@@ -1,0 +1,21 @@
+history,task,title,attachment,actual_min,user_min,category_min,offline_min,4b_estimate_min,4b_abs_error_min,4b_low_min,4b_high_min,4b_covered,4b_confidence,4b_basis,4b_model_status,4b_prediction_seconds,9b_estimate_min,9b_abs_error_min,9b_low_min,9b_high_min,9b_covered,9b_confidence,9b_basis,9b_model_status,9b_prediction_seconds
+01-replica-proofs,bridge-proof,Solve part B of the bridge handout,True,119,75,85,80,104,15,62,146,True,low,Model-selected tasks,ok,88.558,104,15,62,146,True,low,Model-selected tasks,ok,117.027
+01-replica-proofs,bridge-trace,Check a bridge execution before section,False,29,35,40,37,37,8,22,57,True,low,Category history,ok,46.121,48,19,28,67,True,low,Model-selected tasks,ok,188.248
+02-migration-lab,patch-tool,Implement the migration feedback tool,True,138,85,83,84,123,15,110,153,True,medium,Model-selected tasks,ok,24.961,120,18,72,169,True,low,Model-selected tasks,ok,114.113
+02-migration-lab,patch-note,Write the migration tool comparison,False,34,45,44,44,44,10,26,81,True,low,Category history,ok,43.817,36,2,21,51,True,low,Model-selected tasks,ok,439.469
+03-reading-depth,appendix-proof,Prepare the calibration reading,True,76,45,36,41,64,12,38,90,True,low,Model-selected tasks,ok,57.521,64,12,38,90,True,low,Model-selected tasks,ok,526.541
+03-reading-depth,metrics-club,Prepare a transport paper for club,False,46,65,53,59,52,6,42,111,True,low,Model-selected tasks,ok,68.951,54,8,32,76,True,low,Model-selected tasks,ok,42.546
+04-kernel-workbench,async-flicker,Triage a sporadic normalization mismatch,True,127,60,56,58,124,3,74,188,True,low,Model-selected tasks,ok,62.263,124,3,74,188,True,low,Model-selected tasks,ok,43.374
+04-kernel-workbench,sweep-again,Sweep normalization block sizes,False,61,60,56,58,55,6,32,77,True,low,Model-selected tasks,ok,48.354,51,10,30,71,True,low,Model-selected tasks,ok,31.743
+05-studio-crit,queue-revision,Take a second pass at the ticket kiosk,True,132,80,72,76,114,18,68,160,True,low,Model-selected tasks,ok,79.594,94,38,56,132,True,low,Model-selected tasks,ok,44.692
+05-studio-crit,kiosk-print,Apply the signed-off kiosk edits,False,53,45,40,43,39,14,23,56,True,low,Model-selected tasks,ok,60.841,39,14,23,55,True,low,Model-selected tasks,ok,33.472
+06-library-data,returns-merge,Join the returns feed for the quarterly memo,True,137,75,129,102,129,8,61,143,True,low,Model-selected tasks,ok,97.346,94,43,56,142,True,low,Model-selected tasks,ok,53.021
+06-library-data,april-chart,Refresh circulation charts for the April packet,False,43,60,48,54,50,7,30,70,True,low,Model-selected tasks,ok,63.34,50,7,30,70,True,low,Model-selected tasks,ok,38.849
+07-museum-copy,kids-weaving,Prepare Spanish text for the weaving stop,True,111,70,106,82,94,17,56,132,True,low,Model-selected tasks,ok,75.53,73,38,44,105,False,low,Model-selected tasks,ok,51.111
+07-museum-copy,visitor-proof,Proof the English and Spanish visitor map,False,44,45,31,38,41,3,29,71,True,low,Model-selected tasks,ok,116.807,31,13,28,39,False,medium,Model-selected tasks,ok,38.255
+08-field-maintenance,hidden-elbow,Restore pressure at the tool-shed bed,True,153,90,142,116,138,15,82,193,True,low,Model-selected tasks,ok,151.004,116,37,69,167,True,low,Model-selected tasks,ok,47.975
+08-field-maintenance,tap-tag,Inspect the wash-station taps and relabel them,False,38,50,38,46,46,8,27,65,True,low,Category history,ok,50.043,42,4,25,59,True,low,Model-selected tasks,ok,39.13
+09-math-tutor,slope-short,Make a shortened slope clinic for revision week,False,44,60,50,58,50,6,39,55,True,medium,Model-selected tasks,ok,75.58,50,6,29,70,True,low,Model-selected tasks,ok,39.714
+09-math-tutor,new-prob,Design a first lesson about repeated chance trials,True,135,75,63,82,62,73,49,123,False,low,Model-selected tasks,ok,127.924,87,48,52,123,False,low,Model-selected tasks,ok,45.888
+10-personal-admin,tape,Digitize a cassette for the neighborhood archive,True,126,70,70,70,70,56,35,105,False,low,User estimate,ok,44.905,70,56,35,105,False,low,User estimate,ok,32.015
+10-personal-admin,permit,Prepare the first street closure permit packet,True,169,100,77,88,88,81,52,158,False,low,Category history,ok,47.33,89,80,53,126,False,low,Model-selected tasks,ok,77.482
