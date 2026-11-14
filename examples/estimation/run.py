@@ -207,8 +207,8 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
                 model_seconds += duration
                 receipt["seconds"] = round(duration, 3)
             receipt["response"] = reply
-            if model_error is None:
-                outcome = "ok"
+            outcome = "ok_after_retry" if model_error is not None else "ok"
+            model_error = None
             return reply
 
         # This scoped test hook exercises the production fallback without contacting a provider.
@@ -246,7 +246,7 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
 def model_succeeded(row):
     if row.get("fixed_duration") and row["basis"] == "Scheduled duration":
         return row["model_status"] == "not_called"
-    return row["model_status"] == "ok"
+    return row["model_status"] in {"ok", "ok_after_retry"}
 
 
 def metrics(scores):

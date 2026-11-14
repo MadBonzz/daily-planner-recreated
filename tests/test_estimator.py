@@ -301,3 +301,58 @@ def test_cautions_quote_new_obstacles_verbatim_and_keep_different_observations_a
     assert issue in cautions[0]["advice"] and "usually" not in cautions[0]["advice"]
     assert cautions[0]["sources"] == [note, repeated]
     assert cautions[1]["sources"] == [other] and issue not in cautions[1]["advice"]
+
+
+def test_historical_length_limit_uses_same_blinded_inputs_and_bounded_decisions(tmp_path):
+    past = [{**paper("radio", 1.25), "completion_note": "The joystick driver rejected CRLF.",
+             "report": {"intervals": [{"label": "off_task", "seconds": 90, "app": "Arcade", "title": "Scores"}]}},
+            {**paper("wash"), "title": "Wash a pan", "completion_note": "I had to scrub twice."},
+            {**paper("plot"), "title": "Plot a trajectory"}]
+    captured = []
+
+    def respond(messages, schema, **opts):
+        captured.append((messages, schema, opts))
+        if len(captured) == 1:
+            raise estimator.ModelResponseTruncated("model reached its response length limit.")
+        assert messages[-1] == captured[0][0][-1]
+        assert opts["max_tokens"] == 120 and captured[0][2]["max_tokens"] == 480
+        assert schema["additionalProperties"] is False and set(schema["required"]) == {"1", "2", "3"}
+        records = json.loads(messages[-1]["content"])["candidates"]
+        codes = {}
+        for row in records:
+            slot = str(row["slot"])
+            options = schema["properties"][slot]["enum"]
+            assert options == list(range(2 + len(row.get("observations", []))))
+            if row["title"] == past[0]["title"]:
+                codes[slot] = 3  # Select the ActivityWatch observation.
+            elif row["title"] == "Plot a trajectory":
+                codes[slot] = 1  # Select without a flag.
+            else:
+                codes[slot] = 0  # Omit the task.
+        return codes
+
+    with patch("estimator.chat_json", side_effect=respond):
+        result = estimator.predict(paper("new"), past, tmp_path)
+    assert len(captured) == 2
+    assert result["basis"] == "Model-selected tasks"
+    assert {row["task_id"] for row in result["evidence"]} == {"radio", "plot"}
+    assert all("selected this task" in row["reason"] for row in result["evidence"])
+    assert result["cautions"][0]["sources"][0]["origin"] == "ActivityWatch"
+
+
+@pytest.mark.parametrize("compact", [{}, {"1": 1, "2": 0}, {"1": 2}, {"1": True}, {"1": 0.1},
+                                    estimator.ModelResponseTruncated("Second response reached its length limit.")])
+def test_historical_length_limit_never_uses_invalid_decisions_or_retries_twice(tmp_path, compact):
+    with patch("estimator.chat_json", side_effect=[estimator.ModelResponseTruncated("truncated"), compact]) as model:
+        result = estimator.predict(paper("now"), [paper("prior")], tmp_path)
+    assert model.call_count == 2
+    assert result["basis"] == "Text similarity" and result["cautions"] == []
+
+
+def test_other_failures_and_cold_start_do_not_trigger_compact_comparison(tmp_path):
+    # Even the same message text must not turn arbitrary ModelUnavailable into a length event.
+    for history, error in [([paper("prior")], estimator.ModelUnavailable("model reached its response length limit.")),
+                           ([], estimator.ModelResponseTruncated("truncated first-task estimate"))]:
+        with patch("estimator.chat_json", side_effect=error) as model:
+            result = estimator.predict(paper("now"), history, tmp_path)
+        assert model.call_count == 1 and result["basis"] != "Model-selected tasks"

@@ -150,3 +150,28 @@ def test_shared_pdf_stem_is_resolved_locally(tmp_path):
     assert run.documents({"id": "part-b", "pdf": "handout"}, "history", tmp_path) == [("handout.pdf", b"test file")]
     with pytest.raises(ValueError, match="Invalid fixture PDF"):
         run.documents({"id": "part-b", "pdf": "../handout"}, "history", tmp_path)
+
+
+def test_recovered_result_preserves_each_real_response(tmp_path, monkeypatch):
+    history = fixture_history()
+    target = history["holdouts"][0]
+    target["evaluation"] = {"kind": "control", "expected_ratio_range": None, "evidence_ids": [], "rationale": "No band."}
+    answers = iter([run.ModelUnavailable("Output length exceeded"), {"1": 0}])
+    def response(*args, **kwargs):
+        value = next(answers)
+        if isinstance(value, Exception):
+            raise value
+        return value
+    def exercise(fields, rows, index):
+        args = ([{"role": "user", "content": "Synthetic prompt"}], {})
+        with pytest.raises(run.ModelUnavailable):
+            run.estimator.chat_json(*args, max_tokens=480)
+        run.estimator.chat_json(*args, max_tokens=120)
+        return {"point_min": 20, "low_min": 10, "high_min": 30,
+                "confidence": "low", "basis": "User estimate", "evidence": []}
+    monkeypatch.setattr(run.estimator, "chat_json", response)
+    monkeypatch.setattr(run.estimator, "predict", exercise)
+    row = run.evaluate(history, tmp_path, tmp_path / "index", case=target["id"])[0]
+    assert row["model_status"] == "ok_after_retry" and row["model_error"] is None and run.model_succeeded(row)
+    assert row["model_calls"][0]["error"] == "Output length exceeded"
+    assert row["model_calls"][1]["response"] == {"1": 0}

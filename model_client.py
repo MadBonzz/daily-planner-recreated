@@ -33,6 +33,10 @@ class ModelUnavailable(RuntimeError):
     """The configured endpoint could not produce a usable response."""
 
 
+class ModelResponseTruncated(ModelUnavailable):
+    """The endpoint explicitly reported that generation exhausted the response budget."""
+
+
 class _NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -128,7 +132,7 @@ def chat_json(messages, schema, *, max_tokens=512):
             completion = json.load(response)
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":
-            raise ModelUnavailable(f"{model} reached its response length limit.")
+            raise ModelResponseTruncated(f"{model} reached its response length limit.")
         content = choice["message"]["content"].strip()
         if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
             content = content.split("\n", 1)[1][:-3].strip()

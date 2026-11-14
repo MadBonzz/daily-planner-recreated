@@ -62,7 +62,7 @@ Select a saved category when creating a task. Use **Options → Planner settings
 
 The task is saved immediately. Its card shows **Estimating task time…** while PDFs are parsed and the model runs. You can start the timer or add another task. The range and **Why this estimate?** appear automatically when the forecast is available.
 
-With no timed history, the model estimates independently from the description, details and relevant PDF passages. A failed request falls back to your budget with a ±50% range. With completed history, local Qdrant retrieves up to six candidates using hashed words and word pairs. The model compares the work involved, and Python uses the selected tasks’ actual-to-estimated ratios to adjust the new budget. Intervals and confidence labels are planning heuristics.
+With no timed history, the model estimates independently from the description, details and relevant PDF passages. A failed request falls back to your budget with a ±50% range. With completed history, local Qdrant retrieves up to six candidates using hashed words and word pairs. The model compares the work involved. If its response reaches the token limit, the planner makes one shorter request for a decision per candidate. Python uses the selected tasks’ actual-to-estimated ratios to adjust the new budget. Intervals and confidence labels are planning heuristics.
 
 When finishing, optionally record what affected the time. The completion adds its actual duration, note and filtered activity report to the history for future estimates. Open tasks can then receive an updated forecast. The planner retains your budget and its first forecast for comparison. A caution on a card identifies the earlier tasks and the specific observation behind it.
 
