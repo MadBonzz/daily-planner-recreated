@@ -105,12 +105,52 @@ def test_seeded_activity_can_be_clipped_and_does_not_extend_to_new_time():
     assert 'Funny cat' not in json.dumps(report)
 
 
-def test_stale_native_export_cannot_apply_old_reviewer_annotations(tmp_path):
+def test_packaged_database_integrity_and_private_annotations(tmp_path):
+    import hashlib
+    import sqlite3
+    from examples.estimation.activity_fixture import write_database
+
     h = study_history()
-    file = tmp_path / 'activitywatch' / 'test.json'
-    file.parent.mkdir()
-    file.write_text(json.dumps(export_history(h)))
+    path = tmp_path / 'activitywatch' / 'test.db'
+    path.parent.mkdir()
+    write_database(export_history(h), path)
+    h['activitywatch_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+    for row in h['tasks']:
+        for session in row['activity']:
+            for scene in session:
+                for key in set(scene) - {'minutes', 'label', 'pause_after_minutes'}:
+                    del scene[key]
     assert replay_history(h, directory=tmp_path)['signals']['report']['totals']['on_task'] == 420
-    h['tasks'][0]['activity'][0][0]['title'] = 'Different video'
-    with pytest.raises(ValueError, match='Regenerate'):
+    with sqlite3.connect(path) as db:
+        assert db.execute('PRAGMA user_version').fetchone() == (6,)
+        raw = [r[0] for r in db.execute('SELECT data FROM events')]
+        assert all('Casey' not in s and 'on_task' not in s and 'SPOILER' not in s for s in raw)
+        db.execute('DELETE FROM events')
+    with pytest.raises(ValueError, match='does not match'):
         replay_history(h, directory=tmp_path)
+
+
+def test_db_uses_model_for_open_phone_activity_with_seed_clock(tmp_path, monkeypatch):
+    import dev_workspace as dev
+    from examples.estimation.run import DATASET, histories
+
+    h = histories('07')[0]
+    assert (DATASET / 'activitywatch' / (h['id'] + '.db')).is_file()
+    store = dev.open_dev_workspace(tmp_path, h['id'])
+    laundry = next(t for t in store.list_tasks() if t['status'] == 'paused')
+    store.transition(laundry['id'], 'stop')
+    calls = []
+
+    def classify(messages, schema, **kwargs):
+        payload = json.loads(messages[-1]['content'])
+        calls.extend(payload['intervals'])
+        return {key: {'label': 'uncertain', 'reason': 'Phone app alone is ambiguous.'} for key in schema['required']}
+
+    monkeypatch.setattr(activity, 'chat_json', classify)
+    report = dev.dev_activity_report(store, store.get_task(laundry['id']))
+    assert report['classification_source'] == 'model'
+    assert {r.get('phone_app') for r in calls} == {'Clock', 'Messages'}
+    assert all(not r['app'] and r['idle'] for r in calls)
+    assert report['elapsed_seconds'] == pytest.approx(420)
+    assert sum(r['seconds'] for r in report['intervals']) == pytest.approx(420)
+    assert all('label' not in row and 'package' not in row and 'classname' not in row for row in calls)

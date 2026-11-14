@@ -70,59 +70,40 @@
         [
           {
             "minutes": 11,
-            "app": "Okular",
-            "title": "Bounded event decoding — wrap-safe parser",
             "label": "on_task"
           },
           {
             "minutes": 32,
-            "app": "Code",
-            "title": "reader.rs — ring-replay",
             "label": "on_task"
           },
           {
             "minutes": 16,
-            "app": "Terminal",
-            "title": "cargo test wraps_header_then_tombstone",
             "label": "on_task"
           },
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "tests/wrapped_header.rs",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 11,
-            "app": "Terminal",
-            "title": "cargo test --test replay / EOF fixture",
             "label": "on_task"
           },
           {
             "minutes": 16,
-            "app": "Code",
-            "title": "tests/fixtures/min-tail.jsonl",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Firefox",
-            "title": "Peekable in std::iter",
-            "label": "on_task",
-            "domain": "doc.rust-lang.org"
+            "label": "on_task"
           },
           {
             "minutes": 15,
-            "app": "Code",
-            "title": "src/reader.rs",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Terminal",
-            "title": "cargo test replay",
             "label": "on_task"
           }
         ]
@@ -145,44 +126,30 @@
         [
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "trace_diff.py",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "pytest tests/test_cli.py",
             "label": "on_task"
           },
           {
             "minutes": 30,
-            "app": "Code",
-            "title": "cli.py — registration",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Thunderbird",
-            "title": "Inbox",
             "label": "uncertain"
           },
           {
             "minutes": 11,
-            "app": "Terminal",
-            "title": "diff -u failing-tail.jsonl reduced.jsonl",
             "label": "on_task"
           },
           {
             "minutes": 27,
-            "app": "Code",
-            "title": "test_truncated_tail.py",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "Terminal",
-            "title": "pytest -q / trace tools",
             "label": "on_task"
           }
         ]
@@ -205,26 +172,18 @@
         [
           {
             "minutes": 6,
-            "app": "Files",
-            "title": "artifacts/baseline",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Terminal",
-            "title": "less transcript.txt",
             "label": "on_task"
           },
           {
             "minutes": 13,
-            "app": "LibreOffice Writer",
-            "title": "Cursor comparison.odt",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Okular",
-            "title": "Three saved replay transcripts",
             "label": "on_task"
           }
         ]
@@ -246,9 +205,6 @@
         [
           {
             "minutes": 14,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           }
         ]
@@ -272,60 +228,40 @@
         [
           {
             "minutes": 28,
-            "app": "Code",
-            "title": "src/codec.rs — bounded reader",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "pytest -k first_bad_offset",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Firefox",
-            "title": "Queue from rust stdlib",
-            "label": "on_task",
-            "domain": "doc.rust-lang.org"
+            "label": "on_task"
           },
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "trace_tool.py — empty side",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Terminal",
-            "title": "cat failing-seed-03.jsonl",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "tests/regression_tail.py",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Terminal",
-            "title": "pytest --last-failed",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 12,
-            "app": "Code",
-            "title": "trace_tool.py / first bad offset",
             "label": "on_task"
           }
         ]
@@ -347,26 +283,18 @@
         [
           {
             "minutes": 6,
-            "app": "Terminal",
-            "title": "less artifacts/transcript-left.log",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Screenshot",
-            "title": "Select a window",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Terminal",
-            "title": "less artifacts/transcript-right.log",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "Obsidian",
-            "title": "Decoder comparison / captions",
             "label": "on_task"
           }
         ]
@@ -388,27 +316,18 @@
         [
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "replay --seed-manifest baseline.toml",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 8,
-            "app": "Terminal",
-            "title": "less verification-summary.log",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Obsidian",
-            "title": "Seed pack summary",
             "label": "on_task"
           }
         ]
@@ -433,14 +352,10 @@
         [
           {
             "minutes": 6,
-            "app": "Terminal",
-            "title": "cat marker_word_fail.jsonl",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "Code",
-            "title": "minimize_marker_seed.py",
             "label": "on_task"
           }
         ]
@@ -660,5 +575,6 @@
       },
       "day": "2026-10-27"
     }
-  ]
+  ],
+  "activitywatch_sha256": "2457c2f16aaad2afd9093f201b775d69df1aa25d4f1300a3ba3ae0d10b59517a"
 }

@@ -1,4 +1,4 @@
-"""Daily planner UI. Run with python -m streamlit run app.py."""
+"""Plan Smarter UI. Run with python -m streamlit run app.py."""
 
 from datetime import date, datetime, timedelta
 from html import escape
@@ -14,11 +14,12 @@ import estimator
 from dev_workspace import dev_activity_report, history_choices, open_dev_workspace
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
+from task_forecasts import can_retry_forecast
 from pdf_reader import extract_pdf_text
 from model_client import model_settings
 from urllib.parse import urlsplit
 
-st.set_page_config(page_title="Daily planner", page_icon="🗓️", layout="centered")
+st.set_page_config(page_title="Plan Smarter", page_icon="🗓️", layout="centered")
 DATA_ROOT = Path(os.environ.get("PLANNER_DATA_DIR", Path(__file__).parent / "data"))
 STATUS = {"ready": "Ready", "running": "Running", "paused": "Paused",
           "awaiting_finish": "Session stopped", "completed": "Completed"}
@@ -94,14 +95,9 @@ def show_prediction(prediction):
                 f"{prediction['low_min']}–{prediction['high_min']} min planning range · "
                 f"{prediction['confidence']} confidence")
     if prediction.get("basis"):
-        st.caption(f"Estimate source · {prediction['basis']}")
+        fallback = " (local fallback)" if can_retry_forecast(prediction) else ""
+        st.caption(f"Estimate source · {prediction['basis']}{fallback}")
     st.html(f'<p class="task-copy">{escape(prediction.get("explanation", ""))}</p>')
-    evidence = prediction.get("evidence", [])
-    if evidence:
-        st.dataframe([{"Completed task": row["title"], "Your estimate (min)": row["estimate_min"],
-                       "Actual (min)": round(row["actual_min"], 2),
-                       "Correction": f"{row['ratio']:.2f}×", "Why it matches": row["reason"]}
-                      for row in evidence], hide_index=True, width="stretch")
 
 
 @st.dialog("Add task", width="large")
@@ -200,6 +196,8 @@ def timeline(intervals):
         kind = "Excluded" if event["excluded"] else event.get("app") or "Unknown"
         row = {"Start": start, "Length": duration(event["seconds"]), "App": kind,
                "Window or tab": event.get("title", ""), "Domain": event.get("domain", "")}
+        if event.get("phone_app"):
+            row["Phone app"] = event["phone_app"]
         if "label" in event:
             row["Assessment"] = event["label"].replace("_", "-")
             row["Reason"] = event.get("reason", "")
@@ -327,7 +325,7 @@ def estimate_pending(task):
     return task["estimate_updating"]
 
 
-def estimate_section(task):
+def estimate_section(store, task):
     prediction = task["prediction"]
     initial_pending = prediction.get("status") == "pending"
     fixed = task["fixed_duration"]
@@ -339,18 +337,39 @@ def estimate_section(task):
         values.append(f"Planner {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
     if estimate_pending(task) and not initial_pending:
-        values.append("Updating estimate with recent completions…")
+        values.append("Updating estimate…")
     if task["status"] != "running":
         values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
     if initial_pending or fixed or not prediction:
         return
-    for caution in prediction.get("cautions", []):
-        st.text(caution["advice"])
-        for source in caution.get("sources", []):
-            st.caption(f"{source['title']} · {source['origin']}")
+    cautions = prediction.get("cautions", [])
+    if cautions:
+        # Keep one observation visible while the full evidence is collapsed.
+        first = cautions[0]
+        source = next(iter(first.get("sources", [])), {})
+        preview = source.get("observation") or first["advice"]
+        st.html(f'<p class="task-copy"><strong>Watch for</strong> · {escape(preview)}</p>')
     with st.expander("Why this estimate?"):
         show_prediction(prediction)
+        st.markdown("**What to watch for**")
+        if cautions:
+            for caution in cautions:
+                st.html(f'<p class="task-copy">{escape(caution["advice"])}</p>')
+                for source in caution.get("sources", []):
+                    st.html(f'<small>{escape(source["title"])} · {escape(source["origin"])}</small>')
+        else:
+            st.caption("No specific obstacle or distraction was identified in related task history.")
+        evidence = prediction.get("evidence", [])
+        if evidence:
+            st.dataframe([{"Completed task": row["title"], "Your estimate (min)": row["estimate_min"],
+                           "Actual (min)": round(row["actual_min"], 2),
+                           "Correction": f"{row['ratio']:.2f}×", "Why it matches": row["reason"]}
+                          for row in evidence], hide_index=True, width="stretch")
+        if can_retry_forecast(prediction) and task["status"] != "completed" and not estimate_pending(task):
+            if st.button("Retry model estimate", key=f"estimate-retry-{task['id']}"):
+                store.retry_estimate(task["id"])
+                st.rerun()
         original = task["creation_prediction"]
         if original and original != prediction and "point_min" in original:
             st.caption(f"At creation: {minutes(original['point_min'])} "
@@ -369,7 +388,7 @@ def live_estimate_section(store, task, index_dir):
             task.update(fresh)
             if estimate_pending(fresh):
                 schedule_pending(store, index_dir)
-        estimate_section(task)
+        estimate_section(store, task)
     refresh()
 
 
@@ -403,7 +422,7 @@ def render_task(store, index_dir, task, dev):
         if estimate_pending(task):
             live_estimate_section(store, task, index_dir)
         else:
-            estimate_section(task)
+            estimate_section(store, task)
         if task["category"]:
             st.html(f'<small>{escape(task["category"])}</small>')
         if status == "running":
@@ -474,7 +493,7 @@ def render_task(store, index_dir, task, dev):
 def main():
     st.session_state.setdefault("plan_day", date.today())
     title, options = st.container(key="plan_header").columns([4, 1], vertical_alignment="center")
-    title.title("Daily planner")
+    title.title("Plan Smarter")
     with options.popover("Options", width="stretch"):
         open_settings = st.button("Planner settings")
     mode = st.segmented_control("Mode", ["Demo", "Dev"], default="Demo", required=True,

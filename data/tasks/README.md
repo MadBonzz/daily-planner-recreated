@@ -1,4 +1,4 @@
-# Synthetic histories for the daily planner
+# Synthetic histories for Plan Smarter
 
 Ten fictional people have **79 completed tasks**, **20 editable open tasks**, and **20 later tasks held back for scoring**. Sixteen original PDFs are used by 34 records, and 55 completed tasks have a written completion note. The benchmark includes 17 declared patterns, one of which is a fixed 75-minute show. Three controls test a stable budget or an outcome that a user could not reasonably predict.
 
@@ -33,9 +33,17 @@ From the repository root with the project environment activated, select a config
 ```sh
 python -m examples.estimation.run validate
 python -m examples.estimation.run evaluate 02
-python -m examples.estimation.run evaluate --strict-model --json data/results/local/my-model.json
-python -m examples.estimation.run evaluate --offline --json data/results/local/offline.json
+python -m examples.estimation.run evaluate --strict-model --json data/results/local/estimate-only-01/results.json
+python -m examples.estimation.run evaluate --offline --json data/results/local/offline-01/results.json
 ```
+
+The examples above use the synthetic reviewer's interval labels to test time estimation on repeatable history. Add `--classify-history` to test classification and estimation together.
+
+```sh
+python -m examples.estimation.run evaluate --classify-history --strict-model --json data/results/local/end-to-end-01/results.json
+```
+
+This reads the synthetic ActivityWatch databases, clips events to recorded work periods, applies exclusions, then sends sanitized historical intervals and task context (including PDF excerpts when supplied) to the configured model. The resulting labels supply the activity evidence for the held-out forecasts. `history_classification` records the calls, timings, failures, and task-level label totals separately from forecast calls. If the provider fails, affected intervals stay uncertain, the run is saved, and `--strict-model` exits nonzero.
 
 Each forecast uses completed tasks strictly earlier than all the holdouts for that person. The sibling holdouts and open Dev tasks never enter the estimation history. Pre-task input comprises the task title, description, category, details, estimate, fixed-duration flag and extracted PDF content. Only past records can supply observed timings, completion notes and activity summaries. The private grading rubric, expected ratio, held-out completion note, recorded sessions and actual outcome are excluded from prediction.
 
@@ -49,12 +57,14 @@ The result JSON records the selected historical tasks, forecast range, calibrati
 
 The JSON files in `histories/` contain the independent profiles. `tasks` holds completed work, `open_tasks` gives Dev its editable starting state, and `holdouts` contains the prospective tasks and their private grading data. Attached handouts live in `pdfs/`. Several tasks may refer to different sections of the same handout. To regenerate the PDFs, install `reportlab` and run `python data/tasks/render_pdfs.py`.
 
-Ten per-profile ActivityWatch exports in `activitywatch/` contain 461 synthetic watcher events for the completed histories. Replaying them feeds window, browser and AFK events into the planner's normal timer and sanitization code. Relevance labels in the benchmark reports come from fixture annotations. In-progress and future tasks supply no activity evidence to their own estimates.
+Each history points to its own read-only ActivityWatch SQLite database in `activitywatch/`. The ten databases contain 488 fictional events. Their schema matches the v6 Rust store, including bucket metadata, a global event ID, the bucket foreign key, start and end times in Unix nanoseconds, JSON event payloads and the original time indexes. The databases contain only sensor observations. Timer sessions, pause boundaries and interval annotations stay in the history JSON. Past user budgets and actuals are part of the fixture. Model forecasts and run logs live under `data/results/`.
 
-[Current benchmark results](../results/README.md) · [Original fixtures and report](https://github.com/MadBonzz/daily-planner-recreated/tree/1d1eea60ffacef970206b2120ae3808191941344/data)
+The clinic’s open flyer task includes Android activity overlapping a desktop editor. The apartment’s open laundry task has phone activity while the desktop is idle. Dev maps those events from the sample’s clock onto the running timer when a sample is loaded. On task review, the app queries the recorded windows, clips pauses and overlaps, applies exclusions, and sends only the sanitized intervals to the classifier. Time added after loading the sample has no synthetic observations.
 
-To regenerate one raw export from its historical activity scenes, run the command below. The exported watcher buckets contain the fictional device’s events. Periods and relevance annotations belong to the separate profile JSON. During validation, a stale or mismatched checked-in export is rejected.
+[Benchmark runs and reports](../results/README.md) · [Original fixtures and report](https://github.com/MadBonzz/daily-planner-recreated/tree/1d1eea60ffacef970206b2120ae3808191941344/data)
+
+Inspect a fixture with the SQLite CLI. The following query lists watcher types and event counts without displaying window titles.
 
 ```sh
-python -m examples.estimation.activity_fixture data/tasks/histories/10-signal-study.json data/tasks/activitywatch/10-signal-study.json
+sqlite3 -readonly data/tasks/activitywatch/06-neighborhood-clinic.db "SELECT b.type, b.client, count(e.id) FROM buckets b LEFT JOIN events e ON e.bucketrow=b.id GROUP BY b.id;"
 ```

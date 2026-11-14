@@ -13,7 +13,7 @@ import time
 import portalocker
 
 import activity
-from examples.estimation.activity_fixture import replay_history, replay_task_at
+from examples.estimation.activity_fixture import replay_history, replay_task_at, task_layout
 from examples.estimation.run import DATASET, task_inputs, valid_id
 from planner_store import PlannerStore
 
@@ -36,9 +36,8 @@ def _import_task(store, history_id, directory, row, sessions, *, status, now, re
     fields, files = task_inputs(row, history_id, directory)
     if status != "completed":
         fields["day"] = date.fromtimestamp(now).isoformat()
-    # Old completed tasks can legitimately have no stored forecast. Open tasks
-    # without an authored forecast are estimated by the normal background worker.
-    prediction = row.get("prediction", {} if status == "completed" else None)
+    # A sample has user budgets and observations. Open tasks receive a fresh estimate.
+    prediction = {} if status == "completed" else None
     task = timed.create_task(**fields, attachments=files, prediction=prediction)
     task_id = task["id"]
     if row.get("activity"):
@@ -88,8 +87,9 @@ def dev_activity_report(store, task):
         history = json.loads(source.read_text(encoding="utf-8"))
         for row in [*history["tasks"], *history.get("open_tasks", [])]:
             if row["id"] == ref["task"]:
-                return replay_task_at(ref["history"], row, ref["sessions"], periods,
-                                      exclusions=store.get_setting("exclusions", []))
+                return replay_task_at(history, row, ref["sessions"], periods, directory=DATASET,
+                                      exclusions=store.get_setting("exclusions", []), task_context=task,
+                                      use_model=bool(history.get("activitywatch_sha256")))
     return activity.build_report(task, periods, capture=False)
 
 
@@ -101,6 +101,7 @@ def _seed_open(store, history, now):
     # The current session of the running task ends at import time and stays open.
     end = now
     blocks = []
+    layouts = task_layout(history)
     ordered = sorted(rows, key=lambda task: task["status"] == "running")
     for row in reversed(ordered):
         status = row["status"]
@@ -108,7 +109,7 @@ def _seed_open(store, history, now):
             raise ValueError(f"Invalid open task state: {status}")
         sessions = []
         if row.get("sessions_minutes"):
-            layout = replay_history({"id": history["id"], "tasks": [row]})[row["id"]]["sessions"]
+            layout = layouts[row["id"]]["sessions"]
             offset = end - layout[-1][-1][1]
             sessions = [[(start + offset, stop + offset) for start, stop in group] for group in layout]
         elif status != "ready":

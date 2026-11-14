@@ -102,7 +102,8 @@ def _process(store, index_dir, job):
             # The timer and original estimate are already saved. An unexpected
             # parsing or inference error must leave a usable, truthful estimate.
             _LOG.error("Could not prepare task estimate (%s).", type(exc).__name__)
-            prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.")
+            prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.",
+                                             retryable=True)
         saved = store.resolve_prediction(task_id, token, prediction, pdf_text=pdf_text)
         if saved:
             try:

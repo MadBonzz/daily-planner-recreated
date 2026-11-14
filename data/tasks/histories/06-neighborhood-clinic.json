@@ -20,23 +20,14 @@
         [
           {
             "minutes": 8,
-            "app": "Firefox",
-            "title": "Coverage decisions / waiting room",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 27,
-            "app": "Firefox",
-            "title": "Evening capacity • Mara Imani",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "LibreOffice Writer",
-            "title": "Thursday shift decisions",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -59,16 +50,10 @@
         [
           {
             "minutes": 10,
-            "app": "Firefox",
-            "title": "Supply check • Dev Patel",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "LibreOffice Calc",
-            "title": "Clinic stock • order column",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -91,18 +76,11 @@
         [
           {
             "minutes": 8,
-            "app": "LibreOffice Writer",
-            "title": "Temporary door signs",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 26,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -124,36 +102,18 @@
         [
           {
             "minutes": 9,
-            "app": "Firefox",
-            "title": "Overflow rota / waiting room",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 26,
-            "app": "Firefox",
-            "title": "Capacity decisions • Mara Imani",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "LibreOffice Calc",
-            "title": "Overflow owners",
-            "domain": "",
             "label": "on_task"
           }
         ]
-      ],
-      "prediction": {
-        "point_min": 39,
-        "low_min": 25,
-        "high_min": 52,
-        "confidence": "low",
-        "basis": "Synthetic prior estimate",
-        "explanation": "One sign-off and a short edit to the rota.",
-        "evidence": []
-      }
+      ]
     },
     {
       "id": "dev-packs",
@@ -172,16 +132,10 @@
         [
           {
             "minutes": 3,
-            "app": "LibreOffice Calc",
-            "title": "Friday replenishment order",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "Firefox",
-            "title": "Stock call • Dev Patel",
-            "domain": "meet.example.org",
             "label": "on_task"
           }
         ]
@@ -204,16 +158,10 @@
         [
           {
             "minutes": 8,
-            "app": "Firefox",
-            "title": "Monthly pass renewal",
-            "domain": "metro.example.org",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Files",
-            "title": "Transit receipts",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -236,23 +184,14 @@
         [
           {
             "minutes": 6,
-            "app": "Firefox",
-            "title": "Late intake / waiting room",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 28,
-            "app": "Firefox",
-            "title": "Clinic capacity • Mara Imani",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "LibreOffice Writer",
-            "title": "Room decisions",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -275,16 +214,10 @@
         [
           {
             "minutes": 13,
-            "app": "Firefox",
-            "title": "Supply list • Dev Patel",
-            "domain": "meet.example.org",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "LibreOffice Calc",
-            "title": "Buy list / envelopes",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -307,9 +240,6 @@
         [
           {
             "minutes": 5,
-            "app": "",
-            "title": "",
-            "domain": "",
             "label": "uncertain"
           }
         ]
@@ -344,9 +274,6 @@
         [
           {
             "minutes": 9,
-            "app": "LibreOffice Writer",
-            "title": "March public hours",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -463,5 +390,6 @@
         "rationale": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category."
       }
     }
-  ]
+  ],
+  "activitywatch_sha256": "0fe17f044930af8d5f1c9e5df14c6eb0fd6e6d850a7e0c587cac96fbe40b4962"
 }

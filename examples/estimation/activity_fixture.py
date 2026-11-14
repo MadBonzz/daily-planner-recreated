@@ -1,4 +1,4 @@
-"""Render synthetic ActivityWatch exports and replay completed planner sessions.
+"""Replay synthetic ActivityWatch SQLite stores for the planner and estimator.
 
 The generator uses only the historical tasks in a profile. Watcher buckets contain
 ordinary device events. Timer boundaries and synthetic relevance annotations are
@@ -8,10 +8,13 @@ separate, so the same export can also be replayed with the real model classifier
 import argparse
 from collections import defaultdict
 from datetime import date, datetime, time, timezone
+import hashlib
 from functools import partial
 import json
 import math
 from pathlib import Path
+import sqlite3
+from contextlib import closing
 from urllib.parse import unquote
 
 import activity
@@ -44,7 +47,7 @@ def _sessions_by_day(history):
     return days
 
 
-def _render(history):
+def _render(history, *, render_events=True):
     hostname = 'demo-' + history['id']
     buckets = {}
     agenda = {}
@@ -67,6 +70,8 @@ def _render(history):
                        'duration': round(until - at, 6), 'data': data})
 
     def watcher_slice(scene, at, end):
+        if not render_events:
+            return
         app, title = scene.get('app', ''), scene.get('title', '')
         domain = scene.get('domain', '')
         browser = activity._browser(app)
@@ -93,7 +98,8 @@ def _render(history):
         if until > at + 60:
             watcher_slice({'app': 'Calendar', 'title': 'Today', 'idle': True}, at + 60, until)
 
-    for day, day_sessions in sorted(_sessions_by_day(history).items()):
+    timed_tasks = [*history['tasks'], *(r for r in history.get('open_tasks', []) if r.get('sessions_minutes'))]
+    for day, day_sessions in sorted(_sessions_by_day({'tasks': timed_tasks}).items()):
         clock = datetime.combine(date.fromisoformat(day), time(8), timezone.utc).timestamp()
         # When two tasks share a date, the user can switch to the other task
         # before returning for the next session of the first.
@@ -166,39 +172,78 @@ def _report(task, source, periods, annotations, exclusions, use_model=False):
     return report
 
 
-def replay_history(history, *, directory=None, export=None, use_model=False):
-    """Rebuild historical activity reviews, preserving pauses and session grouping.
+def _replay_source(history, directory, export=None):
+    """Packaged samples read their original DB. Inline authored scenes support old profiles."""
+    fingerprint = history.get('activitywatch_sha256')
+    raw, agenda = _render(history, render_events=not fingerprint)
+    hostname = 'demo-' + history['id']
+    if fingerprint:
+        from activity_db import SQLiteActivitySource
+        path = Path(directory) / 'activitywatch' / (history['id'] + '.db')
+        if hashlib.sha256(path.read_bytes()).hexdigest() != fingerprint:
+            raise ValueError(f'{path.name}: database does not match this history')
+        return SQLiteActivitySource(path, hostname=hostname), agenda
+    if export is not None and export != raw:
+        raise ValueError('Export differs from the authored device scenes. Regenerate it.')
+    return ExportSource(raw, hostname), agenda
 
-    By default visible activity uses the author's fixture annotation for a
-    repeatable benchmark. use_model=True classifies the redacted intervals with
-    the configured production provider. No held-out activity is inspected.
+
+def replay_history(history, *, directory=None, export=None, use_model=False, tasks_by_id=None):
+    """Classify recorded windows for completed tasks. Open tasks and holdouts are excluded.
+
+    Historical annotations give deterministic estimator-only scores. use_model=True
+    sends only the sanitised intervals and supplied pre-task context to the classifier.
     """
-    generated, agenda = _render(history)
-    if export is None and directory is not None:
-        path = Path(directory) / 'activitywatch' / (history['id'] + '.json')
-        if path.is_file():
-            export = json.loads(path.read_text(encoding='utf-8'))
-    if export is not None and not use_model and export != generated:
-        raise ValueError('Export differs from annotated history. Regenerate it or use model classification.')
-    source = ExportSource(generated if export is None else export, 'demo-' + history['id'])
-    by_id = {task['id']: task for task in history['tasks']}
+    source, agenda = _replay_source(history, directory, export)
     results = {}
-    for task_id, item in agenda.items():
+    for row in history['tasks']:
+        task_id = row['id']
+        item = agenda[task_id]
         sessions = item['sessions']
         periods = [period for session in sessions for period in session]
-        report = _report(by_id[task_id], source, periods, item['annotations'], [], use_model)
+        context = tasks_by_id[task_id] if tasks_by_id is not None else row
+        report = _report(context, source, periods, item['annotations'], [], use_model)
         results[task_id] = {'sessions': sessions, 'periods': periods, 'report': report}
     return results
 
 
-def replay_task_at(history_id, row, destination_sessions, periods, *, exclusions=()):
-    """Move an authored task's device traces to a DEV workspace's seed clock.
+def task_layout(history):
+    """Seed calendars and annotations without regenerating, reading, or classifying events."""
+    _, agenda = _render(history, render_events=False)
+    return agenda
 
-    Only original observations within each seeded period can be transplanted.
-    Later user-created running periods and extensions have no synthetic evidence.
-    Rebuilding after a corrected stop clips to the actual timer periods.
-    """
-    raw, agenda = _render({'id': history_id, 'tasks': [row]})
+
+class ShiftedSource:
+    """Query a seeded interval at its original DB time; map only its intersection back."""
+
+    def __init__(self, source, mappings):
+        self.source = source
+        self.hostname = source.hostname
+        self.mappings = mappings
+
+    def get(self, path, **query):
+        if path == 'buckets/':
+            return self.source.get(path)
+        start, end = activity._stamp(query['start']), activity._stamp(query['end'])
+        events = []
+        for src_start, src_end, delta in self.mappings:
+            left, right = max(src_start, start - delta), min(src_end, end - delta)
+            if left >= right:
+                continue
+            for row in self.source.get(path, start=activity._iso(left), end=activity._iso(right)):
+                at = activity._stamp(row['timestamp'])
+                a, b = max(at, left), min(at + row['duration'], right)
+                if a < b:
+                    events.append({**row, 'timestamp': activity._iso(a + delta), 'duration': b - a})
+        return sorted(events, key=lambda row: row['timestamp'], reverse=True)
+
+
+def replay_task_at(history, row, destination_sessions, periods, *, directory=None, exclusions=(),
+                   use_model=False, task_context=None):
+    """Move bounded seed observations to Dev's clock. Later user activity stays unobserved."""
+    if isinstance(history, str):  # Backward compatibility with inline scenes.
+        history = {'id': history, 'tasks': [row]}
+    source, agenda = _replay_source(history, directory)
     item = agenda[row['id']]
     original = item['sessions']
     if [len(s) for s in original] != [len(s) for s in destination_sessions]:
@@ -210,32 +255,59 @@ def replay_task_at(history_id, row, destination_sessions, periods, *, exclusions
             if duration > 0:
                 mappings.append((start, start + duration, dest_start - start))
 
-    def transplant(start, end):
-        for left, right, delta in mappings:
-            if left < end and right > start:
-                yield max(start, left) + delta, min(end, right) + delta
+    annotations = [(max(a, left) + delta, min(b, right) + delta, label)
+                   for a, b, label in item['annotations']
+                   for left, right, delta in mappings if left < b and right > a]
+    return _report(task_context or row, ShiftedSource(source, mappings), periods, annotations,
+                   exclusions, use_model)
 
-    shifted_annotations = [(a, b, label) for start, end, label in item['annotations']
-                           for a, b in transplant(start, end)]
-    for bucket in raw['buckets'].values():
-        shifted = []
-        for event in bucket['events']:
-            at = activity._stamp(event['timestamp'])
-            for a, b in transplant(at, at + event['duration']):
-                shifted.append({'id': len(shifted) + 1, 'timestamp': activity._iso(a),
-                                'duration': b - a, 'data': event['data']})
-        bucket['events'] = shifted
-    source = ExportSource(raw, 'demo-' + history_id)
-    return _report(row, source, periods, shifted_annotations, exclusions)
+
+def write_database(export, path):
+    """Write native AW v6 bucket/event records from an authored ActivityWatch export."""
+    # Make the output reproducible and avoid overwriting an existing real watcher DB.
+    with Path(path).open('xb'):
+        pass
+    try:
+        with closing(sqlite3.connect(path)) as db, db:
+            db.executescript("""
+                PRAGMA user_version = 6;
+                PRAGMA foreign_keys = ON;
+                CREATE TABLE buckets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL,
+                    type TEXT NOT NULL, client TEXT NOT NULL, hostname TEXT NOT NULL,
+                    created TEXT NOT NULL, data_deprecated TEXT DEFAULT '{}', data TEXT NOT NULL DEFAULT '{}');
+                CREATE TABLE events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, bucketrow INTEGER NOT NULL,
+                    starttime INTEGER NOT NULL, endtime INTEGER NOT NULL, data TEXT NOT NULL,
+                    FOREIGN KEY (bucketrow) REFERENCES buckets(id));
+                CREATE TABLE key_value (key TEXT PRIMARY KEY, value TEXT, last_modified NUMBER NOT NULL);
+                CREATE INDEX bucket_id_index ON buckets(id);
+                CREATE INDEX events_bucketrow_endtime_starttime_index ON events(bucketrow, endtime, starttime DESC);
+                CREATE INDEX events_bucketrow_starttime_endtime_index ON events(bucketrow, starttime DESC, endtime);
+            """)
+            for key, bucket in sorted(export['buckets'].items()):
+                created = datetime.fromtimestamp(activity._stamp(bucket['created']), timezone.utc)
+                bucket_id = db.execute(
+                    'INSERT INTO buckets(name,type,client,hostname,created) VALUES (?,?,?,?,?)',
+                    (key, bucket['type'], bucket['client'], bucket['hostname'],
+                     created.isoformat(timespec='microseconds'))).lastrowid
+                for event in bucket['events']:
+                    # API events have a start and a duration. AW's SQLite store uses two Unix nanosecond endpoints.
+                    start = round(activity._stamp(event['timestamp']) * 1_000_000) * 1000
+                    end = start + round(event['duration'] * 1_000_000_000)
+                    db.execute('INSERT INTO events(bucketrow,starttime,endtime,data) VALUES (?,?,?,?)',
+                               (bucket_id, start, end, json.dumps(event['data'], ensure_ascii=False)))
+    except BaseException:
+        Path(path).unlink(missing_ok=True)
+        raise
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Write a synthetic ActivityWatch bucket export.')
-    parser.add_argument('history', type=Path, help='Completed-history JSON fixture')
-    parser.add_argument('output', type=Path, help='Destination JSON file')
+    parser = argparse.ArgumentParser(description='Write a new AW v6 SQLite fixture from an ActivityWatch JSON export.')
+    parser.add_argument('export', type=Path)
+    parser.add_argument('database', type=Path, help='New .db path')
     args = parser.parse_args()
-    raw = export_history(json.loads(args.history.read_text(encoding='utf-8')))
-    args.output.write_text(json.dumps(raw, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    write_database(json.loads(args.export.read_text(encoding='utf-8')), args.database)
 
 
 if __name__ == '__main__':

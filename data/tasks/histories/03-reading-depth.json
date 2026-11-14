@@ -82,47 +82,32 @@
         [
           {
             "minutes": 14,
-            "app": "Okular",
-            "title": "Delayed audits — conditional second moment",
             "label": "on_task"
           },
           {
             "minutes": 20,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 19,
-            "app": "Xournal++",
-            "title": "Indicator × conditional loss",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "Obsidian",
-            "title": "Audit coin — missing observations",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 17,
-            "app": "Xournal++",
-            "title": "Example: two different losses",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Okular",
-            "title": "Delayed audits — conditional loss",
             "label": "on_task"
           },
           {
             "minutes": 17,
-            "app": "Code",
-            "title": "missingness-example.tex",
             "label": "on_task"
           }
         ]
@@ -145,26 +130,18 @@
         [
           {
             "minutes": 12,
-            "app": "Okular",
-            "title": "Cutoff or drain — Figure 3",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Obsidian",
-            "title": "Cache control and observed-only baseline",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Okular",
-            "title": "Return curves by queue size",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Obsidian",
-            "title": "Discussion questions",
             "label": "on_task"
           }
         ]
@@ -186,9 +163,6 @@
         [
           {
             "minutes": 18,
-            "app": "",
-            "title": "",
-            "idle": null,
             "label": "uncertain"
           }
         ]
@@ -211,39 +185,26 @@
         [
           {
             "minutes": 16,
-            "app": "Okular",
-            "title": "Audits — epsilon floor",
             "label": "on_task"
           },
           {
             "minutes": 27,
-            "app": "Xournal++",
-            "title": "Expand E[X² | H]",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 7,
-            "app": "Calculator",
-            "title": "Two point loss table",
             "label": "on_task"
           },
           {
             "minutes": 20,
-            "app": "Xournal++",
-            "title": "Variance bound with missing observations",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Okular",
-            "title": "Conditional variance lemma",
             "label": "on_task"
           }
         ]
@@ -265,26 +226,18 @@
         [
           {
             "minutes": 10,
-            "app": "Okular",
-            "title": "Delayed inspections — ablation",
             "label": "on_task"
           },
           {
             "minutes": 13,
-            "app": "LibreOffice Impress",
-            "title": "Audit delay — slide 1",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Okular",
-            "title": "Return curves (same seeds)",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "LibreOffice Impress",
-            "title": "Audit delay — slide 1",
             "label": "on_task"
           }
         ]
@@ -307,54 +260,36 @@
         [
           {
             "minutes": 10,
-            "app": "Okular",
-            "title": "Weighted bins — indicator identity",
             "label": "on_task"
           },
           {
             "minutes": 27,
-            "app": "Xournal++",
-            "title": "Weighted sum inequality",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 17,
-            "app": "Xournal++",
-            "title": "Sketch of two-bin counterexample",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Terminal",
-            "title": "python check_bound.py",
             "label": "on_task"
           },
           {
             "minutes": 15,
-            "app": "Code",
-            "title": "bin-bound.tex",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Firefox",
-            "title": "Final score: city league semifinal",
-            "label": "off_task",
-            "domain": "sports.example"
+            "label": "off_task"
           },
           {
             "minutes": 4,
-            "app": "Okular",
-            "title": "bin-bound.pdf",
             "label": "on_task"
           }
         ]
@@ -376,26 +311,18 @@
         [
           {
             "minutes": 13,
-            "app": "Okular",
-            "title": "Simulation — Figure 2",
             "label": "on_task"
           },
           {
             "minutes": 8,
-            "app": "Obsidian",
-            "title": "Random seed and sample size",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Okular",
-            "title": "Ablations and two controls",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Obsidian",
-            "title": "Headline for journal club",
             "label": "on_task"
           }
         ]
@@ -420,14 +347,10 @@
         [
           {
             "minutes": 3,
-            "app": "Okular",
-            "title": "Audits — conditional independence",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Obsidian",
-            "title": "Reading group — two board prompts",
             "label": "on_task"
           }
         ]
@@ -503,5 +426,6 @@
       },
       "day": "2026-10-27"
     }
-  ]
+  ],
+  "activitywatch_sha256": "6d13eb3871ddeb6244f73ec96c3d744e54d346c4fa782ba89aa6b3ee4b4c9f06"
 }

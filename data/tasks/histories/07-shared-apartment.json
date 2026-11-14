@@ -20,11 +20,7 @@
         [
           {
             "minutes": 36,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -46,20 +42,12 @@
         [
           {
             "minutes": 8,
-            "app": "",
-            "title": "",
-            "domain": "",
             "label": "uncertain",
-            "idle": true,
             "pause_after_minutes": 82
           },
           {
             "minutes": 13,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -81,11 +69,7 @@
         [
           {
             "minutes": 31,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -107,24 +91,14 @@
         [
           {
             "minutes": 8,
-            "app": "Firefox",
-            "title": "Filter supply / subscription",
-            "domain": "supply.example.org",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 6,
-            "app": "Firefox",
-            "title": "Order frequency",
-            "domain": "supply.example.org",
             "label": "on_task"
           }
         ]
@@ -148,21 +122,13 @@
         [
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 14,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -184,23 +150,10 @@
         [
           {
             "minutes": 42,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
-      ],
-      "prediction": {
-        "point_min": 40,
-        "low_min": 30,
-        "high_min": 55,
-        "confidence": "low",
-        "basis": "Synthetic prior estimate",
-        "explanation": "Dinner for five with one heavy pan to hand-wash.",
-        "evidence": []
-      }
+      ]
     },
     {
       "id": "mugs",
@@ -219,11 +172,7 @@
         [
           {
             "minutes": 5,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -245,11 +194,7 @@
         [
           {
             "minutes": 19,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": null
+            "label": "uncertain"
           }
         ]
       ]
@@ -283,11 +228,7 @@
         [
           {
             "minutes": 7,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -343,5 +284,6 @@
         "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio."
       }
     }
-  ]
+  ],
+  "activitywatch_sha256": "68c76c4d764586fa66fcf5ca029c24b7b7ad345c3fbe9f3695edaf795b0c1ae2"
 }

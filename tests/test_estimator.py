@@ -322,7 +322,8 @@ def test_historical_length_limit_uses_same_blinded_inputs_and_bounded_decisions(
         for row in records:
             slot = str(row["slot"])
             options = schema["properties"][slot]["enum"]
-            assert options == list(range(2 + len(row.get("observations", []))))
+            count = len(row.get("observations", []))
+            assert options == list(range(-count, 2 + count))
             if row["title"] == past[0]["title"]:
                 codes[slot] = 3  # Select the ActivityWatch observation.
             elif row["title"] == "Plot a trajectory":
@@ -356,3 +357,66 @@ def test_other_failures_and_cold_start_do_not_trigger_compact_comparison(tmp_pat
         with patch("estimator.chat_json", side_effect=error) as model:
             result = estimator.predict(paper("now"), history, tmp_path)
         assert model.call_count == 1 and result["basis"] != "Model-selected tasks"
+
+
+@pytest.mark.parametrize("compact", [False, True])
+def test_model_flags_an_applicable_issue_without_using_that_tasks_duration(tmp_path, compact):
+    source = dict(paper("lab"), title="Collect a full shift of sensor readings", category="Robotics",
+                  description="Use the USB bridge to record the long field run.", actual_seconds=20000,
+                  completion_note="The USB bridge disconnected during capture.")
+    target = dict(paper("today"), title="Check the USB bridge connection", category="Robotics",
+                  description="Verify the USB bridge on the bench before field work.")
+    replies = ([estimator.ModelResponseTruncated("truncated"), {"1": -1}] if compact else
+               [{"matches": [{"slot": 1, "reason": "Both use the same USB bridge.", "flag": -1}]}])
+    with patch("estimator.chat_json", side_effect=replies):
+        result = estimator.predict(target, [source], tmp_path)
+    assert result["basis"] == "User estimate" and result["evidence"] == []
+    caution, = result["cautions"]
+    assert caution["sources"][0]["task_id"] == source["id"]
+    assert source["completion_note"] in caution["advice"]
+
+
+def test_migration_fixture_fallback_warns_about_fixture_minimization_only_on_the_related_task(tmp_path):
+    from examples.estimation.run import DATASET, histories, historical_rows, task_inputs
+
+    scenario, = histories("02")
+    history = historical_rows(scenario, DATASET)
+    with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("offline")):
+        results = {row["title"]: estimator.predict(task_inputs(row, scenario["id"], DATASET)[0], history, tmp_path)
+                   for row in scenario["open_tasks"]}
+    coding = results["Minimize the marker-word failure"]
+    assert coding["retryable"] and any("EOF fixture" in item["advice"] for item in coding["cautions"])
+    assert {source["origin"] for item in coding["cautions"] for source in item["sources"]} == {"Completion note"}
+    pickup = results["Pick up the lab access card"]
+    assert pickup["cautions"] == [] and pickup["evidence"] == []
+
+
+def test_model_cannot_select_unrelated_coding_history_for_an_errand(tmp_path):
+    prior = dict(paper("past"), title="Port a binary decoder", description="Implement wraparound reads.",
+                 details="Finish the C and Rust harness before lunch.", category="Software engineering",
+                 completion_note="A broken USB bridge delayed the trace.")
+    target = dict(paper("target"), title="Pick up the lab access card",
+                  description="Collect the loaner card before the desk closes.", details="", category="Personal",
+                  pdf_text="")
+    with patch("estimator.chat_json", return_value={"matches": [{"slot": 1, "reason": "Same category.", "flag": 1}]}):
+        result = estimator.predict(target, [prior], tmp_path)
+    assert result["basis"] == "User estimate" and result["evidence"] == [] and result["cautions"] == []
+
+
+def test_repeated_off_task_activity_visible_even_if_model_omits_flags(tmp_path):
+    from examples.estimation.run import DATASET, histories, historical_rows, task_inputs
+
+    scenario, = histories("10")
+    history = historical_rows(scenario, DATASET)
+
+    def choose_all(messages, schema, **kwargs):
+        rows = json.loads(messages[-1]["content"])["candidates"]
+        return {"matches": [{"slot": row["slot"], "reason": "Comparable duration.", "flag": 0} for row in rows]}
+
+    with patch("estimator.chat_json", side_effect=choose_all):
+        forecasts = [estimator.predict(task_inputs(row, scenario["id"], DATASET)[0], history, tmp_path)
+                     for row in scenario["holdouts"]]
+    video, worksheet = forecasts
+    citations = [source for caution in video["cautions"] for source in caution["sources"]]
+    assert any("hockey goals" in s["observation"] and s["origin"] == "ActivityWatch" for s in citations)
+    assert not any(s["origin"] == "ActivityWatch" for c in worksheet["cautions"] for s in c["sources"])

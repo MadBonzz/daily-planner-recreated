@@ -17,6 +17,7 @@ import time
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
+import activity
 import estimator
 from examples.estimation.scoring import grade, rubric_summary, validate_rubric
 from model_client import ModelUnavailable, model_settings
@@ -148,12 +149,13 @@ def histories(selector, directory=DATASET):
     return matches
 
 
-def historical_rows(history, directory):
+def historical_rows(history, directory, *, use_model=False):
     from examples.estimation.activity_fixture import replay_history
-    reports = replay_history(history, directory=directory)
+    fields_by_id = {task["id"]: task_inputs(task, history["id"], directory)[0] for task in history["tasks"]}
+    reports = replay_history(history, directory=directory, use_model=use_model, tasks_by_id=fields_by_id)
     rows = []
     for task in sorted(history["tasks"], key=lambda row: row["day"]):
-        fields, _ = task_inputs(task, history["id"], directory)
+        fields = fields_by_id[task["id"]]
         rows.append({**fields, "id": task["id"], "actual_seconds": task["actual_minutes"] * 60,
                      "status": "completed", "completion_note": task.get("completion_note", ""),
                      "report": reports.get(task["id"], {}).get("report")})
@@ -167,56 +169,69 @@ def category_prediction(task, completed):
     return max(1, round(task["estimate_minutes"] * median(ratios))) if ratios else task["estimate_minutes"]
 
 
-def evaluate(history, directory, index_dir, *, offline=False, case=None):
-    completed = historical_rows(history, directory)
+def record_calls(request, calls, *, classification=False):
+    """Collect validated responses and failure receipts without saving request text."""
+    def observed(messages, schema, **kwargs):
+        prompt = json.dumps(messages, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        receipt = {"prompt_sha256": hashlib.sha256(prompt).hexdigest(), "max_tokens": kwargs.get("max_tokens")}
+        if classification:
+            submitted = json.loads(messages[-1]["content"])
+            receipt["task_title"] = submitted["task"]["title"]
+            receipt["interval_ids"] = [row["id"] for row in submitted["intervals"]]
+        started = time.perf_counter()
+        try:
+            receipt["response"] = request(messages, schema, **kwargs)
+            return receipt["response"]
+        except ModelUnavailable as error:
+            receipt["error"] = str(error)
+            raise
+        finally:
+            receipt["seconds"] = round(time.perf_counter() - started, 3)
+            calls.append(receipt)
+    return observed
+
+
+def evaluate(history, directory, index_dir, *, offline=False, case=None, activity_runs=None):
     selected = [row for row in history["holdouts"] if case is None or case == row["id"]]
     if not selected:
         raise ValueError(f"{history['id']}: no holdout matches {case!r}")
+    if activity_runs is None:
+        completed = historical_rows(history, directory)
+    else:
+        if offline:
+            raise ValueError("Classifying history requires an online run")
+        calls = []
+        with patch.object(activity, "chat_json", record_calls(activity.chat_json, calls, classification=True)):
+            completed = historical_rows(history, directory, use_model=True)
+        activity_runs.append({
+            "history": history["id"], "calls": calls,
+            "tasks": [{"task": past["id"], "label_seconds": past["report"]["totals"],
+                       "warnings": past["report"]["warnings"]} for past in completed],
+        })
+
+    def offline_request(*args, **kwargs):
+        raise ModelUnavailable("Offline fixture run.")
+
     scores = []
-    request = estimator.chat_json
+    request = offline_request if offline else estimator.chat_json
     for row in selected:
         fields, _ = task_inputs(row, history["id"], directory)
         category_min = category_prediction(fields, completed)
-        outcome = "not_called"
-        model_seconds = 0.0
-        model_error = None
         model_calls = []
-
-        def observed_chat(*args, **kwargs):
-            nonlocal outcome, model_seconds, model_error
-            if offline:
-                outcome = "offline"
-                raise ModelUnavailable("Offline fixture run.")
-            call_started = time.perf_counter()
-            messages = args[0] if args else kwargs["messages"]
-            prompt_bytes = json.dumps(messages, ensure_ascii=False, sort_keys=True).encode("utf-8")
-            receipt = {
-                "prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
-                "max_tokens": kwargs.get("max_tokens"),
-            }
-            model_calls.append(receipt)
-            try:
-                reply = request(*args, **kwargs)
-            except ModelUnavailable as exc:
-                outcome = "unavailable"
-                receipt["error"] = str(exc)
-                model_error = str(exc)
-                raise
-            finally:
-                duration = time.perf_counter() - call_started
-                model_seconds += duration
-                receipt["seconds"] = round(duration, 3)
-            receipt["response"] = reply
-            outcome = "ok_after_retry" if model_error is not None else "ok"
-            model_error = None
-            return reply
-
-        # This scoped test hook exercises the production fallback without contacting a provider.
-        # The CLI is single-threaded and restores the client after every prediction.
         started = time.perf_counter()
-        with patch.object(estimator, "chat_json", observed_chat):
+        with patch.object(estimator, "chat_json", record_calls(request, model_calls)):
             prediction = estimator.predict(fields, completed, index_dir)
         latency = time.perf_counter() - started
+        outcome = "not_called"
+        model_error = None
+        model_seconds = sum(call["seconds"] for call in model_calls)
+        if model_calls:
+            if offline:
+                outcome, model_calls, model_seconds = "offline", [], 0.0
+            elif "error" in model_calls[-1]:
+                outcome, model_error = "unavailable", model_calls[-1]["error"]
+            else:
+                outcome = "ok_after_retry" if len(model_calls) > 1 else "ok"
         actual = row["actual_minutes"]
         fields_to_score = {}
         if "evaluation" in row:
@@ -289,6 +304,8 @@ def main(argv=None):
     score.add_argument("history", nargs="?", help="History ID or two-digit prefix; default: all")
     score.add_argument("--case", help="Score one held-out task ID in the chosen history")
     score.add_argument("--offline", action="store_true", help="Exercise the planner's no-model fallback")
+    score.add_argument("--classify-history", action="store_true",
+                       help="Classify earlier tasks’ ActivityWatch intervals with the configured model before forecasting")
     score.add_argument("--strict-model", action="store_true",
                        help="Exit nonzero after saving results if any model call was unavailable")
     score.add_argument("--json", type=Path, help="Save machine-readable case details and summary")
@@ -298,6 +315,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if getattr(args, "strict_model", False) and args.offline:
         parser.error("--strict-model requires an online run")
+    if getattr(args, "classify_history", False) and args.offline:
+        parser.error("--classify-history requires an online run")
     if getattr(args, "case", None) and not args.history:
         parser.error("--case requires a history")
     try:
@@ -327,8 +346,10 @@ def main(argv=None):
             started_at = datetime.now(timezone.utc).isoformat()
             started = time.perf_counter()
             results = []
+            activity_runs = [] if args.classify_history else None
             for history in selected:
-                rows = evaluate(history, DATASET, root / history["id"], offline=args.offline, case=args.case)
+                rows = evaluate(history, DATASET, root / history["id"], offline=args.offline, case=args.case,
+                                activity_runs=activity_runs)
                 for row in rows:
                     print(f"{row['history']}/{row['task']}  original {row['original']}  category {row['category']}  "
                           f"planner {row['planner']} [{row['range'][0]}, {row['range'][1]}]  actual {row['actual']} min  "
@@ -343,22 +364,31 @@ def main(argv=None):
                 host = f"[{host}]"
             if address.port:
                 host = f"{host}:{address.port}"
+            activity_calls = [call for run in activity_runs or () for call in run["calls"]]
             config = {
                 "mode": "offline_fallback" if args.offline else "configured_model",
                 "model": None if args.offline else model,
                 "endpoint": None if args.offline else f"{address.scheme}://{host}{address.path}",
                 "strict_model": args.strict_model,
+                "history_activity_labels": "configured_model" if args.classify_history else "synthetic_annotations",
                 "started_at_utc": started_at, "ended_at_utc": datetime.now(timezone.utc).isoformat(),
                 "elapsed_seconds": round(time.perf_counter() - started, 3),
-                "model_seconds": round(sum(row["model_seconds"] for row in results), 3),
+                "model_seconds": round(sum(row["model_seconds"] for row in results)
+                                       + sum(call["seconds"] for call in activity_calls), 3),
             }
+            output = {"configuration": config, "cases": results, "summary": summary}
+            if activity_runs is not None:
+                summary["history_classification_calls"] = len(activity_calls)
+                summary["history_classification_failed_calls"] = sum("error" in call for call in activity_calls)
+                output["history_classification"] = activity_runs
             print(json.dumps(summary, indent=2))
             if args.json:
                 args.json.parent.mkdir(parents=True, exist_ok=True)
-                args.json.write_text(json.dumps({"configuration": config, "cases": results, "summary": summary}, indent=2,
+                args.json.write_text(json.dumps(output, indent=2,
                                                 ensure_ascii=False) + "\n", encoding="utf-8")
-            if args.strict_model and not all(model_succeeded(row) for row in results):
-                print("Model failed on at least one case; fallback scores are marked in the results.", file=sys.stderr)
+            if args.strict_model and (any("error" in call for call in activity_calls)
+                                      or not all(model_succeeded(row) for row in results)):
+                print("A forecast or activity classification failed. See the recorded calls.", file=sys.stderr)
                 return 1
         return 0
     except KeyboardInterrupt:

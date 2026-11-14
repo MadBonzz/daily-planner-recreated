@@ -20,35 +20,22 @@
         [
           {
             "minutes": 10,
-            "app": "Firefox",
-            "title": "Subarray sum equals K",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           },
           {
             "minutes": 18,
-            "app": "Code",
-            "title": "prefix_counts.py",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Xournal++",
-            "title": "Negative-value trace",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Firefox",
-            "title": "Game highlights — overtime finish",
-            "label": "off_task",
-            "domain": "youtube.com",
-            "audible": true
+            "label": "off_task"
           },
           {
             "minutes": 12,
-            "app": "Code",
-            "title": "test_duplicate_prefix.py",
             "label": "on_task"
           }
         ]
@@ -70,29 +57,19 @@
         [
           {
             "minutes": 8,
-            "app": "Firefox",
-            "title": "Longest repeating character replacement",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           },
           {
             "minutes": 22,
-            "app": "Code",
-            "title": "window_cost.py",
             "label": "on_task"
           },
           {
             "minutes": 13,
-            "app": "Xournal++",
-            "title": "Invariant after move-left",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Firefox",
-            "title": "Replacement window — submissions",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           }
         ]
       ]
@@ -169,47 +146,32 @@
         [
           {
             "minutes": 12,
-            "app": "Okular",
-            "title": "Manifest analysis — exceptional edges",
             "label": "on_task"
           },
           {
             "minutes": 26,
-            "app": "Xournal++",
-            "title": "Control-flow graph",
             "label": "on_task"
           },
           {
             "minutes": 13,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 18,
-            "app": "Xournal++",
-            "title": "Second pass / facts at exit",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Okular",
-            "title": "Resource clinic — terminal states",
             "label": "on_task"
           },
           {
             "minutes": 16,
-            "app": "Code",
-            "title": "manifest-cfg.tex",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Okular",
-            "title": "manifest-cfg.pdf",
             "label": "on_task"
           }
         ]
@@ -232,55 +194,37 @@
         [
           {
             "minutes": 8,
-            "app": "Firefox",
-            "title": "Two non-overlapping target subarrays",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           },
           {
             "minutes": 17,
-            "app": "Code",
-            "title": "min_two_ranges.py",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Xournal++",
-            "title": "Prefix index and non-overlap",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Thunderbird",
-            "title": "Inbox",
             "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 12,
-            "app": "Code",
-            "title": "test_duplicate_prefixes.py",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Terminal",
-            "title": "pytest -k two_ranges",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Obsidian",
-            "title": "Explain two ranges out loud",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Firefox",
-            "title": "Two target ranges — submissions",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           }
         ]
       ]
@@ -301,23 +245,15 @@
         [
           {
             "minutes": 5,
-            "app": "Obsidian",
-            "title": "Accepted answers / merge intervals",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Firefox",
-            "title": "Merge intervals — editor",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           },
           {
             "minutes": 2,
-            "app": "Firefox",
-            "title": "Merge intervals — submission result",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           }
         ]
       ]
@@ -338,9 +274,6 @@
         [
           {
             "minutes": 13,
-            "app": "",
-            "title": "",
-            "idle": null,
             "label": "uncertain"
           }
         ]
@@ -362,22 +295,15 @@
         [
           {
             "minutes": 4,
-            "app": "Obsidian",
-            "title": "Accepted stack solution",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Xournal++",
-            "title": "One increasing-run trace",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "Firefox",
-            "title": "Monotonic stack — editor",
-            "label": "on_task",
-            "domain": "leetcode.com"
+            "label": "on_task"
           }
         ]
       ]
@@ -399,20 +325,14 @@
         [
           {
             "minutes": 8,
-            "app": "Okular",
-            "title": "Resource clinic — written rubric",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Code",
-            "title": "manifest-exits.tex",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Okular",
-            "title": "Resource tracking — proof copy",
             "label": "on_task"
           }
         ]
@@ -436,8 +356,6 @@
         [
           {
             "minutes": 6,
-            "app": "Xournal++",
-            "title": "Monotone deque — two failing arrays",
             "label": "on_task"
           }
         ]
@@ -510,5 +428,6 @@
       },
       "day": "2026-10-27"
     }
-  ]
+  ],
+  "activitywatch_sha256": "c410320e949aa3669ad0433057e3f22570af1d199ec9d35d20a156ce98a96458"
 }

@@ -164,6 +164,27 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(final["prediction"], self.budget)
         self.assertFalse(reopened.has_pending_predictions())
 
+    def test_retry_saved_failure_is_idempotent_preserves_first_forecast_and_timer(self):
+        failed = dict(self.budget, explanation="Model comparison unavailable. api.cohere.ai returned HTTP 422.")
+        task_id = self.task(prediction=failed)["id"]
+        self.store.transition(task_id, "start")
+        self.now += 45
+        self.store.transition(task_id, "pause")
+        reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        self.assertTrue(reopened.retry_estimate(task_id))
+        job = reopened.claim_prediction()
+        self.assertFalse(self.store.retry_estimate(task_id))
+        self.assertTrue(reopened.resolve_prediction(task_id, job["token"], self.budget))
+        saved = reopened.get_task(task_id)
+        self.assertEqual((saved["creation_prediction"], saved["prediction"]), (failed, self.budget))
+        self.assertEqual((saved["status"], saved["actual_seconds"]), ("paused", 45))
+        self.assertFalse(reopened.retry_estimate(task_id))
+
+    def test_completed_failed_forecast_stays_frozen(self):
+        task = self.finish_one("Earlier work", prediction=dict(self.budget, retryable=True))
+        self.assertFalse(self.store.retry_estimate(task["id"]))
+        self.assertFalse(self.store.has_pending_predictions())
+
     def test_prediction_claims_are_atomic_and_restart_recovers_expired_lease(self):
         task = self.task(prediction=None)
         with ThreadPoolExecutor(2) as pool:

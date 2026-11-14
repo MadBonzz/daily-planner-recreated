@@ -21,46 +21,28 @@
         [
           {
             "minutes": 18,
-            "app": "Firefox",
-            "title": "Fourier pulse trains / EE study hour",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Firefox",
-            "title": "Cats chasing a printer cable",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 4,
-            "app": "LibreOffice Writer",
-            "title": "Pulse coefficients",
-            "domain": "",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 15,
-            "app": "Firefox",
-            "title": "Fourier pulse trains / EE study hour",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Firefox",
-            "title": "Commuter train bloopers",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 7,
-            "app": "LibreOffice Writer",
-            "title": "Pulse coefficients",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -83,11 +65,7 @@
         [
           {
             "minutes": 19,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -109,24 +87,14 @@
         [
           {
             "minutes": 7,
-            "app": "Document Viewer",
-            "title": "Phasor worksheet",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 33,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 7,
-            "app": "Xournal++",
-            "title": "Scan answers",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -150,46 +118,28 @@
         [
           {
             "minutes": 19,
-            "app": "Firefox",
-            "title": "Leakage and windowing / course",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Firefox",
-            "title": "Final-minute hockey goals",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 6,
-            "app": "LibreOffice Writer",
-            "title": "Windowing examples",
-            "domain": "",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 7,
-            "app": "Firefox",
-            "title": "Tiny van kitchen build",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 13,
-            "app": "Firefox",
-            "title": "Leakage and windowing / course",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "LibreOffice Writer",
-            "title": "Windowing examples",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -212,16 +162,10 @@
         [
           {
             "minutes": 22,
-            "app": "Audacity",
-            "title": "Town hall / question clip",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Files",
-            "title": "WAV export",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -245,46 +189,28 @@
         [
           {
             "minutes": 14,
-            "app": "Firefox",
-            "title": "Fourier symmetry / worked example",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Firefox",
-            "title": "Pottery wheel wobble",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 3,
-            "app": "LibreOffice Writer",
-            "title": "Odd symmetry",
-            "domain": "",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 5,
-            "app": "Firefox",
-            "title": "Clay fails compilation",
-            "domain": "youtube.com",
             "label": "off_task"
           },
           {
             "minutes": 14,
-            "app": "Firefox",
-            "title": "Fourier symmetry / worked example",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "LibreOffice Writer",
-            "title": "Odd symmetry",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -307,16 +233,10 @@
         [
           {
             "minutes": 39,
-            "app": "Firefox",
-            "title": "Saturday club concert / public relay",
-            "domain": "youtube.com",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "LibreOffice Writer",
-            "title": "Concert booth notes",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -340,24 +260,14 @@
         [
           {
             "minutes": 6,
-            "app": "Document Viewer",
-            "title": "Shelf filter questions",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 29,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 8,
-            "app": "Calculator",
-            "title": "Gain check",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -403,9 +313,6 @@
         [
           {
             "minutes": 30,
-            "app": "Audacity",
-            "title": "Producer interview / local master",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -440,9 +347,6 @@
         [
           {
             "minutes": 8,
-            "app": "Audacity",
-            "title": "Theme intro / automation",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -572,5 +476,6 @@
         ]
       }
     }
-  ]
+  ],
+  "activitywatch_sha256": "9c4fa49c21156a277e88ee12d1b26bf75de8a2ec76111041fa8bd557c8749acd"
 }

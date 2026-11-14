@@ -20,9 +20,6 @@
         [
           {
             "minutes": 60,
-            "app": "QLab",
-            "title": "Radio Cabaret / live captions",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -46,25 +43,15 @@
         [
           {
             "minutes": 14,
-            "app": "QLab",
-            "title": "Radio Cabaret / workspace",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Font Book",
-            "title": "Installing visiting fonts",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -86,11 +73,7 @@
         [
           {
             "minutes": 16,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -112,9 +95,6 @@
         [
           {
             "minutes": 45,
-            "app": "QLab",
-            "title": "Shortwave / caption cues",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -138,25 +118,15 @@
         [
           {
             "minutes": 21,
-            "app": "QLab",
-            "title": "Projection preflight",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Finder",
-            "title": "Tour media / relink",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 8,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -178,9 +148,6 @@
         [
           {
             "minutes": 50,
-            "app": "QLab",
-            "title": "Quiet Hour / booth captions",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -204,11 +171,7 @@
         [
           {
             "minutes": 24,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": null
+            "label": "uncertain"
           }
         ]
       ]
@@ -230,25 +193,15 @@
         [
           {
             "minutes": 18,
-            "app": "QLab",
-            "title": "Blue House / relay",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "System Settings",
-            "title": "Displays / arrangement",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ],
@@ -329,9 +282,6 @@
         [
           {
             "minutes": 6,
-            "app": "Preview",
-            "title": "Seating plan / main room",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -451,5 +401,6 @@
         ]
       }
     }
-  ]
+  ],
+  "activitywatch_sha256": "0728503455c62f6e51af51d5b42abcca1a0e824cc5ca59009edf4b85a4675e46"
 }

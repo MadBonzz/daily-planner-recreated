@@ -78,59 +78,40 @@
         [
           {
             "minutes": 10,
-            "app": "Okular",
-            "title": "Segmented kernel — poisoned padding",
             "label": "on_task"
           },
           {
             "minutes": 26,
-            "app": "Code",
-            "title": "segmented.cu",
             "label": "on_task"
           },
           {
             "minutes": 15,
-            "app": "Terminal",
-            "title": "pytest -k tail_warp",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Code",
-            "title": "tests/poison_regression.py",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 8,
-            "app": "Terminal",
-            "title": "squeue -u student",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 7,
-            "app": "Terminal",
-            "title": "compute-sanitizer ./segmented_poison",
             "label": "on_task"
           },
           {
             "minutes": 22,
-            "app": "Code",
-            "title": "segmented.cu — inactive lanes",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "ctest --output-on-failure",
             "label": "on_task"
           }
         ]
@@ -153,33 +134,22 @@
         [
           {
             "minutes": 9,
-            "app": "Terminal",
-            "title": "./sweep_reference.sh",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 7,
-            "app": "Terminal",
-            "title": "nvidia-smi -q / nvcc --version",
             "label": "on_task"
           },
           {
             "minutes": 20,
-            "app": "LibreOffice Calc",
-            "title": "reference-medians.ods",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "Obsidian",
-            "title": "Compiler and driver details",
             "label": "on_task"
           }
         ]
@@ -203,59 +173,40 @@
         [
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "pitched-reduce.cu — row stride",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Terminal",
-            "title": "pytest -k noncontiguous",
             "label": "on_task"
           },
           {
             "minutes": 15,
-            "app": "Code",
-            "title": "tests/odd_pitch.py",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Thunderbird",
-            "title": "Inbox",
             "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 8,
-            "app": "Terminal",
-            "title": "squeue --me",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 9,
-            "app": "Terminal",
-            "title": "pytest -k odd_width",
             "label": "on_task"
           },
           {
             "minutes": 18,
-            "app": "Code",
-            "title": "pitched-reduce.cu",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Terminal",
-            "title": "ctest -R pitch",
             "label": "on_task"
           }
         ]
@@ -277,9 +228,6 @@
         [
           {
             "minutes": 15,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           }
         ]
@@ -302,53 +250,36 @@
         [
           {
             "minutes": 32,
-            "app": "Code",
-            "title": "scratch_race.cu",
             "label": "on_task"
           },
           {
             "minutes": 19,
-            "app": "Terminal",
-            "title": "compute-sanitizer --tool racecheck",
             "label": "on_task"
           },
           {
             "minutes": 17,
-            "app": "Code",
-            "title": "two_rows_poison.cu",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 11,
-            "app": "Terminal",
-            "title": "ctest --repeat until-fail:100",
             "label": "on_task"
           },
           {
             "minutes": 26,
-            "app": "Code",
-            "title": "scratch_race.cu — scratch ownership",
             "label": "on_task"
           },
           {
             "minutes": 8,
-            "app": "Terminal",
-            "title": "ctest -R poison_tail",
             "label": "on_task"
           },
           {
             "minutes": 15,
-            "app": "Obsidian",
-            "title": "Poisoned padding / visibility",
             "label": "on_task"
           }
         ]
@@ -370,33 +301,22 @@
         [
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "./benchmark --reference --shapes archived",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 8,
-            "app": "Terminal",
-            "title": "less shape-sweep.tsv",
             "label": "on_task"
           },
           {
             "minutes": 18,
-            "app": "LibreOffice Calc",
-            "title": "Archived timing medians",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Screenshot",
-            "title": "Capture reference sweep",
             "label": "on_task"
           }
         ]
@@ -418,20 +338,14 @@
         [
           {
             "minutes": 13,
-            "app": "Code",
-            "title": "scalar_reference.cc",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Terminal",
-            "title": "pytest -k scalar_mask",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Code",
-            "title": "reference.py — docstring",
             "label": "on_task"
           }
         ]
@@ -456,14 +370,10 @@
         [
           {
             "minutes": 4,
-            "app": "Terminal",
-            "title": "diff bad-run.csv patched.csv",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Code",
-            "title": "tail-results.md",
             "label": "on_task"
           }
         ]
@@ -538,5 +448,6 @@
       },
       "day": "2026-10-27"
     }
-  ]
+  ],
+  "activitywatch_sha256": "d04643cfb050465de7a9b3e0a5b57475cd82d5ec4ebf8aae3f1451917f8d37ad"
 }

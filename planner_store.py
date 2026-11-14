@@ -9,7 +9,7 @@ import sqlite3
 import time
 from uuid import uuid4
 
-from task_forecasts import scheduled_prediction
+from task_forecasts import can_retry_forecast, scheduled_prediction
 
 
 DEFAULT_CATEGORIES = ("Work", "Personal", "Study", "Health", "Creative")
@@ -285,6 +285,16 @@ class PlannerStore:
                 db.execute("INSERT INTO attachments VALUES (?, ?, ?, ?)",
                            (str(uuid4()), task_id, Path(name.replace("\\", "/")).name, content))
             return self._task(db, task_id)
+
+    def retry_estimate(self, task_id):
+        """Queue an open fallback for another model attempt, preserving its initial forecast."""
+        with self._db(write=True) as db:
+            task = self._task(db, task_id)
+            if (task["estimate_updating"] or task["status"] == "completed" or task["fixed_duration"]
+                    or not can_retry_forecast(task["prediction"])):
+                return False
+            _enqueue_prediction(db, task_id)
+            return True
 
     def has_pending_predictions(self):
         """Pending work includes currently leased jobs and is independent of the selected day."""

@@ -77,20 +77,14 @@
         [
           {
             "minutes": 8,
-            "app": "Okular",
-            "title": "Ticket desk — one-term snapshots",
             "label": "on_task"
           },
           {
             "minutes": 13,
-            "app": "Xournal++",
-            "title": "Standby ACK table",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Okular",
-            "title": "Ticket desk — exercise 1",
             "label": "on_task"
           }
         ]
@@ -114,39 +108,26 @@
         [
           {
             "minutes": 9,
-            "app": "Okular",
-            "title": "Ticket desk — recovery argument",
             "label": "on_task"
           },
           {
             "minutes": 23,
-            "app": "Xournal++",
-            "title": "Ticket receipt after the crash",
             "label": "on_task"
           },
           {
             "minutes": 11,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 16,
-            "app": "Obsidian",
-            "title": "Second desk failure schedule",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Thunderbird",
-            "title": "Inbox",
             "label": "uncertain"
           },
           {
             "minutes": 10,
-            "app": "Xournal++",
-            "title": "Takeover guard",
             "label": "on_task"
           }
         ]
@@ -168,9 +149,6 @@
         [
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "idle": null,
             "label": "uncertain"
           }
         ]
@@ -195,47 +173,32 @@
         [
           {
             "minutes": 12,
-            "app": "Okular",
-            "title": "Standby handover — journals",
             "label": "on_task"
           },
           {
             "minutes": 22,
-            "app": "Xournal++",
-            "title": "Induction over the election",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 11,
-            "app": "Xournal++",
-            "title": "Counterexample on delayed replies",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 18,
-            "app": "Xournal++",
-            "title": "Recovery case on the scratch sheet",
             "label": "on_task"
           },
           {
             "minutes": 24,
-            "app": "Code",
-            "title": "receipt-invariant.tex",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Terminal",
-            "title": "latexmk receipt-invariant.tex",
             "label": "on_task"
           }
         ]
@@ -258,20 +221,14 @@
         [
           {
             "minutes": 7,
-            "app": "Okular",
-            "title": "Ticket desk — replica responses",
             "label": "on_task"
           },
           {
             "minutes": 14,
-            "app": "Xournal++",
-            "title": "Replies from a, b and c",
             "label": "on_task"
           },
           {
             "minutes": 3,
-            "app": "Okular",
-            "title": "Standby response table",
             "label": "on_task"
           }
         ]
@@ -295,53 +252,36 @@
         [
           {
             "minutes": 11,
-            "app": "Obsidian",
-            "title": "Flush barrier / journal cursor",
             "label": "on_task"
           },
           {
             "minutes": 21,
-            "app": "Xournal++",
-            "title": "Delayed DRAINED counterexample",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "idle": true,
             "label": "uncertain"
           },
           {
             "minutes": 2,
-            "app": "Thunderbird",
-            "title": "Inbox",
             "label": "uncertain"
           },
           {
             "minutes": 5,
-            "app": "Xournal++",
-            "title": "Crash just before persist",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 27,
-            "app": "Code",
-            "title": "barrier-recovery.tex",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Okular",
-            "title": "barrier-recovery.pdf",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Code",
-            "title": "barrier-recovery.tex",
             "label": "on_task"
           }
         ]
@@ -363,23 +303,14 @@
         [
           {
             "minutes": 7,
-            "app": "Firefox",
-            "title": "Student transit — reload card",
-            "label": "on_task",
-            "domain": "transit.example"
+            "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Firefox",
-            "title": "Account preferences",
-            "label": "uncertain",
-            "domain": "account.example",
-            "excluded": true
+            "label": "uncertain"
           },
           {
             "minutes": 5,
-            "app": "Files",
-            "title": "Downloads / Transit receipts",
             "label": "on_task"
           }
         ]
@@ -404,14 +335,10 @@
         [
           {
             "minutes": 8,
-            "app": "Code",
-            "title": "recovery-argument.tex",
             "label": "on_task"
           },
           {
             "minutes": 4,
-            "app": "Okular",
-            "title": "recovery-argument.pdf",
             "label": "on_task"
           }
         ]
@@ -560,5 +487,6 @@
       },
       "day": "2026-10-27"
     }
-  ]
+  ],
+  "activitywatch_sha256": "8830ad1ddf8a627eff96d25b5a51a21335c9b4262d3b5d63deda4bb9f17bb84b"
 }

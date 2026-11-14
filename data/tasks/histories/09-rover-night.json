@@ -21,48 +21,28 @@
         [
           {
             "minutes": 12,
-            "app": "Terminal",
-            "title": "rover-c / bringup",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "Terminal",
-            "title": "udevadm monitor / tty disconnect",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ],
         [
           {
             "minutes": 12,
-            "app": "Terminal",
-            "title": "ros2 bag record / wheel ticks",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 9,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 12,
-            "app": "VSCodium",
-            "title": "encoder trace / annotate",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -85,23 +65,14 @@
         [
           {
             "minutes": 11,
-            "app": "Terminal",
-            "title": "ros2 bag play junction",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 24,
-            "app": "VSCodium",
-            "title": "notebooks/junction_plot",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 7,
-            "app": "Image Viewer",
-            "title": "Threshold frames",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -124,11 +95,7 @@
         [
           {
             "minutes": 24,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ]
@@ -151,48 +118,28 @@
         [
           {
             "minutes": 12,
-            "app": "Terminal",
-            "title": "rover-c / imu bringup",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 8,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 14,
-            "app": "Terminal",
-            "title": "ros2 bag / serial port lost",
-            "domain": "",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 13,
-            "app": "Terminal",
-            "title": "rover-c / check device name",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 10,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 20,
-            "app": "VSCodium",
-            "title": "imu_turn_plot.py",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -215,17 +162,10 @@
         [
           {
             "minutes": 33,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 19,
-            "app": "Xournal++",
-            "title": "Camera frame notes",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -275,18 +215,11 @@
         [
           {
             "minutes": 12,
-            "app": "LibreOffice Calc",
-            "title": "Repair night / check-in",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 48,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           }
         ]
       ],
@@ -310,61 +243,32 @@
         [
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "dock / serial bringup",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 8,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 10,
-            "app": "Terminal",
-            "title": "record approach bag",
-            "domain": "",
             "label": "on_task"
           }
         ],
         [
           {
             "minutes": 12,
-            "app": "Terminal",
-            "title": "ttyUSB reconnect",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 12,
-            "app": "",
-            "title": "",
-            "domain": "",
-            "label": "uncertain",
-            "idle": true
+            "label": "uncertain"
           },
           {
             "minutes": 18,
-            "app": "VSCodium",
-            "title": "Dock trace comparison",
-            "domain": "",
             "label": "on_task"
           }
         ]
       ],
-      "prediction": {
-        "point_min": 66,
-        "low_min": 42,
-        "high_min": 94,
-        "confidence": "low",
-        "basis": "Synthetic prior estimate",
-        "explanation": "Two physical runs plus exporting bumper edges.",
-        "evidence": []
-      },
       "pdf": {
         "title": "Dock approach and bumper taps on cart C",
         "series": "Ridge Avenue robotics workshop",
@@ -430,23 +334,14 @@
         [
           {
             "minutes": 7,
-            "app": "Terminal",
-            "title": "ros2 bag info wheel-slip",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 23,
-            "app": "VSCodium",
-            "title": "wheel_slip.ipynb",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 6,
-            "app": "Image Viewer",
-            "title": "Corrected overlay",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -469,16 +364,10 @@
         [
           {
             "minutes": 13,
-            "app": "LibreOffice Calc",
-            "title": "Consumables / vendors",
-            "domain": "",
             "label": "on_task"
           },
           {
             "minutes": 5,
-            "app": "Firefox",
-            "title": "Budget message",
-            "domain": "mail.example.org",
             "label": "on_task"
           }
         ]
@@ -513,9 +402,6 @@
         [
           {
             "minutes": 13,
-            "app": "Xournal++",
-            "title": "Mast frame worksheet",
-            "domain": "",
             "label": "on_task"
           }
         ]
@@ -693,5 +579,6 @@
         ]
       }
     }
-  ]
+  ],
+  "activitywatch_sha256": "9c9fd2e3dd80aeb98c3076d506181f34de6a2aa8e5f6345ee2c53c8fba1a2f66"
 }
