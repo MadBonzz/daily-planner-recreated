@@ -218,12 +218,13 @@ def _first_estimate(task, estimate):
 
     low, point, high = (result.get(key) for key in ("low_min", "point_min", "high_min"))
     reason = (result.get("reason") or "").strip()
-    if (not all(type(value) is int for value in (low, point, high))
-            or not 0 < low <= point <= high or low == high or not reason):
+    # JSON Schema accepts whole-valued floats (e.g. 90.0) as integers.
+    whole_minutes = all(type(v) is int or (type(v) is float and v.is_integer()) for v in (low, point, high))
+    if not whole_minutes or not 0 < low <= point <= high or low == high or not reason:
         return _fallback(estimate, "No timed personal history. The model returned an invalid estimate.")
-    return {"point_min": point, "low_min": low, "high_min": high, "confidence": "low",
+    return {"point_min": int(point), "low_min": int(low), "high_min": int(high), "confidence": "low",
             "basis": "Model estimate from task scope", "evidence": [],
-            "explanation": f"No timed personal history. This estimate is based on the task scope. {reason[:350]}"}
+            "explanation": f"No timed personal history. This estimate is based on the task scope. {reason}"}
 
 
 def predict(task, completed, index_dir):

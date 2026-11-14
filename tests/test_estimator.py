@@ -33,6 +33,21 @@ def test_first_estimate_uses_task_pdf_independently(tmp_path):
     assert output["reason"] in prediction["explanation"]
 
 
+def test_first_estimate_preserves_explanation_and_final_assumption(tmp_path):
+    reason = (
+        "The task calls for reconstructing the central argument, verifying the intermediate lemmas, "
+        "and writing out the assumptions for the final bound. Each step takes time because you plan "
+        "to reproduce the derivation in a notebook. The range allows for revisiting sections that "
+        "use unfamiliar notation, as well as checking that the boundary conditions hold. "
+        "This assumes you already know the concentration inequality used in the proof."
+    )
+    reply = {"low_min": 60.0, "point_min": 90.0, "high_min": 120.0, "reason": reason}
+    with patch("estimator.chat_json", return_value=reply):
+        result = estimator.predict(paper("new"), [], tmp_path)
+    assert result["explanation"].endswith(reason)
+    assert result["point_min"] == 90 and type(result["point_min"]) is int
+
+
 def test_first_estimate_model_unavailable(tmp_path):
     with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("HTTP 401")):
         result = estimator.predict(paper("new"), [], tmp_path)
@@ -42,7 +57,7 @@ def test_first_estimate_model_unavailable(tmp_path):
 
 
 @pytest.mark.parametrize("low,point,high", [(80, 60, 100), (40, 110, 90), (0, 60, 100),
-                                            (60, 60, 60), (False, 10, 25)])
+                                            (60, 60, 60), (False, 10, 25), (20, 35.5, 60)])
 def test_first_estimate_rejects_invalid_range(low, point, high, tmp_path):
     with patch("estimator.chat_json", return_value=dict(low_min=low, point_min=point, high_min=high, reason="Scope")):
         result = estimator.predict(paper("new"), [], tmp_path)
