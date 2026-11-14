@@ -15,13 +15,39 @@ def paper(task_id, ratio=1, category="Reading", details="Work through the deriva
             "pdf_text": "Page 2: concentration bound and proof"}
 
 
-def test_cold_start_without_model(tmp_path):
+def test_first_estimate_uses_task_pdf_independently(tmp_path):
+    output = {"low_min": 70, "point_min": 90, "high_min": 120, "reason": "Reproducing the proof requires deriving the bound."}
     task = paper("new")
-    with patch("estimator.chat_json") as model:
-        prediction = estimator.predict(task, [], tmp_path)
-    model.assert_not_called()
-    assert (prediction["point_min"], prediction["low_min"], prediction["high_min"]) == (60, 30, 90)
-    assert prediction["evidence"] == []
+    with patch("estimator.chat_json", return_value=output) as model:
+        prediction = estimator.predict(task, [dict(task, id="untimed", actual_seconds=0)], tmp_path)
+    messages, _ = model.call_args.args
+    record = json.loads(messages[1]["content"])
+    assert set(record) == {"title", "description", "category", "details", "document_excerpt"}
+    assert record["description"] == task["description"]
+    assert record["category"] == "Reading" and record["details"] == task["details"]
+    assert "concentration bound" in record["document_excerpt"]
+    assert "actual_seconds" not in record
+    assert (prediction["point_min"], prediction["low_min"], prediction["high_min"]) == (90, 70, 120)
+    assert prediction["confidence"] == "low" and prediction["evidence"] == []
+    assert prediction["basis"] == "Model estimate from task scope"
+    assert output["reason"] in prediction["explanation"]
+
+
+def test_first_estimate_model_unavailable(tmp_path):
+    with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("HTTP 401")):
+        result = estimator.predict(paper("new"), [], tmp_path)
+    assert (result["point_min"], result["low_min"], result["high_min"]) == (60, 30, 90)
+    assert "HTTP 401" in result["explanation"]
+    assert result["confidence"] == "low" and result["evidence"] == []
+
+
+@pytest.mark.parametrize("low,point,high", [(80, 60, 100), (40, 110, 90), (0, 60, 100),
+                                            (60, 60, 60), (False, 10, 25)])
+def test_first_estimate_rejects_invalid_range(low, point, high, tmp_path):
+    with patch("estimator.chat_json", return_value=dict(low_min=low, point_min=point, high_min=high, reason="Scope")):
+        result = estimator.predict(paper("new"), [], tmp_path)
+    assert result["basis"] == "User estimate" and result["point_min"] == 60
+    assert "invalid estimate" in result["explanation"]
 
 
 def test_uses_only_selected_outcomes_once_and_snapshots_math(tmp_path):
@@ -149,3 +175,14 @@ def test_full_pdf_reaches_estimation_prompt_and_late_requirements(tmp_path):
         assert "Page 9:" in record["document_excerpt"]
         assert "four producer threads" in record["document_excerpt"]
         assert len(record["document_excerpt"]) <= cap
+
+
+def test_retrieval_repairs_an_old_pre_pdf_vector(tmp_path):
+    task = {**paper("past"), "status": "completed", "prediction": {"point_min": 90}}
+    estimator.index_task(tmp_path, {**task, "pdf_text": "", "status": "ready", "prediction": {}})
+    estimator._search(paper("new"), [task], tmp_path)
+    with estimator._index(tmp_path) as client:
+        records, _ = client.scroll(estimator.COLLECTION, with_vectors=True)
+        assert records[0].payload["planner_minutes"] == 90
+        assert records[0].payload["status"] == "completed"
+        assert records[0].vector == pytest.approx(estimator._vector(task), abs=1e-6)

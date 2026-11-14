@@ -11,6 +11,7 @@ import streamlit as st
 
 import activity
 import estimator
+from estimate_worker import schedule_pending
 from planner_store import PlannerStore
 from model_client import model_settings
 from urllib.parse import urlsplit
@@ -76,9 +77,9 @@ def notice(message):
     st.session_state["notice"] = message
 
 
-def sync_index(index_dir, task):
+def sync_index(store, index_dir, task):
     try:
-        estimator.index_task(index_dir, task)
+        estimator.index_current_task(index_dir, store, task["id"])
     except (OSError, ValueError, RuntimeError):
         notice("Task saved. The planner will retry indexing it when it searches completed work.")
 
@@ -90,7 +91,8 @@ def show_prediction(prediction):
     st.markdown(f"**{minutes(prediction['point_min'])} suggested** · "
                 f"{prediction['low_min']}–{prediction['high_min']} min planning range · "
                 f"{prediction['confidence']} confidence")
-    # The estimate itself is frozen when the task is created.
+    if prediction.get("basis"):
+        st.caption(f"Estimate source · {prediction['basis']}")
     st.html(f'<p class="task-copy">{escape(prediction.get("explanation", ""))}</p>')
     evidence = prediction.get("evidence", [])
     if evidence:
@@ -101,7 +103,7 @@ def show_prediction(prediction):
 
 
 @st.dialog("Add task", width="large")
-def new_task(store, index_dir, day):
+def new_task(store, day):
     with st.form("new_task_form"):
         title = st.text_input("Task name", required=True, placeholder="Read the optimization paper")
         description = st.text_area("Description", required=True, placeholder="What do you want to finish?", height=86)
@@ -123,27 +125,13 @@ def new_task(store, index_dir, day):
         st.error("Fill in the required fields: " + ", ".join(missing) + ".")
         return
     attachments = [(file.name, file.getvalue()) for file in files]
-    unreadable = []
-    excerpts = []
-    with st.spinner("Preparing your estimate…"):
-        for name, data in attachments:
-            excerpt = estimator.extract_pdf_text(data)
-            if excerpt:
-                excerpts.append(excerpt)
-            else:
-                unreadable.append(name)
-        fields = dict(title=title.strip(), description=description.strip(), details=details.strip(),
-                      category=category.strip(), pdf_text="\n".join(excerpts),
-                      estimate_minutes=estimate, day=day)
-        try:
-            prediction = estimator.predict(fields, store.completed_tasks(), index_dir)
-            task = store.create_task(**fields, prediction=prediction, attachments=attachments)
-        except (ValueError, sqlite3.Error, OSError) as error:
-            show_error(error)
-            return
-    sync_index(index_dir, task)
-    if unreadable:
-        notice("Task saved. These PDFs were attached but yielded no readable text: " + ", ".join(unreadable))
+    try:
+        store.create_task(title=title.strip(), description=description.strip(), details=details.strip(),
+                          category=category.strip(), estimate_minutes=estimate, day=day,
+                          attachments=attachments, prediction=None)
+    except (ValueError, sqlite3.Error, OSError) as error:
+        show_error(error)
+        return
     st.rerun()
 
 
@@ -172,7 +160,8 @@ def stop_confirmation(store, index_dir, task, demo):
     if yes.button("Yes, finish task", type="primary", width="stretch"):
         saved = perform(store, task, "finish")
         if saved:
-            sync_index(index_dir, saved)
+            if saved["prediction"].get("status") != "pending":
+                sync_index(store, index_dir, saved)
             generate_report(store, saved, demo)
             st.rerun()
     if no.button("No, continue later", width="stretch"):
@@ -240,8 +229,8 @@ def delete_task(store, index_dir, task):
     st.text(f'Delete “{task["title"]}” and its stored sessions, PDFs, and report?')
     if st.button("Delete task permanently", type="primary"):
         try:
-            estimator.forget_task(index_dir, task["id"])
             store.delete_task(task["id"])
+            estimator.forget_task(index_dir, task["id"])
         except (ValueError, RuntimeError, OSError, sqlite3.Error) as error:
             show_error(error)
             return
@@ -287,8 +276,8 @@ def settings(store, index_dir, demo):
     confirm = st.checkbox(f"Delete my {which} tasks, PDFs, reports and estimate history.")
     if st.button("Delete planner data", disabled=not confirm):
         try:
-            estimator.clear_index(index_dir)
             store.clear_data()
+            estimator.clear_index(index_dir)
         except (OSError, RuntimeError, sqlite3.Error) as error:
             show_error(error)
             return
@@ -303,6 +292,62 @@ def select_day(day):
     st.session_state["plan_day"] = day
 
 
+def estimate_pending(task):
+    return task["prediction"].get("status") == "pending"
+
+
+def estimate_section(task):
+    prediction = task["prediction"]
+    values = [f"Your estimate {minutes(task['estimate_minutes'])}"]
+    if estimate_pending(task):
+        values.append("Estimating task time…")
+    elif "point_min" in prediction:
+        values.append(f"Planner {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
+                      f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
+    if task["status"] != "running":
+        values.append(f"Recorded {duration(task['actual_seconds'])}")
+    st.caption("  ·  ".join(values))
+    if not estimate_pending(task):
+        with st.expander("Why this estimate?"):
+            show_prediction(prediction)
+
+
+def live_estimate_section(store, task, index_dir):
+    # Refresh only this part of the card. A finished forecast must not close an open dialog.
+    @st.fragment(run_every="1s", key=f"estimate-{task['id']}")
+    def refresh():
+        if estimate_pending(task):
+            try:
+                fresh = store.get_task(task["id"])
+            except ValueError:
+                st.rerun()
+            task.update(fresh)
+            if estimate_pending(fresh):
+                schedule_pending(store, index_dir)
+        estimate_section(task)
+    refresh()
+
+
+def daily_totals(tasks):
+    original = sum(t["estimate_minutes"] for t in tasks)
+    budget = sum(t["prediction"].get("point_min", t["estimate_minutes"]) for t in tasks)
+    done = sum(t["status"] == "completed" for t in tasks)
+    budget_label = "Estimating…" if any(estimate_pending(t) for t in tasks) else minutes(budget)
+    st.html('<div class="metric-grid">' + "".join(
+        f"<div><small>{label}</small><strong>{value}</strong></div>" for label, value in
+        (("Your estimates", minutes(original)), ("Planner budget", budget_label),
+         ("Tasks complete", f"{done} / {len(tasks)}"))) + '</div>')
+
+
+def live_daily_totals(store, day, tasks):
+    @st.fragment(run_every="1s")
+    def refresh():
+        if any(estimate_pending(t) for t in tasks):
+            tasks[:] = store.list_tasks(day)
+        daily_totals(tasks)
+    refresh()
+
+
 def render_task(store, index_dir, task, demo):
     key = task["id"]
     status = task["status"]
@@ -310,15 +355,10 @@ def render_task(store, index_dir, task, demo):
         st.html(f'<div class="task-head"><h3>{escape(task["title"])}</h3>'
                 f'<span class="{status}">{STATUS[status]}</span></div>'
                 f'<p class="task-copy">{escape(task["description"])}</p>')
-        point = task["prediction"].get("point_min")
-        values = [f"Your estimate {minutes(task['estimate_minutes'])}"]
-        if point is not None:
-            pred = task["prediction"]
-            values.append(f"Planner {minutes(point)} ({pred['low_min']:g}–{pred['high_min']:g} min, "
-                          f"{pred['confidence']} confidence)")
-        if status != "running":
-            values.append(f"Recorded {duration(task['actual_seconds'])}")
-        st.caption("  ·  ".join(values))
+        if estimate_pending(task):
+            live_estimate_section(store, task, index_dir)
+        else:
+            estimate_section(task)
         if task["category"]:
             st.html(f'<small>{escape(task["category"])}</small>')
         if status == "running":
@@ -353,8 +393,6 @@ def render_task(store, index_dir, task, demo):
         elif status == "awaiting_finish":
             if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
                 stop_confirmation(store, index_dir, task, demo)
-        with st.expander("Why this estimate?"):
-            show_prediction(task["prediction"])
         if status == "running" and not demo:
             if st.toggle("Live activity", key=f"live-{key}", help="Preview the last two minutes."):
                 live_activity(store, task)
@@ -395,6 +433,8 @@ def main():
     data_dir = DATA_ROOT / ("demo" if demo else "live")
     store = PlannerStore(data_dir)
     index_dir = data_dir / "vectors"
+    if store.has_pending_predictions():
+        schedule_pending(store, index_dir)
     if open_settings:
         settings(store, index_dir, demo)
     if demo:
@@ -418,15 +458,12 @@ def main():
     controls[2].button("→", key="next", help="Next day", on_click=move_day, args=(1,), width="stretch")
     controls[3].button("Today", on_click=select_day, args=(date.today(),), width="stretch")
     if controls[4].button("＋ Add task", type="primary", width="stretch"):
-        new_task(store, index_dir, day)
+        new_task(store, day)
     tasks = store.list_tasks(day)
-    original = sum(t["estimate_minutes"] for t in tasks)
-    budget = sum(t["prediction"].get("point_min", t["estimate_minutes"]) for t in tasks)
-    done = sum(t["status"] == "completed" for t in tasks)
-    st.html('<div class="metric-grid">' + "".join(
-        f"<div><small>{label}</small><strong>{value}</strong></div>" for label, value in
-        (("Your estimates", minutes(original)), ("Planner budget", minutes(budget)),
-         ("Tasks complete", f"{done} / {len(tasks)}"))) + '</div>')
+    if any(estimate_pending(t) for t in tasks):
+        live_daily_totals(store, day, tasks.copy())
+    else:
+        daily_totals(tasks)
     if running := store.running_task():
         if running["day"] != day.isoformat():
             st.text(f'Timer running on {running["day"]}: {running["title"]}')

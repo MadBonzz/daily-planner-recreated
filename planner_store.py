@@ -29,6 +29,17 @@ CREATE TABLE IF NOT EXISTS tasks (
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS tasks_by_day ON tasks(day);
+CREATE TABLE IF NOT EXISTS prediction_jobs (
+    task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
+    token TEXT,
+    lease_end REAL
+);
+CREATE TABLE IF NOT EXISTS prediction_history (
+    task_id TEXT NOT NULL REFERENCES prediction_jobs ON DELETE CASCADE,
+    source_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
+    PRIMARY KEY(task_id, source_id)
+);
+CREATE INDEX IF NOT EXISTS prediction_history_source ON prediction_history(source_id);
 CREATE TABLE IF NOT EXISTS sessions (
     id INTEGER PRIMARY KEY,
     task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
@@ -169,7 +180,7 @@ class PlannerStore:
     def pending_task(self):
         return self._first_with_status("awaiting_finish")
 
-    def create_task(self, *, title, description, estimate_minutes, day, prediction,
+    def create_task(self, *, title, description, estimate_minutes, day, prediction=None,
                     category="", details="", attachments=(), pdf_text=""):
         title = title.strip()
         description = description.strip()
@@ -179,6 +190,9 @@ class PlannerStore:
         if not math.isfinite(estimate_minutes) or estimate_minutes <= 0:
             raise ValueError("The estimate must be a positive number of minutes.")
         task_id = str(uuid4())
+        queue_prediction = prediction is None
+        if queue_prediction:
+            prediction = {"status": "pending", "basis": "Pending", "evidence": []}
         with self._db(write=True) as db:
             db.execute("""
                 INSERT INTO tasks(id, day, title, description, category, details, pdf_text,
@@ -187,12 +201,67 @@ class PlannerStore:
             """, (task_id, _day(day), title, description, category or "", details or "",
                   pdf_text or "", estimate_minutes, json.dumps(prediction, allow_nan=False),
                   self.clock()))
+            if queue_prediction:
+                db.execute("INSERT INTO prediction_jobs(task_id) VALUES (?)", (task_id,))
+                # Membership is frozen in the creation transaction. A task finished
+                # while this estimate is running must never affect its first forecast.
+                db.execute("""INSERT INTO prediction_history(task_id, source_id)
+                              SELECT ?, id FROM tasks WHERE status='completed' AND actual_seconds > 0""",
+                           (task_id,))
             for name, content in attachments:
                 if not isinstance(content, bytes) or b"%PDF-" not in content[:1024]:
                     raise ValueError("Only PDF attachments are supported.")
                 db.execute("INSERT INTO attachments VALUES (?, ?, ?, ?)",
                            (str(uuid4()), task_id, Path(name.replace("\\", "/")).name, content))
             return self._task(db, task_id)
+
+    def has_pending_predictions(self):
+        """Pending work includes currently leased jobs and is independent of the selected day."""
+        with self._db() as db:
+            return db.execute("SELECT 1 FROM prediction_jobs LIMIT 1").fetchone() is not None
+
+    def claim_prediction(self, *, lease_seconds=300):
+        """Lease one eligible estimate. Its source tasks were already finished when it was created."""
+        if not math.isfinite(lease_seconds) or lease_seconds <= 0:
+            raise ValueError("The estimate lease must be a positive number of seconds.")
+        with self._db(write=True) as db:
+            now = self.clock()
+            row = db.execute("""
+                SELECT t.id FROM prediction_jobs j JOIN tasks t ON t.id=j.task_id
+                WHERE j.token IS NULL OR j.lease_end<=?
+                ORDER BY t.created_at, t.rowid LIMIT 1
+            """, (now,)).fetchone()
+            if row is None:
+                return None
+            task_id = row["id"]
+            token = str(uuid4())
+            db.execute("UPDATE prediction_jobs SET token=?, lease_end=? WHERE task_id=?",
+                       (token, now + lease_seconds, task_id))
+            task = self._task(db, task_id)
+            history = self._tasks(db, """WHERE t.id IN (
+                SELECT source_id FROM prediction_history WHERE task_id=?
+            )""", (task_id,))
+            return {"task": task, "history": history, "token": token}
+
+    def renew_prediction(self, task_id, token, *, lease_seconds=300):
+        if not math.isfinite(lease_seconds) or lease_seconds <= 0:
+            raise ValueError("The estimate lease must be a positive number of seconds.")
+        with self._db(write=True) as db:
+            now = self.clock()
+            return bool(db.execute("""
+                UPDATE prediction_jobs SET lease_end=? WHERE task_id=? AND token=? AND lease_end>?
+            """, (now + lease_seconds, task_id, token, now)).rowcount)
+
+    def resolve_prediction(self, task_id, token, prediction, *, pdf_text=None):
+        """Publish the original forecast once, even if its timer has since finished."""
+        with self._db(write=True) as db:
+            deleted = db.execute("DELETE FROM prediction_jobs WHERE task_id=? AND token=? AND lease_end>?",
+                                 (task_id, token, self.clock()))
+            if not deleted.rowcount:
+                return False
+            db.execute("UPDATE tasks SET prediction=?, pdf_text=COALESCE(?,pdf_text) WHERE id=?",
+                       (json.dumps(prediction, allow_nan=False), pdf_text, task_id))
+            return True
 
     def transition(self, task_id, action, *, ended_at=None):
         """Apply a timer action and return the committed state. Starting another task pauses the first."""
@@ -334,6 +403,12 @@ class PlannerStore:
 
     def delete_task(self, task_id):
         with self._db(write=True) as db:
+            # A running model call may already hold the deleted task in memory.
+            # Revoke that worker before removing the source, so its response cannot
+            # restore the source title or description in a different task's forecast.
+            db.execute("""UPDATE prediction_jobs SET token=NULL, lease_end=NULL
+                          WHERE task_id IN (SELECT task_id FROM prediction_history WHERE source_id=?)""",
+                       (task_id,))
             db.execute("DELETE FROM tasks WHERE id=?", (task_id,))
             # A stored explanation can name a comparison anywhere in its text.
             # Retain the displayed numbers while erasing that explanation and its evidence.

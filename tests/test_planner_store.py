@@ -133,6 +133,74 @@ class StoreTests(unittest.TestCase):
             list(executor.map(lambda _: self.store.transition(running, "stop"), (1, 2)))
         self.assertEqual(self.store.get_task(running)["actual_seconds"], 30)
 
+    def finish_one(self, title, prediction=None):
+        task = self.task(title, prediction=self.budget if prediction is None else prediction)
+        self.store.transition(task["id"], "start")
+        self.now += 60
+        self.store.transition(task["id"], "stop")
+        return self.store.transition(task["id"], "finish")
+
+    def test_background_estimate_freezes_history_and_survives_task_completion(self):
+        earlier = self.finish_one("Earlier proof")
+        target = self.task("Another proof", prediction=None)
+        self.assertEqual(target["prediction"]["status"], "pending")
+        later = self.finish_one("Later proof")
+        self.store.transition(target["id"], "start")
+        self.now += 15
+        self.store.transition(target["id"], "stop")
+        self.store.transition(target["id"], "finish")
+        reopened = PlannerStore(self.base / "live", clock=lambda: self.now)
+        self.assertTrue(reopened.has_pending_predictions())
+        job = reopened.claim_prediction()
+        self.assertEqual(job["task"]["id"], target["id"])
+        self.assertEqual([row["id"] for row in job["history"]], [earlier["id"]])
+        self.assertNotEqual(later["id"], earlier["id"])
+        self.assertIsNone(reopened.claim_prediction())
+        self.assertTrue(reopened.resolve_prediction(target["id"], job["token"], self.budget, pdf_text="Page 1"))
+        self.assertFalse(self.store.resolve_prediction(target["id"], job["token"], {"point_min": 999}))
+        final = reopened.get_task(target["id"])
+        self.assertEqual((final["status"], final["actual_seconds"], final["pdf_text"]), ("completed", 15, "Page 1"))
+        self.assertEqual(final["prediction"], self.budget)
+        self.assertFalse(reopened.has_pending_predictions())
+
+    def test_prediction_claims_are_atomic_and_restart_recovers_expired_lease(self):
+        task = self.task(prediction=None)
+        with ThreadPoolExecutor(2) as pool:
+            claims = list(pool.map(lambda _: self.store.claim_prediction(lease_seconds=5), range(2)))
+        self.assertEqual(sum(job is not None for job in claims), 1)
+        job = next(job for job in claims if job)
+        self.now += 4
+        self.assertTrue(self.store.renew_prediction(task["id"], job["token"], lease_seconds=10))
+        self.now += 7
+        reopened = PlannerStore(self.base / "live", clock=lambda: self.now)
+        self.assertIsNone(reopened.claim_prediction())
+        self.now += 3
+        self.assertFalse(self.store.renew_prediction(task["id"], job["token"]))
+        self.assertFalse(self.store.resolve_prediction(task["id"], job["token"], self.budget))
+        fresh = reopened.claim_prediction()
+        self.assertNotEqual(fresh["token"], job["token"])
+        self.assertFalse(self.store.resolve_prediction(task["id"], job["token"], self.budget))
+        self.assertTrue(reopened.resolve_prediction(task["id"], fresh["token"], self.budget))
+
+    def test_inflight_prediction_cannot_restore_deleted_tasks_or_sources(self):
+        source = self.finish_one("Private source")
+        task = self.task(prediction=None)
+        first = self.store.claim_prediction()
+        self.store.delete_task(source["id"])
+        self.assertFalse(self.store.renew_prediction(task["id"], first["token"]))
+        self.assertFalse(self.store.resolve_prediction(task["id"], first["token"], self.budget))
+        claim = self.store.claim_prediction()
+        self.assertEqual(claim["history"], [])
+        self.store.delete_task(task["id"])
+        self.assertFalse(self.store.resolve_prediction(task["id"], claim["token"], self.budget))
+        self.assertFalse(self.store.has_pending_predictions())
+
+    def test_pending_job_rolls_back_with_invalid_pdf(self):
+        with self.assertRaises(ValueError):
+            self.task(prediction=None, attachments=[("broken.pdf", b"invalid")])
+        self.assertFalse(self.store.has_pending_predictions())
+        self.assertIsNone(self.store.claim_prediction())
+
     def test_demo_isolation_and_reset(self):
         with self.assertRaises(ValueError):
             self.store.seed_demo()
