@@ -1,0 +1,191 @@
+{
+  "id": "01-replica-proofs",
+  "name": "Replica protocols seminar",
+  "scenario": "One student uses the same course category for pencil traces, new safety arguments, and the final write-up. The requested part of the handout determines what counts as finished.",
+  "tasks": [
+    {
+      "id": "clock-two",
+      "day": "2026-09-02",
+      "title": "Fill in the missing logical clock entries",
+      "description": "I have four blanks on the timeline from discussion. Propagate the send and receive timestamps and check each arrow.",
+      "category": "Distributed systems",
+      "details": "I already copied the timeline into my notes.",
+      "estimate_minutes": 35,
+      "actual_minutes": 22,
+      "sessions_minutes": [
+        22
+      ]
+    },
+    {
+      "id": "lease-restart",
+      "day": "2026-09-07",
+      "title": "Find a bad lease handoff",
+      "description": "Construct an execution in which two replicas both admit a client after the directory restarts. Write the events in execution order and say which client guarantee fails.",
+      "category": "Distributed systems",
+      "details": "I can explain the bug informally. I still need a trace that is legal under every rule.",
+      "estimate_minutes": 55,
+      "actual_minutes": 86,
+      "sessions_minutes": [
+        47,
+        39
+      ]
+    },
+    {
+      "id": "quorum-card",
+      "day": "2026-09-11",
+      "title": "Make a quorum revision card",
+      "description": "List smallest read and write set sizes for the four replica counts from lecture. Label which pairs must intersect.",
+      "category": "Distributed systems",
+      "details": "The inequalities are already in my notes.",
+      "estimate_minutes": 30,
+      "actual_minutes": 26,
+      "sessions_minutes": [
+        26
+      ]
+    },
+    {
+      "id": "epoch-proof",
+      "day": "2026-09-16",
+      "title": "Show a frozen epoch cannot accept new leases",
+      "description": "Write a full induction covering directory reboots and delayed grant messages. Include an explicit statement of the state that survives a restart.",
+      "category": "Distributed systems",
+      "details": "First time writing down persistence assumptions for this protocol.",
+      "estimate_minutes": 85,
+      "actual_minutes": 138,
+      "sessions_minutes": [
+        54,
+        49,
+        35
+      ],
+      "pdf": {
+        "title": "Directory leases across epochs",
+        "sections": [
+          {
+            "heading": "System",
+            "body": "A directory allocates exclusive leases for a key. An epoch change seals the old grant list on durable storage. Messages sent before the seal may arrive later."
+          },
+          {
+            "heading": "A. Trace",
+            "body": "Draw a timeline with one delayed grant, two directory epochs, and one client retry. Annotate which epoch each participant records."
+          },
+          {
+            "heading": "B. Argument",
+            "body": "Propose a condition a replica must check before admitting a client. Use induction over message delivery and crash recovery to justify it. State the durable state explicitly."
+          },
+          {
+            "heading": "C. Optional",
+            "body": "Explain which change would be necessary if durable storage could be rolled back."
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-trace",
+      "day": "2026-09-23",
+      "title": "Typeset the lease solution",
+      "description": "Turn the checked event order and proof outline into two clean pages. Label the figure and make the notation consistent.",
+      "category": "Distributed systems",
+      "details": "All reasoning is in my notebook; no additional cases requested.",
+      "estimate_minutes": 55,
+      "actual_minutes": 40,
+      "sessions_minutes": [
+        40
+      ]
+    },
+    {
+      "id": "ack-traces",
+      "day": "2026-09-30",
+      "title": "Check three acknowledgment histories",
+      "description": "For each supplied message trace, mark whether an append has reached the stated replication threshold and underline the decisive event.",
+      "category": "Distributed systems",
+      "details": "Only a mark and a one-line explanation are required.",
+      "estimate_minutes": 40,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ]
+    },
+    {
+      "id": "barrier-proof",
+      "day": "2026-10-05",
+      "title": "Prove the snapshot cut is closed",
+      "description": "Write a safety argument that includes buffered sends, duplicate barrier markers, and the first event at a recovering node.",
+      "category": "Distributed systems",
+      "details": "I know the no-crash argument. The restart case is new to me.",
+      "estimate_minutes": 95,
+      "actual_minutes": 145,
+      "sessions_minutes": [
+        62,
+        53,
+        30
+      ]
+    },
+    {
+      "id": "fifo-example",
+      "day": "2026-10-10",
+      "title": "Build a counterexample to the FIFO shortcut",
+      "description": "Give the shortest sequence I can find that makes a receiver reveal a later message while its predecessor is still queued. Check all channel assumptions.",
+      "category": "Distributed systems",
+      "details": "Need something concrete enough to present on the board.",
+      "estimate_minutes": 40,
+      "actual_minutes": 55,
+      "sessions_minutes": [
+        33,
+        22
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "bridge-proof",
+      "day": "2026-10-18",
+      "title": "Solve part B of the bridge handout",
+      "description": "Prove the bridge never exposes a new route before every admitted old-route packet has been accounted for, or give a legal failure trace.",
+      "category": "Distributed systems",
+      "details": "Write the reasoning from scratch. Part A is already done.",
+      "estimate_minutes": 75,
+      "actual_minutes": 119,
+      "sessions_minutes": [
+        48,
+        55,
+        16
+      ],
+      "pdf": {
+        "title": "Safe updates at a routing bridge",
+        "sections": [
+          {
+            "heading": "Setup",
+            "body": "A bridge tracks a configuration generation and a durable cutoff sequence number. Packets may be duplicated, delayed, and delivered after the controller restarts."
+          },
+          {
+            "heading": "Part A. Replay",
+            "body": "Fill in missing generation labels for the sample execution in which a duplicate arrives after a cutoff. This part needs only the labels."
+          },
+          {
+            "heading": "Part B. Safety",
+            "body": "Give an invariant for packets admitted before the cutoff. Cover controller recovery and a delayed acknowledgment in separate cases. If the listed fields are insufficient, construct an event sequence showing why."
+          },
+          {
+            "heading": "Submission",
+            "body": "For B, give the state assumptions and either a proof or a numbered trace with the violated condition identified. A diagram without the argument is incomplete."
+          }
+        ]
+      },
+      "check": "Should favor the epoch and barrier arguments over quick trace-marking tasks in the same course."
+    },
+    {
+      "id": "bridge-trace",
+      "day": "2026-10-25",
+      "title": "Check a bridge execution before section",
+      "description": "Work through the sample twenty-event log and circle the first transition that closes the old generation. Add one sentence explaining the choice.",
+      "category": "Distributed systems",
+      "details": "The proof is not due for this exercise; only the marked execution is requested.",
+      "estimate_minutes": 35,
+      "actual_minutes": 29,
+      "sessions_minutes": [
+        29
+      ],
+      "check": "Shared terminology with a hard proof should not dominate a short replay exercise."
+    }
+  ]
+}

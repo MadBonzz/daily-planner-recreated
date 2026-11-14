@@ -60,6 +60,10 @@ The new-task form requires an original time budget and a description. You can ad
 
 Under **Options → Workspace**, choose **Example history** and click **Load example history** to try the estimator with five labeled examples. Choose **My planner** for personal tasks. These workspaces use separate SQLite databases and Qdrant indexes under `data/`. Set `PLANNER_DATA_DIR` to change the parent directory. Example tasks demonstrate how a prediction changes after completion. Their outcomes are illustrative. SQLite holds the task descriptions, original PDFs, extracted text, saved predictions, sessions, and completed reports. The vector index can be rebuilt from the task history. Keep this directory local.
 
+## Test the estimator
+
+Open a disposable profile with synthetic history or score 20 held-out tasks against their recorded outcomes. The fixture runner uses your configured model and reports when it falls back. [Test histories and Windows commands](data/tasks/README.md)
+
 ## Tests
 
 From the repository root, run:

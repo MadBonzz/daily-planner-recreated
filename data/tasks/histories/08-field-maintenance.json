@@ -1,0 +1,157 @@
+{
+  "id": "08-field-maintenance",
+  "name": "Community garden equipment steward",
+  "scenario": "A volunteer records active work on a garden's irrigation system and storage shed. Planned work may span several visits; curing, deliveries and waits between visits fall outside the recorded work.",
+  "tasks": [
+    {
+      "id": "hose-tags",
+      "day": "2026-04-03",
+      "title": "Label the hose runs",
+      "description": "Walk both beds, match hoses to the marked valves and replace six faded labels.",
+      "category": "Inspection",
+      "details": "I have the valve map and labels ready. Only the north and west beds are open.",
+      "estimate_minutes": 45,
+      "actual_minutes": 34,
+      "sessions_minutes": [
+        34
+      ]
+    },
+    {
+      "id": "storage-door",
+      "day": "2026-04-11",
+      "title": "Repair the storage shed door latch",
+      "description": "Align the latch on the frame and test whether the door stays closed in wind.",
+      "category": "Repair",
+      "details": "The pilot holes are worn. Patch the wood and come back after it cures for a final fitting.",
+      "estimate_minutes": 70,
+      "actual_minutes": 98,
+      "sessions_minutes": [
+        44,
+        38,
+        16
+      ]
+    },
+    {
+      "id": "south-line",
+      "day": "2026-04-22",
+      "title": "Replace the buried south-bed tee",
+      "description": "Locate the split connector, expose it without disturbing the root bed, refit the branch and pressure-test it.",
+      "category": "Repair",
+      "details": "The joint is under mulch. There is only an old sketch for this bed.",
+      "estimate_minutes": 80,
+      "actual_minutes": 148,
+      "sessions_minutes": [
+        58,
+        63,
+        27
+      ],
+      "pdf": {
+        "title": "South bed: irrigation work order",
+        "sections": [
+          {
+            "heading": "Observed fault",
+            "body": "When the south valve is opened, the far row drips slowly and a wet patch forms beside the herb border. The supply-side test point holds pressure when the branch is isolated. The buried tee is shown only approximately on the early bed sketch."
+          },
+          {
+            "heading": "Constraints",
+            "body": "Keep foot traffic off the herb border. A removable board spans the aisle and can be lifted by hand. Photograph each exposed connection before disconnecting it so the line depth is recorded."
+          },
+          {
+            "heading": "Return visit",
+            "body": "Test the repaired branch while it is exposed and check the following morning for pooling. Submit the marked location and the two readings with the work order."
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen-clean",
+      "day": "2026-05-02",
+      "title": "Service the two accessible intake screens",
+      "description": "Flush both screens, clear debris and log the readings before and after cleaning.",
+      "category": "Inspection",
+      "details": "Both housings are above ground and the same wrench fits each one.",
+      "estimate_minutes": 55,
+      "actual_minutes": 41,
+      "sessions_minutes": [
+        41
+      ]
+    },
+    {
+      "id": "tap-handle",
+      "day": "2026-05-16",
+      "title": "Replace the tap handle on the wash station",
+      "description": "Match a spare handle to the existing stem and test the tap under normal flow.",
+      "category": "Repair",
+      "details": "Stem and retaining screw are visible. Replacement kit is already in the shed.",
+      "estimate_minutes": 45,
+      "actual_minutes": 39,
+      "sessions_minutes": [
+        39
+      ]
+    },
+    {
+      "id": "drip-splice",
+      "day": "2026-05-29",
+      "title": "Find the dripping splice near the compost fence",
+      "description": "Trace the supply line to the leaking joint, replace the splice and check flow at the last emitter after the next watering cycle.",
+      "category": "Repair",
+      "details": "The planting crew moved the fence. Access is narrow and the old joints look alike.",
+      "estimate_minutes": 90,
+      "actual_minutes": 157,
+      "sessions_minutes": [
+        55,
+        73,
+        29
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "hidden-elbow",
+      "day": "2026-06-08",
+      "title": "Restore pressure at the tool-shed bed",
+      "description": "Find a loss of pressure between the supply and the last bed, repair the joint and record the test readings.",
+      "category": "Repair",
+      "details": "The pump passed its check. Follow the work-order drawing because the pipe is out of sight.",
+      "estimate_minutes": 90,
+      "actual_minutes": 153,
+      "sessions_minutes": [
+        54,
+        66,
+        33
+      ],
+      "pdf": {
+        "title": "Tool-shed bed: pressure loss",
+        "sections": [
+          {
+            "heading": "Site note",
+            "body": "The supply valve is above grade beside the shed. The distribution elbow sits behind the edging under a gravel strip. The 2022 drawing marks two possible routes between the wash station and the shed."
+          },
+          {
+            "heading": "Before closure",
+            "body": "Isolate the bed, record a reading at the supply, then trace the affected branch. Mark the route actually found and repair the failed fitting. Leave the edging removable until the branch has passed the morning test."
+          },
+          {
+            "heading": "Acceptance",
+            "body": "Record flow at the final emitter and inspect the gravel strip for fresh pooling. The job card can be closed after two recorded checks on separate watering cycles."
+          }
+        ]
+      },
+      "check": "Tests prediction across several work periods on a buried fault; elapsed calendar time between visits must never become actual task time."
+    },
+    {
+      "id": "tap-tag",
+      "day": "2026-06-23",
+      "title": "Inspect the wash-station taps and relabel them",
+      "description": "Test the two accessible taps, verify the shutoff labels against the map, and attach two replacement tags.",
+      "category": "Inspection",
+      "details": "No digging or component replacement requested. I have one short visit before opening.",
+      "estimate_minutes": 50,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        38
+      ],
+      "check": "Tests whether familiar site names incorrectly pull in previous repair overruns when the task is an inspection."
+    }
+  ]
+}

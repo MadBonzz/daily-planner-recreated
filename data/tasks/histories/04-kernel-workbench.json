@@ -1,0 +1,182 @@
+{
+  "id": "04-kernel-workbench",
+  "name": "GPU kernel workbench",
+  "scenario": "A systems student has a reusable timing harness and good estimates for routine kernels. Debugging apparently tiny synchronization or indexing bugs has highly variable durations.",
+  "tasks": [
+    {
+      "id": "vector-baseline",
+      "day": "2026-09-01",
+      "title": "Add the fused bias baseline",
+      "description": "Extend an existing elementwise addition kernel with one bias read and reuse the correctness harness at three sizes.",
+      "category": "GPU lab",
+      "details": "Benchmark script already accepts a third argument.",
+      "estimate_minutes": 55,
+      "actual_minutes": 49,
+      "sessions_minutes": [
+        49
+      ]
+    },
+    {
+      "id": "warp-tail",
+      "day": "2026-09-05",
+      "title": "Fix the reduction tail failure",
+      "description": "Track down sporadic mismatches when the last reduction tile is partial. Add tests for prime lengths after identifying the bug.",
+      "category": "GPU lab",
+      "details": "Only one test is flaky; I have not isolated the input yet.",
+      "estimate_minutes": 45,
+      "actual_minutes": 141,
+      "sessions_minutes": [
+        52,
+        48,
+        41
+      ],
+      "pdf": {
+        "title": "Reduction failure ticket",
+        "sections": [
+          {
+            "heading": "Symptom",
+            "body": "An array of length 1009 usually matches the host sum; repeated launches occasionally differ. Multiples of the block size pass. The current test runner checks only one launch per input."
+          },
+          {
+            "heading": "Reproducer",
+            "body": "Sweep lengths on either side of a tile boundary with a fixed random seed. Compare the first differing block against a CPU partial-sum trace."
+          },
+          {
+            "heading": "Done",
+            "body": "Provide a reproducible failure, a patch, and a regression that passes over 200 launches. Do not change the comparison tolerance."
+          }
+        ]
+      }
+    },
+    {
+      "id": "throughput-table",
+      "day": "2026-09-10",
+      "title": "Refresh the transfer table",
+      "description": "Run the existing host/device bandwidth benchmark on three batch sizes and update the table.",
+      "category": "GPU lab",
+      "details": "The node is booked and the harness is installed.",
+      "estimate_minutes": 35,
+      "actual_minutes": 27,
+      "sessions_minutes": [
+        27
+      ]
+    },
+    {
+      "id": "stride-kernel",
+      "day": "2026-09-15",
+      "title": "Implement the straightforward strided gather",
+      "description": "Use the provided index equation for each lane; validate against the NumPy reference and add the kernel to the benchmark.",
+      "category": "GPU lab",
+      "details": "No shared memory or tuning pass requested.",
+      "estimate_minutes": 70,
+      "actual_minutes": 68,
+      "sessions_minutes": [
+        68
+      ]
+    },
+    {
+      "id": "transpose-index",
+      "day": "2026-09-22",
+      "title": "Diagnose transposed labels",
+      "description": "Figure out why non-square batches swap two output channels in the profiler build. Patch the bad dimension and test both layouts.",
+      "category": "GPU lab",
+      "details": "This appears isolated to the host dispatch.",
+      "estimate_minutes": 50,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        22,
+        16
+      ]
+    },
+    {
+      "id": "race-repro",
+      "day": "2026-09-27",
+      "title": "Isolate the scratch-buffer race",
+      "description": "Create the smallest repeatable failure with two streams and fix the lifetime of a shared temporary allocation.",
+      "category": "GPU lab",
+      "details": "No stable reproduction yet. Include the 100-run test.",
+      "estimate_minutes": 75,
+      "actual_minutes": 154,
+      "sessions_minutes": [
+        54,
+        59,
+        41
+      ]
+    },
+    {
+      "id": "median-runs",
+      "day": "2026-10-02",
+      "title": "Compare block sizes for the gather",
+      "description": "Use the fixed workload and harness to time four block sizes. Report medians and keep the fastest passing setting.",
+      "category": "GPU lab",
+      "details": "No new kernel algorithm. Test the same four choices on every shape.",
+      "estimate_minutes": 55,
+      "actual_minutes": 42,
+      "sessions_minutes": [
+        42
+      ]
+    },
+    {
+      "id": "masked-add",
+      "day": "2026-10-08",
+      "title": "Add optional mask to bias kernel",
+      "description": "Reuse the elementwise baseline and add output checks for one sparse and one dense mask.",
+      "category": "GPU lab",
+      "details": "The reference and parameter plumbing are done.",
+      "estimate_minutes": 50,
+      "actual_minutes": 54,
+      "sessions_minutes": [
+        54
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "async-flicker",
+      "day": "2026-10-14",
+      "title": "Triage a sporadic normalization mismatch",
+      "description": "Find and fix a discrepancy visible only when two request streams overlap. Leave behind a regression that fails reliably before the patch.",
+      "category": "GPU lab",
+      "details": "Unknown cause. The single-stream benchmark is clean.",
+      "estimate_minutes": 60,
+      "actual_minutes": 127,
+      "sessions_minutes": [
+        45,
+        54,
+        28
+      ],
+      "pdf": {
+        "title": "Incident review: two-stream normalization",
+        "sections": [
+          {
+            "heading": "Evidence",
+            "body": "The same input yields correct normalized outputs with one stream and occasional differences with two. Launch order and buffer pool events are available as timestamped records."
+          },
+          {
+            "heading": "Scope",
+            "body": "Keep both streams active. Create a reproducer with the smallest batch you can find and locate the first incorrect intermediate. Document any assumption about buffer ownership."
+          },
+          {
+            "heading": "Acceptance",
+            "body": "Submit the fix, the failing replay, and a repeated correctness run. Speed measurements are optional."
+          }
+        ]
+      },
+      "check": "Similar unknown-cause debugging tasks have a broad spread; a precise estimate matching routine implementation would be misleading."
+    },
+    {
+      "id": "sweep-again",
+      "day": "2026-10-20",
+      "title": "Sweep normalization block sizes",
+      "description": "Measure four block sizes with the existing script on the six known-good shapes and update the throughput table.",
+      "category": "GPU lab",
+      "details": "Correctness is already established. Use the reserved node and record medians.",
+      "estimate_minutes": 60,
+      "actual_minutes": 61,
+      "sessions_minutes": [
+        61
+      ],
+      "check": "Retrieve scripted sweeps, then check whether a correction helps a task whose original budget happened to be accurate."
+    }
+  ]
+}

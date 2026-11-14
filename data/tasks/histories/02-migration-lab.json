@@ -1,0 +1,186 @@
+{
+  "id": "02-migration-lab",
+  "name": "Migration tools lab",
+  "scenario": "A developer alternates between new safe translations, debugger and test-harness work, and writing up results for already validated patches. Scope matters even when the same source module appears twice.",
+  "tasks": [
+    {
+      "id": "replay-cases",
+      "day": "2026-09-03",
+      "title": "Replay old codec cases",
+      "description": "Run the migration suite on four packet fixtures and paste the resulting status table into the notebook.",
+      "category": "Migration lab",
+      "details": "The test binary and fixtures are already built.",
+      "estimate_minutes": 40,
+      "actual_minutes": 28,
+      "sessions_minutes": [
+        28
+      ]
+    },
+    {
+      "id": "ring-port",
+      "day": "2026-09-08",
+      "title": "Port the packet ring to safe Rust",
+      "description": "Implement the queue behind the existing Rust interface. Cover an empty queue, a wraparound write, and a full queue that refuses a partial frame.",
+      "category": "Migration lab",
+      "details": "I know Rust slices. The legacy queue contract depends on a sentinel slot.",
+      "estimate_minutes": 75,
+      "actual_minutes": 135,
+      "sessions_minutes": [
+        52,
+        61,
+        22
+      ],
+      "pdf": {
+        "title": "Frame ring migration",
+        "sections": [
+          {
+            "heading": "Wire contract",
+            "body": "A frame starts with a single unsigned length byte and a payload. A fixed-size ring reserves one unused slot so read and write offsets can coincide only when empty."
+          },
+          {
+            "heading": "Independent exercise A",
+            "body": "Port the enqueue and dequeue functions into the supplied Rust module using safe indexed slices. A short read must preserve both offsets. Reject a frame larger than the usable ring capacity."
+          },
+          {
+            "heading": "Fixtures",
+            "body": "For a ring of eight slots with an empty state at offset six, enqueue payload bytes 65, 0 and 66, then read the frame. Add tests for this wrap and for retry after an incomplete write."
+          },
+          {
+            "heading": "Independent exercise B",
+            "body": "Use a saved differential trace to explain how a failed enqueue changes offsets in the old implementation. B requires a short written note only."
+          }
+        ]
+      }
+    },
+    {
+      "id": "codec-caption",
+      "day": "2026-09-14",
+      "title": "Summarize packet test failures",
+      "description": "Use the saved replay logs to write one paragraph per failure family and annotate a two-column table for the lab note.",
+      "category": "Migration lab",
+      "details": "I have all outputs and the driver version.",
+      "estimate_minutes": 45,
+      "actual_minutes": 33,
+      "sessions_minutes": [
+        33
+      ]
+    },
+    {
+      "id": "trace-tool",
+      "day": "2026-09-20",
+      "title": "Make a trace minimizer for callback mismatches",
+      "description": "Add a tool that shrinks failing operation sequences while preserving the first observable divergence between the C and Rust callbacks.",
+      "category": "Migration lab",
+      "details": "The runner already reports divergence but cannot shrink reproductions.",
+      "estimate_minutes": 80,
+      "actual_minutes": 109,
+      "sessions_minutes": [
+        58,
+        51
+      ]
+    },
+    {
+      "id": "suite-seeds",
+      "day": "2026-09-24",
+      "title": "Replay the decoder corpus",
+      "description": "Use last week’s driver to replay six saved seeds. Capture exit statuses and export the summary CSV.",
+      "category": "Migration lab",
+      "details": "Pause the timer during unattended runs if I switch to another task.",
+      "estimate_minutes": 35,
+      "actual_minutes": 34,
+      "sessions_minutes": [
+        18,
+        16
+      ]
+    },
+    {
+      "id": "suite-report",
+      "day": "2026-10-01",
+      "title": "Finish the migration results page",
+      "description": "Use the exported CSV and saved traces to explain the three remaining behavioral differences for code review.",
+      "category": "Migration lab",
+      "details": "No new implementation. I already checked the traces.",
+      "estimate_minutes": 55,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        38
+      ]
+    },
+    {
+      "id": "boundary-debug",
+      "day": "2026-10-07",
+      "title": "Debug a translated length check",
+      "description": "Find why the new record parser consumes a byte after a truncated frame. Patch the parser and add a regression that compares the cursor positions.",
+      "category": "Migration lab",
+      "details": "I have one reproducer but do not know which branch first diverges.",
+      "estimate_minutes": 60,
+      "actual_minutes": 87,
+      "sessions_minutes": [
+        48,
+        39
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "patch-tool",
+      "day": "2026-10-14",
+      "title": "Implement the migration feedback tool",
+      "description": "Add a bounded tool that returns the first divergence in the C and Rust execution traces. Wire it into the repair loop and test it on the three supplied failures.",
+      "category": "Migration lab",
+      "details": "Need working code and tests. Analysis plots can wait.",
+      "estimate_minutes": 85,
+      "actual_minutes": 138,
+      "sessions_minutes": [
+        50,
+        55,
+        33
+      ],
+      "pdf": {
+        "title": "A bounded trace tool for source migration",
+        "sections": [
+          {
+            "heading": "Given",
+            "body": "The starter includes parsers in two languages and an instrumented driver. Each operation emits a record with opcode, result, and cursor position. A repair assistant currently receives the entire trace after every attempt. The packet log uses the same monotonically increasing operation index on both sides. Some opcodes produce an empty result field; their cursor positions are still meaningful. A malformed packet must report failure at the first unread byte. Comparing only the final buffer length can hide a faulty repair."
+          },
+          {
+            "heading": "Implement",
+            "body": "Expose a first_difference operation returning the mismatched record and at most two predecessors. If one side ends early, represent the missing record explicitly. Never include later trace records in the tool response."
+          },
+          {
+            "heading": "Example inputs and output boundary",
+            "body": "Consider this source trace: (0, open, ok, 0), (1, header, ok, 2), (2, read, short, 2). The translated trace agrees through operation 1 but reports (2, read, short, 3). Your tool must identify index 2 without treating equal return codes as a match. On a trace with no difference, return an explicit no-divergence result; do not fabricate an index. If both traces are empty, that same result must be valid."
+          },
+          {
+            "heading": "Validate",
+            "body": "Use cases for different return codes, a cursor discrepancy with equal return codes, and one truncated trace. Capture the response on each fixture and verify the repair loop can request it twice without losing the original trace.",
+            "page_break_before": true
+          },
+          {
+            "heading": "Short comparison protocol",
+            "body": "Run the provided scripted repair sequence with the old whole-trace response, then run it with the bounded response on the same fixtures. In a compact table, record which operation was first flagged and how many records were returned. Explain one case where omitting the preceding records obscures a bad cursor advance. You may use synthetic traces; the parser implementation is outside the repair scope."
+          },
+          {
+            "heading": "Other deliverable",
+            "body": "A separate report-only track compares saved repair transcripts. It does not require modifying the assistant or rerunning translation."
+          }
+        ]
+      },
+      "check": "Working code plus harness tests should match implementation and debugging, not reviews of the same traces."
+    },
+    {
+      "id": "patch-note",
+      "day": "2026-10-21",
+      "title": "Write the migration tool comparison",
+      "description": "Draft the report page from the saved transcripts for last week’s trace tool. Compare the failure messages and explain one unsuccessful repair.",
+      "category": "Migration lab",
+      "details": "The patch is merged. No coding or reruns for this submission.",
+      "estimate_minutes": 45,
+      "actual_minutes": 34,
+      "sessions_minutes": [
+        34
+      ],
+      "check": "Look for the old results page and failure summaries despite the implementation language in the title."
+    }
+  ]
+}

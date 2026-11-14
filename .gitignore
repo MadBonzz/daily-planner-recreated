@@ -3,7 +3,10 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .data/
-data/
+/data/*
+!/data/tasks/
+!/data/results/
+/data/results/local/
 .streamlit/secrets.toml
 .env
 *.sqlite*

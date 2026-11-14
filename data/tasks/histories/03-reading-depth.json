@@ -1,0 +1,184 @@
+{
+  "id": "03-reading-depth",
+  "name": "A journal club reading log",
+  "scenario": "One reader budgets by page count. Figure-led empirical reads tend to finish early; deriving equations by hand often runs long. A short verification of a familiar theorem is a deliberate counterexample.",
+  "tasks": [
+    {
+      "id": "derive-noise",
+      "day": "2026-09-04",
+      "title": "Reproduce the noise bound",
+      "description": "Read the brief proof and derive the missing expectation step on paper before journal club.",
+      "category": "Reading",
+      "details": "The handout is only six pages. The conditioning argument is new.",
+      "estimate_minutes": 40,
+      "actual_minutes": 68,
+      "sessions_minutes": [
+        35,
+        33
+      ],
+      "pdf": {
+        "title": "Notes on noisy counters",
+        "sections": [
+          {
+            "heading": "Setting",
+            "body": "Two sensors return a count and an independent error with mean zero. The proposed estimator averages repeated readings after a thresholding step."
+          },
+          {
+            "heading": "Reading target",
+            "body": "Write the conditional expectation of the retained observations. Identify where thresholding breaks the usual zero-mean argument. Derive one corrected expression for a threshold of zero."
+          },
+          {
+            "heading": "Notebook entry",
+            "body": "Record your assumptions next to the equation they justify and give a small distribution for which the uncorrected claim fails."
+          }
+        ]
+      }
+    },
+    {
+      "id": "read-cache",
+      "day": "2026-09-09",
+      "title": "Read the cache study for discussion",
+      "description": "Skim methods, identify the baseline in Figure 3 and note how the hit rate changes across the three traffic mixes.",
+      "category": "Reading",
+      "details": "Only need talking points, no derivations.",
+      "estimate_minutes": 55,
+      "actual_minutes": 37,
+      "sessions_minutes": [
+        37
+      ]
+    },
+    {
+      "id": "read-queues",
+      "day": "2026-09-14",
+      "title": "Derive the queue drift inequality",
+      "description": "Work through the proof of the drift bound and write the algebra the author skips between lines two and three.",
+      "category": "Reading",
+      "details": "This argument is unfamiliar although I have seen the theorem statement.",
+      "estimate_minutes": 50,
+      "actual_minutes": 85,
+      "sessions_minutes": [
+        54,
+        31
+      ]
+    },
+    {
+      "id": "read-storage",
+      "day": "2026-09-18",
+      "title": "Review the storage benchmark",
+      "description": "Read the workload definitions and four plots; bring two limitations of the throughput comparison.",
+      "category": "Reading",
+      "details": "I know the workload generator from another class.",
+      "estimate_minutes": 70,
+      "actual_minutes": 46,
+      "sessions_minutes": [
+        46
+      ]
+    },
+    {
+      "id": "check-jensen",
+      "day": "2026-09-23",
+      "title": "Verify one step using Jensen",
+      "description": "Check the direction of one inequality in my old notes and record the convexity assumption.",
+      "category": "Reading",
+      "details": "I used this exact proof last semester; not reading the surrounding paper.",
+      "estimate_minutes": 20,
+      "actual_minutes": 16,
+      "sessions_minutes": [
+        16
+      ]
+    },
+    {
+      "id": "replica-figs",
+      "day": "2026-09-29",
+      "title": "Prepare journal club questions",
+      "description": "Read the methods and evaluation of the rack placement paper, then make three questions backed by a figure.",
+      "category": "Reading",
+      "details": "Need one careful pass through the results. Skip the analytic appendix.",
+      "estimate_minutes": 60,
+      "actual_minutes": 48,
+      "sessions_minutes": [
+        48
+      ]
+    },
+    {
+      "id": "derive-mixture",
+      "day": "2026-10-04",
+      "title": "Reconstruct the mixture proof",
+      "description": "Starting with the definition of the mixture, derive both cases in the likelihood proof. Finish with one numerical check.",
+      "category": "Reading",
+      "details": "Looks similar to the noise note but the notation is different.",
+      "estimate_minutes": 65,
+      "actual_minutes": 103,
+      "sessions_minutes": [
+        41,
+        49,
+        13
+      ]
+    },
+    {
+      "id": "metrics-sketch",
+      "day": "2026-10-08",
+      "title": "Skim the results on burst traffic",
+      "description": "Understand the run conditions and the tails of the latency plot. Add a slide with one chart and a two-sentence takeaway.",
+      "category": "Reading",
+      "details": "The chart is provided and the deck is open.",
+      "estimate_minutes": 50,
+      "actual_minutes": 41,
+      "sessions_minutes": [
+        41
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "appendix-proof",
+      "day": "2026-10-15",
+      "title": "Prepare the calibration reading",
+      "description": "Work through the assigned portion of the short calibration paper and write notes detailed enough to explain the steps at the board.",
+      "category": "Reading",
+      "details": "My group assigned me the appendix exercise in the reading guide.",
+      "estimate_minutes": 45,
+      "actual_minutes": 76,
+      "sessions_minutes": [
+        40,
+        36
+      ],
+      "pdf": {
+        "title": "Reading guide: calibration under selective labels",
+        "sections": [
+          {
+            "heading": "Paper outline",
+            "body": "The main text compares three calibration plots on held-out reviews. The appendix studies a toy censoring rule that hides labels below a decision threshold."
+          },
+          {
+            "heading": "Main-text exercise",
+            "body": "Choose the most distorted reliability diagram and describe the subgroup responsible. One paragraph is sufficient."
+          },
+          {
+            "heading": "Appendix exercise",
+            "body": "Derive the calibration error conditional on a label being visible, for both values of a binary grouping variable. Use the censoring rule to construct a counterexample and show the arithmetic."
+          },
+          {
+            "heading": "Discussion",
+            "body": "Be ready to justify each conditioning step without looking at the printed argument."
+          }
+        ]
+      },
+      "check": "The PDF distinguishes a derivation from the easier main-text exercise."
+    },
+    {
+      "id": "metrics-club",
+      "day": "2026-10-22",
+      "title": "Prepare a transport paper for club",
+      "description": "Read the evaluation and give two observations tied to the latency and loss plots.",
+      "category": "Reading",
+      "details": "Skip the formal congestion-control argument; I only cover the measurement section.",
+      "estimate_minutes": 65,
+      "actual_minutes": 46,
+      "sessions_minutes": [
+        46
+      ],
+      "check": "A broad reading-category correction mixes tasks with opposite errors. The matched empirical reads are more useful."
+    }
+  ]
+}

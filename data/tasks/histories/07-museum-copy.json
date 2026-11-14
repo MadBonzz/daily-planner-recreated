@@ -1,0 +1,168 @@
+{
+  "id": "07-museum-copy",
+  "name": "Museum communications editor",
+  "scenario": "A bilingual museum editor adapts public copy for different audiences. Proofing approved bilingual copy is usually quick, while a short passage can be slow when the glossary or intended audience changes.",
+  "tasks": [
+    {
+      "id": "caption-proof",
+      "day": "2026-02-05",
+      "title": "Revisar doce cartelas de la colección",
+      "description": "Compare the approved Spanish and English labels for punctuation, inventory numbers, and accent marks. Return a marked PDF.",
+      "category": "Proofreading",
+      "details": "Translations and terminology were signed off last week. Preserve artwork titles exactly.",
+      "estimate_minutes": 50,
+      "actual_minutes": 33,
+      "sessions_minutes": [
+        33
+      ]
+    },
+    {
+      "id": "school-panel",
+      "day": "2026-02-12",
+      "title": "Adapt the ceramics panel for school visits",
+      "description": "Prepare a Spanish panel for readers aged 9–12 using the English curatorial text. Retain object names and the distinction between firing and glazing.",
+      "category": "Adaptation",
+      "details": "The draft is short. Replace unexplained technical vocabulary and fit text into the existing panel.",
+      "estimate_minutes": 80,
+      "actual_minutes": 119,
+      "sessions_minutes": [
+        61,
+        58
+      ],
+      "pdf": {
+        "title": "Gallery school visit: bilingual panel brief",
+        "sections": [
+          {
+            "heading": "Curatorial draft",
+            "body": "After the first firing, the vessel was coated with a mineral mixture. A second firing fused that coat to the surface. A break near the foot reveals that the color and the underlying clay are different materials."
+          },
+          {
+            "heading": "Audience and terminology",
+            "body": "Write for children visiting with a teacher. Define the two firings without implying the vessel was painted after its final firing. Retain the object label 'Vasija de dos asas' in the Spanish version."
+          },
+          {
+            "heading": "Production constraints",
+            "body": "The English label is reference material. Write a new Spanish panel with a short headline and two short paragraphs. Provide one optional spoken prompt for the guide and check the line breaks against the panel mock-up."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hours-notice",
+      "day": "2026-02-19",
+      "title": "Proofread the spring hours notice",
+      "description": "Verify two English and Spanish listings against the approved schedule and fix any mismatched day names.",
+      "category": "Proofreading",
+      "details": "Use el museo for the institution. The new notice follows the winter template.",
+      "estimate_minutes": 30,
+      "actual_minutes": 21,
+      "sessions_minutes": [
+        21
+      ]
+    },
+    {
+      "id": "audio-route",
+      "day": "2026-03-01",
+      "title": "Rewrite an audio-guide stop in plain Spanish",
+      "description": "Make a 90-second spoken script from the curator's long English label. Keep the object description usable for a listener who cannot see the case.",
+      "category": "Adaptation",
+      "details": "Try the script aloud, leave breathing room at line breaks, and avoid directional words such as over here.",
+      "estimate_minutes": 85,
+      "actual_minutes": 132,
+      "sessions_minutes": [
+        58,
+        38,
+        36
+      ]
+    },
+    {
+      "id": "bilingual-calendar",
+      "day": "2026-03-12",
+      "title": "Update the bilingual event calendar",
+      "description": "Proof the dates, location names and accents on six already translated event listings.",
+      "category": "Proofreading",
+      "details": "Check the events sheet and the official accent list; no copy changes requested.",
+      "estimate_minutes": 45,
+      "actual_minutes": 39,
+      "sessions_minutes": [
+        39
+      ]
+    },
+    {
+      "id": "glossary",
+      "day": "2026-03-25",
+      "title": "Resolve the craft glossary before translation",
+      "description": "Prepare a bilingual shortlist for six tool names and flag the entries that need a curator's decision.",
+      "category": "Terminology",
+      "details": "Two names are regional. Include a one-sentence usage example for each candidate.",
+      "estimate_minutes": 60,
+      "actual_minutes": 94,
+      "sessions_minutes": [
+        44,
+        50
+      ]
+    },
+    {
+      "id": "newsletter",
+      "day": "2026-04-09",
+      "title": "Translate the member newsletter paragraph",
+      "description": "Translate the general welcome and two practical reminders. Reuse approved membership terminology and preserve links.",
+      "category": "Translation",
+      "details": "Audience is regular members. The spring events already have official bilingual names.",
+      "estimate_minutes": 55,
+      "actual_minutes": 52,
+      "sessions_minutes": [
+        52
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "kids-weaving",
+      "day": "2026-04-17",
+      "title": "Prepare Spanish text for the weaving stop",
+      "description": "Turn the curator's source into copy that a visiting child can follow and that the designer can fit on the panel.",
+      "category": "Adaptation",
+      "details": "Use the attached layout brief and keep the approved object name.",
+      "estimate_minutes": 70,
+      "actual_minutes": 111,
+      "sessions_minutes": [
+        50,
+        36,
+        25
+      ],
+      "pdf": {
+        "title": "Weaving stop: visitor text brief",
+        "sections": [
+          {
+            "heading": "Source passage",
+            "body": "The shuttle takes the weft through a temporary opening in the warp. By changing which threads rise, the weaver builds a pattern. The striped sampler preserves three attempts at the same repeat, with the last repeat reversed."
+          },
+          {
+            "heading": "Audience instruction",
+            "body": "The visitor will be holding a cardboard loom and following one step at a time. Write the body in Spanish. Introduce urdimbre and trama once, each with a short explanation a child could understand."
+          },
+          {
+            "heading": "Handoff",
+            "body": "Deliver a 45-word panel and a 20-second guide prompt. Preserve the name Muestrario de franjas. Check which explanation is intelligible when read aloud; the designer cannot add a diagram."
+          }
+        ]
+      },
+      "check": "Tests multilingual semantic comparison and audience adaptation when the clearest historical match discusses a different craft."
+    },
+    {
+      "id": "visitor-proof",
+      "day": "2026-05-03",
+      "title": "Proof the English and Spanish visitor map",
+      "description": "Check spelling and accents in the six bilingual facility labels and fix the new Sunday closing time.",
+      "category": "Proofreading",
+      "details": "The translations have approval. The copy can be edited in an existing two-column document.",
+      "estimate_minutes": 45,
+      "actual_minutes": 44,
+      "sessions_minutes": [
+        44
+      ],
+      "check": "Select approved bilingual proofreading examples and check whether the model overcorrects an already well-budgeted edit."
+    }
+  ]
+}
