@@ -12,6 +12,8 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py --server.address 127.0.0.1
 ```
 
+If an existing install reports `No module named dotenv`, run the pip command above with the same virtual environment you use to start Streamlit. The package is named `python-dotenv`.
+
 On Linux or macOS, use `.venv/bin/python` for the last two commands. Open the local URL printed by Streamlit. The planner can record tasks and sessions before the optional services below are available.
 
 ## Choose the model endpoint
@@ -41,6 +43,8 @@ For local inference, remove the endpoint and model overrides or set them to `htt
 lms load <model-key> --gpu off --context-length 8192 --identifier ternary-bonsai-4b
 lms server start --bind 127.0.0.1 --port 1234
 ```
+
+The request timeout defaults to 90 seconds. Set `PLANNER_MODEL_TIMEOUT_SECONDS=360` in your .env if CPU inference needs longer.
 
 LM Studio and the planner must run on the same host for this configuration. The initial software and model downloads require internet access.
 

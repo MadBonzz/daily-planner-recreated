@@ -1,13 +1,21 @@
 """Validated chat completions from LM Studio or a configured compatible endpoint."""
 
 import json
+import math
 import os
+import shlex
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
-from dotenv import dotenv_values
+try:
+    from dotenv import dotenv_values
+except ModuleNotFoundError as exc:
+    if exc.name != "dotenv":
+        raise
+    dotenv_values = None
+
 from jsonschema import ValidationError, validate
 
 
@@ -15,6 +23,10 @@ MODEL_ID = "ternary-bonsai-4b"
 API_URL = "http://127.0.0.1:1234/v1/chat/completions"
 ENV_FILE = Path(__file__).with_name(".env")
 COHERE_HOSTS = {"api.cohere.ai", "api.cohere.com"}
+SETTING_NAMES = {
+    "PLANNER_MODEL_ENDPOINT", "PLANNER_MODEL", "COHERE_API", "COHERE_API_KEY",
+    "PLANNER_MODEL_TIMEOUT_SECONDS",
+}
 
 
 class ModelUnavailable(RuntimeError):
@@ -26,23 +38,49 @@ class _NoRedirect(HTTPRedirectHandler):
         return None
 
 
+def _file_settings():
+    if dotenv_values is not None:
+        return dotenv_values(ENV_FILE, interpolate=False, encoding="utf-8-sig")
+    # Existing installations can read the planner's simple one-line settings
+    # before the user updates their environment from requirements.txt.
+    if not ENV_FILE.is_file():
+        return {}
+    result = {}
+    for line in ENV_FILE.read_text(encoding="utf-8-sig").splitlines():
+        name, sep, value = line.strip().removeprefix("export ").partition("=")
+        name = name.strip()
+        if not sep or name not in SETTING_NAMES:
+            continue
+        try:
+            parts = shlex.split(value, comments=True)
+        except ValueError:
+            raise ModelUnavailable(f"Check the quotes around {name} in .env.") from None
+        result[name] = " ".join(parts)
+    return result
+
+
 def _configuration():
     # Reload on every request so editing the two settings takes effect immediately.
-    config = {**dotenv_values(ENV_FILE, interpolate=False), **os.environ}
-    endpoint = config.get("PLANNER_MODEL_ENDPOINT") or API_URL
-    model = config.get("PLANNER_MODEL") or MODEL_ID
-    return endpoint, model, config.get("COHERE_API") or config.get("COHERE_API_KEY")
+    return {**_file_settings(), **os.environ}
 
 
-def model_settings():
+def model_settings(config=None):
     """The active endpoint and model ID, without credentials."""
-    endpoint, model, _ = _configuration()
-    return endpoint, model
+    if config is None:
+        config = _configuration()
+    return config.get("PLANNER_MODEL_ENDPOINT") or API_URL, config.get("PLANNER_MODEL") or MODEL_ID
 
 
 def chat_json(messages, schema, *, max_tokens=512):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
-    endpoint, model, key = _configuration()
+    config = _configuration()
+    endpoint, model = model_settings(config)
+    try:
+        timeout = float(config.get("PLANNER_MODEL_TIMEOUT_SECONDS") or 90)
+        if not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError
+    except ValueError:
+        raise ModelUnavailable("PLANNER_MODEL_TIMEOUT_SECONDS must be a positive finite number.") from None
     headers = {"Content-Type": "application/json"}
     try:
         url = urlsplit(endpoint)
@@ -58,6 +96,7 @@ def chat_json(messages, schema, *, max_tokens=512):
     if cohere:
         if model in {"c4ai-aya-expanse-8b", "c4ai-aya-vision-8b"}:
             raise ModelUnavailable(f"Cohere retired {model} on April 4, 2026. Choose a hosted model in .env.")
+        key = config.get("COHERE_API") or config.get("COHERE_API_KEY")
         if not key:
             raise ModelUnavailable("Set COHERE_API in .env to use the Cohere endpoint.")
         headers["Authorization"] = f"Bearer {key}"
@@ -85,7 +124,7 @@ def chat_json(messages, schema, *, max_tokens=512):
         handlers.append(ProxyHandler({}))
     client = build_opener(*handlers)
     try:
-        with client.open(request, timeout=90) as response:
+        with client.open(request, timeout=timeout) as response:
             completion = json.load(response)
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":

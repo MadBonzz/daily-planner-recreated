@@ -1,6 +1,8 @@
 import io
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -31,6 +33,7 @@ class ModelClientTests(unittest.TestCase):
     def test_local_schema_request(self, opener):
         opener.return_value.open.return_value = self.reply('{"label":"on_task"}')
         self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
+        self.assertEqual(opener.return_value.open.call_args.kwargs['timeout'], 90)
         request = opener.return_value.open.call_args.args[0]
         self.assertEqual(request.full_url, API_URL)
         body = json.loads(request.data)
@@ -106,3 +109,39 @@ class ModelClientTests(unittest.TestCase):
             ), self.assertRaisesRegex(ModelUnavailable, message):
                 chat_json([], self.schema)
         opener.assert_not_called()
+
+
+    def test_import_and_dotenv_settings_without_python_dotenv(self):
+        self.env_file.write_text(
+            'COHERE_API="fake-test-credential"\n'
+            "PLANNER_MODEL='command-r7b-12-2024' # hosted model\n"
+            "PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions\n",
+            encoding="utf-8-sig",
+        )
+        script = """
+import os, sys
+from pathlib import Path
+sys.modules['dotenv'] = None
+import model_client
+model_client.ENV_FILE = Path(sys.argv[1])
+endpoint, model = model_client.model_settings()
+assert model_client._configuration()['COHERE_API'] == 'fake-test-credential'
+assert model == 'command-r7b-12-2024'
+assert endpoint == 'https://api.cohere.ai/compatibility/v1/chat/completions'
+os.environ['PLANNER_MODEL'] = 'env-override'
+assert model_client.model_settings() == (endpoint, 'env-override')
+"""
+        subprocess.run([sys.executable, "-c", script, str(self.env_file)], check=True,
+                       cwd=Path(__file__).resolve().parents[1])
+
+
+    @patch("model_client.build_opener")
+    def test_configurable_timeout_is_positive_and_finite(self, opener):
+        self.env_file.write_text("PLANNER_MODEL_TIMEOUT_SECONDS=240.5")
+        opener.return_value.open.return_value = self.reply('{"label":"on_task"}')
+        chat_json([], self.schema)
+        self.assertEqual(opener.return_value.open.call_args.kwargs["timeout"], 240.5)
+        for invalid in ["-1", "0", "inf", "nan", "nonsense"]:
+            with self.subTest(invalid=invalid), patch.dict(os.environ, PLANNER_MODEL_TIMEOUT_SECONDS=invalid):
+                with self.assertRaisesRegex(ModelUnavailable, "positive finite"):
+                    chat_json([], self.schema)
