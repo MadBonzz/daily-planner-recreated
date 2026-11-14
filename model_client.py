@@ -25,7 +25,8 @@ ENV_FILE = Path(__file__).with_name(".env")
 COHERE_HOSTS = {"api.cohere.ai", "api.cohere.com"}
 SETTING_NAMES = {
     "PLANNER_MODEL_ENDPOINT", "PLANNER_MODEL", "COHERE_API", "COHERE_API_KEY",
-    "PLANNER_MODEL_TIMEOUT_SECONDS",
+    "PLANNER_MODEL_TIMEOUT_SECONDS", "PLANNER_ACTIVITYWATCH_HOSTNAME",
+    "PLANNER_ACTIVITYWATCH_DB", "PLANNER_ACTIVITYWATCH_PHONE_DB",
 }
 
 
@@ -56,14 +57,18 @@ def _file_settings():
         if not sep or name not in SETTING_NAMES:
             continue
         try:
-            parts = shlex.split(value, comments=True)
+            lexer = shlex.shlex(value, posix=True)
+            lexer.whitespace_split = True
+            if name in {"PLANNER_ACTIVITYWATCH_DB", "PLANNER_ACTIVITYWATCH_PHONE_DB"}:
+                lexer.escape = ""  # Keep Windows path separators in legacy .env files.
+            parts = list(lexer)
         except ValueError:
             raise ModelUnavailable(f"Check the quotes around {name} in .env.") from None
         result[name] = " ".join(parts)
     return result
 
 
-def _configuration():
+def planner_settings():
     # Reload on every request so editing the two settings takes effect immediately.
     return {**_file_settings(), **os.environ}
 
@@ -71,13 +76,13 @@ def _configuration():
 def model_settings(config=None):
     """The active endpoint and model ID, without credentials."""
     if config is None:
-        config = _configuration()
+        config = planner_settings()
     return config.get("PLANNER_MODEL_ENDPOINT") or API_URL, config.get("PLANNER_MODEL") or MODEL_ID
 
 
 def chat_json(messages, schema, *, max_tokens=512):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
-    config = _configuration()
+    config = planner_settings()
     endpoint, model = model_settings(config)
     try:
         timeout = float(config.get("PLANNER_MODEL_TIMEOUT_SECONDS") or 90)
@@ -104,7 +109,7 @@ def chat_json(messages, schema, *, max_tokens=512):
         if not key:
             raise ModelUnavailable("Set COHERE_API in .env to use the Cohere endpoint.")
         headers["Authorization"] = f"Bearer {key}"
-    if cohere and (model.startswith("c4ai-aya-") or model.startswith("tiny-aya-")):
+    if cohere and model.startswith(("c4ai-aya-", "tiny-aya-")):
         # Aya supports ordinary chat. Provide its response contract in the prompt.
         instruction = "Return only one JSON object matching this schema:\n" + json.dumps(schema)
         conversation = list(messages)
@@ -112,9 +117,8 @@ def chat_json(messages, schema, *, max_tokens=512):
             first = conversation.pop(0)
             instruction = first["content"] + "\n\n" + instruction
         payload["messages"] = [{"role": "system", "content": instruction}, *conversation]
-    elif cohere:
-        payload["response_format"] = {"type": "json_object", "schema": schema}
     else:
+        # Both LM Studio and Cohere's OpenAI compatibility endpoint accept this envelope.
         payload["response_format"] = {
             "type": "json_schema",
             "json_schema": {"name": "planner_response", "strict": True, "schema": schema},
