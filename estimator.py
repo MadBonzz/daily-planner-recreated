@@ -1,7 +1,6 @@
 """Local task retrieval and inspectable planning estimates, in minutes."""
 
 import hashlib
-import io
 import json
 import math
 import re
@@ -12,39 +11,16 @@ from contextlib import contextmanager
 from pathlib import Path
 from statistics import median
 
-from pypdf import PdfReader
-from pypdf.errors import PyPdfError
 from qdrant_client import QdrantClient, models
 
 from model_client import ModelUnavailable, chat_json
+from pdf_reader import document_excerpt, extract_pdf_text
 
 
 COLLECTION = "planner_tasks_v1"
 DIMENSIONS = 512
 INDEX_LOCK = threading.RLock()
 COMMON_WORDS = set("a an and as at be by for from i in into is it my of on or the this to with".split())
-
-
-def extract_pdf_text(data: bytes) -> str:
-    """Read representative excerpts locally. An unreadable/scanned file adds no text."""
-    if not data:
-        return ""
-    try:
-        reader = PdfReader(io.BytesIO(data), strict=False)
-        if reader.is_encrypted:
-            return ""
-        count = len(reader.pages)
-        # Include the beginning and sample the rest, even for a long handout.
-        pages = sorted({0, 1, *[round(i * (count - 1) / 5) for i in range(6)]})
-        snippets = []
-        for n in pages:
-            if 0 <= n < count:
-                text = " ".join((reader.pages[n].extract_text() or "").split())
-                if text:
-                    snippets.append(f"Page {n + 1}: {text[:900]}")
-        return "\n".join(snippets)
-    except (PyPdfError, OSError, ValueError, TypeError, KeyError, IndexError, RecursionError, NotImplementedError):
-        return ""
 
 
 def _tokens(text):
@@ -57,7 +33,8 @@ def _vector(task):
     vector = [0.0] * DIMENSIONS
     for key, weight, limit in (("title", 2, 300), ("description", 3, 1800),
                                ("details", 2, 1200), ("category", 1, 120), ("pdf_text", 1, 6000)):
-        words = _tokens((task.get(key) or "")[:limit])
+        content = document_excerpt(task, limit) if key == "pdf_text" else (task.get(key) or "")[:limit]
+        words = _tokens(content)
         terms = Counter(words)
         terms.update(" ".join(pair) for pair in zip(words, words[1:]))
         # Normalize fields independently so a long PDF cannot drown out the user's goal.
@@ -149,12 +126,10 @@ def _search(task, history, index_dir):
     return [(ids[str(hit.id)], hit.score) for hit in hits]
 
 
-def _prompt_record(task):
-    snippets = (task.get("pdf_text") or "").splitlines()
-    excerpt = " ".join(line[:110] for line in snippets[:5])[:450]
+def _prompt_record(task, pdf_limit=900):
     return {"title": task["title"][:120], "description": task["description"][:280],
             "details": (task.get("details") or "")[:180], "category": (task.get("category") or "")[:70],
-            "document_excerpt": excerpt}
+            "document_excerpt": document_excerpt(task, pdf_limit)}
 
 
 def _select(task, candidates):
@@ -167,7 +142,7 @@ def _select(task, candidates):
                            "reason": {"type": "string"}},
         }}},
     }
-    request = {"new_task": _prompt_record(task), "candidates": [
+    request = {"new_task": _prompt_record(task, pdf_limit=1800), "candidates": [
         {"slot": i, **_prompt_record(row)} for i, (row, _) in enumerate(candidates, 1)
     ]}
     result = chat_json([
@@ -214,8 +189,8 @@ def predict(task, completed, index_dir):
     note = ""
     try:
         matches = _select(task, candidates)
-    except ModelUnavailable:
-        note = "The local model was unavailable. "
+    except ModelUnavailable as error:
+        note = f"Model comparison unavailable. {error} "
         basis = "Text similarity"
         matches = [(row, "Similar wording in the task or document.") for row, score in candidates if score >= 0.30]
     if not matches:

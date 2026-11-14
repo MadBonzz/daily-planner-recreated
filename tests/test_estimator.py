@@ -109,3 +109,43 @@ def test_pdf_text_extraction_and_invalid_attachment():
 def test_positive_estimates(estimate, tmp_path):
     with pytest.raises(ValueError):
         estimator.predict({**paper("new"), "estimate_minutes": estimate}, [], tmp_path)
+
+
+def test_full_pdf_reaches_estimation_prompt_and_late_requirements(tmp_path):
+    from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
+
+    writer = PdfWriter()
+    for i in range(10):
+        page = writer.add_blank_page(400, 400)
+        font = DictionaryObject({
+            NameObject("/Type"): NameObject("/Font"), NameObject("/Subtype"): NameObject("/Type1"),
+            NameObject("/BaseFont"): NameObject("/Helvetica"),
+        })
+        page[NameObject("/Resources")] = DictionaryObject({
+            NameObject("/Font"): DictionaryObject({NameObject("/F1"): font})
+        })
+        stream = DecodedStreamObject()
+        paragraph = "General background for the project. " * 35
+        if i == 8:
+            paragraph += "Benchmark the lock-free ring buffer with four producer threads."
+        stream.set_data(f"BT /F1 8 Tf 5 280 Td ({paragraph}) Tj ET".encode())
+        page[NameObject("/Contents")] = writer._add_object(stream)
+
+    output = BytesIO()
+    writer.write(output)
+    extracted = estimator.extract_pdf_text(output.getvalue())
+    assert len(extracted.splitlines()) == 10
+    goal = {**paper("now"), "description": "Benchmark the lock-free ring buffer under contention.",
+            "pdf_text": extracted}
+    captured = {}
+
+    def inspect(messages, schema, **kwargs):
+        captured.update(json.loads(messages[1]["content"]))
+        return {"matches": []}
+
+    with patch("estimator.chat_json", side_effect=inspect):
+        estimator.predict(goal, [dict(goal, id="prior")], tmp_path)
+    for record, cap in [(captured["new_task"], 1800), (captured["candidates"][0], 900)]:
+        assert "Page 9:" in record["document_excerpt"]
+        assert "four producer threads" in record["document_excerpt"]
+        assert len(record["document_excerpt"]) <= cap

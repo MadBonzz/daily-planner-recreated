@@ -11,6 +11,7 @@ from urllib.parse import quote, urlencode, urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, build_opener
 
 from model_client import ModelUnavailable, chat_json
+from pdf_reader import document_excerpt
 
 
 STREAMS = {"currentwindow": "window", "web.tab.current": "tab", "afkstatus": "afk"}
@@ -288,7 +289,9 @@ def _classify(task, rows, warnings):
         else:
             row["reason"] = "No valid classification was available."
             pending.append(index)
-    context = {key: _clean(task.get(key), 650) for key in ("name", "title", "description", "category", "details", "scope_summary", "pdf_text") if task.get(key)}
+    context = {key: _clean(task.get(key), 650) for key in ("name", "title", "description", "category", "details", "scope_summary") if task.get(key)}
+    if task.get("pdf_text"):
+        context["pdf_text"] = document_excerpt(task, 900)
     system = (
         "Label each interval by its likely relevance to the user's described task. "
         "on_task: activity directly supports the task, e.g. reading a relevant reference. "
@@ -313,8 +316,8 @@ def _classify(task, rows, warnings):
                   "required": keys, "additionalProperties": False}
         try:
             labels = chat_json(messages, schema, max_tokens=600)
-        except ModelUnavailable:
-            warnings.append("Local classification is unavailable. Unclassified time is shown as uncertain.")
+        except ModelUnavailable as error:
+            warnings.append(f"Activity classification unavailable. {error} Unclassified time is shown as uncertain.")
             break
         for i in batch:
             item = labels[str(i)]

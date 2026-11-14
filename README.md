@@ -14,9 +14,24 @@ python -m venv .venv
 
 On Linux or macOS, use `.venv/bin/python` for the last two commands. Open the local URL printed by Streamlit. The planner can record tasks and sessions before the optional services below are available.
 
-## Local model
+## Choose the model endpoint
 
-The app sends inference requests only to `http://127.0.0.1:1234/v1/chat/completions` using the identifier `ternary-bonsai-4b`. It uses PrismML's **Ternary-Bonsai-4B**, including for task comparisons and activity interpretation.
+For Cohere, keep your existing `COHERE_API` key in the repository-root `.env` and add these two lines:
+
+```dotenv
+PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions
+PLANNER_MODEL=command-r7b-12-2024
+```
+
+The hosted configuration uses **Command R7B** for estimates and activity classification. [Cohere Command R7B](https://docs.cohere.com/v2/docs/command-r7b)
+
+After pulling this update, install the updated requirements using your existing virtual environment and restart Streamlit. In **Options → Planner settings**, check the model and host. To test a model-assisted estimate, choose **Example history**, load the sample tasks and create a related task. Expand **Why this estimate?** to see the selected comparisons or the reason the app used a fallback.
+
+Task records, originals of PDFs and ActivityWatch logs are stored locally. Selecting a hosted endpoint sends relevant task descriptions, PDF text excerpts, and filtered activity observations to that provider for inference. No API key is needed for LM Studio.
+
+### Local LM Studio
+
+For local inference, remove the endpoint and model overrides or set them to `http://127.0.0.1:1234/v1/chat/completions` and `ternary-bonsai-4b`. The same timer, estimator, and activity review work with either configuration.
 
 1. Install [LM Studio](https://lmstudio.ai/download) or its [headless Linux daemon](https://lmstudio.ai/docs/developer/core/headless). For headless Linux the official install command is `curl -fsSL https://lmstudio.ai/install.sh | bash`, followed by `lms daemon up`.
 2. Download [Ternary-Bonsai-4B-Q2_0_g64.gguf](https://huggingface.co/prism-ml/Ternary-Bonsai-4B-gguf/blob/main/Ternary-Bonsai-4B-Q2_0_g64.gguf). The `_g64` suffix selects the group-64 layout compatible with the stock llama.cpp CPU engine. Import the file with `lms import <path-to-the-gguf>`. Use `lms ls` to find its model key.
@@ -39,7 +54,7 @@ The elapsed time used for planning is the sum of running periods across sessions
 
 ## Estimates
 
-The new-task form requires an original time budget and a description. You can add a category, extra details, and PDFs. The app samples readable PDF text. Scanned PDFs can be attached but supply no text for estimation. Local Qdrant retrieves up to six completed tasks by cosine similarity using hashed words and word pairs. This needs no second embedding model. Bonsai selects comparable work using the descriptions, notes and document excerpts. Python computes the median actual/original ratio and applies a smaller correction when there are few matches. If inference is unavailable, text similarity or category history provides a fallback. The app keeps the original estimate and its own prediction separately. A first task gets a broad planning range around the entered estimate. Ranges and confidence labels are heuristics until evaluated on real history.
+The new-task form requires an original time budget and a description. You can add a category, extra details, and PDFs. The parser extracts text from every readable PDF page, then selects page-labeled passages that match the task and cover different sections. Scanned PDFs can be attached but supply no text for estimation. Local Qdrant retrieves up to six completed tasks by cosine similarity using hashed words and word pairs. This needs no second embedding model. The configured model selects comparable work using the descriptions, notes and document excerpts. Python computes the median actual/original ratio and applies a smaller correction when there are few matches. If inference is unavailable, text similarity or category history provides a fallback. The app keeps the original estimate and its own prediction separately. A first task gets a broad planning range around the entered estimate. Ranges and confidence labels are heuristics until evaluated on real history.
 
 ## Local data and example history
 

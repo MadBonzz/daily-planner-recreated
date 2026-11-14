@@ -12,6 +12,8 @@ import streamlit as st
 import activity
 import estimator
 from planner_store import PlannerStore
+from model_client import model_settings
+from urllib.parse import urlsplit
 
 st.set_page_config(page_title="Daily planner", page_icon="🗓️", layout="centered")
 DATA_ROOT = Path(os.environ.get("PLANNER_DATA_DIR", Path(__file__).parent / "data"))
@@ -38,7 +40,7 @@ h2,h3 {letter-spacing: -.033em}
 .task-copy {color:#425266;margin:.3rem 0 .25rem;white-space:pre-wrap;overflow-wrap:anywhere}
 .empty-plan {background:white;border:1px dashed #b9c4d5;padding:2.6rem 1rem;text-align:center;border-radius:16px}
 @media (max-width:640px) {
- .st-key-plan_navigation [data-testid="stHorizontalBlock"] {display:grid;grid-template-columns:2.8rem 1fr 2.8rem;gap:.45rem}
+ .st-key-plan_navigation [data-testid="stHorizontalBlock"] {display:grid;grid-template-columns:4.5rem minmax(0,1fr) 2.8rem;gap:.45rem}
  .st-key-plan_navigation [data-testid="stColumn"] {width:100%;min-width:0;flex:none}
  .st-key-plan_navigation [data-testid="stColumn"]:last-child {grid-column:span 2}
  .st-key-plan_header [data-testid="stHorizontalBlock"] {display:flex;flex-wrap:nowrap;align-items:center}
@@ -242,6 +244,18 @@ def delete_task(store, index_dir, task):
 
 @st.dialog("Planner settings", width="large")
 def settings(store, index_dir, demo):
+    endpoint, model = model_settings()
+    st.subheader("Model connection")
+    st.text(model)
+    try:
+        host = urlsplit(endpoint).hostname or ""
+    except ValueError:
+        host = ""
+    if host in {"127.0.0.1", "localhost", "::1"}:
+        st.caption("Inference runs on this computer.")
+    else:
+        st.text(f"Configured host: {host}" if host else "Check the configured endpoint in .env.")
+        st.caption("This provider receives the task descriptions, document excerpts, and filtered activity used for inference.")
     st.subheader("Activity capture")
     if demo:
         st.caption("Example mode uses a separate history and skips live activity collection.")

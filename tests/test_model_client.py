@@ -1,5 +1,8 @@
 import io
 import json
+import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
@@ -13,6 +16,11 @@ class ModelClientTests(unittest.TestCase):
         "properties": {"label": {"enum": ["on_task", "off_task", "uncertain"]}},
         "additionalProperties": False,
     }
+
+    def setUp(self):
+        self.env_file = Path(self.enterContext(TemporaryDirectory())) / ".env"
+        self.enterContext(patch("model_client.ENV_FILE", self.env_file))
+        self.enterContext(patch.dict(os.environ, {}, clear=True))
 
     def reply(self, content, finish_reason="stop"):
         return io.BytesIO(json.dumps({"choices": [
@@ -36,3 +44,65 @@ class ModelClientTests(unittest.TestCase):
                 opener.return_value.open.return_value = self.reply(content, reason)
                 with self.assertRaises(ModelUnavailable):
                     chat_json([], self.schema)
+
+    @patch("model_client.build_opener")
+    def test_configured_cohere_request_loads_dotenv_and_keeps_prompt(self, opener):
+        self.env_file.write_text(
+            'COHERE_API="test-token"\nPLANNER_MODEL=c4ai-aya-expanse-32b\n'
+            'PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions\n'
+        )
+        opener.return_value.open.return_value = self.reply('```json\n{"label":"on_task"}\n```')
+        messages = [{"role": "system", "content": "Classify the activity."},
+                    {"role": "user", "content": "CUDA docs"}]
+        self.assertEqual(chat_json(messages, self.schema), {"label": "on_task"})
+        req = opener.return_value.open.call_args.args[0]
+        self.assertEqual(req.get_header("Authorization"), "Bearer test-token")
+        payload = json.loads(req.data)
+        self.assertEqual(payload["model"], "c4ai-aya-expanse-32b")
+        self.assertEqual(payload["messages"][1], messages[1])
+        self.assertIn(messages[0]["content"], payload["messages"][0]["content"])
+        self.assertIn(json.dumps(self.schema), payload["messages"][0]["content"])
+        self.assertNotIn("response_format", payload)
+        self.assertEqual(messages[0]["content"], "Classify the activity.")
+
+    @patch("model_client.build_opener")
+    def test_command_r7b_uses_native_structured_output(self, opener):
+        self.env_file.write_text(
+            "COHERE_API=test-token\nPLANNER_MODEL=command-r7b-12-2024\n"
+            "PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions\n"
+        )
+        opener.return_value.open.return_value = self.reply('{"label":"on_task"}')
+        messages = [{"role": "user", "content": "Classify the task."}]
+        self.assertEqual(chat_json(messages, self.schema), {"label": "on_task"})
+        request = opener.return_value.open.call_args.args[0]
+        payload = json.loads(request.data)
+        self.assertEqual(payload["model"], "command-r7b-12-2024")
+        self.assertEqual(payload["response_format"], {"type": "json_object", "schema": self.schema})
+        self.assertEqual(payload["messages"], messages)
+
+    @patch("model_client.build_opener")
+    def test_cohere_key_only_sent_to_official_host(self, opener):
+        self.env_file.write_text("COHERE_API=unit-test\nPLANNER_MODEL=stale\n")
+        for endpoint in [API_URL, "https://api.cohere.ai.example.org/v1/chat/completions"]:
+            with self.subTest(endpoint=endpoint), patch.dict(
+                os.environ, PLANNER_MODEL_ENDPOINT=endpoint, PLANNER_MODEL="chosen-model"
+            ):
+                opener.return_value.open.return_value = self.reply('{"label":"uncertain"}')
+                chat_json([], self.schema)
+                req = opener.return_value.open.call_args.args[0]
+                self.assertFalse(req.has_header("Authorization"))
+                self.assertEqual(json.loads(req.data)["model"], "chosen-model")
+
+    @patch("model_client.build_opener")
+    def test_missing_key_retired_model_and_insecure_cohere_are_actionable(self, opener):
+        host = "https://api.cohere.ai/compatibility/v1/chat/completions"
+        for endpoint, model, message in [
+            (host, "c4ai-aya-expanse-32b", "COHERE_API"),
+            (host, "c4ai-aya-expanse-8b", "retired"),
+            (host.replace("https:", "http:"), "test", "Invalid"),
+        ]:
+            with self.subTest(model=model), patch.dict(
+                os.environ, PLANNER_MODEL_ENDPOINT=endpoint, PLANNER_MODEL=model
+            ), self.assertRaisesRegex(ModelUnavailable, message):
+                chat_json([], self.schema)
+        opener.assert_not_called()
