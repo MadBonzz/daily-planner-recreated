@@ -27,6 +27,8 @@ STYLES = """
 h1 {letter-spacing: -.055em}
 h2,h3 {letter-spacing: -.033em}
 [data-testid="stVerticalBlockBorderWrapper"] {background: #fff; border-radius: 16px}
+[data-testid="stDialog"] [data-testid="stWidgetLabelRequired"] {font-size:0}
+[data-testid="stDialog"] [data-testid="stWidgetLabelRequired"]::after {content:"*";color:#b42318;font-size:1rem;font-weight:700}
 .metric-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:.35rem 0 1.1rem;
  background:white;border:1px solid #d8deea;border-radius:14px;padding:1.05rem 0}
 .metric-grid div {padding:0 clamp(.6rem,2.7vw,1.7rem);border-left:1px solid #d8deea}
@@ -101,11 +103,12 @@ def show_prediction(prediction):
 @st.dialog("Add task", width="large")
 def new_task(store, index_dir, day):
     with st.form("new_task_form"):
-        title = st.text_input("Task name", placeholder="Read the optimization paper")
-        description = st.text_area("Description", placeholder="What do you want to finish?", height=86)
+        title = st.text_input("Task name", required=True, placeholder="Read the optimization paper")
+        description = st.text_area("Description", required=True, placeholder="What do you want to finish?", height=86)
         left, right = st.columns(2)
-        estimate = left.number_input("Your estimate (minutes)", min_value=1, value=30, step=1)
-        category = right.text_input("Category (optional)", placeholder="Reading")
+        estimate = left.number_input("Your estimate (minutes)", min_value=1, value=None, step=1,
+                                     required=True, placeholder="e.g. 30")
+        category = right.text_input("Category", required=True, placeholder="Reading")
         details = st.text_area("More details (optional)", height=80,
                                placeholder="Which sections matter? How familiar are you with this work?")
         files = st.file_uploader("Attach PDFs (optional)", type=["pdf"], accept_multiple_files=True,
@@ -113,8 +116,11 @@ def new_task(store, index_dir, day):
         submitted = st.form_submit_button("Create task", type="primary")
     if not submitted:
         return
-    if not title.strip() or not description.strip():
-        st.error("Enter a task name and description.")
+    missing = [label for label, value in (("task name", title.strip()), ("description", description.strip()),
+                                          ("estimate in minutes", estimate), ("category", category.strip()))
+               if not value]
+    if missing:
+        st.error("Fill in the required fields: " + ", ".join(missing) + ".")
         return
     attachments = [(file.name, file.getvalue()) for file in files]
     unreadable = []
