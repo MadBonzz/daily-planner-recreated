@@ -1,0 +1,467 @@
+{
+  "id": "06-neighborhood-clinic",
+  "name": "Neighborhood clinic volunteer coordinator",
+  "scenario": "I share scheduling for a small evening clinic. A capacity decision with Mara and the Monday stock check with Dev both live in my calendar as calls. I also make signage, cover the front desk, and fit errands around the shifts.",
+  "tasks": [
+    {
+      "id": "mara-evening",
+      "day": "2026-01-12",
+      "title": "Review Thursday evening coverage with Mara",
+      "description": "Agree on a second greeter and a backup for the late check-in with Mara Imani. Send the decisions to the shift lead.",
+      "category": "Meetings",
+      "details": "The invite has our usual half hour. The lead needs the final names.",
+      "estimate_minutes": 30,
+      "actual_minutes": 40,
+      "sessions_minutes": [
+        40
+      ],
+      "completion_note": "Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments.",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Firefox",
+            "title": "Coverage decisions / waiting room",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 27,
+            "app": "Firefox",
+            "title": "Evening capacity • Mara Imani",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "LibreOffice Writer",
+            "title": "Thursday shift decisions",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dev-stock",
+      "day": "2026-01-14",
+      "title": "Stock check with Dev",
+      "description": "Run through the gloves and badge sleeves that need reordering with Dev Patel. He has the counts in his sheet.",
+      "category": "Meetings",
+      "details": "Recurring stock call, twenty-minute slot; send the buyer two quantities.",
+      "estimate_minutes": 20,
+      "actual_minutes": 15,
+      "sessions_minutes": [
+        15
+      ],
+      "completion_note": "Dev had already filtered the stock sheet. We finished before the end of the slot.",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Firefox",
+            "title": "Supply check • Dev Patel",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "LibreOffice Calc",
+            "title": "Clinic stock • order column",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "campus-posters",
+      "day": "2026-01-17",
+      "title": "Replace two check-in direction signs",
+      "description": "Move the paper arrows from the east entry to the temporary side door. Print one bilingual sign and leave tape at the desk.",
+      "category": "Front desk",
+      "details": "Printer at reception; old frames can be reused.",
+      "estimate_minutes": 35,
+      "actual_minutes": 34,
+      "sessions_minutes": [
+        34
+      ],
+      "completion_note": "The second frame needed tape but the printer worked.",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "LibreOffice Writer",
+            "title": "Temporary door signs",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 26,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mara-capacity",
+      "day": "2026-01-26",
+      "title": "Work out the overflow roster with Mara",
+      "description": "Meet Mara Imani to decide who can stay for the spillover clinic. Record the owners in the rota.",
+      "category": "Meetings",
+      "details": "Same fortnightly capacity slot. I have three people to propose.",
+      "estimate_minutes": 30,
+      "actual_minutes": 41,
+      "sessions_minutes": [
+        41
+      ],
+      "completion_note": "Mara was nine minutes late. We still reviewed all three names and left at 18:11.",
+      "activity": [
+        [
+          {
+            "minutes": 9,
+            "app": "Firefox",
+            "title": "Overflow rota / waiting room",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 26,
+            "app": "Firefox",
+            "title": "Capacity decisions • Mara Imani",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "LibreOffice Calc",
+            "title": "Overflow owners",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "prediction": {
+        "point_min": 39,
+        "low_min": 25,
+        "high_min": 52,
+        "confidence": "low",
+        "basis": "Synthetic prior estimate",
+        "explanation": "One sign-off and a short edit to the rota.",
+        "evidence": []
+      }
+    },
+    {
+      "id": "dev-packs",
+      "day": "2026-01-28",
+      "title": "Check replenishment list with Dev",
+      "description": "Ask Dev Patel which three packing supplies to add to Friday’s order and cross off two received items.",
+      "category": "Meetings",
+      "details": "Use the standing twenty-minute stock call.",
+      "estimate_minutes": 20,
+      "actual_minutes": 14,
+      "sessions_minutes": [
+        14
+      ],
+      "completion_note": "Dev brought the marked-up order sheet. No backorders to discuss.",
+      "activity": [
+        [
+          {
+            "minutes": 3,
+            "app": "LibreOffice Calc",
+            "title": "Friday replenishment order",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 11,
+            "app": "Firefox",
+            "title": "Stock call • Dev Patel",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bus-pass",
+      "day": "2026-02-05",
+      "title": "Renew my bus pass",
+      "description": "Renew the commuter pass on the transit site and save the receipt to the travel folder.",
+      "category": "Personal admin",
+      "details": "Wallet and pass number are at my desk.",
+      "estimate_minutes": 15,
+      "actual_minutes": 12,
+      "sessions_minutes": [
+        12
+      ],
+      "completion_note": "Saved the receipt and checked the new expiry date.",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Firefox",
+            "title": "Monthly pass renewal",
+            "domain": "metro.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Files",
+            "title": "Transit receipts",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mara-late-room",
+      "day": "2026-02-09",
+      "title": "Assign the late intake room with Mara",
+      "description": "Mara Imani and I need to pick a second appointment room, agree an owner, then send the signed-off rota.",
+      "category": "Meetings",
+      "details": "Capacity review at 17:30, normal half-hour booking.",
+      "estimate_minutes": 30,
+      "actual_minutes": 39,
+      "sessions_minutes": [
+        39
+      ],
+      "completion_note": "Mara arrived six minutes after the start. She stayed until the owner confirmed.",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Firefox",
+            "title": "Late intake / waiting room",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 28,
+            "app": "Firefox",
+            "title": "Clinic capacity • Mara Imani",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "LibreOffice Writer",
+            "title": "Room decisions",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dev-receipts",
+      "day": "2026-02-11",
+      "title": "Close the supply list with Dev",
+      "description": "Check the masks and envelope counts with Dev Patel and hand his order list to reception.",
+      "category": "Meetings",
+      "details": "Usual twenty-minute stock catch-up. Counts are ready.",
+      "estimate_minutes": 20,
+      "actual_minutes": 16,
+      "sessions_minutes": [
+        16
+      ],
+      "completion_note": "Counts matched. Dev had sorted the receipts before the call.",
+      "activity": [
+        [
+          {
+            "minutes": 13,
+            "app": "Firefox",
+            "title": "Supply list • Dev Patel",
+            "domain": "meet.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "LibreOffice Calc",
+            "title": "Buy list / envelopes",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mara-dropoff",
+      "day": "2026-02-13",
+      "title": "Ask Mara where the spare badges go",
+      "description": "Voice call with Mara for the location of the spare badge tin. I just need the room number before opening.",
+      "category": "Front desk",
+      "details": "No roster or attendance choices today.",
+      "estimate_minutes": 10,
+      "actual_minutes": 5,
+      "sessions_minutes": [
+        5
+      ],
+      "completion_note": "Reached her on the first try at the front desk.",
+      "activity": [
+        [
+          {
+            "minutes": 5,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-door",
+      "day": "2026-03-03",
+      "title": "Order two door wedges",
+      "description": "Find the same rubber wedge that fits the side entrance and send the item number to the buyer.",
+      "category": "Front desk",
+      "details": "One for each door leaf.",
+      "estimate_minutes": 12,
+      "status": "ready",
+      "sessions_minutes": []
+    },
+    {
+      "id": "paused-flyer",
+      "day": "2026-03-03",
+      "title": "Update the March opening-hours flyer",
+      "description": "Replace the holiday hours on the door sheet and print a test copy.",
+      "category": "Front desk",
+      "details": "Waiting for the lead to confirm Tuesday.",
+      "estimate_minutes": 25,
+      "status": "paused",
+      "sessions_minutes": [
+        9
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 9,
+            "app": "LibreOffice Writer",
+            "title": "March public hours",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "mara-rooms",
+      "day": "2026-03-04",
+      "title": "Set the handover rota with Mara",
+      "description": "Meet Mara Imani to agree handover owners for the two intake rooms and record the decision in the shift rota.",
+      "category": "Meetings",
+      "details": "Thirty-minute invite, same capacity review. I have the draft list.",
+      "estimate_minutes": 30,
+      "actual_minutes": 41,
+      "sessions_minutes": [
+        41
+      ],
+      "check": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.23,
+          1.44
+        ],
+        "evidence_ids": [
+          "mara-evening",
+          "mara-capacity",
+          "mara-late-room"
+        ],
+        "rationale": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison.",
+        "expected_caution": {
+          "evidence_ids": [
+            "mara-evening",
+            "mara-capacity",
+            "mara-late-room"
+          ],
+          "rationale": "Mention that Mara previously joined these capacity reviews late, attributing it to the coordinator’s notes."
+        }
+      },
+      "pdf": {
+        "title": "Evening intake handover • Thursday rota",
+        "series": "North Canal volunteer clinic",
+        "kind": "Rota decision sheet",
+        "sections": [
+          {
+            "heading": "Decisions to bring back",
+            "body": "The overflow desk opens only when both rooms have someone able to reconcile appointment cards. Room 2 has a single entrance, so the handover lead must stand inside, leaving the doorway clear. The roster below uses job titles so the printed copy can be displayed outside the staff cupboard. Write actual volunteer names on the retained shift copy."
+          },
+          {
+            "heading": "Provisional cover",
+            "body": "Ask the two leads to agree a backup for the last group. A backup can cover one gap at a time. If the interpreter is moved to overflow, the front desk must keep the call list and a charged phone.",
+            "table": {
+              "headers": [
+                "Position",
+                "Proposed cover",
+                "Question for shift lead"
+              ],
+              "rows": [
+                [
+                  "Main room",
+                  "Intake lead + rota volunteer",
+                  "Who takes the final handover?"
+                ],
+                [
+                  "Side room",
+                  "Float lead until doors close",
+                  "Name one replacement for the float."
+                ],
+                [
+                  "Hall check",
+                  "Welcome-desk volunteer",
+                  "Who walks the completed cards back?"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Decision record",
+            "body": "On the retained shift copy, write the room, primary owner, backup owner and the time the clipboard changes hands. A blank backup is an unresolved item. Tell reception which column is still open and agree who will chase it. Put out a fresh public copy showing roles and rooms only."
+          },
+          {
+            "heading": "Worked handover entry",
+            "body": "Example from a training sheet: “Side room / float lead / volunteer B / at the last card return.” This entry does not cover the case where both rooms close together. Ask which lead physically holds the overflow clipboard if both are finishing an intake. Record one owner for the clipboard and a different owner for walking the sealed envelope to the office. Do not put visitor names, phone numbers or appointment identifiers on this sheet."
+          }
+        ]
+      }
+    },
+    {
+      "id": "dev-april",
+      "day": "2026-03-05",
+      "title": "Run the supply check with Dev",
+      "description": "Go over the April reorder sheet with Dev Patel and agree the two quantities that go to the buyer.",
+      "category": "Meetings",
+      "details": "Our usual stock call. His counts have been filled in. Calendar held for twenty minutes.",
+      "estimate_minutes": 20,
+      "actual_minutes": 15,
+      "sessions_minutes": [
+        15
+      ],
+      "check": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.66,
+          0.86
+        ],
+        "evidence_ids": [
+          "dev-stock",
+          "dev-packs",
+          "dev-receipts"
+        ],
+        "rationale": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category."
+      }
+    }
+  ]
+}

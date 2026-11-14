@@ -7,7 +7,7 @@ from xml.sax.saxutils import escape
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate
+from reportlab.platypus import PageBreak, Paragraph, Preformatted, SimpleDocTemplate, Spacer, Table, TableStyle
 
 ROOT = Path(__file__).resolve().parent
 # The collection includes classroom handouts, lab briefs and professional work orders.
@@ -32,14 +32,19 @@ def markup(text):
 
 def make_pdf(doc, history_id, task_id, destination):
     series, kind, accent = SERIES[history_id[:2]]
+    series = doc.get("series", series)
+    kind = doc.get("kind", kind)
     accent = colors.HexColor(accent)
     ink = colors.HexColor("#202B34")
     muted = colors.HexColor("#55626B")
     heading = ParagraphStyle("Heading", fontName="Helvetica-Bold", fontSize=13,
                              leading=17, textColor=ink, spaceBefore=16, spaceAfter=5,
                              keepWithNext=True)
-    body = ParagraphStyle("Body", fontName="Times-Roman", fontSize=12, leading=17,
+    body = ParagraphStyle("Body", fontName="Times-Roman", fontSize=11, leading=14.5,
                           textColor=ink, spaceAfter=5)
+    mono = ParagraphStyle("Code", fontName="Courier", fontSize=8.5, leading=11.5,
+                          borderPadding=6, leftIndent=9, spaceBefore=6, spaceAfter=8)
+    cell = ParagraphStyle("Cell", fontName="Helvetica", fontSize=8.8, leading=11.2)
     title = ParagraphStyle("Title", fontName="Times-Bold", fontSize=26,
                            leading=30, textColor=ink, spaceAfter=9)
     kind_style = ParagraphStyle("Type", fontName="Helvetica-Bold", fontSize=9,
@@ -72,9 +77,22 @@ def make_pdf(doc, history_id, task_id, destination):
         if index and section.get("page_break_before"):
             story.extend([PageBreak(), Paragraph(markup(doc["title"]), kind_style)])
         story.append(Paragraph(markup(section["heading"]), heading))
-        for paragraph in section["body"].split("\n\n"):
+        for paragraph in section.get("body", "").split("\n\n"):
             if paragraph.strip():
                 story.append(Paragraph(markup(paragraph.strip()), body))
+        if section.get("code"):
+            story.append(Preformatted(section["code"], mono, maxLineLength=88))
+        if table := section.get("table"):
+            rows = [table["headers"], *table["rows"]]
+            cells = [[Paragraph(markup(str(value)), cell) for value in row] for row in rows]
+            grid = Table(cells, colWidths=[496 / len(rows[0])] * len(rows[0]), repeatRows=1, hAlign="LEFT")
+            grid.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#DBE8EA")),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LINEBELOW", (0, 0), (-1, -1), 0.35, colors.HexColor("#B7C6C9")),
+                ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]))
+            story.extend([grid, Spacer(1, 7)])
     output.build(story, onFirstPage=decorate, onLaterPages=decorate)
 
 
@@ -82,8 +100,9 @@ def main():
     written = 0
     for file in sorted((ROOT / "histories").glob("*.json")):
         history = json.loads(file.read_text(encoding="utf-8"))
-        for task in history["tasks"] + history["holdouts"]:
-            if doc := task.get("pdf"):
+        for task in history["tasks"] + history["holdouts"] + history.get("open_tasks", []):
+            doc = task.get("pdf")
+            if isinstance(doc, dict):
                 target = ROOT / "pdfs" / history["id"] / f"{task['id']}.pdf"
                 make_pdf(doc, history["id"], task["id"], target)
                 written += 1

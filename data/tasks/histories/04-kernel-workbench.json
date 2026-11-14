@@ -1,182 +1,542 @@
 {
   "id": "04-kernel-workbench",
-  "name": "GPU kernel workbench",
-  "scenario": "A systems student has a reusable timing harness and good estimates for routine kernels. Debugging apparently tiny synchronization or indexing bugs has highly variable durations.",
+  "name": "GPU lab and errands",
+  "scenario": "This student budgets scripted sweeps accurately. Debugging a concurrent kernel involves a reduced test, an allocation and a second correctness run.",
   "tasks": [
     {
-      "id": "vector-baseline",
-      "day": "2026-09-01",
-      "title": "Add the fused bias baseline",
-      "description": "Extend an existing elementwise addition kernel with one bias read and reuse the correctness harness at three sizes.",
+      "id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "description": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression.",
+      "details": "",
       "category": "GPU lab",
-      "details": "Benchmark script already accepts a third argument.",
-      "estimate_minutes": 55,
-      "actual_minutes": 49,
+      "estimate_minutes": 80,
+      "actual_minutes": 122,
       "sessions_minutes": [
-        49
+        65,
+        57
+      ],
+      "completion_note": "I lost time getting a GPU allocation after I had reduced the failure.",
+      "pdf": {
+        "title": "Thread ownership in a segmented activity kernel",
+        "series": "Parallel systems studio · practical 3",
+        "kind": "GPU lab handout",
+        "sections": [
+          {
+            "heading": "Bug report and workspace",
+            "body": "A telemetry pipeline sums active ticks per session. The device input has a row of 33 to 509 ticks per session and a row-specific cutoff length. For a batch we allocate a pitched array with a padded stride in elements. One tile is 32 consecutive lanes. The production checksum fails on sessions whose valid tail crosses a warp boundary. The failure is easier to see when two consecutive rows have unequal valid lengths. Replacing all cutoffs with the same power of two conceals it.\n\nYou receive a correct scalar CPU oracle, an intentionally faulty CUDA kernel, a Python binding and fixture arrays. Check your code against the oracle over integer values prior to profiling. The starter code hardcodes the pitch to the valid length in one helper; fixing that alone does not establish correct reduction. A heatmap of deltas can help localize incorrect rows."
+          },
+          {
+            "heading": "Contract and reduced failure",
+            "body": "For each row r, compute one exact signed 32-bit sum of values with 0 <= j < length[r]. Padding values are deliberately large negative sentinels. No two blocks own the same output row, and no thread may read padding to obtain a convenient zero value. The host allocator pre-fills output with a nonzero pattern to reveal missing writes. The harness passes stride explicitly; do not infer stride from the number of valid values.",
+            "table": {
+              "headers": [
+                "Case",
+                "Rows / pitch",
+                "Valid lengths",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "tiny",
+                  "3 / 64",
+                  "3, 32, 33",
+                  "Straddle a warp boundary"
+                ],
+                [
+                  "poison",
+                  "2 / 96",
+                  "36, 61",
+                  "Detect reads from padded storage"
+                ],
+                [
+                  "empty",
+                  "3 / 128",
+                  "0, 65, 69",
+                  "Distinguish empty row and uninitialized write"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Task A · Fix the kernel and prove ownership",
+            "body": "Write a one-paragraph map from row and tile indices to block and thread coordinates. Fix the reduction in student/segmented.cu. The baseline permits either one block per row or multiple tiles in a block. If using shared memory, specify which participating threads must reach each block barrier. A return for an invalid lane cannot silently remove that thread from a later collective. State what every inactive lane contributes before the shuffle or shared-memory step. Write a regression reproducing an intermittent failure; explain the thread schedule or visibility assumption exposed by your case.",
+            "page_break_before": true,
+            "code": "RowView v = rows[blockIdx.x];\nint col = tile_base + threadIdx.x;\nint value = col < v.valid ? base[blockIdx.x * stride + col] : 0;\n// existing kernel reduces lane values here\n// exactly one owner stores output[blockIdx.x]"
+          },
+          {
+            "heading": "Task B · Timed comparison",
+            "body": "The benchmark harness warms both kernels for 20 iterations, then times 60 launches on a single stream. Wait for outstanding events before reading elapsed time. Report median and p90 for row sizes 32, 33, 65 and 257. Record GPU model, compiler, block shape, version and whether the output has been verified under poison padding. Rerunning an existing sweep on the validated reference branch is a separate reporting exercise. On that branch, there is no student kernel change to make."
+          },
+          {
+            "heading": "Submission checklist and grading cases",
+            "body": "Submit the kernel patch, one minimal failure fixture and a results table. The tests include an empty row, a tail consisting of one lane, identical adjacent rows and rows with different pitches. There is a written question about when a block-wide barrier can deadlock. A faster kernel that fails the CPU comparison receives no timing credit; a correct slow kernel still gets functional credit. Keep the raw launch measurements so that an anomalous jitter value can be inspected after the fact."
+          }
+        ]
+      },
+      "day": "2026-09-05",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Okular",
+            "title": "Segmented kernel — poisoned padding",
+            "label": "on_task"
+          },
+          {
+            "minutes": 26,
+            "app": "Code",
+            "title": "segmented.cu",
+            "label": "on_task"
+          },
+          {
+            "minutes": 15,
+            "app": "Terminal",
+            "title": "pytest -k tail_warp",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Code",
+            "title": "tests/poison_regression.py",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 8,
+            "app": "Terminal",
+            "title": "squeue -u student",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 7,
+            "app": "Terminal",
+            "title": "compute-sanitizer ./segmented_poison",
+            "label": "on_task"
+          },
+          {
+            "minutes": 22,
+            "app": "Code",
+            "title": "segmented.cu — inactive lanes",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "ctest --output-on-failure",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
-      "id": "warp-tail",
-      "day": "2026-09-05",
-      "title": "Fix the reduction tail failure",
-      "description": "Track down sporadic mismatches when the last reduction tile is partial. Add tests for prime lengths after identifying the bug.",
+      "id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "description": "Run the existing sweep, copy four medians and list compiler/driver.",
+      "details": "",
       "category": "GPU lab",
-      "details": "Only one test is flaky; I have not isolated the input yet.",
-      "estimate_minutes": 45,
-      "actual_minutes": 141,
+      "estimate_minutes": 60,
+      "actual_minutes": 59,
       "sessions_minutes": [
-        52,
-        48,
-        41
+        59
       ],
-      "pdf": {
-        "title": "Reduction failure ticket",
-        "sections": [
+      "pdf": "warp-tail",
+      "day": "2026-09-09",
+      "activity": [
+        [
           {
-            "heading": "Symptom",
-            "body": "An array of length 1009 usually matches the host sum; repeated launches occasionally differ. Multiples of the block size pass. The current test runner checks only one launch per input."
+            "minutes": 9,
+            "app": "Terminal",
+            "title": "./sweep_reference.sh",
+            "label": "on_task"
           },
           {
-            "heading": "Reproducer",
-            "body": "Sweep lengths on either side of a tile boundary with a fixed random seed. Compare the first differing block against a CPU partial-sum trace."
+            "minutes": 12,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
           },
           {
-            "heading": "Done",
-            "body": "Provide a reproducible failure, a patch, and a regression that passes over 200 launches. Do not change the comparison tolerance."
+            "minutes": 7,
+            "app": "Terminal",
+            "title": "nvidia-smi -q / nvcc --version",
+            "label": "on_task"
+          },
+          {
+            "minutes": 20,
+            "app": "LibreOffice Calc",
+            "title": "reference-medians.ods",
+            "label": "on_task"
+          },
+          {
+            "minutes": 11,
+            "app": "Obsidian",
+            "title": "Compiler and driver details",
+            "label": "on_task"
           }
         ]
-      }
-    },
-    {
-      "id": "throughput-table",
-      "day": "2026-09-10",
-      "title": "Refresh the transfer table",
-      "description": "Run the existing host/device bandwidth benchmark on three batch sizes and update the table.",
-      "category": "GPU lab",
-      "details": "The node is booked and the harness is installed.",
-      "estimate_minutes": 35,
-      "actual_minutes": 27,
-      "sessions_minutes": [
-        27
       ]
     },
     {
       "id": "stride-kernel",
-      "day": "2026-09-15",
-      "title": "Implement the straightforward strided gather",
-      "description": "Use the provided index equation for each lane; validate against the NumPy reference and add the kernel to the benchmark.",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "description": "Construct a non-contiguous input and fix the offset; run the odd-width regression.",
+      "details": "",
       "category": "GPU lab",
-      "details": "No shared memory or tuning pass requested.",
       "estimate_minutes": 70,
-      "actual_minutes": 68,
+      "actual_minutes": 109,
       "sessions_minutes": [
-        68
+        60,
+        49
+      ],
+      "completion_note": "Waiting for a GPU allocation delayed the reproducer.",
+      "day": "2026-09-13",
+      "activity": [
+        [
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "pitched-reduce.cu — row stride",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Terminal",
+            "title": "pytest -k noncontiguous",
+            "label": "on_task"
+          },
+          {
+            "minutes": 15,
+            "app": "Code",
+            "title": "tests/odd_pitch.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Thunderbird",
+            "title": "Inbox",
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 8,
+            "app": "Terminal",
+            "title": "squeue --me",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 9,
+            "app": "Terminal",
+            "title": "pytest -k odd_width",
+            "label": "on_task"
+          },
+          {
+            "minutes": 18,
+            "app": "Code",
+            "title": "pitched-reduce.cu",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Terminal",
+            "title": "ctest -R pitch",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
-      "id": "transpose-index",
-      "day": "2026-09-22",
-      "title": "Diagnose transposed labels",
-      "description": "Figure out why non-square batches swap two output channels in the profiler build. Patch the bad dimension and test both layouts.",
-      "category": "GPU lab",
-      "details": "This appears isolated to the host dispatch.",
-      "estimate_minutes": 50,
-      "actual_minutes": 38,
+      "id": "clothes",
+      "title": "Fold the clothes from the drying rack",
+      "description": "Fold dry clothes and hang the shirts; the wash itself finished earlier.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 15,
+      "actual_minutes": 15,
       "sessions_minutes": [
-        22,
-        16
+        15
+      ],
+      "day": "2026-09-17",
+      "activity": [
+        [
+          {
+            "minutes": 15,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          }
+        ]
       ]
     },
     {
       "id": "race-repro",
-      "day": "2026-09-27",
-      "title": "Isolate the scratch-buffer race",
-      "description": "Create the smallest repeatable failure with two streams and fix the lifetime of a shared temporary allocation.",
+      "title": "Make the shared scratch race reproducible",
+      "description": "Build a two-row harness, isolate the missing ordering and explain why the poison fixture fails.",
+      "details": "",
       "category": "GPU lab",
-      "details": "No stable reproduction yet. Include the 100-run test.",
-      "estimate_minutes": 75,
-      "actual_minutes": 154,
+      "estimate_minutes": 90,
+      "actual_minutes": 138,
       "sessions_minutes": [
-        54,
-        59,
-        41
+        78,
+        60
+      ],
+      "day": "2026-09-21",
+      "activity": [
+        [
+          {
+            "minutes": 32,
+            "app": "Code",
+            "title": "scratch_race.cu",
+            "label": "on_task"
+          },
+          {
+            "minutes": 19,
+            "app": "Terminal",
+            "title": "compute-sanitizer --tool racecheck",
+            "label": "on_task"
+          },
+          {
+            "minutes": 17,
+            "app": "Code",
+            "title": "two_rows_poison.cu",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 11,
+            "app": "Terminal",
+            "title": "ctest --repeat until-fail:100",
+            "label": "on_task"
+          },
+          {
+            "minutes": 26,
+            "app": "Code",
+            "title": "scratch_race.cu — scratch ownership",
+            "label": "on_task"
+          },
+          {
+            "minutes": 8,
+            "app": "Terminal",
+            "title": "ctest -R poison_tail",
+            "label": "on_task"
+          },
+          {
+            "minutes": 15,
+            "app": "Obsidian",
+            "title": "Poisoned padding / visibility",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "median-runs",
-      "day": "2026-10-02",
-      "title": "Compare block sizes for the gather",
-      "description": "Use the fixed workload and harness to time four block sizes. Report medians and keep the fastest passing setting.",
+      "title": "Repeat the archived shape sweep",
+      "description": "Use the validated binary to collect timing medians and a screenshot.",
+      "details": "",
       "category": "GPU lab",
-      "details": "No new kernel algorithm. Test the same four choices on every shape.",
-      "estimate_minutes": 55,
-      "actual_minutes": 42,
+      "estimate_minutes": 50,
+      "actual_minutes": 51,
       "sessions_minutes": [
-        42
+        51
+      ],
+      "day": "2026-09-25",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "./benchmark --reference --shapes archived",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 8,
+            "app": "Terminal",
+            "title": "less shape-sweep.tsv",
+            "label": "on_task"
+          },
+          {
+            "minutes": 18,
+            "app": "LibreOffice Calc",
+            "title": "Archived timing medians",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Screenshot",
+            "title": "Capture reference sweep",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "masked-add",
-      "day": "2026-10-08",
-      "title": "Add optional mask to bias kernel",
-      "description": "Reuse the elementwise baseline and add output checks for one sparse and one dense mask.",
+      "title": "Review an already-passing scalar fallback",
+      "description": "Check three examples against the CPU output and update the docstring.",
+      "details": "",
       "category": "GPU lab",
-      "details": "The reference and parameter plumbing are done.",
-      "estimate_minutes": 50,
-      "actual_minutes": 54,
+      "estimate_minutes": 30,
+      "actual_minutes": 24,
       "sessions_minutes": [
-        54
+        24
+      ],
+      "day": "2026-09-29",
+      "activity": [
+        [
+          {
+            "minutes": 13,
+            "app": "Code",
+            "title": "scalar_reference.cc",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Terminal",
+            "title": "pytest -k scalar_mask",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Code",
+            "title": "reference.py — docstring",
+            "label": "on_task"
+          }
+        ]
       ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "recheck-tail",
+      "title": "Compare old and new poison runs",
+      "description": "Annotate the two mismatching rows with their pitch and lane owner.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 35,
+      "pdf": "warp-tail",
+      "status": "paused",
+      "sessions_minutes": [
+        10
+      ],
+      "day": "2026-10-25",
+      "activity": [
+        [
+          {
+            "minutes": 4,
+            "app": "Terminal",
+            "title": "diff bad-run.csv patched.csv",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Code",
+            "title": "tail-results.md",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dishsoap",
+      "title": "Return library adapter and buy soap",
+      "description": "Return the USB adapter and collect the grocery order on the way back.",
+      "details": "",
+      "category": "Personal",
+      "estimate_minutes": 25,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-10-25"
     }
   ],
   "holdouts": [
     {
       "id": "async-flicker",
-      "day": "2026-10-14",
-      "title": "Triage a sporadic normalization mismatch",
-      "description": "Find and fix a discrepancy visible only when two request streams overlap. Leave behind a regression that fails reliably before the patch.",
+      "title": "Fix nondeterministic segmented sums",
+      "description": "Task A only: minimize the non-power-of-two failure, correct the ownership rule and add one regression.",
+      "details": "",
       "category": "GPU lab",
-      "details": "Unknown cause. The single-stream benchmark is clean.",
-      "estimate_minutes": 60,
-      "actual_minutes": 127,
+      "estimate_minutes": 85,
+      "actual_minutes": 132,
       "sessions_minutes": [
-        45,
-        54,
-        28
+        75,
+        57
       ],
-      "pdf": {
-        "title": "Incident review: two-stream normalization",
-        "sections": [
-          {
-            "heading": "Evidence",
-            "body": "The same input yields correct normalized outputs with one stream and occasional differences with two. Launch order and buffer pool events are available as timestamped records."
-          },
-          {
-            "heading": "Scope",
-            "body": "Keep both streams active. Create a reproducer with the smallest batch you can find and locate the first incorrect intermediate. Document any assumption about buffer ownership."
-          },
-          {
-            "heading": "Acceptance",
-            "body": "Submit the fix, the failing replay, and a repeated correctness run. Speed measurements are optional."
-          }
-        ]
+      "pdf": "warp-tail",
+      "check": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.38,
+          1.68
+        ],
+        "evidence_ids": [
+          "warp-tail",
+          "stride-kernel",
+          "race-repro"
+        ],
+        "rationale": "Prior debugging with odd shapes and poisoned padding needed about half again as much time."
       },
-      "check": "Similar unknown-cause debugging tasks have a broad spread; a precise estimate matching routine implementation would be misleading."
+      "day": "2026-10-26"
     },
     {
       "id": "sweep-again",
-      "day": "2026-10-20",
-      "title": "Sweep normalization block sizes",
-      "description": "Measure four block sizes with the existing script on the six known-good shapes and update the throughput table.",
+      "title": "Rerun the validated reference sweep",
+      "description": "Task B reporting on the passing branch. Save raw timings and four medians; no implementation.",
+      "details": "",
       "category": "GPU lab",
-      "details": "Correctness is already established. Use the reserved node and record medians.",
       "estimate_minutes": 60,
       "actual_minutes": 61,
       "sessions_minutes": [
         61
       ],
-      "check": "Retrieve scripted sweeps, then check whether a correction helps a task whose original budget happened to be accurate."
+      "pdf": "warp-tail",
+      "check": "The scripted sweeps are already well budgeted.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.9,
+          1.11
+        ],
+        "evidence_ids": [
+          "throughput-table",
+          "median-runs"
+        ],
+        "rationale": "The scripted sweeps are already well budgeted."
+      },
+      "day": "2026-10-27"
     }
   ]
 }

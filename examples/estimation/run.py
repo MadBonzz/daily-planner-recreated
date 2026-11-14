@@ -1,9 +1,11 @@
 """Explore and score the synthetic planner histories. Run as python -m examples.estimation.run."""
 
 import argparse
+import hashlib
 from collections import Counter
-from datetime import date, datetime, time as clock_time, timezone
+from datetime import date, datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -16,6 +18,7 @@ from unittest.mock import patch
 from urllib.parse import urlsplit
 
 import estimator
+from examples.estimation.scoring import grade, rubric_summary, validate_rubric
 from model_client import ModelUnavailable, model_settings
 from planner_store import PlannerStore
 
@@ -28,7 +31,12 @@ INPUT_KEYS = ("day", "title", "description", "category", "details", "estimate_mi
 def documents(task, history_id, directory):
     if not task.get("pdf"):
         return []
-    path = directory / "pdfs" / history_id / f"{task['id']}.pdf"
+    if not valid_id(history_id):
+        raise ValueError("Invalid fixture history ID")
+    stem = task["pdf"] if isinstance(task["pdf"], str) else task["id"]
+    if not valid_id(stem):
+        raise ValueError("Invalid fixture PDF reference")
+    path = directory / "pdfs" / history_id / f"{stem}.pdf"
     return [(path.name, path.read_bytes())]
 
 
@@ -36,12 +44,18 @@ def task_inputs(task, history_id, directory):
     """Only pre-task fields are permitted here. Outcome, sessions and 'check' stay in the fixture."""
     files = documents(task, history_id, directory)
     fields = {key: task[key] for key in INPUT_KEYS}
+    if "fixed_duration" in task:
+        fields["fixed_duration"] = task["fixed_duration"]
     fields["pdf_text"] = "\n".join(estimator.extract_pdf_text(data) for _, data in files)
     return fields, files
 
 
 def valid_id(value):
     return isinstance(value, str) and re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]*", value)
+
+
+def positive_minutes(value):
+    return type(value) in (int, float) and math.isfinite(value) and value > 0
 
 
 def validate(history, directory, *, check_pdfs=True):
@@ -64,6 +78,10 @@ def validate(history, directory, *, check_pdfs=True):
             raise ValueError(f"{task_id}: invalid task text")
         if not task["title"].strip() or not task["description"].strip():
             raise ValueError(f"{task_id}: a title and description are required")
+        if "completion_note" in task and not isinstance(task["completion_note"], str):
+            raise ValueError(f"{task_id}: completion_note must be text")
+        if "fixed_duration" in task and type(task["fixed_duration"]) is not bool:
+            raise ValueError(f"{task_id}: fixed_duration must be a boolean")
         sessions = task["sessions_minutes"]
         if not isinstance(sessions, list) or not sessions or any(
             type(n) is not int or n <= 0 for n in [*sessions, task["actual_minutes"], task["estimate_minutes"]]
@@ -73,7 +91,42 @@ def validate(history, directory, *, check_pdfs=True):
             fields, _ = task_inputs(task, history_id, directory)
             if not fields["pdf_text"].strip():
                 raise ValueError(f"{history_id}/{task_id}: attachment has no readable text")
-    if any(not row.get("check") for row in holdouts):
+    open_rows = history.get("open_tasks", [])
+    if sum(row["status"] == "running" for row in open_rows) > 1:
+        raise ValueError(f"{history_id}: only one open task can be running")
+    for row in open_rows:
+        task_id = row["id"]
+        if not valid_id(task_id) or task_id in seen:
+            raise ValueError(f"{history_id}: invalid or duplicate open task ID {task_id!r}")
+        seen.add(task_id)
+        if date.fromisoformat(row["day"]).isoformat() != row["day"]:
+            raise ValueError(f"{task_id}: use a YYYY-MM-DD date")
+        if "fixed_duration" in row and type(row["fixed_duration"]) is not bool:
+            raise ValueError(f"{task_id}: fixed_duration must be a boolean")
+        if row["status"] not in {"ready", "paused", "running"}:
+            raise ValueError(f"{task_id}: invalid open task status")
+        if (not all(isinstance(row.get(k), str) for k in ("title", "description", "category", "details"))
+                or not row["title"].strip() or not row["description"].strip()):
+            raise ValueError(f"{task_id}: open task needs a title and description")
+        if not positive_minutes(row["estimate_minutes"]):
+            raise ValueError(f"{task_id}: invalid open task budget")
+        sessions = row.get("sessions_minutes", [])
+        if (not isinstance(sessions, list) or not all(positive_minutes(v) for v in sessions)
+                or (row["status"] == "ready" and sessions) or (row["status"] == "paused" and not sessions)):
+            raise ValueError(f"{task_id}: invalid previously recorded open-task sessions")
+        if row.get("activity") and check_pdfs:
+            from examples.estimation.activity_fixture import replay_history
+            replay_history({"id": history_id, "tasks": [row]})
+        if row.get("pdf") and check_pdfs:
+            if not task_inputs(row, history_id, directory)[0]["pdf_text"].strip():
+                raise ValueError(f"{task_id}: attachment has no readable text")
+    graded = any("evaluation" in row for row in holdouts)
+    for row in holdouts:
+        if graded and "evaluation" not in row:
+            raise ValueError(f"{history_id}: every holdout needs its declared evaluation")
+        if "evaluation" in row:
+            validate_rubric(row["evaluation"], {past["id"] for past in tasks})
+    if any(not row.get("check") and not row.get("evaluation") for row in holdouts):
         raise ValueError(f"{history_id}: each holdout needs a check describing its intended test")
     if min(row["day"] for row in holdouts) <= max(row["day"] for row in tasks):
         raise ValueError(f"{history_id}: every holdout must be later than all historical tasks")
@@ -96,11 +149,14 @@ def histories(selector, directory=DATASET):
 
 
 def historical_rows(history, directory):
+    from examples.estimation.activity_fixture import replay_history
+    reports = replay_history(history, directory=directory)
     rows = []
     for task in sorted(history["tasks"], key=lambda row: row["day"]):
         fields, _ = task_inputs(task, history["id"], directory)
         rows.append({**fields, "id": task["id"], "actual_seconds": task["actual_minutes"] * 60,
-                     "status": "completed"})
+                     "status": "completed", "completion_note": task.get("completion_note", ""),
+                     "report": reports.get(task["id"], {}).get("report")})
     return rows
 
 
@@ -124,6 +180,7 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
         outcome = "not_called"
         model_seconds = 0.0
         model_error = None
+        model_calls = []
 
         def observed_chat(*args, **kwargs):
             nonlocal outcome, model_seconds, model_error
@@ -131,15 +188,27 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
                 outcome = "offline"
                 raise ModelUnavailable("Offline fixture run.")
             call_started = time.perf_counter()
+            messages = args[0] if args else kwargs["messages"]
+            prompt_bytes = json.dumps(messages, ensure_ascii=False, sort_keys=True).encode("utf-8")
+            receipt = {
+                "prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
+                "max_tokens": kwargs.get("max_tokens"),
+            }
+            model_calls.append(receipt)
             try:
                 reply = request(*args, **kwargs)
             except ModelUnavailable as exc:
                 outcome = "unavailable"
+                receipt["error"] = str(exc)
                 model_error = str(exc)
                 raise
             finally:
-                model_seconds += time.perf_counter() - call_started
-            outcome = "ok"
+                duration = time.perf_counter() - call_started
+                model_seconds += duration
+                receipt["seconds"] = round(duration, 3)
+            receipt["response"] = reply
+            if model_error is None:
+                outcome = "ok"
             return reply
 
         # This scoped test hook exercises the production fallback without contacting a provider.
@@ -149,7 +218,18 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
             prediction = estimator.predict(fields, completed, index_dir)
         latency = time.perf_counter() - started
         actual = row["actual_minutes"]
+        fields_to_score = {}
+        if "evaluation" in row:
+            fields_to_score = {
+                "fixed_duration": bool(fields.get("fixed_duration")),
+                "cautions": prediction.get("cautions", []),
+                "explanation": prediction.get("explanation", ""),
+                "model_calls": model_calls,
+                "evaluation": grade(row["evaluation"], prediction, fields["estimate_minutes"], actual,
+                                    {r["id"] for r in completed}),
+            }
         scores.append({
+            **fields_to_score,
             "history": history["id"], "task": row["id"], "title": row["title"],
             "original": fields["estimate_minutes"], "category": category_min,
             "planner": prediction["point_min"], "actual": actual,
@@ -158,14 +238,21 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None):
             "confidence": prediction["confidence"], "basis": prediction["basis"],
             "model_status": outcome, "model_error": model_error, "model_seconds": round(model_seconds, 3),
             "latency_seconds": round(latency, 3),
-            "evidence": prediction["evidence"], "check": row["check"],
+            "evidence": prediction["evidence"], "check": row.get("check", ""),
         })
     return scores
+
+
+def model_succeeded(row):
+    if row.get("fixed_duration") and row["basis"] == "Scheduled duration":
+        return row["model_status"] == "not_called"
+    return row["model_status"] == "ok"
 
 
 def metrics(scores):
     return {
         "cases": len(scores),
+        **rubric_summary(scores),
         "mae_minutes": {method: round(mean(abs(row[method] - row["actual"]) for row in scores), 2)
                         for method in ("original", "category", "planner")},
         "ranges_covering_actual": sum(row["covered"] for row in scores),
@@ -180,23 +267,9 @@ def populate_profile(history, directory, root):
     """Seed a new profile with real store transitions and attach synthetic PDFs."""
     if (root / "live").exists():
         raise ValueError("Choose a new, empty fixture profile")
-    stamp = 0.0
-    store = PlannerStore(root / "live", clock=lambda: stamp)
-    store.set_capture(False)
-    for row in sorted(history["tasks"], key=lambda task: task["day"]):
-        fields, files = task_inputs(row, history["id"], directory)
-        morning = datetime.combine(date.fromisoformat(row["day"]), clock_time(8), timezone.utc).timestamp()
-        stamp = max(morning, stamp)
-        # No original app forecast exists for imported history. An empty snapshot is
-        # rendered explicitly as missing in the planner.
-        task = store.create_task(**fields, attachments=files, prediction={})
-        for i, length in enumerate(row["sessions_minutes"]):
-            store.transition(task["id"], "start")
-            stamp += length * 60
-            store.transition(task["id"], "stop")
-            store.transition(task["id"], "finish" if i == len(row["sessions_minutes"]) - 1 else "continue_later")
-            stamp += 15 * 60
-
+    from dev_workspace import seed_completed
+    store = PlannerStore(root / "live")
+    seed_completed(store, history, directory)
     completed = store.completed_tasks()
     for row in history["holdouts"]:
         fields, files = task_inputs(row, history["id"], directory)
@@ -212,7 +285,7 @@ def main(argv=None):
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("list", help="List all synthetic histories")
     commands.add_parser("validate", help="Check dates, session totals, and readable PDFs")
-    score = commands.add_parser("evaluate", help="Score both held-out tasks against fixed earlier history")
+    score = commands.add_parser("evaluate", help="Score held-out tasks against fixed earlier history")
     score.add_argument("history", nargs="?", help="History ID or two-digit prefix; default: all")
     score.add_argument("--case", help="Score one held-out task ID in the chosen history")
     score.add_argument("--offline", action="store_true", help="Exercise the planner's no-model fallback")
@@ -236,7 +309,10 @@ def main(argv=None):
         for history in selected:
             validate(history, DATASET, check_pdfs=args.command == "validate")
         if args.command == "validate":
-            print(f"Validated {len(selected)} histories, all sessions, holdout dates, and attachments.")
+            from examples.estimation.activity_fixture import replay_history
+            for history in selected:
+                replay_history(history, directory=DATASET)
+            print(f"Validated {len(selected)} histories, activity sessions, holdout rubrics, dates, and attachments.")
             return 0
         with TemporaryDirectory(prefix="planner-synthetic-") as temp:
             root = Path(temp)
@@ -281,7 +357,7 @@ def main(argv=None):
                 args.json.parent.mkdir(parents=True, exist_ok=True)
                 args.json.write_text(json.dumps({"configuration": config, "cases": results, "summary": summary}, indent=2,
                                                 ensure_ascii=False) + "\n", encoding="utf-8")
-            if args.strict_model and any(row["model_status"] == "unavailable" for row in results):
+            if args.strict_model and not all(model_succeeded(row) for row in results):
                 print("Model failed on at least one case; fallback scores are marked in the results.", file=sys.stderr)
                 return 1
         return 0

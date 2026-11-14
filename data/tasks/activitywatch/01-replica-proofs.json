@@ -1,0 +1,445 @@
+{
+  "buckets": {
+    "aw-watcher-window_demo-01-replica-proofs": {
+      "id": "aw-watcher-window_demo-01-replica-proofs",
+      "created": "2026-09-05T08:00:00+00:00",
+      "name": "",
+      "type": "currentwindow",
+      "client": "aw-watcher-window",
+      "hostname": "demo-01-replica-proofs",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-09-05T08:00:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "app": "Okular",
+            "title": "Ticket desk — one-term snapshots"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-09-05T08:08:00+00:00",
+          "duration": 780.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Standby ACK table"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-09-05T08:21:00+00:00",
+          "duration": 300.0,
+          "data": {
+            "app": "Okular",
+            "title": "Ticket desk — exercise 1"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-09-09T08:00:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "app": "Okular",
+            "title": "Ticket desk — recovery argument"
+          }
+        },
+        {
+          "id": 5,
+          "timestamp": "2026-09-09T08:09:00+00:00",
+          "duration": 1380.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Ticket receipt after the crash"
+          }
+        },
+        {
+          "id": 6,
+          "timestamp": "2026-09-09T08:43:00+00:00",
+          "duration": 960.0,
+          "data": {
+            "app": "Obsidian",
+            "title": "Second desk failure schedule"
+          }
+        },
+        {
+          "id": 7,
+          "timestamp": "2026-09-09T08:59:00+00:00",
+          "duration": 180.0,
+          "data": {
+            "app": "Thunderbird",
+            "title": "Inbox"
+          }
+        },
+        {
+          "id": 8,
+          "timestamp": "2026-09-09T09:02:00+00:00",
+          "duration": 600.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Takeover guard"
+          }
+        },
+        {
+          "id": 9,
+          "timestamp": "2026-09-17T08:00:00+00:00",
+          "duration": 720.0,
+          "data": {
+            "app": "Okular",
+            "title": "Standby handover — journals"
+          }
+        },
+        {
+          "id": 10,
+          "timestamp": "2026-09-17T08:12:00+00:00",
+          "duration": 1320.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Induction over the election"
+          }
+        },
+        {
+          "id": 11,
+          "timestamp": "2026-09-17T08:44:00+00:00",
+          "duration": 660.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Counterexample on delayed replies"
+          }
+        },
+        {
+          "id": 12,
+          "timestamp": "2026-09-17T08:55:00+00:00",
+          "duration": 900.0,
+          "data": {
+            "app": "Calendar",
+            "title": "Today"
+          }
+        },
+        {
+          "id": 13,
+          "timestamp": "2026-09-17T09:10:00+00:00",
+          "duration": 1080.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Recovery case on the scratch sheet"
+          }
+        },
+        {
+          "id": 14,
+          "timestamp": "2026-09-17T09:28:00+00:00",
+          "duration": 1440.0,
+          "data": {
+            "app": "Code",
+            "title": "receipt-invariant.tex"
+          }
+        },
+        {
+          "id": 15,
+          "timestamp": "2026-09-17T09:52:00+00:00",
+          "duration": 180.0,
+          "data": {
+            "app": "Terminal",
+            "title": "latexmk receipt-invariant.tex"
+          }
+        },
+        {
+          "id": 16,
+          "timestamp": "2026-09-21T08:00:00+00:00",
+          "duration": 420.0,
+          "data": {
+            "app": "Okular",
+            "title": "Ticket desk — replica responses"
+          }
+        },
+        {
+          "id": 17,
+          "timestamp": "2026-09-21T08:07:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Replies from a, b and c"
+          }
+        },
+        {
+          "id": 18,
+          "timestamp": "2026-09-21T08:21:00+00:00",
+          "duration": 180.0,
+          "data": {
+            "app": "Okular",
+            "title": "Standby response table"
+          }
+        },
+        {
+          "id": 19,
+          "timestamp": "2026-09-25T08:00:00+00:00",
+          "duration": 660.0,
+          "data": {
+            "app": "Obsidian",
+            "title": "Flush barrier / journal cursor"
+          }
+        },
+        {
+          "id": 20,
+          "timestamp": "2026-09-25T08:11:00+00:00",
+          "duration": 1260.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Delayed DRAINED counterexample"
+          }
+        },
+        {
+          "id": 21,
+          "timestamp": "2026-09-25T08:41:00+00:00",
+          "duration": 120.0,
+          "data": {
+            "app": "Thunderbird",
+            "title": "Inbox"
+          }
+        },
+        {
+          "id": 22,
+          "timestamp": "2026-09-25T08:43:00+00:00",
+          "duration": 300.0,
+          "data": {
+            "app": "Xournal++",
+            "title": "Crash just before persist"
+          }
+        },
+        {
+          "id": 23,
+          "timestamp": "2026-09-25T08:48:00+00:00",
+          "duration": 900.0,
+          "data": {
+            "app": "Calendar",
+            "title": "Today"
+          }
+        },
+        {
+          "id": 24,
+          "timestamp": "2026-09-25T09:03:00+00:00",
+          "duration": 1620.0,
+          "data": {
+            "app": "Code",
+            "title": "barrier-recovery.tex"
+          }
+        },
+        {
+          "id": 25,
+          "timestamp": "2026-09-25T09:30:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "app": "Okular",
+            "title": "barrier-recovery.pdf"
+          }
+        },
+        {
+          "id": 26,
+          "timestamp": "2026-09-25T09:39:00+00:00",
+          "duration": 360.0,
+          "data": {
+            "app": "Code",
+            "title": "barrier-recovery.tex"
+          }
+        },
+        {
+          "id": 27,
+          "timestamp": "2026-09-29T08:00:00+00:00",
+          "duration": 420.0,
+          "data": {
+            "app": "Firefox",
+            "title": "Student transit — reload card"
+          }
+        },
+        {
+          "id": 28,
+          "timestamp": "2026-09-29T08:07:00+00:00",
+          "duration": 240.0,
+          "data": {
+            "app": "Firefox",
+            "title": "Account preferences"
+          }
+        },
+        {
+          "id": 29,
+          "timestamp": "2026-09-29T08:11:00+00:00",
+          "duration": 300.0,
+          "data": {
+            "app": "Files",
+            "title": "Downloads / Transit receipts"
+          }
+        }
+      ]
+    },
+    "aw-watcher-afk_demo-01-replica-proofs": {
+      "id": "aw-watcher-afk_demo-01-replica-proofs",
+      "created": "2026-09-05T08:00:00+00:00",
+      "name": "",
+      "type": "afkstatus",
+      "client": "aw-watcher-afk",
+      "hostname": "demo-01-replica-proofs",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-09-05T08:00:00+00:00",
+          "duration": 1560.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-09-09T08:00:00+00:00",
+          "duration": 1920.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-09-09T08:32:00+00:00",
+          "duration": 660.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-09-09T08:43:00+00:00",
+          "duration": 1740.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 5,
+          "timestamp": "2026-09-17T08:00:00+00:00",
+          "duration": 2040.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 6,
+          "timestamp": "2026-09-17T08:34:00+00:00",
+          "duration": 600.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 7,
+          "timestamp": "2026-09-17T08:44:00+00:00",
+          "duration": 720.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 8,
+          "timestamp": "2026-09-17T08:56:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 9,
+          "timestamp": "2026-09-17T09:10:00+00:00",
+          "duration": 2700.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 10,
+          "timestamp": "2026-09-21T08:00:00+00:00",
+          "duration": 1440.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 11,
+          "timestamp": "2026-09-25T08:00:00+00:00",
+          "duration": 1920.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 12,
+          "timestamp": "2026-09-25T08:32:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 13,
+          "timestamp": "2026-09-25T08:41:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 14,
+          "timestamp": "2026-09-25T08:49:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 15,
+          "timestamp": "2026-09-25T09:03:00+00:00",
+          "duration": 2520.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 16,
+          "timestamp": "2026-09-29T08:00:00+00:00",
+          "duration": 960.0,
+          "data": {
+            "status": "not-afk"
+          }
+        }
+      ]
+    },
+    "aw-watcher-web-firefox_demo-01-replica-proofs": {
+      "id": "aw-watcher-web-firefox_demo-01-replica-proofs",
+      "created": "2026-09-29T08:00:00+00:00",
+      "name": "",
+      "type": "web.tab.current",
+      "client": "aw-watcher-web-firefox",
+      "hostname": "demo-01-replica-proofs",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-09-29T08:00:00+00:00",
+          "duration": 420.0,
+          "data": {
+            "url": "https://transit.example/",
+            "title": "Student transit — reload card",
+            "audible": false,
+            "incognito": false
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-09-29T08:07:00+00:00",
+          "duration": 240.0,
+          "data": {
+            "url": "https://private-fixture.example/",
+            "title": "Account preferences",
+            "audible": false,
+            "incognito": false
+          }
+        }
+      ]
+    }
+  }
+}

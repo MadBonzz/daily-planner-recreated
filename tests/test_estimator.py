@@ -201,3 +201,103 @@ def test_retrieval_repairs_an_old_pre_pdf_vector(tmp_path):
         assert records[0].payload["planner_minutes"] == 90
         assert records[0].payload["status"] == "completed"
         assert records[0].vector == pytest.approx(estimator._vector(task), abs=1e-6)
+
+
+def test_fixed_duration_skips_model_and_timed_comparisons(tmp_path):
+    with patch("estimator.chat_json") as model, patch("estimator._search") as search:
+        task = {**paper("show"), "fixed_duration": True, "estimate_minutes": 75}
+        result = estimator.predict(task, [paper("overrun", 3)], tmp_path)
+    model.assert_not_called()
+    search.assert_not_called()
+    assert (result["low_min"], result["point_min"], result["high_min"]) == (75, 75, 75)
+    assert result["basis"] == "Scheduled duration" and result["cautions"] == []
+
+
+def test_meeting_uses_observed_ratios_with_no_surcharge_for_lateness(tmp_path):
+    task = dict(paper("target"), title="Schedule rota with Sam", category="Meetings",
+                description="Review all of this month's handovers with Sam.", estimate_minutes=30)
+    note = "Sam joined six minutes after the start. We still covered the whole rota."
+    history = [{**task, "id": str(i), "actual_seconds": 30 * 60 * ratio,
+                "completion_note": note if not i else ""}
+               for i, ratio in enumerate((1.20, 1.25, 1.20))]
+    fixed = {**task, "id": "training", "fixed_duration": True, "actual_seconds": 9000}
+    target = {**task, "completion_note": "TARGET OUTCOME MUST STAY PRIVATE"}
+
+    def choose(messages, schema, **kwargs):
+        record = json.loads(messages[-1]["content"])
+        assert "TARGET OUTCOME" not in messages[-1]["content"]
+        assert len(record["candidates"]) == 3
+        return {"matches": [{"slot": row["slot"], "reason": "Same person and review.", "flag": 1}
+                            for row in record["candidates"]]}
+
+    with patch("estimator.chat_json", side_effect=choose) as model:
+        result = estimator.predict(target, [*history, fixed], tmp_path)
+    model.assert_called_once()
+    assert result["point_min"] == 36 and result["low_min"] < 36 < result["high_min"]
+    assert result["confidence"] == "medium"
+    caution, = result["cautions"]
+    assert note in caution["advice"]
+    assert caution["sources"] == [{"task_id": "0", "title": task["title"],
+                                  "origin": "Completion note", "observation": note}]
+
+
+def test_relevant_aw_flags_exclude_private_idle_and_unclassified_intervals(tmp_path):
+    task = dict(paper("now"), title="Study a lecture", description="Watch the lecture on harmonics.")
+    visible = {"seconds": 180, "domain": "youtube.com", "title": "Cup highlights",
+               "label": "off_task", "idle": False, "excluded": False}
+    intervals = [
+        {**visible, "title": "task lecture", "label": "on_task"},
+        {**visible, "title": "private medical tab", "excluded": True},
+        {**visible, "title": "attendee late", "label": "uncertain"},
+        {**visible, "title": "idle page", "idle": True},
+        visible, {**visible, "seconds": 60},
+    ]
+    history = [{**task, "id": key, "report": {"intervals": intervals}} for key in ("a", "b", "unrelated")]
+
+    def choose(messages, schema, **kwargs):
+        records = json.loads(messages[-1]["content"])["candidates"]
+        assert all(r["observations"] == ["ActivityWatch: 4.0 min on youtube.com labeled off-task (Cup highlights)."]
+                   for r in records)
+        return {"matches": [{"slot": 1, "reason": "Same lecture format.", "flag": 1},
+                            {"slot": 1, "reason": "Duplicate.", "flag": 1},
+                            {"slot": 2, "reason": "Same lecture format.", "flag": 1}]}
+
+    with patch("estimator.chat_json", side_effect=choose):
+        result = estimator.predict(task, history, tmp_path)
+    assert len(result["cautions"]) == 1
+    advice = result["cautions"][0]
+    assert "youtube.com" in advice["advice"]
+    assert {source["task_id"] for source in advice["sources"]} == {e["task_id"] for e in result["evidence"]}
+    assert len(advice["sources"]) == 2
+    assert {source["origin"] for source in advice["sources"]} == {"ActivityWatch"}
+
+
+def test_invalid_and_category_only_caution_references_are_ignored(tmp_path):
+    prior = {**paper("prior"), "completion_note": "The serial link disconnected."}
+    for matches in ([], [{"slot": 1, "reason": "Similar scope.", "flag": 2}]):
+        with patch("estimator.chat_json", return_value={"matches": matches}):
+            result = estimator.predict(paper("now"), [prior], tmp_path)
+        assert result["cautions"] == []
+
+
+def test_offline_forecast_credits_notes_and_keeps_consistent_ratios(tmp_path):
+    history = [{**paper(str(i), ratio), "completion_note": "Reconnected the serial link."}
+               for i, ratio in enumerate((1.20, 1.25, 1.20))]
+    with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("offline")):
+        result = estimator.predict(paper("now"), history, tmp_path)
+    assert result["basis"] == "Text similarity" and result["point_min"] == 72
+    caution, = result["cautions"]
+    assert "Reconnected the serial link." in caution["advice"]
+    assert [source["observation"] for source in caution["sources"]] == ["Reconnected the serial link."] * 3
+    assert {source["origin"] for source in caution["sources"]} == {"Completion note"}
+
+def test_cautions_quote_new_obstacles_verbatim_and_keep_different_observations_apart():
+    issue = "The joystick driver rejected CRLF in the calibration file."
+    note = {"task_id": "driver", "title": "Configure joystick", "origin": "Completion note", "observation": issue}
+    other = {**note, "task_id": "bench", "observation": "The bench was occupied until noon."}
+    repeated = {**note, "task_id": "second-driver"}
+    cautions = estimator.cautions_from_sources([note, other, repeated, note])
+    assert len(cautions) == 2
+    assert issue in cautions[0]["advice"] and "usually" not in cautions[0]["advice"]
+    assert cautions[0]["sources"] == [note, repeated]
+    assert cautions[1]["sources"] == [other] and issue not in cautions[1]["advice"]

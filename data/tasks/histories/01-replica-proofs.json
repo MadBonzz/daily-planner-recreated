@@ -1,191 +1,564 @@
 {
   "id": "01-replica-proofs",
-  "name": "Replica protocols seminar",
-  "scenario": "One student uses the same course category for pencil traces, new safety arguments, and the final write-up. The requested part of the handout determines what counts as finished.",
+  "name": "Problem sets between lab and home",
+  "scenario": "A student writes crash-recovery proofs longhand before typesetting them; trace tables and life admin take very different amounts of time.",
   "tasks": [
     {
       "id": "clock-two",
-      "day": "2026-09-02",
-      "title": "Fill in the missing logical clock entries",
-      "description": "I have four blanks on the timeline from discussion. Propagate the send and receive timestamps and check each arrow.",
+      "title": "Reconstruct the ticket-desk ACK timeline",
+      "description": "Fill the missing journal entries in exercise 1. I copied the initial snapshot already.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "I already copied the timeline into my notes.",
       "estimate_minutes": 35,
-      "actual_minutes": 22,
+      "actual_minutes": 26,
       "sessions_minutes": [
-        22
+        26
+      ],
+      "pdf": {
+        "title": "When can a standby issue tickets?",
+        "series": "Replication reading seminar · workshop",
+        "kind": "Protocol worksheet",
+        "sections": [
+          {
+            "heading": "The ticket desk",
+            "body": "Five replicas issue one-use loading tickets. A front desk accepts a request with token u, proposes (u, lane) and waits for three signed acknowledgments before handing the driver a receipt. The standby desk can take over after reading three replica journals. A driver can visit a second desk before a delayed response from the first desk arrives. Every replica compares tokens by byte equality. A newer election term alone does not invalidate an already issued receipt.",
+            "table": {
+              "headers": [
+                "Replica",
+                "Term 4 journal",
+                "Stable high-water mark"
+              ],
+              "rows": [
+                [
+                  "a",
+                  "(x, east), (u, east)",
+                  "9"
+                ],
+                [
+                  "b",
+                  "(x, east), (u, east)",
+                  "9"
+                ],
+                [
+                  "c",
+                  "(x, east)",
+                  "8"
+                ],
+                [
+                  "d",
+                  "(y, west)",
+                  "7"
+                ],
+                [
+                  "e",
+                  "unavailable until step 5",
+                  "unknown"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Exercise 1 · One-term snapshots",
+            "body": "Mark which three journals a takeover might read before delivery of the acknowledgment from c. Give both the visible prefix and the longest prefix that must have been acknowledged by a quorum. Explain why the shortest journal cannot by itself disprove the existence of a receipt. In your table, distinguish a read response from a row whose value is inferred only by quorum intersection."
+          },
+          {
+            "heading": "Exercise 2 · Recovery argument",
+            "body": "Now let the first desk crash immediately after it sends a receipt. The standby proposes a lane change for the same token. Write an invariant that says a driver with a durable receipt cannot later observe a distinct authorized lane for that token. Enumerate the transition that creates a receipt, the transition that elects a desk, and the transition that discards a reused token. Either prove each preserves the invariant or construct one message interleaving that violates it. Include the earliest inconsistent pair of records.",
+            "page_break_before": true
+          },
+          {
+            "heading": "A tempting optimization",
+            "body": "A teammate keeps only the greatest scalar high-water mark from the three recovery replies. Test this proposal by varying the token assignments while keeping the returned marks unchanged. Provide a pair of executions if the optimization loses information. Your solution may assume authentic signatures; it may not use clock order between replicas. Submit the trace and a paragraph naming the state that must survive a reboot."
+          }
+        ]
+      },
+      "day": "2026-09-05",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Okular",
+            "title": "Ticket desk — one-term snapshots",
+            "label": "on_task"
+          },
+          {
+            "minutes": 13,
+            "app": "Xournal++",
+            "title": "Standby ACK table",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Okular",
+            "title": "Ticket desk — exercise 1",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "lease-restart",
-      "day": "2026-09-07",
-      "title": "Find a bad lease handoff",
-      "description": "Construct an execution in which two replicas both admit a client after the directory restarts. Write the events in execution order and say which client guarantee fails.",
+      "title": "Prove the takeover rule survives a desk crash",
+      "description": "Write a safety invariant for a returned ticket under delayed responses; consider the crash after the receipt.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "I can explain the bug informally. I still need a trace that is legal under every rule.",
-      "estimate_minutes": 55,
-      "actual_minutes": 86,
+      "estimate_minutes": 60,
+      "actual_minutes": 72,
       "sessions_minutes": [
-        47,
-        39
+        72
+      ],
+      "completion_note": "I needed a separate failure schedule for the recovery case.",
+      "pdf": "clock-two",
+      "day": "2026-09-09",
+      "activity": [
+        [
+          {
+            "minutes": 9,
+            "app": "Okular",
+            "title": "Ticket desk — recovery argument",
+            "label": "on_task"
+          },
+          {
+            "minutes": 23,
+            "app": "Xournal++",
+            "title": "Ticket receipt after the crash",
+            "label": "on_task"
+          },
+          {
+            "minutes": 11,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 16,
+            "app": "Obsidian",
+            "title": "Second desk failure schedule",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "Thunderbird",
+            "title": "Inbox",
+            "label": "uncertain"
+          },
+          {
+            "minutes": 10,
+            "app": "Xournal++",
+            "title": "Takeover guard",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
-      "id": "quorum-card",
-      "day": "2026-09-11",
-      "title": "Make a quorum revision card",
-      "description": "List smallest read and write set sizes for the four replica counts from lecture. Label which pairs must intersect.",
-      "category": "Distributed systems",
-      "details": "The inequalities are already in my notes.",
-      "estimate_minutes": 30,
-      "actual_minutes": 26,
+      "id": "dish-rack",
+      "title": "Empty the dishwasher before lab",
+      "description": "Put the clean dishes away and wipe the lower rack.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 12,
+      "actual_minutes": 10,
       "sessions_minutes": [
-        26
+        10
+      ],
+      "day": "2026-09-13",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "idle": null,
+            "label": "uncertain"
+          }
+        ]
       ]
     },
     {
       "id": "epoch-proof",
-      "day": "2026-09-16",
-      "title": "Show a frozen epoch cannot accept new leases",
-      "description": "Write a full induction covering directory reboots and delayed grant messages. Include an explicit statement of the state that survives a restart.",
+      "title": "Prove one receipt per token after a leader change",
+      "description": "Hand in a quantified invariant, then check the takeover handler against stale journal replies.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "First time writing down persistence assumptions for this protocol.",
-      "estimate_minutes": 85,
-      "actual_minutes": 138,
+      "estimate_minutes": 80,
+      "actual_minutes": 100,
       "sessions_minutes": [
-        54,
-        49,
-        35
+        55,
+        45
       ],
-      "pdf": {
-        "title": "Directory leases across epochs",
-        "sections": [
+      "completion_note": "Writing out a separate failure schedule took another pass.",
+      "pdf": "clock-two",
+      "day": "2026-09-17",
+      "activity": [
+        [
           {
-            "heading": "System",
-            "body": "A directory allocates exclusive leases for a key. An epoch change seals the old grant list on durable storage. Messages sent before the seal may arrive later."
+            "minutes": 12,
+            "app": "Okular",
+            "title": "Standby handover — journals",
+            "label": "on_task"
           },
           {
-            "heading": "A. Trace",
-            "body": "Draw a timeline with one delayed grant, two directory epochs, and one client retry. Annotate which epoch each participant records."
+            "minutes": 22,
+            "app": "Xournal++",
+            "title": "Induction over the election",
+            "label": "on_task"
           },
           {
-            "heading": "B. Argument",
-            "body": "Propose a condition a replica must check before admitting a client. Use induction over message delivery and crash recovery to justify it. State the durable state explicitly."
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
           },
           {
-            "heading": "C. Optional",
-            "body": "Explain which change would be necessary if durable storage could be rolled back."
+            "minutes": 11,
+            "app": "Xournal++",
+            "title": "Counterexample on delayed replies",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 18,
+            "app": "Xournal++",
+            "title": "Recovery case on the scratch sheet",
+            "label": "on_task"
+          },
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "receipt-invariant.tex",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "Terminal",
+            "title": "latexmk receipt-invariant.tex",
+            "label": "on_task"
           }
         ]
-      }
-    },
-    {
-      "id": "format-trace",
-      "day": "2026-09-23",
-      "title": "Typeset the lease solution",
-      "description": "Turn the checked event order and proof outline into two clean pages. Label the figure and make the notation consistent.",
-      "category": "Distributed systems",
-      "details": "All reasoning is in my notebook; no additional cases requested.",
-      "estimate_minutes": 55,
-      "actual_minutes": 40,
-      "sessions_minutes": [
-        40
       ]
     },
     {
       "id": "ack-traces",
-      "day": "2026-09-30",
-      "title": "Check three acknowledgment histories",
-      "description": "For each supplied message trace, mark whether an append has reached the stated replication threshold and underline the decisive event.",
+      "title": "Label received and delayed ticket-desk acknowledgments",
+      "description": "Annotate which journals actually responded in the standby desk replay. No argument or repair is due.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "Only a mark and a one-line explanation are required.",
-      "estimate_minutes": 40,
-      "actual_minutes": 36,
+      "estimate_minutes": 30,
+      "actual_minutes": 24,
       "sessions_minutes": [
-        36
+        24
+      ],
+      "pdf": "clock-two",
+      "day": "2026-09-21",
+      "activity": [
+        [
+          {
+            "minutes": 7,
+            "app": "Okular",
+            "title": "Ticket desk — replica responses",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Xournal++",
+            "title": "Replies from a, b and c",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "Okular",
+            "title": "Standby response table",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "barrier-proof",
-      "day": "2026-10-05",
-      "title": "Prove the snapshot cut is closed",
-      "description": "Write a safety argument that includes buffered sends, duplicate barrier markers, and the first event at a recovering node.",
+      "title": "Prove a flush barrier across restart",
+      "description": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "I know the no-crash argument. The restart case is new to me.",
-      "estimate_minutes": 95,
-      "actual_minutes": 145,
+      "estimate_minutes": 75,
+      "actual_minutes": 90,
       "sessions_minutes": [
-        62,
-        53,
-        30
+        48,
+        42
+      ],
+      "completion_note": "Separate failure schedule for crash recovery; proofread before sending.",
+      "day": "2026-09-25",
+      "activity": [
+        [
+          {
+            "minutes": 11,
+            "app": "Obsidian",
+            "title": "Flush barrier / journal cursor",
+            "label": "on_task"
+          },
+          {
+            "minutes": 21,
+            "app": "Xournal++",
+            "title": "Delayed DRAINED counterexample",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "app": "Thunderbird",
+            "title": "Inbox",
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "app": "Xournal++",
+            "title": "Crash just before persist",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 27,
+            "app": "Code",
+            "title": "barrier-recovery.tex",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Okular",
+            "title": "barrier-recovery.pdf",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Code",
+            "title": "barrier-recovery.tex",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
-      "id": "fifo-example",
-      "day": "2026-10-10",
-      "title": "Build a counterexample to the FIFO shortcut",
-      "description": "Give the shortest sequence I can find that makes a receiver reveal a later message while its predecessor is still queued. Check all channel assumptions.",
-      "category": "Distributed systems",
-      "details": "Need something concrete enough to present on the board.",
-      "estimate_minutes": 40,
-      "actual_minutes": 55,
+      "id": "bus-pass",
+      "title": "Renew bus pass",
+      "description": "Reload the student transit card and save the receipt.",
+      "details": "",
+      "category": "Personal",
+      "estimate_minutes": 10,
+      "actual_minutes": 16,
       "sessions_minutes": [
-        33,
-        22
+        16
+      ],
+      "day": "2026-09-29",
+      "activity": [
+        [
+          {
+            "minutes": 7,
+            "app": "Firefox",
+            "title": "Student transit — reload card",
+            "label": "on_task",
+            "domain": "transit.example"
+          },
+          {
+            "minutes": 4,
+            "app": "Firefox",
+            "title": "Account preferences",
+            "label": "uncertain",
+            "domain": "account.example",
+            "excluded": true
+          },
+          {
+            "minutes": 5,
+            "app": "Files",
+            "title": "Downloads / Transit receipts",
+            "label": "on_task"
+          }
+        ]
       ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "fix-proof",
+      "title": "Typeset the recovery argument",
+      "description": "Turn my pencilled invariant into a short PDF and check the quantifiers.",
+      "details": "",
+      "category": "Distributed systems",
+      "estimate_minutes": 40,
+      "pdf": "clock-two",
+      "status": "paused",
+      "sessions_minutes": [
+        12
+      ],
+      "day": "2026-10-25",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Code",
+            "title": "recovery-argument.tex",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Okular",
+            "title": "recovery-argument.pdf",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "soap",
+      "title": "Pick up dish soap",
+      "description": "Buy the unscented refill on the way home.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 15,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-10-25"
     }
   ],
   "holdouts": [
     {
       "id": "bridge-proof",
-      "day": "2026-10-18",
       "title": "Solve part B of the bridge handout",
-      "description": "Prove the bridge never exposes a new route before every admitted old-route packet has been accounted for, or give a legal failure trace.",
+      "description": "Prove the retirement invariant or give a legal failure schedule. Include the repair across restart.",
+      "details": "Part A is already written. I need a submission-ready argument.",
       "category": "Distributed systems",
-      "details": "Write the reasoning from scratch. Part A is already done.",
       "estimate_minutes": 75,
-      "actual_minutes": 119,
+      "actual_minutes": 93,
       "sessions_minutes": [
-        48,
-        55,
-        16
+        51,
+        42
       ],
       "pdf": {
-        "title": "Safe updates at a routing bridge",
+        "title": "Can a bridge retire its old route?",
+        "series": "Replication reading seminar · problem set 4",
+        "kind": "Written assignment",
         "sections": [
           {
-            "heading": "Setup",
-            "body": "A bridge tracks a configuration generation and a durable cutoff sequence number. Packets may be duplicated, delayed, and delivered after the controller restarts."
+            "heading": "System and failure model",
+            "body": "A control process C moves a stream from bridge A to bridge B. Producers attach a monotonically increasing sequence number and a generation to each packet. A producer may retransmit after a timeout. The network may reorder, duplicate and delay packets, including acknowledgments. Channels do not fabricate messages. There is one producer for each stream and at most one controller is active at any moment. Do not assume synchronized clocks or FIFO delivery.\n    \nThe producer's log and the controller's durable record survive a crash. A bridge loses its in-memory deduplication map on restart. Each bridge has a stable disk journal for effects it has already applied. The controller may crash between sending a message and appending a record. Each handler invocation is atomic, but a handler and a disk append at another process are separate events."
           },
           {
-            "heading": "Part A. Replay",
-            "body": "Fill in missing generation labels for the sample execution in which a duplicate arrives after a cutoff. This part needs only the labels."
+            "heading": "Part A · Reconstruct one execution",
+            "body": "Reconstruct both the controller's durable state and the externally visible effects after every event. Write the generation attached to each acknowledgment. If information is missing, list the legal possibilities. For the replay sheet, a short table is sufficient. Do not silently drop a duplicate to make the timeline consistent.",
+            "table": {
+              "headers": [
+                "Step",
+                "Actor",
+                "Event visible to the actor"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "Producer",
+                  "Send (stream s, g=7, seq=18) to A."
+                ],
+                [
+                  "2",
+                  "A",
+                  "Journal the effect for seq=18. Send ACK; delivery stalls."
+                ],
+                [
+                  "3",
+                  "C",
+                  "Write closing(7,18). Send DRAIN(7,18) to A."
+                ],
+                [
+                  "4",
+                  "Network",
+                  "Deliver an older ACK for seq=17, g=7 to C."
+                ],
+                [
+                  "5",
+                  "A / C",
+                  "A restarts. C receives a DRAINED message for generation 6."
+                ],
+                [
+                  "6",
+                  "Producer",
+                  "Timeout for seq=18; retry under the old generation."
+                ]
+              ]
+            }
           },
           {
-            "heading": "Part B. Safety",
-            "body": "Give an invariant for packets admitted before the cutoff. Cover controller recovery and a delayed acknowledgment in separate cases. If the listed fields are insufficient, construct an event sequence showing why."
+            "heading": "Protocol supplied for analysis",
+            "body": "Every message includes stream, generation and sequence number, except DRAINED, which includes only stream and generation. The stable cursor last[g] is the largest contiguous effect journaled for g. durable_mode and cutoff are colocated. Append-before-send ordering matters. The shorthand emit() makes the new route visible to the producer. The last line below runs only on controller recovery.",
+            "page_break_before": true,
+            "code": "on switch(s,k): persist(closing(g,k)); send DRAIN(s,g,k) to A\nA.on DRAIN(s,g,k): if last[g] >= k: send DRAINED(s,g) to C\nC.on DRAINED(s,x): if durable_mode == closing: emit(OPEN(s,g+1))\nC.recover(): if durable_mode == closing: resend DRAIN(s,g,cutoff)"
           },
           {
-            "heading": "Submission",
-            "body": "For B, give the state assumptions and either a proof or a numbered trace with the violated condition identified. A diagram without the argument is incomplete."
+            "heading": "Part B · Safety proof or legal counterexample",
+            "body": "No effect from a packet admitted on the retiring route may be lost when the new route becomes visible. State precisely which packets count as admitted. Decide whether the supplied protocol enforces this property across crash and replay. If your answer is yes, give a quantified invariant, establish initialization and address every handler that changes it. If no, give the shortest trace you can justify. Identify the first event after which the property can no longer be guaranteed.\n\nAnalyze a delayed DRAINED for a different generation and a crash after emit but before the next stable record separately. State any additional stable information a repaired protocol needs. Show why matching a generation alone does or does not suffice when the producer retries an already journaled effect. An argument that depends on eventual delivery must identify the step at which it uses that assumption."
+          },
+          {
+            "heading": "What to hand in",
+            "body": "Submit a state table for A and a separate argument for B. Use event numbers when referring to the replay. For the repair, include the changed guard or write order and one adversarial execution it rules out. We grade a counterexample on whether every message in it can arise under the stated handlers. Diagrams and pseudocode are welcome when accompanied by a written claim explaining what the diagram establishes."
           }
         ]
       },
-      "check": "Should favor the epoch and barrier arguments over quick trace-marking tasks in the same course."
+      "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.14,
+          1.3
+        ],
+        "evidence_ids": [
+          "lease-restart",
+          "epoch-proof",
+          "barrier-proof"
+        ],
+        "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+        "expected_caution": {
+          "evidence_ids": [
+            "lease-restart",
+            "epoch-proof"
+          ],
+          "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+        }
+      },
+      "day": "2026-10-26"
     },
     {
       "id": "bridge-trace",
-      "day": "2026-10-25",
-      "title": "Check a bridge execution before section",
-      "description": "Work through the sample twenty-event log and circle the first transition that closes the old generation. Add one sentence explaining the choice.",
+      "title": "Fill the replay table in part A",
+      "description": "Label the six given exchanges and the durable state after each. Stop after part A.",
+      "details": "",
       "category": "Distributed systems",
-      "details": "The proof is not due for this exercise; only the marked execution is requested.",
-      "estimate_minutes": 35,
-      "actual_minutes": 29,
+      "estimate_minutes": 30,
+      "actual_minutes": 23,
       "sessions_minutes": [
-        29
+        23
       ],
-      "check": "Shared terminology with a hard proof should not dominate a short replay exercise."
+      "pdf": "bridge-proof",
+      "check": "Two bounded offline table replays finished ahead of budget.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.7,
+          0.93
+        ],
+        "evidence_ids": [
+          "clock-two",
+          "ack-traces"
+        ],
+        "rationale": "Two bounded offline table replays finished ahead of budget."
+      },
+      "day": "2026-10-27"
     }
   ]
 }

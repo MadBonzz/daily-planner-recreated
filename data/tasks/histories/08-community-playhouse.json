@@ -1,0 +1,455 @@
+{
+  "id": "08-community-playhouse",
+  "name": "Community playhouse operator and box-office volunteer",
+  "scenario": "I operate captions from the booth for touring shows with a locked running time. Shows, preflight checks, usher handovers and editing the cue file all appear on the same shift calendar.",
+  "tasks": [
+    {
+      "id": "radio-cabaret",
+      "day": "2026-01-09",
+      "title": "Run captions during Radio Cabaret",
+      "description": "Operate captions from the first audio cue to blackout for the locked sixty-minute studio recording.",
+      "category": "Shows",
+      "details": "The producer owns the playback clock. Loading the file and closing up are separate tasks.",
+      "estimate_minutes": 60,
+      "actual_minutes": 60,
+      "sessions_minutes": [
+        60
+      ],
+      "completion_note": "The audio ran continuously to the programmed blackout.",
+      "activity": [
+        [
+          {
+            "minutes": 60,
+            "app": "QLab",
+            "title": "Radio Cabaret / live captions",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "fixed_duration": true
+    },
+    {
+      "id": "cabaret-load",
+      "day": "2026-01-09",
+      "title": "Load the incoming booth file",
+      "description": "Make the visiting show open on the booth Mac, replace two broken font links and run the first cue on the confidence monitor.",
+      "category": "Booth prep",
+      "details": "Files arrived on a USB drive. The visiting technician will check the final monitor.",
+      "estimate_minutes": 25,
+      "actual_minutes": 33,
+      "sessions_minutes": [
+        33
+      ],
+      "completion_note": "The second font family used a different name on the booth Mac.",
+      "activity": [
+        [
+          {
+            "minutes": 14,
+            "app": "QLab",
+            "title": "Radio Cabaret / workspace",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Font Book",
+            "title": "Installing visiting fonts",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "usher-handback",
+      "day": "2026-01-17",
+      "title": "Hand over the foyer desk",
+      "description": "Take the float count and tell the incoming usher which visitors asked for aisle access.",
+      "category": "Front of house",
+      "details": "Two groups arriving late need a clear handover.",
+      "estimate_minutes": 20,
+      "actual_minutes": 16,
+      "sessions_minutes": [
+        16
+      ],
+      "completion_note": "The usher was already at the desk and had the seat plan.",
+      "activity": [
+        [
+          {
+            "minutes": 16,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "short-on-air",
+      "day": "2026-01-24",
+      "title": "Operate captions for Shortwave Live",
+      "description": "Run the caption faders through the forty-five-minute recorded performance. Stop at blackout.",
+      "category": "Shows",
+      "details": "Public stream follows the master file with no interval.",
+      "estimate_minutes": 45,
+      "actual_minutes": 45,
+      "sessions_minutes": [
+        45
+      ],
+      "completion_note": "Hit the final cue at the end of the master track.",
+      "activity": [
+        [
+          {
+            "minutes": 45,
+            "app": "QLab",
+            "title": "Shortwave / caption cues",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "fixed_duration": true
+    },
+    {
+      "id": "audio-preflight",
+      "day": "2026-02-01",
+      "title": "Check the booth playback outputs",
+      "description": "Open the touring workspace, verify both projector outputs and fix the path to the house loop before doors.",
+      "category": "Booth prep",
+      "details": "The tour has supplied a cue manifest and an updated video file.",
+      "estimate_minutes": 30,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        38
+      ],
+      "completion_note": "The main display worked immediately. The loop still pointed at last week’s share.",
+      "activity": [
+        [
+          {
+            "minutes": 21,
+            "app": "QLab",
+            "title": "Projection preflight",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Finder",
+            "title": "Tour media / relink",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 8,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "quiet-show",
+      "day": "2026-02-12",
+      "title": "Caption the Quiet Hour recording",
+      "description": "Drive captions for the locked fifty-minute audio piece, from the countdown beep to the final silence.",
+      "category": "Shows",
+      "details": "No audience talk afterward. The show clock drives the cue track.",
+      "estimate_minutes": 50,
+      "actual_minutes": 50,
+      "sessions_minutes": [
+        50
+      ],
+      "completion_note": "The master file finished on time.",
+      "activity": [
+        [
+          {
+            "minutes": 50,
+            "app": "QLab",
+            "title": "Quiet Hour / booth captions",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "fixed_duration": true
+    },
+    {
+      "id": "grain-pickup",
+      "day": "2026-02-20",
+      "title": "Pick up soup supplies after rehearsal",
+      "description": "Collect the reserved grain and broth from the shop next to the venue.",
+      "category": "Errands",
+      "details": "Cut through the alley on the walk home.",
+      "estimate_minutes": 20,
+      "actual_minutes": 24,
+      "sessions_minutes": [
+        24
+      ],
+      "completion_note": "There was a short queue at the till.",
+      "activity": [
+        [
+          {
+            "minutes": 24,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": null
+          }
+        ]
+      ]
+    },
+    {
+      "id": "blue-relay",
+      "day": "2026-02-25",
+      "title": "Test the relay for the Blue House tour",
+      "description": "Follow the visiting crew’s booth changeover sheet. Verify the mirror display and restore the house workspace when the test is finished.",
+      "category": "Booth prep",
+      "details": "Two outputs to test and one media relink. Print the handback line.",
+      "estimate_minutes": 35,
+      "actual_minutes": 43,
+      "sessions_minutes": [
+        43
+      ],
+      "completion_note": "Connecting the lobby screen changed the display order. The restore check caught it.",
+      "activity": [
+        [
+          {
+            "minutes": 18,
+            "app": "QLab",
+            "title": "Blue House / relay",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 11,
+            "app": "System Settings",
+            "title": "Displays / arrangement",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ],
+      "pdf": {
+        "title": "Blue House • incoming relay changeover",
+        "series": "Gravel Lane Players",
+        "kind": "Visiting technical sheet",
+        "sections": [
+          {
+            "heading": "Handoff at the booth",
+            "body": "The company brings one playback bundle on a thumb drive labeled BH-TOUR. Copy the folder BLUE_HOUSE before opening its workspace. Preserve subfolder names. The main output is the full-stage image; the lobby output repeats closed captions over a plain background. The house confidence screen is independent."
+          },
+          {
+            "heading": "Signal list",
+            "body": "At the booth, trace each cable to its panel label. Display numbers in the operating system can change when the lobby receiver wakes up. Identify the destination from a test image first.",
+            "table": {
+              "headers": [
+                "Cue",
+                "Image to send",
+                "Expected destination"
+              ],
+              "rows": [
+                [
+                  "B10",
+                  "White cross with BLUE HOUSE in upper left",
+                  "Main projector only"
+                ],
+                [
+                  "B11",
+                  "Open caption line on dark field",
+                  "Lobby, through receiver B"
+                ],
+                [
+                  "B12",
+                  "Alternating frame counter",
+                  "Operator preview only"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Acceptance and handback",
+            "body": "Run B10, B11 and B12 individually. If the lower third is clipped in the lobby, select the receiver’s native mode before touching the text box. If B10 starts but the image is blank, rebind the tour asset to media/main-cross.png on the copied drive. Put a tick by each successful route and write down any patched link. Return the booth to its opening slide and leave the lobby receiver awake."
+          },
+          {
+            "heading": "Receiver fault example",
+            "body": "The booth preview can show the correct B11 frame while an extender is still showing a cached image from the previous show. Change B11 to a different test cue and ask the foyer checker for the last two words, then switch back. If neither the new words nor a loss-of-signal card appears, inspect the selected input on the foyer receiver. Keep the production set disarmed during this check."
+          }
+        ]
+      }
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-ribbons",
+      "day": "2026-03-01",
+      "title": "Label the spare caption leads",
+      "description": "Label two HDMI leads for the booth and put them in the road case.",
+      "category": "Booth prep",
+      "details": "Add the green tape before the labels.",
+      "estimate_minutes": 15,
+      "status": "ready",
+      "sessions_minutes": []
+    },
+    {
+      "id": "run-foyer",
+      "day": "2026-03-01",
+      "title": "Check the foyer seat map",
+      "description": "Mark six aisle seats on the printed floor plan and leave copies with the ushers.",
+      "category": "Front of house",
+      "details": "Printer has the current floor plan.",
+      "estimate_minutes": 22,
+      "status": "running",
+      "sessions_minutes": [
+        6
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Preview",
+            "title": "Seating plan / main room",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "blue-show",
+      "day": "2026-03-07",
+      "title": "Operate captions for Sea Glass at 19:00",
+      "description": "Run the caption desk for the public performance of Sea Glass. The master track runs 19:00 to 20:15 without interruption.",
+      "category": "Shows",
+      "details": "Fixed 75-minute public performance. Preflight and teardown are other entries in the calendar.",
+      "estimate_minutes": 75,
+      "actual_minutes": 75,
+      "sessions_minutes": [
+        75
+      ],
+      "check": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.0,
+          1.0
+        ],
+        "evidence_ids": [
+          "radio-cabaret",
+          "short-on-air",
+          "quiet-show"
+        ],
+        "rationale": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns."
+      },
+      "fixed_duration": true
+    },
+    {
+      "id": "sea-preflight",
+      "day": "2026-03-07",
+      "title": "Do the Sea Glass booth preflight",
+      "description": "Use the visiting crew sheet to check the two projector routes, fix any broken path and return the house screens to standby.",
+      "category": "Booth prep",
+      "details": "We have the touring media already. Check the lobby output separately.",
+      "estimate_minutes": 30,
+      "actual_minutes": 37,
+      "sessions_minutes": [
+        37
+      ],
+      "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.16,
+          1.42
+        ],
+        "evidence_ids": [
+          "cabaret-load",
+          "audio-preflight",
+          "blue-relay"
+        ],
+        "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here."
+      },
+      "pdf": {
+        "title": "Sea Glass • two-output booth preflight",
+        "series": "Wren Tide Touring",
+        "kind": "Visiting company technical packet",
+        "sections": [
+          {
+            "heading": "What arrives on the company drive",
+            "body": "The folder SG_HANDOFF contains a QLab workspace, two test clips, a compressed caption track and a read-only copy of the playback manifest. Work from the booth copy in the house shows folder. Starting the production workspace straight from the drive makes a later relink indistinguishable from a missing asset."
+          },
+          {
+            "heading": "Trace the signal",
+            "body": "The main picture goes directly from output A to the stage projector. Output B runs through the foyer extender. The booth preview is a confidence view and never substitutes for seeing the foyer screen. Ask the house assistant to stand by the foyer monitor with the printed four-word test phrase.",
+            "table": {
+              "headers": [
+                "Route",
+                "Test image",
+                "Pass condition"
+              ],
+              "rows": [
+                [
+                  "A / stage",
+                  "Sea horizon with fine white frame",
+                  "All four corners visible."
+                ],
+                [
+                  "B / foyer",
+                  "Captions over a solid blue field",
+                  "Entire line reads “glass turns with tide”."
+                ],
+                [
+                  "Booth preview",
+                  "Flashing counter on grey",
+                  "Counter advances with the stage test."
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Run the test workspace",
+            "body": "Arm the test cues one at a time. Record the elapsed counter value at the first matching output, but do not check synchrony by eye from the booth alone. A foyer extender can retain the last good image even after losing its input. Ask the assistant which word is on screen after the change to test card B2.",
+            "page_break_before": true,
+            "code": "A1  stills/stage-frame.png  -> A\nB1  tests/foyer-blue.mov    -> B\nB2  tests/foyer-grey.mov    -> B\nH0  house/doors-open.png    -> A"
+          },
+          {
+            "heading": "A missing media example",
+            "body": "A workspace copied from TourMac might still refer to /Volumes/SG_SOURCE/tests/foyer-grey.mov. Select the identically named file in the booth copy. Run B1 and B2 again, check that the filename remains relative after saving, and record which cue needed the change. Never relink a test card to a production caption asset just because the basename looks close."
+          },
+          {
+            "heading": "Release the booth",
+            "body": "Stop the test cues, select the house standby workspace, put H0 on stage, and return output B to the house welcome screen. Leave the touring workspace on the local disk for the performance operator. Sign the handover with the route that failed, the action taken, and the name of the crew member who checked the foyer."
+          },
+          {
+            "heading": "What to write on the handback slip",
+            "body": "Record the test asset, the physical destination and the observed far-end result in one line per route. For instance, “B2 / foyer / grey card reached screen, last word changed to tide.” A note that the cue advanced in QLab alone is insufficient. Leave any physical cable moves on the patch list and return the booth to its documented rack labels before releasing it to doors."
+          }
+        ]
+      }
+    }
+  ]
+}

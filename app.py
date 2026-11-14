@@ -11,8 +11,10 @@ import streamlit as st
 
 import activity
 import estimator
+from dev_workspace import dev_activity_report, history_choices, open_dev_workspace
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
+from pdf_reader import extract_pdf_text
 from model_client import model_settings
 from urllib.parse import urlsplit
 
@@ -108,9 +110,12 @@ def new_task(store, day):
         title = st.text_input("Task name", required=True, placeholder="Read the optimization paper")
         description = st.text_area("Description", required=True, placeholder="What do you want to finish?", height=86)
         left, right = st.columns(2)
-        estimate = left.number_input("Your estimate (minutes)", min_value=1, value=None, step=1,
+        estimate = left.number_input("Duration (minutes)", min_value=1, value=None, step=1,
                                      required=True, placeholder="e.g. 30")
-        category = right.text_input("Category", required=True, placeholder="Reading")
+        category = right.selectbox("Category", store.list_categories(), index=None, required=True,
+                                   placeholder="Choose a category",
+                                   help="Add categories in Planner settings.")
+        fixed = st.checkbox("Fixed duration", help="Use the scheduled length exactly, such as for a screening. Leave this off for meetings that can run over.")
         details = st.text_area("More details (optional)", height=80,
                                placeholder="Which sections matter? How familiar are you with this work?")
         files = st.file_uploader("Attach PDFs (optional)", type=["pdf"], accept_multiple_files=True,
@@ -119,7 +124,7 @@ def new_task(store, day):
     if not submitted:
         return
     missing = [label for label, value in (("task name", title.strip()), ("description", description.strip()),
-                                          ("estimate in minutes", estimate), ("category", category.strip()))
+                                          ("duration in minutes", estimate), ("category", category))
                if not value]
     if missing:
         st.error("Fill in the required fields: " + ", ".join(missing) + ".")
@@ -127,7 +132,7 @@ def new_task(store, day):
     attachments = [(file.name, file.getvalue()) for file in files]
     try:
         store.create_task(title=title.strip(), description=description.strip(), details=details.strip(),
-                          category=category.strip(), estimate_minutes=estimate, day=day,
+                          category=category, estimate_minutes=estimate, day=day, fixed_duration=fixed,
                           attachments=attachments, prediction=None)
     except (ValueError, sqlite3.Error, OSError) as error:
         show_error(error)
@@ -143,26 +148,41 @@ def perform(store, task, action, **kwargs):
         return None
 
 
-def generate_report(store, task, demo):
+def task_report(store, task, dev):
     with st.spinner("Reviewing recorded activity…"):
-        report = activity.build_report(task, store.periods(task["id"]),
-                                       exclusions=store.get_setting("exclusions", []),
-                                       disabled_periods=store.disabled_periods(task["id"]),
-                                       capture=not demo)
-        store.save_report(task["id"], report)
+        if dev:
+            return dev_activity_report(store, task)
+        return activity.build_report(task, store.periods(task["id"]),
+                                     exclusions=store.get_setting("exclusions", []),
+                                     disabled_periods=store.disabled_periods(task["id"]))
 
 
 @st.dialog("Have you finished this task?")
-def stop_confirmation(store, index_dir, task, demo):
+def stop_confirmation(store, index_dir, task, dev):
     st.html(f'<strong>{escape(task["title"])}</strong>')
     st.write(f"Your timer stopped at {duration(task['actual_seconds'])} of recorded work.")
+    note = st.text_area("Completion note (optional)", key=f"finish-note-{task['id']}",
+                        placeholder="What affected how long this took?")
     yes, no = st.columns(2)
     if yes.button("Yes, finish task", type="primary", width="stretch"):
-        saved = perform(store, task, "finish")
+        # Stop has closed the timer. Finalize the note, report, actual and comparison
+        # history together, so a new forecast sees this task's activity immediately.
+        parsed = None
+        try:
+            if task["fixed_duration"] and task["attachments"] and not task["pdf_text"]:
+                # Fixed events have no prediction worker. Read attachments here,
+                # after the timer stops, for classification and future comparisons.
+                parsed = "\n".join(extract_pdf_text(store.attachment_bytes(doc["id"]))
+                                   for doc in task["attachments"])
+                task = {**task, "pdf_text": parsed}
+            report = task_report(store, task, dev)
+        except (ValueError, RuntimeError, OSError) as error:
+            report = None
+            notice(f"Task finished. Activity review can be retried on its card. {error}")
+        saved = perform(store, task, "finish", completion_note=note, report=report, pdf_text=parsed)
         if saved:
             if saved["prediction"].get("status") != "pending":
                 sync_index(store, index_dir, saved)
-            generate_report(store, saved, demo)
             st.rerun()
     if no.button("No, continue later", width="stretch"):
         if perform(store, task, "continue_later"):
@@ -238,7 +258,7 @@ def delete_task(store, index_dir, task):
 
 
 @st.dialog("Planner settings", width="large")
-def settings(store, index_dir, demo):
+def settings(store, index_dir, dev):
     endpoint, model = model_settings()
     st.subheader("Model connection")
     st.text(model)
@@ -251,9 +271,20 @@ def settings(store, index_dir, demo):
     else:
         st.text(f"Configured host: {host}" if host else "Check the configured endpoint in .env.")
         st.caption("This provider receives the task descriptions, document excerpts, and filtered activity used for inference.")
+    st.subheader("Categories")
+    st.caption(" · ".join(store.list_categories()))
+    with st.form("add_category", clear_on_submit=True):
+        category_name = st.text_input("New category name", placeholder="e.g. Lab meetings")
+        if st.form_submit_button("Add category"):
+            try:
+                store.add_category(category_name)
+            except ValueError as error:
+                st.error(str(error))
+            else:
+                st.rerun(scope="fragment")
     st.subheader("Activity capture")
-    if demo:
-        st.caption("Example mode uses a separate history and skips live activity collection.")
+    if dev:
+        st.caption("Dev uses synthetic activity from the loaded history.")
     else:
         captured = store.get_setting("capture_enabled", True)
         enabled = st.toggle("Read ActivityWatch during timed work", value=captured)
@@ -272,7 +303,7 @@ def settings(store, index_dir, demo):
             st.rerun()
     st.divider()
     st.subheader("Delete planner data")
-    which = "example" if demo else "personal"
+    which = "example" if dev else "personal"
     confirm = st.checkbox(f"Delete my {which} tasks, PDFs, reports and estimate history.")
     if st.button("Delete planner data", disabled=not confirm):
         try:
@@ -293,23 +324,37 @@ def select_day(day):
 
 
 def estimate_pending(task):
-    return task["prediction"].get("status") == "pending"
+    return task["estimate_updating"]
 
 
 def estimate_section(task):
     prediction = task["prediction"]
-    values = [f"Your estimate {minutes(task['estimate_minutes'])}"]
-    if estimate_pending(task):
+    initial_pending = prediction.get("status") == "pending"
+    fixed = task["fixed_duration"]
+    label = "Scheduled" if fixed else "Your estimate"
+    values = [f"{label} {minutes(task['estimate_minutes'])}"]
+    if initial_pending:
         values.append("Estimating task time…")
-    elif "point_min" in prediction:
+    elif "point_min" in prediction and not fixed:
         values.append(f"Planner {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
+    if estimate_pending(task) and not initial_pending:
+        values.append("Updating estimate with recent completions…")
     if task["status"] != "running":
         values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
-    if not estimate_pending(task):
-        with st.expander("Why this estimate?"):
-            show_prediction(prediction)
+    if initial_pending or fixed or not prediction:
+        return
+    for caution in prediction.get("cautions", []):
+        st.text(caution["advice"])
+        for source in caution.get("sources", []):
+            st.caption(f"{source['title']} · {source['origin']}")
+    with st.expander("Why this estimate?"):
+        show_prediction(prediction)
+        original = task["creation_prediction"]
+        if original and original != prediction and "point_min" in original:
+            st.caption(f"At creation: {minutes(original['point_min'])} "
+                       f"({original['low_min']:g}–{original['high_min']:g} min).")
 
 
 def live_estimate_section(store, task, index_dir):
@@ -332,7 +377,7 @@ def daily_totals(tasks):
     original = sum(t["estimate_minutes"] for t in tasks)
     budget = sum(t["prediction"].get("point_min", t["estimate_minutes"]) for t in tasks)
     done = sum(t["status"] == "completed" for t in tasks)
-    budget_label = "Estimating…" if any(estimate_pending(t) for t in tasks) else minutes(budget)
+    budget_label = "Estimating…" if any(t["prediction"].get("status") == "pending" for t in tasks) else minutes(budget)
     st.html('<div class="metric-grid">' + "".join(
         f"<div><small>{label}</small><strong>{value}</strong></div>" for label, value in
         (("Your estimates", minutes(original)), ("Planner budget", budget_label),
@@ -348,7 +393,7 @@ def live_daily_totals(store, day, tasks):
     refresh()
 
 
-def render_task(store, index_dir, task, demo):
+def render_task(store, index_dir, task, dev):
     key = task["id"]
     status = task["status"]
     with st.container(border=True):
@@ -392,18 +437,22 @@ def render_task(store, index_dir, task, demo):
                     st.rerun()
         elif status == "awaiting_finish":
             if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
-                stop_confirmation(store, index_dir, task, demo)
-        if status == "running" and not demo:
+                stop_confirmation(store, index_dir, task, dev)
+        if status == "running" and not dev:
             if st.toggle("Live activity", key=f"live-{key}", help="Preview the last two minutes."):
                 live_activity(store, task)
         if status == "completed":
+            if task["completion_note"]:
+                st.caption("Completion note")
+                st.text(task["completion_note"])
             with st.expander("Activity report", expanded=True):
                 if task["report"]:
                     show_report(task["report"])
                 else:
                     st.caption("An activity report has not been generated for this task.")
                 if st.button("Rebuild report" if task["report"] else "Generate report", key=f"report-{key}"):
-                    generate_report(store, task, demo)
+                    report = task_report(store, task, dev)
+                    store.save_report(key, report)
                     st.rerun()
         with st.expander("Task details"):
             if task["details"]:
@@ -427,28 +476,39 @@ def main():
     title, options = st.container(key="plan_header").columns([4, 1], vertical_alignment="center")
     title.title("Daily planner")
     with options.popover("Options", width="stretch"):
-        mode = st.radio("Workspace", ["My planner", "Example history"], key="data_mode")
         open_settings = st.button("Planner settings")
-    demo = mode == "Example history"
-    data_dir = DATA_ROOT / ("demo" if demo else "live")
-    store = PlannerStore(data_dir)
-    index_dir = data_dir / "vectors"
+    mode = st.segmented_control("Mode", ["Demo", "Dev"], default="Demo", required=True,
+                                key="planner_mode", on_change=select_day, args=(date.today(),),
+                                help="Demo is your planner. Dev loads editable sample histories.")
+    dev = mode == "Dev"
+    if dev:
+        choices = history_choices()
+        selected = st.selectbox("Sample history", list(choices), format_func=choices.get,
+                                key="dev_history", on_change=select_day, args=(date.today(),))
+        store = open_dev_workspace(DATA_ROOT, selected)
+        with st.expander("History details"):
+            st.caption("This workspace contains synthetic tasks. Your edits are saved separately for each sample.")
+            past = store.list_tasks()
+            st.dataframe([{"Date": t["day"], "Task": t["title"], "Status": STATUS[t["status"]],
+                           "Duration (min)": t["estimate_minutes"], "Recorded (min)": round(t["actual_seconds"] / 60, 1)}
+                          for t in past], hide_index=True, width="stretch")
+            available_days = sorted({date.fromisoformat(t["day"]) for t in past}, reverse=True)
+            if available_days:
+                date_column, jump = st.columns([3, 1], vertical_alignment="bottom")
+                target = date_column.selectbox("Task date", available_days, key=f"dev-date-{selected}")
+                jump.button("Open date", on_click=select_day, args=(target,), width="stretch")
+            if st.button("Reset sample history", help="Restore the original tasks and discard edits to this sample."):
+                open_dev_workspace(DATA_ROOT, selected, reset=True)
+                select_day(date.today())
+                st.session_state.pop("ask_finish", None)
+                st.rerun()
+    else:
+        store = PlannerStore(DATA_ROOT / "live")
+    index_dir = store.data_dir / "vectors"
     if store.has_pending_predictions():
         schedule_pending(store, index_dir)
     if open_settings:
-        settings(store, index_dir, demo)
-    if demo:
-        st.info("Example workspace · All records here are separate from your personal history.")
-        if not store.get_setting("example_history_seeded", False):
-            if st.button("Load example history"):
-                store.seed_demo()
-                st.rerun()
-        else:
-            with st.expander("Example history"):
-                st.dataframe([{"Date": t["day"], "Completed task": t["title"],
-                               "Estimated (min)": t["estimate_minutes"],
-                               "Actual (min)": round(t["actual_seconds"] / 60, 2)}
-                              for t in store.completed_tasks()], width="stretch", hide_index=True)
+        settings(store, index_dir, dev)
     if "notice" in st.session_state:
         st.warning(st.session_state.pop("notice"))
     controls = st.container(key="plan_navigation").columns([1, 2, 1, 1, 2], vertical_alignment="bottom")
@@ -477,11 +537,11 @@ def main():
         st.html('<div class="empty-plan"><strong>No tasks planned</strong>'
                 '<p>Add a task to plan and track your work for this day.</p></div>')
     for task in sorted(tasks, key=lambda t: (t["status"] == "completed", t["created_at"])):
-        render_task(store, index_dir, task, demo)
+        render_task(store, index_dir, task, dev)
     if key := st.session_state.pop("ask_finish", None):
         stopped = store.get_task(key)
         if stopped["status"] == "awaiting_finish":
-            stop_confirmation(store, index_dir, stopped, demo)
+            stop_confirmation(store, index_dir, stopped, dev)
 
 
 if __name__ == "__main__":

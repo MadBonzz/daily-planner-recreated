@@ -117,3 +117,27 @@ def test_deleted_task_cannot_be_restored_by_late_result(tmp_path, monkeypatch):
         release.set()
     drain(store)
     assert store.list_tasks() == []
+
+
+def test_refresh_saves_grounded_caution_and_preserves_original_forecast(tmp_path, monkeypatch):
+    stamp = 1000.0
+    store = PlannerStore(tmp_path / "live", clock=lambda: stamp)
+    initial = {"point_min": 20, "low_min": 10, "high_min": 30, "evidence": [], "cautions": []}
+    current = create(store, prediction=initial)
+    earlier = create(store, prediction=initial)
+    store.transition(earlier["id"], "start")
+    stamp += 30 * 60
+    store.transition(earlier["id"], "stop")
+    note = "I needed another pass to derive the concentration inequality."
+    store.transition(earlier["id"], "finish", completion_note=note)
+
+    monkeypatch.setattr(worker.estimator, "chat_json", lambda *a, **kw: {
+        "matches": [{"slot": 1, "reason": "Same proof and goal.", "flag": 1}]
+    })
+    schedule_pending(store, store.data_dir / "vectors")
+    drain(store)
+    refreshed = store.get_task(current["id"])
+    assert refreshed["creation_prediction"] == initial
+    assert refreshed["prediction"]["cautions"][0]["sources"] == [
+        {"task_id": earlier["id"], "title": earlier["title"], "origin": "Completion note", "observation": note}
+    ]

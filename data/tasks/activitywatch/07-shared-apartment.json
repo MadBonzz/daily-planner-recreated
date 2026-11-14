@@ -1,0 +1,196 @@
+{
+  "buckets": {
+    "aw-watcher-afk_demo-07-shared-apartment": {
+      "id": "aw-watcher-afk_demo-07-shared-apartment",
+      "created": "2026-01-08T08:00:00+00:00",
+      "name": "",
+      "type": "afkstatus",
+      "client": "aw-watcher-afk",
+      "hostname": "demo-07-shared-apartment",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-01-08T08:00:00+00:00",
+          "duration": 2160.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-01-11T08:00:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-01-11T08:08:00+00:00",
+          "duration": 60.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-01-11T08:09:00+00:00",
+          "duration": 5640.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 5,
+          "timestamp": "2026-01-16T08:00:00+00:00",
+          "duration": 1860.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 6,
+          "timestamp": "2026-01-21T08:00:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 7,
+          "timestamp": "2026-01-21T08:08:00+00:00",
+          "duration": 240.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 8,
+          "timestamp": "2026-01-21T08:12:00+00:00",
+          "duration": 360.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 9,
+          "timestamp": "2026-01-25T08:00:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 10,
+          "timestamp": "2026-01-25T08:09:00+00:00",
+          "duration": 60.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 11,
+          "timestamp": "2026-01-25T08:10:00+00:00",
+          "duration": 1680.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 12,
+          "timestamp": "2026-02-01T08:00:00+00:00",
+          "duration": 2520.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 13,
+          "timestamp": "2026-02-04T08:00:00+00:00",
+          "duration": 300.0,
+          "data": {
+            "status": "afk"
+          }
+        }
+      ]
+    },
+    "aw-watcher-window_demo-07-shared-apartment": {
+      "id": "aw-watcher-window_demo-07-shared-apartment",
+      "created": "2026-01-11T08:08:00+00:00",
+      "name": "",
+      "type": "currentwindow",
+      "client": "aw-watcher-window",
+      "hostname": "demo-07-shared-apartment",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-01-11T08:08:00+00:00",
+          "duration": 4920.0,
+          "data": {
+            "app": "Calendar",
+            "title": "Today"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-01-21T08:00:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "app": "Firefox",
+            "title": "Filter supply / subscription"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-01-21T08:12:00+00:00",
+          "duration": 360.0,
+          "data": {
+            "app": "Firefox",
+            "title": "Order frequency"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-01-25T08:09:00+00:00",
+          "duration": 900.0,
+          "data": {
+            "app": "Calendar",
+            "title": "Today"
+          }
+        }
+      ]
+    },
+    "aw-watcher-web-firefox_demo-07-shared-apartment": {
+      "id": "aw-watcher-web-firefox_demo-07-shared-apartment",
+      "created": "2026-01-21T08:00:00+00:00",
+      "name": "",
+      "type": "web.tab.current",
+      "client": "aw-watcher-web-firefox",
+      "hostname": "demo-07-shared-apartment",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-01-21T08:00:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "url": "https://supply.example.org/",
+            "title": "Filter supply / subscription",
+            "audible": false,
+            "incognito": false
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-01-21T08:12:00+00:00",
+          "duration": 360.0,
+          "data": {
+            "url": "https://supply.example.org/",
+            "title": "Order frequency",
+            "audible": false,
+            "incognito": false
+          }
+        }
+      ]
+    }
+  }
+}

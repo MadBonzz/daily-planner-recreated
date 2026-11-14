@@ -1,0 +1,697 @@
+{
+  "id": "09-rover-night",
+  "name": "Robotics night-school student and repair volunteer",
+  "scenario": "I share an old rover with the repair club. Most of my lab work is either an actual rover run over the cart’s USB bridge or an offline replay. I also solve frame-transform problems, work on my bike and staff club nights.",
+  "tasks": [
+    {
+      "id": "hall-encoder",
+      "day": "2026-01-10",
+      "title": "Log the hallway encoder run",
+      "description": "Connect my laptop to the club rover’s USB bridge, collect left and right counts over the chalk course, then export a clean trace.",
+      "category": "Robotics lab",
+      "details": "Use rover C, the old bridge and the usual bringup file. Need two traversals.",
+      "estimate_minutes": 40,
+      "actual_minutes": 63,
+      "sessions_minutes": [
+        30,
+        33
+      ],
+      "completion_note": "The USB bridge dropped twice when I restarted bag capture. Reconnected, checked the port name and ran both traversals again.",
+      "activity": [
+        [
+          {
+            "minutes": 12,
+            "app": "Terminal",
+            "title": "rover-c / bringup",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Terminal",
+            "title": "udevadm monitor / tty disconnect",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ],
+        [
+          {
+            "minutes": 12,
+            "app": "Terminal",
+            "title": "ros2 bag record / wheel ticks",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 12,
+            "app": "VSCodium",
+            "title": "encoder trace / annotate",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "junction-replay",
+      "day": "2026-01-14",
+      "title": "Replay the line-junction bag",
+      "description": "Play back the saved junction bag on my laptop, add a plot of sensor threshold crossings, and export the two marked frames.",
+      "category": "Robotics lab",
+      "details": "The bag is already on disk; no rover connection required.",
+      "estimate_minutes": 45,
+      "actual_minutes": 42,
+      "sessions_minutes": [
+        42
+      ],
+      "completion_note": "The saved timestamp list lined up with both crossings.",
+      "activity": [
+        [
+          {
+            "minutes": 11,
+            "app": "Terminal",
+            "title": "ros2 bag play junction",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 24,
+            "app": "VSCodium",
+            "title": "notebooks/junction_plot",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Image Viewer",
+            "title": "Threshold frames",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bicycle",
+      "day": "2026-01-19",
+      "title": "Swap the rear bike light",
+      "description": "Replace the cracked bracket and align the rear light with the rack.",
+      "category": "Repair",
+      "details": "Screwdriver and spare bracket in the saddle bag.",
+      "estimate_minutes": 25,
+      "actual_minutes": 24,
+      "sessions_minutes": [
+        24
+      ],
+      "completion_note": "The supplied washer fit.",
+      "activity": [
+        [
+          {
+            "minutes": 24,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "turntable",
+      "day": "2026-01-24",
+      "title": "Record a turning test on rover C",
+      "description": "Collect a timed spin on the club rover, check the on-board IMU against the marked turn and attach a short plot to the logbook.",
+      "category": "Robotics lab",
+      "details": "Actual cart on the floor. Laptop uses the original USB bridge.",
+      "estimate_minutes": 50,
+      "actual_minutes": 77,
+      "sessions_minutes": [
+        34,
+        43
+      ],
+      "completion_note": "Serial link dropped midway through the turn. Replugged USB, reselected the device and repeated the whole turn.",
+      "activity": [
+        [
+          {
+            "minutes": 12,
+            "app": "Terminal",
+            "title": "rover-c / imu bringup",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 8,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 14,
+            "app": "Terminal",
+            "title": "ros2 bag / serial port lost",
+            "domain": "",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 13,
+            "app": "Terminal",
+            "title": "rover-c / check device name",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 20,
+            "app": "VSCodium",
+            "title": "imu_turn_plot.py",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "frame-drawing",
+      "day": "2026-02-01",
+      "title": "Work out the camera frame change",
+      "description": "Draw base, camera and tag axes and derive the transform that puts one observed point in the base frame.",
+      "category": "Written robotics",
+      "details": "Paper exercise. Check the camera translation before multiplying.",
+      "estimate_minutes": 45,
+      "actual_minutes": 52,
+      "sessions_minutes": [
+        52
+      ],
+      "completion_note": "I had the inverse rotation on the first attempt. Multiplying a known point exposed it.",
+      "activity": [
+        [
+          {
+            "minutes": 33,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 19,
+            "app": "Xournal++",
+            "title": "Camera frame notes",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "pdf": {
+        "title": "Frames on the repair bench",
+        "series": "Ridge Avenue robotics workshop",
+        "kind": "Problem sheet",
+        "sections": [
+          {
+            "heading": "Frame definitions and units",
+            "body": "A pinhole camera is attached to a square rover plate. For this sheet the base frame B has x forward, y left and z upward. Define a camera carrier C, with its x axis pointing left in B and its y axis pointing backward. Its z axis points upward. The origin of C in B coordinates is (0.24, -0.08, 0.36) metres. An observed marker A has coordinates (0.10, 0.04, -0.12) metres in C."
+          },
+          {
+            "heading": "1. Draw the physical frames",
+            "body": "Draw a plan view of B and C and mark their origins. On a second sketch, show the two z axes and the signed height of A above the base. Give the coordinates of C’s three unit directions in B and state whether the directions form a right-handed basis."
+          },
+          {
+            "heading": "2. Compose the rigid change of coordinates",
+            "body": "Use the directions as the columns of a matrix mapping C coordinates into B. Write out the homogeneous transform and apply it to marker A. Test the transform with the origin of C and with a second point one metre along its x axis. Turn in the matrix, the two tests, and the marker coordinates with units."
+          },
+          {
+            "heading": "3. Trace a bad calibration",
+            "body": "Another student has put -0.08 in the first translation slot and 0.24 in the second. Pick a point that exposes this error without changing the rotation, then explain why testing only a vector with homogeneous w = 0 would miss it. Present one numerical counterexample and a two-sentence diagnosis."
+          },
+          {
+            "heading": "Comparison with the physical mount",
+            "body": "Set a ruler along the camera carrier x axis and imagine moving the observed marker 0.05 m along that ruler. Give the change in the base coordinates without recalculating the entire transform. As a hand check, your answer should be a direction vector with length 0.05 m. On your drawing distinguish motion of the observed marker from motion of the camera mount; the two cases change different terms in the transformation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "club-shift",
+      "day": "2026-02-05",
+      "title": "Cover the repair-club sign-in desk",
+      "description": "Sit the one-hour sign-in shift, hand out tags and log room numbers.",
+      "category": "Club service",
+      "details": "Fixed volunteer shift. A second volunteer takes over at the end.",
+      "estimate_minutes": 60,
+      "actual_minutes": 60,
+      "sessions_minutes": [
+        60
+      ],
+      "completion_note": "Handed the desk back on time.",
+      "activity": [
+        [
+          {
+            "minutes": 12,
+            "app": "LibreOffice Calc",
+            "title": "Repair night / check-in",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 48,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ],
+      "fixed_duration": true
+    },
+    {
+      "id": "dock-trace",
+      "day": "2026-02-12",
+      "title": "Capture docking sensor traces on the club cart",
+      "description": "Connect through rover C’s USB bridge. Record the approach and reverse-out, then compare bumper signals against the marked docking line.",
+      "category": "Robotics lab",
+      "details": "Shared laptop bridge again. Use the foam dock and collect both directions.",
+      "estimate_minutes": 45,
+      "actual_minutes": 70,
+      "sessions_minutes": [
+        28,
+        42
+      ],
+      "completion_note": "Another disconnect when starting the second bag. Reconnecting the old USB bridge and redoing the reverse run cost most of the extra time.",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "dock / serial bringup",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 8,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "record approach bag",
+            "domain": "",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 12,
+            "app": "Terminal",
+            "title": "ttyUSB reconnect",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 12,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 18,
+            "app": "VSCodium",
+            "title": "Dock trace comparison",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "prediction": {
+        "point_min": 66,
+        "low_min": 42,
+        "high_min": 94,
+        "confidence": "low",
+        "basis": "Synthetic prior estimate",
+        "explanation": "Two physical runs plus exporting bumper edges.",
+        "evidence": []
+      },
+      "pdf": {
+        "title": "Dock approach and bumper taps on cart C",
+        "series": "Ridge Avenue robotics workshop",
+        "kind": "Measurement card",
+        "sections": [
+          {
+            "heading": "Capture the two traversals",
+            "body": "Place the foam dock at the tape line. Record the bumper switch, both wheel tick streams, and the odometry topic before the robot moves. Run the forward approach until the tape marker meets the dock edge. Mark that approximate meeting time in the operator note. Reverse until the two switches clear and keep the recorder going through the short stationary tail."
+          },
+          {
+            "heading": "Required outputs",
+            "body": "Keep separate bag names for each traversal. Export a graph with time since first tick on the horizontal axis and label the first bumper closure and last opening. Repeat the test when any required stream never publishes. Include a small table of consecutive edge timestamps so the reader can tell switch bounce from the genuine release.",
+            "table": {
+              "headers": [
+                "Signal",
+                "Example transition",
+                "Where to inspect"
+              ],
+              "rows": [
+                [
+                  "left_ticks / right_ticks",
+                  "Both increase before contact",
+                  "Bag metadata and first plot"
+                ],
+                [
+                  "bumper_left",
+                  "false to true near foam dock",
+                  "Rising edge record"
+                ],
+                [
+                  "bumper_right",
+                  "true to false on reverse",
+                  "Release marker"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Sign the log",
+            "body": "Record whether the foam dock moved and which approach bag was used for the final plot. If the control laptop changes during the run, record the device name and bag start as captured on that laptop. Keep incomplete bags with an INCOMPLETE suffix."
+          },
+          {
+            "heading": "A bounce that looks like a second approach",
+            "body": "A left-switch trace may contain 0, 1, 0, 1 in four adjacent rows while the right switch stays at 1 and the wheel counts show no reversal. Present that window as supporting data and indicate how you decided whether the final opening was genuine. Do not remove the raw edges from the exported trace; annotate your decision in a separate column."
+          }
+        ]
+      }
+    },
+    {
+      "id": "wheel-ticks",
+      "day": "2026-02-19",
+      "title": "Replot the wheel slip from Thursday’s bag",
+      "description": "Open the recorded bag on the laptop, correct the wheel diameter in the plotting notebook and export the overlay.",
+      "category": "Robotics lab",
+      "details": "The physical robot is in another building and is not needed.",
+      "estimate_minutes": 35,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ],
+      "completion_note": "Plot updated on the first full run.",
+      "activity": [
+        [
+          {
+            "minutes": 7,
+            "app": "Terminal",
+            "title": "ros2 bag info wheel-slip",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 23,
+            "app": "VSCodium",
+            "title": "wheel_slip.ipynb",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Image Viewer",
+            "title": "Corrected overlay",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "grant-email",
+      "day": "2026-02-22",
+      "title": "Send the consumables estimate",
+      "description": "Write the repair-club treasurer a line-item estimate for caster wheels, cable ties and foam tape.",
+      "category": "Club service",
+      "details": "Supplier prices already in the spreadsheet.",
+      "estimate_minutes": 20,
+      "actual_minutes": 18,
+      "sessions_minutes": [
+        18
+      ],
+      "completion_note": "The treasurer accepted the existing links.",
+      "activity": [
+        [
+          {
+            "minutes": 13,
+            "app": "LibreOffice Calc",
+            "title": "Consumables / vendors",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Firefox",
+            "title": "Budget message",
+            "domain": "mail.example.org",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-washers",
+      "day": "2026-03-01",
+      "title": "Inventory spare axle washers",
+      "description": "Count the washer bags and fill the parts-bin card.",
+      "category": "Repair",
+      "details": "Two small drawers in the club room.",
+      "estimate_minutes": 20,
+      "status": "ready",
+      "sessions_minutes": []
+    },
+    {
+      "id": "paused-frames",
+      "day": "2026-03-01",
+      "title": "Check the camera mast axes",
+      "description": "Draw the transformed optical axis for two different mast heights.",
+      "category": "Written robotics",
+      "details": "Stopped just before checking my second drawing.",
+      "estimate_minutes": 35,
+      "status": "paused",
+      "sessions_minutes": [
+        13
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 13,
+            "app": "Xournal++",
+            "title": "Mast frame worksheet",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "bump-crossing",
+      "day": "2026-03-03",
+      "title": "Record the cable-cover crossing on rover C",
+      "description": "Collect two real crossings of the rubber cable cover, compare IMU spikes and wheel speeds, and deliver the annotated plots.",
+      "category": "Robotics lab",
+      "details": "Use club rover C with its original USB bridge. The mat and laptop are already set up.",
+      "estimate_minutes": 45,
+      "actual_minutes": 71,
+      "sessions_minutes": [
+        31,
+        40
+      ],
+      "check": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.43,
+          1.68
+        ],
+        "evidence_ids": [
+          "hall-encoder",
+          "turntable",
+          "dock-trace"
+        ],
+        "rationale": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+        "expected_caution": {
+          "evidence_ids": [
+            "hall-encoder",
+            "turntable",
+            "dock-trace"
+          ],
+          "rationale": "Warn that the original USB bridge disconnected on earlier live captures; leave time to reconnect and repeat the affected run."
+        }
+      },
+      "pdf": {
+        "title": "Cable-cover field capture • Rover C",
+        "series": "Ridge Avenue robotics workshop",
+        "kind": "Instrumented trial brief",
+        "sections": [
+          {
+            "heading": "Question and physical layout",
+            "body": "Does the wheel-speed estimate change at the same instant as the inertial peak when the front casters reach a rubber cable cover? Work on the marked straight course. Place the 16 mm cover at the central tape line and leave the landing strip clear. Use the same driven wheel pair, tire pressure and laptop for both trials. Do not swap left and right sensor names between runs."
+          },
+          {
+            "heading": "Two comparable observations",
+            "body": "With the rover stationary, start the recorder before the approach. Perform two passes in the same direction at the club’s marked crawl setting. End each bag after the rear wheel clears the cover. Count a pass as complete only when wheel and inertial data span the approach, crossing, and landing. Write down any manual steering correction; that is a limitation of the trial."
+          },
+          {
+            "heading": "Channels and time bases",
+            "body": "Wheel counters and IMU samples carry sensor timestamps; bag arrival time may lag. Use the stamp inside the message when the field exists. Retain the raw value and its units in your exported table.",
+            "table": {
+              "headers": [
+                "Stream",
+                "Fields to export",
+                "Sample interpretation"
+              ],
+              "rows": [
+                [
+                  "/c/wheels",
+                  "stamp_ns, left_ticks, right_ticks",
+                  "Increment over adjacent records"
+                ],
+                [
+                  "/c/imu",
+                  "stamp_ns, accel_z_mps2",
+                  "Vertical acceleration in sensor frame"
+                ],
+                [
+                  "/operator/mark",
+                  "stamp_ns, pass_id",
+                  "Operator’s rough crossing mark"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Pull the crossing from the trace",
+            "body": "Start with the manual crossing mark, find the vertical acceleration peak in a small neighborhood, and compare it with the change in wheel speed. Keep the two original time series and the aligned copy. In the example below the wheel samples are less frequent than inertial samples. The nearest arrival record is not necessarily the nearest sensor-time record.",
+            "page_break_before": true,
+            "code": "stream        sensor stamp (s)    sample\nleft wheel        12.360           1,392 ticks\nimu.z             12.371          11.8 m/s^2\nimu.z             12.381          15.1 m/s^2\nleft wheel        12.400           1,400 ticks"
+          },
+          {
+            "heading": "Plot and recovery checks",
+            "body": "Overlay both wheel speeds above the inertial trace, with separate panels for passes A and B. Label the same event in each panel. If a topic disappears halfway through, keep the partial bag under a new name and repeat the affected pass. A partial run must never silently become a zero-speed segment in the final graph."
+          },
+          {
+            "heading": "Hand-in to the club notebook",
+            "body": "Include raw bag identifiers, a small CSV excerpt containing the crossing, two annotated plots and a paragraph on the lag between peaks. Note sensor-frame orientation and whether correcting the baseline changed the selected peak. Leave the mat and course tape as found."
+          },
+          {
+            "heading": "Compare across passes",
+            "body": "Compute the signed difference between wheel-speed change and acceleration peak for each pass. Write the sign convention in the column header. If one pass reverses the order of events, inspect raw message sequence numbers and overlapping sample intervals before calling it a physical lead or lag. Report when the sampling interval is larger than the claimed difference."
+          }
+        ]
+      }
+    },
+    {
+      "id": "replay-ramp",
+      "day": "2026-03-05",
+      "title": "Plot the ramp trial from yesterday’s recording",
+      "description": "Replay the ramp bag on the laptop, mark the two wheel-slip events and export the overlays.",
+      "category": "Robotics lab",
+      "details": "The archive is saved locally. This is offline analysis only; no rover or bridge is required.",
+      "estimate_minutes": 40,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        38
+      ],
+      "check": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope.",
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": [
+          0.85,
+          1.12
+        ],
+        "evidence_ids": [
+          "junction-replay",
+          "wheel-ticks"
+        ],
+        "rationale": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope."
+      },
+      "pdf": {
+        "title": "Ramp bag replay • archive note",
+        "series": "Ridge Avenue robotics workshop",
+        "kind": "Data release note",
+        "sections": [
+          {
+            "heading": "Archive contents",
+            "body": "The completed run is in ramp_B_12. The bag includes two wheel counters, motor current and the operator marks at the entry/exit tape. All three series are timestamped by the logger on the cart. The setup photo and a separate timing note are in the same local folder. No acquisition or new run is part of this analysis."
+          },
+          {
+            "heading": "Inspect before plotting",
+            "body": "The wheel channel wraps at 65536. Construct differences between consecutive samples before smoothing and handle a negative wrap when the next value is near zero. Mark a candidate slip only inside the interval from entering to leaving the ramp. Compare the raw count differences to the current peak to rule out a split record.",
+            "table": {
+              "headers": [
+                "Record",
+                "Wheel count",
+                "Interpretation"
+              ],
+              "rows": [
+                [
+                  "A - 1",
+                  "65530",
+                  "Just before wrap"
+                ],
+                [
+                  "A",
+                  "3",
+                  "Forward motion with wrap"
+                ],
+                [
+                  "A + 1",
+                  "12",
+                  "Forward motion continues"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Deliver the overlays",
+            "body": "Show an unfiltered trace and a clearly labeled smoothed trace on common axes. Number the two slip events in capture order. Write which sample adjacent to each peak you used and why; a reviewer should be able to recover both markers from the archived bag."
+          },
+          {
+            "heading": "Diagnostic ambiguity",
+            "body": "A learner treated the span between counts 65530 and 3 as a large negative speed. Derive the forward difference for that span, state the wrap assumption explicitly, and place that result beside the uncorrected speed on the diagnostic plot. A second pass near a direction change may violate the forward-motion assumption; explain how you would decide using the sign of the other wheel and the operator mark."
+          }
+        ]
+      }
+    }
+  ]
+}

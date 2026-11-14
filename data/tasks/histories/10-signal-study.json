@@ -1,0 +1,576 @@
+{
+  "id": "10-signal-study",
+  "name": "Evening signal-processing student and audio volunteer",
+  "scenario": "My evenings alternate between Fourier videos, paper-and-pencil problems, and small audio jobs. In-browser novelty clips sometimes eat into my lecture timer. Downloaded exercise sheets, local editing, and a live club stream are different work.",
+  "tasks": [
+    {
+      "id": "pulse-video",
+      "day": "2026-01-06",
+      "title": "Watch the Fourier pulse-train lecture",
+      "description": "Watch the recorded pulse-train lesson on YouTube and recreate the first two coefficient sketches in my notebook.",
+      "category": "Signal study",
+      "details": "Open the course playlist from the laptop and follow the worked example.",
+      "estimate_minutes": 40,
+      "actual_minutes": 55,
+      "sessions_minutes": [
+        28,
+        27
+      ],
+      "completion_note": "I opened two recommended clips during the lecture and left the timer going before returning to the coefficients.",
+      "activity": [
+        [
+          {
+            "minutes": 18,
+            "app": "Firefox",
+            "title": "Fourier pulse trains / EE study hour",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Firefox",
+            "title": "Cats chasing a printer cable",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 4,
+            "app": "LibreOffice Writer",
+            "title": "Pulse coefficients",
+            "domain": "",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 15,
+            "app": "Firefox",
+            "title": "Fourier pulse trains / EE study hour",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Firefox",
+            "title": "Commuter train bloopers",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 7,
+            "app": "LibreOffice Writer",
+            "title": "Pulse coefficients",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "venue-mic",
+      "day": "2026-01-10",
+      "title": "Check the handheld mic cable",
+      "description": "Verify the spare XLR against the house mic, label it, and return the cable tester to the cabinet.",
+      "category": "Audio volunteer",
+      "details": "Stage box is already up. No soundcheck needed.",
+      "estimate_minutes": 20,
+      "actual_minutes": 19,
+      "sessions_minutes": [
+        19
+      ],
+      "completion_note": "Cable passed after reseating the latch.",
+      "activity": [
+        [
+          {
+            "minutes": 19,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "phasor-paper",
+      "day": "2026-01-15",
+      "title": "Do the complex exponential worksheet",
+      "description": "Solve four phasor problems on paper. Check a sign by evaluating the complex exponential at zero.",
+      "category": "Signal study",
+      "details": "Use the downloaded sheet. No video to watch.",
+      "estimate_minutes": 50,
+      "actual_minutes": 47,
+      "sessions_minutes": [
+        47
+      ],
+      "completion_note": "Only the last sign needed a correction.",
+      "activity": [
+        [
+          {
+            "minutes": 7,
+            "app": "Document Viewer",
+            "title": "Phasor worksheet",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 33,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 7,
+            "app": "Xournal++",
+            "title": "Scan answers",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "window-video",
+      "day": "2026-01-22",
+      "title": "Work through the windowing video",
+      "description": "Watch the windowing and leakage lesson on YouTube. Pause to draw the rectangular and Hann examples.",
+      "category": "Signal study",
+      "details": "Use the course channel on the laptop. Both drawings go in my study notes.",
+      "estimate_minutes": 45,
+      "actual_minutes": 61,
+      "sessions_minutes": [
+        34,
+        27
+      ],
+      "completion_note": "Stayed on the course page at first, then watched a game highlight and part of a van conversion before finishing the second graph.",
+      "activity": [
+        [
+          {
+            "minutes": 19,
+            "app": "Firefox",
+            "title": "Leakage and windowing / course",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Firefox",
+            "title": "Final-minute hockey goals",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 6,
+            "app": "LibreOffice Writer",
+            "title": "Windowing examples",
+            "domain": "",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 7,
+            "app": "Firefox",
+            "title": "Tiny van kitchen build",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 13,
+            "app": "Firefox",
+            "title": "Leakage and windowing / course",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "LibreOffice Writer",
+            "title": "Windowing examples",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "voice-repair",
+      "day": "2026-01-30",
+      "title": "Clean up the town-hall voice clip",
+      "description": "Remove the click at the start of the question, fade the tail and export a 48 kHz mono WAV.",
+      "category": "Audio volunteer",
+      "details": "The saved Audacity project already has markers.",
+      "estimate_minutes": 25,
+      "actual_minutes": 28,
+      "sessions_minutes": [
+        28
+      ],
+      "completion_note": "Auditioned the tail twice on headphones.",
+      "activity": [
+        [
+          {
+            "minutes": 22,
+            "app": "Audacity",
+            "title": "Town hall / question clip",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Files",
+            "title": "WAV export",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "symmetry-video",
+      "day": "2026-02-04",
+      "title": "Take notes on Fourier symmetry",
+      "description": "Watch the course lecture on YouTube and sketch the odd-symmetry example. Work through the sign check before closing the notebook.",
+      "category": "Signal study",
+      "details": "Streaming from my desktop. Need a sketch I can use at revision.",
+      "estimate_minutes": 35,
+      "actual_minutes": 47,
+      "sessions_minutes": [
+        23,
+        24
+      ],
+      "completion_note": "A recommended pottery short turned into a chain of clips. Lost my place and replayed the sign check.",
+      "activity": [
+        [
+          {
+            "minutes": 14,
+            "app": "Firefox",
+            "title": "Fourier symmetry / worked example",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Firefox",
+            "title": "Pottery wheel wobble",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 3,
+            "app": "LibreOffice Writer",
+            "title": "Odd symmetry",
+            "domain": "",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 5,
+            "app": "Firefox",
+            "title": "Clay fails compilation",
+            "domain": "youtube.com",
+            "label": "off_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Firefox",
+            "title": "Fourier symmetry / worked example",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "LibreOffice Writer",
+            "title": "Odd symmetry",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stream-shift",
+      "day": "2026-02-09",
+      "title": "Monitor the club concert web stream",
+      "description": "Watch the public stream from the opening announcement until the timed playback ends. Leave the booth notes for the next volunteer.",
+      "category": "Audio volunteer",
+      "details": "Fixed 45-minute shift on the club’s video channel.",
+      "estimate_minutes": 45,
+      "actual_minutes": 45,
+      "sessions_minutes": [
+        45
+      ],
+      "completion_note": "The stream played through without interruption.",
+      "activity": [
+        [
+          {
+            "minutes": 39,
+            "app": "Firefox",
+            "title": "Saturday club concert / public relay",
+            "domain": "youtube.com",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "LibreOffice Writer",
+            "title": "Concert booth notes",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "fixed_duration": true
+    },
+    {
+      "id": "filter-exercise",
+      "day": "2026-02-14",
+      "title": "Calculate the shelf filter gain",
+      "description": "Solve the filter response problems on the downloaded handout. Label the two break frequencies and check one answer numerically.",
+      "category": "Signal study",
+      "details": "Use calculator and paper. No course recording for these.",
+      "estimate_minutes": 40,
+      "actual_minutes": 43,
+      "sessions_minutes": [
+        43
+      ],
+      "completion_note": "I had to check the base of the logarithm once.",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Document Viewer",
+            "title": "Shelf filter questions",
+            "domain": "",
+            "label": "on_task"
+          },
+          {
+            "minutes": 29,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 8,
+            "app": "Calculator",
+            "title": "Gain check",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ],
+      "pdf": {
+        "title": "One-pole shelf and break frequencies",
+        "series": "Harbor Radio study circle",
+        "kind": "Practice sheet",
+        "sections": [
+          {
+            "heading": "Mixer calibration problem",
+            "body": "A small mixer applies H(s) = 2(1 + s/800)/(1 + s/3200). The service log stores angular frequency in radians per second. A colleague wrote the two break values directly on a hertz axis. Draw a corrected axis and label each break using f = omega/(2 pi). Give the limiting low- and high-frequency gains as both ratios and decibels."
+          },
+          {
+            "heading": "Check one point numerically",
+            "body": "Evaluate |H(j omega)| at omega = 1600 rad/s, retaining the squared magnitude until the final square root. Compare the result with the straight-line Bode approximation in that region. Explain why 20 log10 is the appropriate conversion for this gain."
+          },
+          {
+            "heading": "Record the checks",
+            "body": "Show the algebra and label the numerical axes with units. Report one independent check outside the transition band, picking a frequency at least one decade from a break. A correct limiting slope alone does not identify the two break frequencies."
+          },
+          {
+            "heading": "An instrument discrepancy",
+            "body": "The display reports 9.1 dB at the test point. Your answer need not match that unverified reading exactly. Check whether the instrument divides by the input peak, RMS value or full scale. Write down which convention your calculation assumes and give a plausible sign for the error caused by applying a peak/RMS correction twice. Attach the two gain limits, the intermediate complex magnitude and the final labeled plot."
+          }
+        ]
+      }
+    },
+    {
+      "id": "quiet-news",
+      "day": "2026-02-23",
+      "title": "Listen back to the producer interview",
+      "description": "Check the local audio file for a dropout and add a marker at the start of each speaker turn.",
+      "category": "Audio volunteer",
+      "details": "Studio file is already downloaded. Only mark the first pass.",
+      "estimate_minutes": 30,
+      "actual_minutes": 30,
+      "sessions_minutes": [
+        30
+      ],
+      "completion_note": "Marked four speaker changes and handed over the index.",
+      "activity": [
+        [
+          {
+            "minutes": 30,
+            "app": "Audacity",
+            "title": "Producer interview / local master",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-headphone",
+      "day": "2026-03-01",
+      "title": "Pick up the repaired headphones",
+      "description": "Bring the repair ticket to the audio shop after class.",
+      "category": "Errands",
+      "details": "Shop closes at six.",
+      "estimate_minutes": 24,
+      "status": "ready",
+      "sessions_minutes": []
+    },
+    {
+      "id": "run-edit",
+      "day": "2026-03-01",
+      "title": "Trim the intro to the club interview",
+      "description": "Bring the theme bed under the host and leave three seconds of room tone.",
+      "category": "Audio volunteer",
+      "details": "I have isolated the first cut already.",
+      "estimate_minutes": 30,
+      "status": "running",
+      "sessions_minutes": [
+        8
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Audacity",
+            "title": "Theme intro / automation",
+            "domain": "",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "triangle-video",
+      "day": "2026-03-02",
+      "title": "Watch the triangular-wave Fourier lecture",
+      "description": "Work through the YouTube lecture on triangular waves and sketch two of the series reconstructions in my study notes.",
+      "category": "Signal study",
+      "details": "Use the course playlist in my usual browser. Pause for the second sketch.",
+      "estimate_minutes": 40,
+      "actual_minutes": 54,
+      "sessions_minutes": [
+        30,
+        24
+      ],
+      "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.25,
+          1.46
+        ],
+        "evidence_ids": [
+          "pulse-video",
+          "window-video",
+          "symmetry-video"
+        ],
+        "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+        "expected_caution": {
+          "evidence_ids": [
+            "pulse-video",
+            "window-video",
+            "symmetry-video"
+          ],
+          "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user’s past notes give specific evidence."
+        }
+      }
+    },
+    {
+      "id": "triangle-sheet",
+      "day": "2026-03-04",
+      "title": "Complete the triangle-wave practice problems",
+      "description": "Calculate the first three nonzero coefficients on the worksheet and justify why the even terms vanish. Check one sum numerically.",
+      "category": "Signal study",
+      "details": "Downloaded exercise sheet, a pencil and a local calculator. No lecture or browser needed.",
+      "estimate_minutes": 45,
+      "actual_minutes": 44,
+      "sessions_minutes": [
+        44
+      ],
+      "check": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": [
+          0.86,
+          1.13
+        ],
+        "evidence_ids": [
+          "phasor-paper",
+          "filter-exercise"
+        ],
+        "rationale": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction."
+      },
+      "pdf": {
+        "title": "Triangular wave reconstruction at the monitor output",
+        "series": "Harbor Radio study circle",
+        "kind": "Problem sheet",
+        "sections": [
+          {
+            "heading": "Source waveform",
+            "body": "A line tester generates an even triangular signal with period T and amplitude A. On the interval -T/2 through T/2, write it as x(t) = A - 4A|t|/T, then continue periodically. The printed monitor trace has a positive peak at t = 0 and a negative peak at t = T/2. Use omega0 = 2 pi/T and the cosine-series convention x(t) = a0/2 + sum a_n cos(n omega0 t)."
+          },
+          {
+            "heading": "1. Sketch and separate the terms",
+            "body": "Sketch two periods with a common baseline. On your sketch, show a half-period shift and use it to say which harmonic indices can contribute. Explain why the sine coefficients vanish under the specified time origin. If you choose another origin, draw the shift before writing coefficients."
+          },
+          {
+            "heading": "2. Work the coefficients",
+            "body": "Set up the cosine integral over half a period and show the boundary terms after integration by parts. Evaluate the first three nonzero a_n in terms of A and pi. Keep each sign in your written table and label the frequency of each term in hertz for a 100 Hz fundamental.",
+            "table": {
+              "headers": [
+                "Harmonic",
+                "Expression to record",
+                "Check"
+              ],
+              "rows": [
+                [
+                  "First nonzero",
+                  "coefficient and frequency",
+                  "Sign relative to the peak"
+                ],
+                [
+                  "Second nonzero",
+                  "coefficient and frequency",
+                  "Ratio to the first"
+                ],
+                [
+                  "Third nonzero",
+                  "coefficient and frequency",
+                  "Ratio to the first"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "3. Check the partial reconstruction",
+            "body": "Use A = 1 V and T = 0.01 s for an independent numerical check. Evaluate the three-term sum at t = 0, t = T/4 and t = T/2; compare with the piecewise source values. State one reason a truncated series can miss the magnitude of a peak while still giving the correct sign. A calculator or a short local script is enough.",
+            "page_break_before": true
+          },
+          {
+            "heading": "Check a time-shift claim",
+            "body": "A note on the bench claims that shifting the capture origin by T/4 keeps all sine terms equal to zero. Test this with the fundamental, using cos(a+b). Identify which coefficient changes and explain why the physical signal still has the same period. Include a corrected sketch of the axes and one line of algebra."
+          },
+          {
+            "heading": "Return a short work packet",
+            "body": "Hand in the labeled sketch, your integral with boundary terms, the coefficient table, and the numerical check. Mark units on each numerical line. If an evaluation differs from the original waveform, indicate whether the discrepancy is due to finite truncation, a normalization choice or a possible arithmetic error. No recording or online demonstration is required."
+          },
+          {
+            "heading": "Compare two hand sketches",
+            "body": "An older notebook gives a nonzero even term and places the positive peak at T/4. Look at the time origin, offset and symmetry separately. Which discrepancy could be explained by a horizontal shift alone? Which would require a different source waveform or an incorrect integral? Use a concrete sample from your table to defend each answer. Do not erase the original sketch; circle the feature that distinguishes the two versions."
+          }
+        ]
+      }
+    }
+  ]
+}

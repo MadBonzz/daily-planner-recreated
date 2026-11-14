@@ -92,3 +92,61 @@ def test_strict_evaluation_saves_results_even_on_failure(tmp_path, monkeypatch, 
     assert data["configuration"]["endpoint"] == "https://api.cohere.com/v1/chat"
     assert data["configuration"]["model"] == "test-model"
     assert data["configuration"]["elapsed_seconds"] >= data["cases"][0]["model_seconds"]
+
+
+def test_grading_uses_only_prospective_fields_and_scores_citations(tmp_path, monkeypatch):
+    from examples.estimation.scoring import validate_rubric
+
+    history = fixture_history()
+    row = history["holdouts"][0]
+    rubric = {
+        "kind": "patterned", "expected_ratio_range": [1.4, 1.5],
+        "evidence_ids": ["past-1"], "rationale": "Use historical editing overruns.",
+        "expected_caution": {"evidence_ids": ["past-1"], "rationale": "Budget time for a second pass."},
+    }
+    row.update(fixed_duration=False, evaluation=rubric, completion_note="HELD_OUT_NOTE")
+    history["tasks"][0]["completion_note"] = "HISTORICAL_NOTE"
+    history["open_tasks"] = [{"title": "OPEN_TASK"}]
+    validate_rubric(rubric, {"past-1"})
+
+    def predict(fields, past, _):
+        assert set(fields) == set(run.INPUT_KEYS) | {"fixed_duration", "pdf_text"}
+        assert fields["fixed_duration"] is False
+        assert not ({"actual_minutes", "evaluation", "completion_note", "report", "sessions_minutes", "check"} & fields.keys())
+        assert "HISTORICAL_NOTE" in str(past)
+        assert all(s not in str((fields, past)) for s in ("HELD_OUT_NOTE", "OPEN_TASK", "Budget time for a second pass."))
+        return {"point_min": 28, "low_min": 20, "high_min": 30, "confidence": "low", "basis": "Model-selected tasks",
+                "evidence": [{"task_id": "past-1"}],
+                "cautions": [{"advice": "Allow a second pass.", "sources": [{"task_id": "past-1"}]}]}
+
+    monkeypatch.setattr(run.estimator, "predict", predict)
+    cases = run.evaluate(history, tmp_path, tmp_path / "index", case=row["id"])
+    scored = cases[0]["evaluation"]
+    assert scored["predicted_ratio"] == 1.4 and scored["prediction_in_band"]
+    assert scored["realized_ratio"] == 1.5 and scored["realization_in_band"]
+    assert scored["selected_expected_ids"] == ["past-1"] and scored["caution_cites_expected_source"]
+    assert scored["unknown_caution_source_ids"] == []
+    assert run.metrics(cases)["patterned_cases_in_declared_band"] == {"original": 0, "category": 1, "planner": 1, "actual": 1}
+    with pytest.raises(ValueError, match="earlier tasks"):
+        validate_rubric({**rubric, "evidence_ids": [row["id"]]}, {"past-1"})
+
+
+def test_unpredictable_case_is_graded_only_on_realized_outcome():
+    from examples.estimation.scoring import grade, rubric_summary
+    rubric = {"kind": "control", "expected_ratio_range": None, "evidence_ids": [], "rationale": "Unforeseeable outage."}
+    prediction = {"point_min": 30, "evidence": [], "cautions": []}
+    scored = grade(rubric, prediction, 30, 51, set())
+    summary = rubric_summary([{"evaluation": scored, "original": 30, "category": 30, "planner": 30, "actual": 51}])
+    assert scored["prediction_in_band"] is None and scored["caution_cites_expected_source"] is None
+    assert summary["patterned_cases"] == 0 and summary["control_cases"] == 1
+    assert run.model_succeeded({"basis": "Scheduled duration", "fixed_duration": True, "model_status": "not_called"})
+    assert not run.model_succeeded({"basis": "User estimate", "fixed_duration": False, "model_status": "not_called"})
+
+
+def test_shared_pdf_stem_is_resolved_locally(tmp_path):
+    folder = tmp_path / "pdfs" / "history"
+    folder.mkdir(parents=True)
+    (folder / "handout.pdf").write_bytes(b"test file")
+    assert run.documents({"id": "part-b", "pdf": "handout"}, "history", tmp_path) == [("handout.pdf", b"test file")]
+    with pytest.raises(ValueError, match="Invalid fixture PDF"):
+        run.documents({"id": "part-b", "pdf": "../handout"}, "history", tmp_path)

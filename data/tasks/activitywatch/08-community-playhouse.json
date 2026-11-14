@@ -1,0 +1,202 @@
+{
+  "buckets": {
+    "aw-watcher-window_demo-08-community-playhouse": {
+      "id": "aw-watcher-window_demo-08-community-playhouse",
+      "created": "2026-01-09T08:00:00+00:00",
+      "name": "",
+      "type": "currentwindow",
+      "client": "aw-watcher-window",
+      "hostname": "demo-08-community-playhouse",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-01-09T08:00:00+00:00",
+          "duration": 3600.0,
+          "data": {
+            "app": "QLab",
+            "title": "Radio Cabaret / live captions"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-01-09T09:00:00+00:00",
+          "duration": 900.0,
+          "data": {
+            "app": "Calendar",
+            "title": "Today"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-01-09T09:15:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "app": "QLab",
+            "title": "Radio Cabaret / workspace"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-01-09T09:29:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "app": "Font Book",
+            "title": "Installing visiting fonts"
+          }
+        },
+        {
+          "id": 5,
+          "timestamp": "2026-01-24T08:00:00+00:00",
+          "duration": 2700.0,
+          "data": {
+            "app": "QLab",
+            "title": "Shortwave / caption cues"
+          }
+        },
+        {
+          "id": 6,
+          "timestamp": "2026-02-01T08:00:00+00:00",
+          "duration": 1260.0,
+          "data": {
+            "app": "QLab",
+            "title": "Projection preflight"
+          }
+        },
+        {
+          "id": 7,
+          "timestamp": "2026-02-01T08:21:00+00:00",
+          "duration": 540.0,
+          "data": {
+            "app": "Finder",
+            "title": "Tour media / relink"
+          }
+        },
+        {
+          "id": 8,
+          "timestamp": "2026-02-12T08:00:00+00:00",
+          "duration": 3000.0,
+          "data": {
+            "app": "QLab",
+            "title": "Quiet Hour / booth captions"
+          }
+        },
+        {
+          "id": 9,
+          "timestamp": "2026-02-25T08:00:00+00:00",
+          "duration": 1080.0,
+          "data": {
+            "app": "QLab",
+            "title": "Blue House / relay"
+          }
+        },
+        {
+          "id": 10,
+          "timestamp": "2026-02-25T08:18:00+00:00",
+          "duration": 660.0,
+          "data": {
+            "app": "System Settings",
+            "title": "Displays / arrangement"
+          }
+        }
+      ]
+    },
+    "aw-watcher-afk_demo-08-community-playhouse": {
+      "id": "aw-watcher-afk_demo-08-community-playhouse",
+      "created": "2026-01-09T08:00:00+00:00",
+      "name": "",
+      "type": "afkstatus",
+      "client": "aw-watcher-afk",
+      "hostname": "demo-08-community-playhouse",
+      "events": [
+        {
+          "id": 1,
+          "timestamp": "2026-01-09T08:00:00+00:00",
+          "duration": 3660.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 2,
+          "timestamp": "2026-01-09T09:01:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 3,
+          "timestamp": "2026-01-09T09:15:00+00:00",
+          "duration": 1380.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 4,
+          "timestamp": "2026-01-09T09:38:00+00:00",
+          "duration": 600.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 5,
+          "timestamp": "2026-01-17T08:00:00+00:00",
+          "duration": 960.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 6,
+          "timestamp": "2026-01-24T08:00:00+00:00",
+          "duration": 2700.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 7,
+          "timestamp": "2026-02-01T08:00:00+00:00",
+          "duration": 1800.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 8,
+          "timestamp": "2026-02-01T08:30:00+00:00",
+          "duration": 480.0,
+          "data": {
+            "status": "afk"
+          }
+        },
+        {
+          "id": 9,
+          "timestamp": "2026-02-12T08:00:00+00:00",
+          "duration": 3000.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 10,
+          "timestamp": "2026-02-25T08:00:00+00:00",
+          "duration": 1740.0,
+          "data": {
+            "status": "not-afk"
+          }
+        },
+        {
+          "id": 11,
+          "timestamp": "2026-02-25T08:29:00+00:00",
+          "duration": 840.0,
+          "data": {
+            "status": "afk"
+          }
+        }
+      ]
+    }
+  }
+}

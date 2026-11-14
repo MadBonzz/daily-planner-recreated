@@ -1,0 +1,514 @@
+{
+  "id": "05-interview-practice",
+  "name": "Interview problems around class",
+  "scenario": "A candidate practices new invariant-heavy medium problems and later retypes selected solutions. Program-analysis homework and everyday chores share the same planner.",
+  "tasks": [
+    {
+      "id": "subarray-target",
+      "title": "LeetCode practice · subarray sum equals k",
+      "description": "Solve from a blank editor using prefix counts; include a trace with negative values and duplicate prefix sums.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 45,
+      "actual_minutes": 54,
+      "sessions_minutes": [
+        54
+      ],
+      "completion_note": "Explaining why the initial prefix count is one took a second example.",
+      "day": "2026-09-05",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Firefox",
+            "title": "Subarray sum equals K",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          },
+          {
+            "minutes": 18,
+            "app": "Code",
+            "title": "prefix_counts.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "Xournal++",
+            "title": "Negative-value trace",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Firefox",
+            "title": "Game highlights — overtime finish",
+            "label": "off_task",
+            "domain": "youtube.com",
+            "audible": true
+          },
+          {
+            "minutes": 12,
+            "app": "Code",
+            "title": "test_duplicate_prefix.py",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "window-cost",
+      "title": "Practice the longest window with bounded replacement",
+      "description": "Write a solution from scratch and explain why discarding the left endpoint restores the invariant.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 40,
+      "actual_minutes": 50,
+      "sessions_minutes": [
+        50
+      ],
+      "day": "2026-09-09",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Firefox",
+            "title": "Longest repeating character replacement",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          },
+          {
+            "minutes": 22,
+            "app": "Code",
+            "title": "window_cost.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 13,
+            "app": "Xournal++",
+            "title": "Invariant after move-left",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Firefox",
+            "title": "Replacement window — submissions",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "cfg-paper",
+      "title": "Draw the manifest control-flow graph",
+      "description": "Do the written clinic questions only, including the exceptional edge and second loop pass.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 60,
+      "actual_minutes": 98,
+      "sessions_minutes": [
+        51,
+        47
+      ],
+      "completion_note": "The exception edge changed the exit facts.",
+      "pdf": {
+        "title": "Review clinic · Tracing resource ownership",
+        "series": "Program analysis workshop · sheet 2",
+        "kind": "Exercise packet",
+        "sections": [
+          {
+            "heading": "Clinic setup",
+            "body": "A command-line batch importer reads manifests, validates resource names and writes one audit record per accepted item. Audit handles may be acquired inside a loop. A return from the validation helper can leave the handle open. An exception from append is caught by the caller and recorded as a skipped item. The starter kit includes a set of short functions in a language with explicit acquire and release operations; each resource is identified by an allocation site in this exercise.\n\nFor the first two functions, work entirely on paper. The third function is supplied as an AST in JSON and can be used for an optional implementation. Mark the entry, exit and exceptional exit separately. A node with no side effect still belongs in the graph if it controls reachability.",
+            "code": "h = acquire(batch)\nfor row in rows:\n    if stale(row):\n        continue\n    if bad(row):\n        return skipped\n    append(h, row)          # may throw WriteError\nrelease(h)\nreturn ok"
+          },
+          {
+            "heading": "Written questions",
+            "body": "Draw a control-flow graph for the snippet under the stated exception model. Label the edge that leaves append on WriteError. Define a forward may analysis whose state at each program point is the set of sites whose handles can still be open. Give the transfer functions for acquisition, release and a branch join. Specify the entry fact and how you distinguish unreachable from reachable with the empty set. Show the facts after the first and second pass through the loop. Does one pass in source order yield the fixed point? Give a trace supporting your answer."
+          },
+          {
+            "heading": "Metamorphic checks for the prototype",
+            "body": "Transform one function by introducing an equivalent conditional that uses a temporary variable and another by moving release into a cleanup block. The first transformation should preserve the reported leak sites. The second should remove an exceptional-exit report while retaining the intentional early-return finding unless that return also enters cleanup. Use at least one AST in which two acquisitions occur at distinct sites that happen to share a variable name. Include your assumptions about aliasing.",
+            "page_break_before": true,
+            "table": {
+              "headers": [
+                "Path",
+                "Expected terminal kind",
+                "Reason to inspect"
+              ],
+              "rows": [
+                [
+                  "No rows",
+                  "normal",
+                  "Loop skipped; final release executed."
+                ],
+                [
+                  "Bad first row",
+                  "early return",
+                  "Open site has no cleanup on that branch."
+                ],
+                [
+                  "WriteError on second append",
+                  "exception",
+                  "Earlier success does not close this handle."
+                ],
+                [
+                  "Stale then valid",
+                  "normal",
+                  "Loop back edge must rejoin entry facts."
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Submission",
+            "body": "For the core clinic, submit a labeled graph, the data-flow equations and the final fact sets for all exits. For the extension, include the JSON input, a runnable analysis and a regression test per transformation. The two tracks are separate. An answer describing how to test an analysis does not complete the implementation track. This document belongs to the program-analysis reading block and is separate from timed interview practice."
+          }
+        ]
+      },
+      "day": "2026-09-13",
+      "activity": [
+        [
+          {
+            "minutes": 12,
+            "app": "Okular",
+            "title": "Manifest analysis — exceptional edges",
+            "label": "on_task"
+          },
+          {
+            "minutes": 26,
+            "app": "Xournal++",
+            "title": "Control-flow graph",
+            "label": "on_task"
+          },
+          {
+            "minutes": 13,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 18,
+            "app": "Xournal++",
+            "title": "Second pass / facts at exit",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Okular",
+            "title": "Resource clinic — terminal states",
+            "label": "on_task"
+          },
+          {
+            "minutes": 16,
+            "app": "Code",
+            "title": "manifest-cfg.tex",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Okular",
+            "title": "manifest-cfg.pdf",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "two-targets",
+      "title": "Practice two non-overlapping target ranges",
+      "description": "Design the prefix-index invariant, implement from blank, test negative and duplicate values, then explain it out loud.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 60,
+      "actual_minutes": 72,
+      "sessions_minutes": [
+        42,
+        30
+      ],
+      "day": "2026-09-17",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Firefox",
+            "title": "Two non-overlapping target subarrays",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          },
+          {
+            "minutes": 17,
+            "app": "Code",
+            "title": "min_two_ranges.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Xournal++",
+            "title": "Prefix index and non-overlap",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "Thunderbird",
+            "title": "Inbox",
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 12,
+            "app": "Code",
+            "title": "test_duplicate_prefixes.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Terminal",
+            "title": "pytest -k two_ranges",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Obsidian",
+            "title": "Explain two ranges out loud",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Firefox",
+            "title": "Two target ranges — submissions",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "description": "Use last week’s accepted answer; check the equality boundary and send the link.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "actual_minutes": 17,
+      "sessions_minutes": [
+        17
+      ],
+      "day": "2026-09-21",
+      "activity": [
+        [
+          {
+            "minutes": 5,
+            "app": "Obsidian",
+            "title": "Accepted answers / merge intervals",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "Firefox",
+            "title": "Merge intervals — editor",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          },
+          {
+            "minutes": 2,
+            "app": "Firefox",
+            "title": "Merge intervals — submission result",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "cutlery",
+      "title": "Wash the lunch dishes",
+      "description": "Clean one pan, two bowls and cutlery; let the rack air dry.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 12,
+      "actual_minutes": 13,
+      "sessions_minutes": [
+        13
+      ],
+      "day": "2026-09-25",
+      "activity": [
+        [
+          {
+            "minutes": 13,
+            "app": "",
+            "title": "",
+            "idle": null,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "retype-stack",
+      "title": "Review the saved monotone stack solution",
+      "description": "Replay one example and type my existing solution; this is review rather than a fresh solve.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 30,
+      "actual_minutes": 21,
+      "sessions_minutes": [
+        21
+      ],
+      "day": "2026-09-29",
+      "activity": [
+        [
+          {
+            "minutes": 4,
+            "app": "Obsidian",
+            "title": "Accepted stack solution",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Xournal++",
+            "title": "One increasing-run trace",
+            "label": "on_task"
+          },
+          {
+            "minutes": 12,
+            "app": "Firefox",
+            "title": "Monotonic stack — editor",
+            "label": "on_task",
+            "domain": "leetcode.com"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "rubric",
+      "title": "Proofread the resource tracking write-up",
+      "description": "Check the terminal-state annotations and graph names against the sheet.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 30,
+      "actual_minutes": 28,
+      "sessions_minutes": [
+        28
+      ],
+      "pdf": "cfg-paper",
+      "day": "2026-10-03",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Okular",
+            "title": "Resource clinic — written rubric",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Code",
+            "title": "manifest-exits.tex",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "Okular",
+            "title": "Resource tracking — proof copy",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "queue-drill",
+      "title": "Trace monotone deque by hand",
+      "description": "I have two failing arrays with duplicate prefix values; finish the trace.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "status": "paused",
+      "sessions_minutes": [
+        6
+      ],
+      "day": "2026-10-25",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Xournal++",
+            "title": "Monotone deque — two failing arrays",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "analysis-extension",
+      "title": "Implement the optional leak-site analysis",
+      "description": "Add the forward worklist on the supplied AST; cover exceptional edges and cleanup.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 115,
+      "pdf": "cfg-paper",
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-10-25"
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "shortest-window",
+      "title": "Solve a new shortest-window problem",
+      "description": "From scratch find the shortest nonempty subarray summing to at least K with signed integers. Explain which prefix candidates can be discarded and test duplicates.",
+      "details": "No editorial. I want accepted code plus a spoken invariant, not just recognition.",
+      "category": "Interview practice",
+      "estimate_minutes": 50,
+      "actual_minutes": 62,
+      "sessions_minutes": [
+        62
+      ],
+      "check": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.13,
+          1.31
+        ],
+        "evidence_ids": [
+          "subarray-target",
+          "window-cost",
+          "two-targets"
+        ],
+        "rationale": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor."
+      },
+      "day": "2026-10-26"
+    },
+    {
+      "id": "editorial-review",
+      "title": "Redo the saved interval merge after lunch",
+      "description": "Reimplement my saved solution and test endpoints touching. I have the example trace from my first pass.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "actual_minutes": 19,
+      "sessions_minutes": [
+        19
+      ],
+      "check": "Review uses prior solution and is routinely shorter.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.6,
+          0.87
+        ],
+        "evidence_ids": [
+          "retype-merge",
+          "retype-stack"
+        ],
+        "rationale": "Review uses prior solution and is routinely shorter."
+      },
+      "day": "2026-10-27"
+    }
+  ]
+}

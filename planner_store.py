@@ -9,6 +9,11 @@ import sqlite3
 import time
 from uuid import uuid4
 
+from task_forecasts import scheduled_prediction
+
+
+DEFAULT_CATEGORIES = ("Work", "Personal", "Study", "Health", "Creative")
+
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS tasks (
@@ -21,6 +26,10 @@ CREATE TABLE IF NOT EXISTS tasks (
     pdf_text TEXT NOT NULL,
     estimate_minutes REAL NOT NULL CHECK (estimate_minutes > 0),
     prediction TEXT NOT NULL,
+    creation_prediction TEXT,
+    fixed_duration INTEGER NOT NULL DEFAULT 0,
+    completion_note TEXT NOT NULL DEFAULT '',
+    refresh_waiting INTEGER NOT NULL DEFAULT 0,
     status TEXT NOT NULL DEFAULT 'ready'
         CHECK (status IN ('ready','running','paused','awaiting_finish','completed')),
     created_at REAL NOT NULL,
@@ -37,6 +46,7 @@ CREATE TABLE IF NOT EXISTS prediction_jobs (
 CREATE TABLE IF NOT EXISTS prediction_history (
     task_id TEXT NOT NULL REFERENCES prediction_jobs ON DELETE CASCADE,
     source_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
+    snapshot TEXT,
     PRIMARY KEY(task_id, source_id)
 );
 CREATE INDEX IF NOT EXISTS prediction_history_source ON prediction_history(source_id);
@@ -70,10 +80,15 @@ CREATE TABLE IF NOT EXISTS attachments (
 );
 CREATE INDEX IF NOT EXISTS task_attachments ON attachments(task_id);
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS categories (
+    label_key TEXT PRIMARY KEY,
+    name TEXT NOT NULL
+);
 """
 
 _TASKS = """
 SELECT t.*, clock.started_at,
+       EXISTS(SELECT 1 FROM prediction_jobs j WHERE j.task_id=t.id) AS estimate_updating,
        COALESCE(t.actual_seconds, clock.total, 0) AS measured
 FROM tasks AS t
 LEFT JOIN (
@@ -101,6 +116,34 @@ def _get_setting(db, key, default):
     return json.loads(row[0]) if row else default
 
 
+def _enqueue_prediction(db, task_id):
+    # Replacing a refresh invalidates any older lease. Store the comparison set in
+    # the same transaction, so a newer completion cannot leak into the first estimate.
+    db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
+    db.execute("INSERT INTO prediction_jobs(task_id) VALUES (?)", (task_id,))
+    # Completed task identity, timer, note and attachments are immutable. Its
+    # report can be rebuilt, and its own first estimate/PDF can arrive later.
+    db.execute("""INSERT INTO prediction_history(task_id, source_id, snapshot)
+                  SELECT ?, id, json_object(
+                      'report', json(report), 'pdf_text', pdf_text,
+                      'prediction', json_object('point_min', json_extract(prediction, '$.point_min')),
+                      'creation_prediction', json_object('point_min', json_extract(creation_prediction, '$.point_min')))
+                  FROM tasks WHERE status='completed' AND actual_seconds>0 AND id!=?""",
+               (task_id, task_id))
+
+
+def _refresh_open_estimates(db):
+    for row in db.execute("""SELECT id, creation_prediction FROM tasks
+                             WHERE status IN ('ready','running','paused','awaiting_finish')
+                               AND fixed_duration=0""").fetchall():
+        if row["creation_prediction"] is None:
+            # The first forecast must still complete against its original comparison
+            # set. Run the latest refresh immediately after that snapshot is committed.
+            db.execute("UPDATE tasks SET refresh_waiting=1 WHERE id=?", (row["id"],))
+        else:
+            _enqueue_prediction(db, row["id"])
+
+
 def _close_period(db, session_id, now):
     period = db.execute(
         "SELECT id FROM periods WHERE session_id=? AND end IS NULL", (session_id,)
@@ -120,6 +163,27 @@ class PlannerStore:
         self.clock = clock
         with self._db() as db:
             db.executescript(_SCHEMA)
+        with self._db(write=True) as db:
+            history_columns = {row["name"] for row in db.execute("PRAGMA table_info(prediction_history)")}
+            if "snapshot" not in history_columns:
+                db.execute("ALTER TABLE prediction_history ADD COLUMN snapshot TEXT")
+            columns = {row["name"] for row in db.execute("PRAGMA table_info(tasks)")}
+            for name, declaration in (("fixed_duration", "INTEGER NOT NULL DEFAULT 0"),
+                                      ("completion_note", "TEXT NOT NULL DEFAULT ''"),
+                                      ("refresh_waiting", "INTEGER NOT NULL DEFAULT 0")):
+                if name not in columns:
+                    db.execute(f"ALTER TABLE tasks ADD COLUMN {name} {declaration}")
+            if "creation_prediction" not in columns:
+                db.execute("ALTER TABLE tasks ADD COLUMN creation_prediction TEXT")
+                db.execute("""UPDATE tasks SET creation_prediction=prediction
+                              WHERE COALESCE(json_extract(prediction,'$.status'),'') != 'pending'""")
+            if not _get_setting(db, "category_list_initialized", False):
+                labels = list(DEFAULT_CATEGORIES)
+                labels.extend(row[0].strip() for row in db.execute(
+                    "SELECT DISTINCT category FROM tasks WHERE trim(category) != ''"))
+                db.executemany("INSERT OR IGNORE INTO categories VALUES (?, ?)",
+                               [(label.casefold(), label) for label in labels])
+                _save_setting(db, "category_list_initialized", True)
 
     @contextmanager
     def _db(self, *, write=False):
@@ -142,6 +206,11 @@ class PlannerStore:
             task = dict(row)
             task["actual_seconds"] = task.pop("measured")
             task["prediction"] = json.loads(task["prediction"])
+            original = task["creation_prediction"]
+            task["creation_prediction"] = json.loads(original) if original is not None else None
+            task["fixed_duration"] = bool(task["fixed_duration"])
+            task["estimate_updating"] = bool(task["estimate_updating"])
+            task.pop("refresh_waiting")
             task["report"] = json.loads(task["report"]) if task["report"] else None
             task["attachments"] = [dict(a) for a in db.execute(
                 "SELECT id, name FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],)
@@ -181,7 +250,7 @@ class PlannerStore:
         return self._first_with_status("awaiting_finish")
 
     def create_task(self, *, title, description, estimate_minutes, day, prediction=None,
-                    category="", details="", attachments=(), pdf_text=""):
+                    category="", details="", attachments=(), pdf_text="", fixed_duration=False):
         title = title.strip()
         description = description.strip()
         if not title or not description:
@@ -190,24 +259,26 @@ class PlannerStore:
         if not math.isfinite(estimate_minutes) or estimate_minutes <= 0:
             raise ValueError("The estimate must be a positive number of minutes.")
         task_id = str(uuid4())
+        if fixed_duration:
+            prediction = scheduled_prediction(estimate_minutes)
         queue_prediction = prediction is None
         if queue_prediction:
             prediction = {"status": "pending", "basis": "Pending", "evidence": []}
         with self._db(write=True) as db:
+            category = (category or "").strip()
+            if category:
+                db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (category.casefold(), category))
+                category = db.execute("SELECT name FROM categories WHERE label_key=?",
+                                      (category.casefold(),)).fetchone()[0]
             db.execute("""
                 INSERT INTO tasks(id, day, title, description, category, details, pdf_text,
-                                  estimate_minutes, prediction, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                  estimate_minutes, prediction, created_at, fixed_duration, creation_prediction)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (task_id, _day(day), title, description, category or "", details or "",
                   pdf_text or "", estimate_minutes, json.dumps(prediction, allow_nan=False),
-                  self.clock()))
+                  self.clock(), int(fixed_duration), None if queue_prediction else json.dumps(prediction, allow_nan=False)))
             if queue_prediction:
-                db.execute("INSERT INTO prediction_jobs(task_id) VALUES (?)", (task_id,))
-                # Membership is frozen in the creation transaction. A task finished
-                # while this estimate is running must never affect its first forecast.
-                db.execute("""INSERT INTO prediction_history(task_id, source_id)
-                              SELECT ?, id FROM tasks WHERE status='completed' AND actual_seconds > 0""",
-                           (task_id,))
+                _enqueue_prediction(db, task_id)
             for name, content in attachments:
                 if not isinstance(content, bytes) or b"%PDF-" not in content[:1024]:
                     raise ValueError("Only PDF attachments are supported.")
@@ -241,7 +312,17 @@ class PlannerStore:
             history = self._tasks(db, """WHERE t.id IN (
                 SELECT source_id FROM prediction_history WHERE task_id=?
             )""", (task_id,))
-            return {"task": task, "history": history, "token": token}
+            snapshots = dict(db.execute("SELECT source_id,snapshot FROM prediction_history WHERE task_id=?",
+                                        (task_id,)))
+            for source in history:
+                snapshot = snapshots[source["id"]]
+                if snapshot is not None:
+                    source.update(json.loads(snapshot))
+            # A task can finish before its forecast worker runs. Only information
+            # available to the user at creation is a valid forecast input.
+            inputs = {key: task[key] for key in ("id", "title", "description", "category", "details",
+                      "day", "estimate_minutes", "fixed_duration", "pdf_text", "attachments")}
+            return {"task": inputs, "history": history, "token": token}
 
     def renew_prediction(self, task_id, token, *, lease_seconds=300):
         if not math.isfinite(lease_seconds) or lease_seconds <= 0:
@@ -253,17 +334,23 @@ class PlannerStore:
             """, (now + lease_seconds, task_id, token, now)).rowcount)
 
     def resolve_prediction(self, task_id, token, prediction, *, pdf_text=None):
-        """Publish the original forecast once, even if its timer has since finished."""
+        """Save the current forecast while preserving the task's initial prediction."""
         with self._db(write=True) as db:
             deleted = db.execute("DELETE FROM prediction_jobs WHERE task_id=? AND token=? AND lease_end>?",
                                  (task_id, token, self.clock()))
             if not deleted.rowcount:
                 return False
-            db.execute("UPDATE tasks SET prediction=?, pdf_text=COALESCE(?,pdf_text) WHERE id=?",
-                       (json.dumps(prediction, allow_nan=False), pdf_text, task_id))
+            data = json.dumps(prediction, allow_nan=False)
+            waiting = db.execute("SELECT refresh_waiting, status FROM tasks WHERE id=?", (task_id,)).fetchone()
+            db.execute("""UPDATE tasks SET prediction=?, creation_prediction=COALESCE(creation_prediction, ?),
+                          pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
+                       (data, data, pdf_text, task_id))
+            if waiting["refresh_waiting"] and waiting["status"] != "completed":
+                _enqueue_prediction(db, task_id)
             return True
 
-    def transition(self, task_id, action, *, ended_at=None):
+    def transition(self, task_id, action, *, ended_at=None, completion_note="", report=None,
+                   pdf_text=None, refresh_estimates=True):
         """Apply a timer action and return the committed state. Starting another task pauses the first."""
         with self._db(write=True) as db:
             task = self._task(db, task_id)
@@ -313,12 +400,18 @@ class PlannerStore:
             elif action == "continue_later" and state == "awaiting_finish":
                 state = "ready"
             elif action == "finish" and state == "awaiting_finish":
-                db.execute("UPDATE tasks SET completed_at=?, actual_seconds=? WHERE id=?",
-                           (now, task["actual_seconds"], task_id))
+                db.execute("""UPDATE tasks SET completed_at=?, actual_seconds=?, completion_note=?,
+                              report=?, pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
+                           (now, task["actual_seconds"], completion_note.strip(),
+                            json.dumps(report, allow_nan=False) if report is not None else None, pdf_text, task_id))
+                if task["creation_prediction"] is not None:
+                    db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
                 state = "completed"
             else:
                 raise ValueError(f"Cannot {action.replace('_', ' ')} a {state} task.")
             db.execute("UPDATE tasks SET status=? WHERE id=?", (state, task_id))
+            if action == "finish" and refresh_estimates and task["actual_seconds"] > 0:
+                _refresh_open_estimates(db)
             return self._task(db, task_id)
 
     def periods(self, task_id):
@@ -379,12 +472,14 @@ class PlannerStore:
                 db.execute("UPDATE capture SET end=MAX(start, ?) WHERE end IS NULL", (now,))
             _save_setting(db, "capture_enabled", enabled)
 
-    def save_report(self, task_id, report):
+    def save_report(self, task_id, report, *, refresh_estimates=True):
         with self._db(write=True) as db:
             changed = db.execute("UPDATE tasks SET report=? WHERE id=? AND status='completed'",
                                  (json.dumps(report, allow_nan=False), task_id))
             if not changed.rowcount:
                 raise ValueError("Finish the task before saving its activity review.")
+            if refresh_estimates:
+                _refresh_open_estimates(db)
 
     def attachment_bytes(self, attachment_id):
         with self._db() as db:
@@ -410,20 +505,46 @@ class PlannerStore:
                           WHERE task_id IN (SELECT task_id FROM prediction_history WHERE source_id=?)""",
                        (task_id,))
             db.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+            db.execute("DELETE FROM settings WHERE key=?", (f"dev_activity_{task_id}",))
             # A stored explanation can name a comparison anywhere in its text.
             # Retain the displayed numbers while erasing that explanation and its evidence.
-            for row in db.execute("SELECT id, prediction FROM tasks").fetchall():
-                prediction = json.loads(row["prediction"])
-                if any(str(item.get("task_id")) == task_id for item in prediction.get("evidence", [])):
-                    prediction["evidence"] = []
-                    prediction["explanation"] = "The supporting history included a deleted task."
-                    db.execute("UPDATE tasks SET prediction=? WHERE id=?",
-                               (json.dumps(prediction), row["id"]))
+            for row in db.execute("SELECT id, prediction, creation_prediction FROM tasks").fetchall():
+                for column in ("prediction", "creation_prediction"):
+                    if row[column] is None:
+                        continue
+                    prediction = json.loads(row[column])
+                    sources = list(prediction.get("evidence", []))
+                    for caution in prediction.get("cautions", []):
+                        sources.extend(caution.get("sources", []))
+                    if any(str(item.get("task_id")) == task_id for item in sources):
+                        prediction["evidence"] = []
+                        prediction.pop("cautions", None)
+                        prediction["explanation"] = "The supporting history included a deleted task."
+                        db.execute(f"UPDATE tasks SET {column}=? WHERE id=?",
+                                   (json.dumps(prediction), row["id"]))
 
     def clear_data(self):
         with self._db(write=True) as db:
             db.execute("DELETE FROM tasks")
             db.execute("DELETE FROM settings")
+            db.execute("DELETE FROM categories")
+            db.executemany("INSERT INTO categories VALUES (?, ?)",
+                           [(label.casefold(), label) for label in DEFAULT_CATEGORIES])
+            _save_setting(db, "category_list_initialized", True)
+
+    def list_categories(self):
+        with self._db() as db:
+            return [row[0] for row in db.execute("SELECT name FROM categories ORDER BY rowid")]
+
+    def add_category(self, name):
+        name = name.strip()
+        if not name:
+            raise ValueError("Enter a category name.")
+        with self._db(write=True) as db:
+            inserted = db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (name.casefold(), name))
+            if not inserted.rowcount:
+                raise ValueError("That category already exists.")
+        return name
 
     def get_setting(self, key, default=None):
         with self._db() as db:
@@ -451,6 +572,7 @@ class PlannerStore:
             if _get_setting(db, "example_history_seeded", False):
                 return
             for index, (title, desc, cat, estimate, actual) in enumerate(examples):
+                db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (cat.casefold(), cat))
                 task_id = str(uuid4())
                 day = date.today() - timedelta(days=len(examples) - index)
                 end = self.clock() - (len(examples) - index) * 86400
@@ -466,4 +588,7 @@ class PlannerStore:
                 sid = db.execute("INSERT INTO sessions(task_id,started_at,stopped_at) VALUES (?,?,?)",
                                  (task_id, start, end)).lastrowid
                 db.execute("INSERT INTO periods(session_id,start,end) VALUES (?,?,?)", (sid, start, end))
+            db.execute("""UPDATE tasks SET creation_prediction=prediction
+                          WHERE creation_prediction IS NULL AND status='completed'
+                          AND json_extract(prediction,'$.basis')='Example'""")
             _save_setting(db, "example_history_seeded", True)

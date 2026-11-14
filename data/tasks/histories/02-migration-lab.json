@@ -1,186 +1,664 @@
 {
   "id": "02-migration-lab",
-  "name": "Migration tools lab",
-  "scenario": "A developer alternates between new safe translations, debugger and test-harness work, and writing up results for already validated patches. Scope matters even when the same source module appears twice.",
+  "name": "Shipping a trace tool",
+  "scenario": "A systems student budgets code, regression tests and writing separately. Their partner has already collected the logs for the reporting tasks.",
   "tasks": [
     {
-      "id": "replay-cases",
-      "day": "2026-09-03",
-      "title": "Replay old codec cases",
-      "description": "Run the migration suite on four packet fixtures and paste the resulting status table into the notebook.",
-      "category": "Migration lab",
-      "details": "The test binary and fixtures are already built.",
-      "estimate_minutes": 40,
-      "actual_minutes": 28,
-      "sessions_minutes": [
-        28
-      ]
-    },
-    {
       "id": "ring-port",
-      "day": "2026-09-08",
-      "title": "Port the packet ring to safe Rust",
-      "description": "Implement the queue behind the existing Rust interface. Cover an empty queue, a wraparound write, and a full queue that refuses a partial frame.",
-      "category": "Migration lab",
-      "details": "I know Rust slices. The legacy queue contract depends on a sentinel slot.",
-      "estimate_minutes": 75,
-      "actual_minutes": 135,
+      "title": "Port the wraparound header reader",
+      "description": "Implement wrapped reads of four-byte headers and verify the cursor before and after an empty event.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 90,
+      "actual_minutes": 137,
       "sessions_minutes": [
-        52,
-        61,
-        22
+        83,
+        54
       ],
+      "completion_note": "Had to minimize an EOF fixture before the Rust harness would reproduce it.",
       "pdf": {
-        "title": "Frame ring migration",
+        "title": "Bounded event decoding · a porting practical",
+        "series": "Systems software studio · lab 4",
+        "kind": "Developer specification",
         "sections": [
           {
-            "heading": "Wire contract",
-            "body": "A frame starts with a single unsigned length byte and a payload. A fixed-size ring reserves one unused slot so read and write offsets can coincide only when empty."
+            "heading": "What has already been ported",
+            "body": "The service writes a compact length-prefixed ring of status events. A production backup tool uses the old C reader; the prototype uses a Rust iterator. The header is four bytes, little-endian. A zero payload length is a valid tombstone and consumes exactly the header. A payload may wrap at the physical end of the backing buffer. Neither language may read after the published tail, even if the allocation contains leftover bytes. The starter allocates a buffer and a separate logical cursor; tests exercise the same public Reader::next() method.",
+            "table": {
+              "headers": [
+                "Offset",
+                "Value",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "0..2",
+                  "u16 LE",
+                  "Payload length, including zero"
+                ],
+                [
+                  "2",
+                  "u8",
+                  "Kind; unsupported values must produce InvalidKind"
+                ],
+                [
+                  "3",
+                  "u8",
+                  "Flags. Retain unknown bits for the caller."
+                ]
+              ]
+            }
           },
           {
-            "heading": "Independent exercise A",
-            "body": "Port the enqueue and dequeue functions into the supplied Rust module using safe indexed slices. A short read must preserve both offsets. Reject a frame larger than the usable ring capacity."
+            "heading": "Reproduce before writing the fix",
+            "body": "Build the C reader with the supplied seed pack and retain one failing event transcript. Keep the seed and the ring capacity in the regression test name. Translate the failure to Rust. Treat cursor movement as an observable result: comparing the payload alone misses a second-call failure. Use a seed where the header is split and a distinct seed where only the payload wraps."
           },
           {
-            "heading": "Fixtures",
-            "body": "For a ring of eight slots with an empty state at offset six, enqueue payload bytes 65, 0 and 66, then read the frame. Add tests for this wrap and for retry after an incomplete write."
+            "heading": "Deliverables and adversarial cases",
+            "body": "Implement wrap-safe parsing and a CLI exposing the first diverging cursor/value pair. Malformed lengths cannot advance the cursor. Add a paired regression covering a tombstone at the final four bytes and a positive payload ending at byte zero. Tests must verify the state before and after each read. Explain why the successful return path advances by the encoded length even when it represents an empty event. Also submit one minimized reproducer for a bug you encountered during the port.",
+            "page_break_before": true
           },
           {
-            "heading": "Independent exercise B",
-            "body": "Use a saved differential trace to explain how a failed enqueue changes offsets in the old implementation. B requires a short written note only."
+            "heading": "Reporting-only exercise",
+            "body": "The course branch includes three archived transcripts for a separate write-up. Reuse the saved stdout and seed manifest. Extract the first bad cursor, summarize which decoder moved too early, and show the version of the corrected reader used for comparison. A passing output without the two cursor positions is incomplete. For the marked reporting exercise, students do not change source code or regenerate the logs.",
+            "code": "cargo test --test replay -- wraps_header_then_tombstone\npython scripts/compare_saved.py artifacts/baseline --key cursor_before\n# Compare tuples (return_kind, cursor_before, cursor_after) in stream order."
           }
         ]
-      }
-    },
-    {
-      "id": "codec-caption",
-      "day": "2026-09-14",
-      "title": "Summarize packet test failures",
-      "description": "Use the saved replay logs to write one paragraph per failure family and annotate a two-column table for the lab note.",
-      "category": "Migration lab",
-      "details": "I have all outputs and the driver version.",
-      "estimate_minutes": 45,
-      "actual_minutes": 33,
-      "sessions_minutes": [
-        33
+      },
+      "day": "2026-09-05",
+      "activity": [
+        [
+          {
+            "minutes": 11,
+            "app": "Okular",
+            "title": "Bounded event decoding — wrap-safe parser",
+            "label": "on_task"
+          },
+          {
+            "minutes": 32,
+            "app": "Code",
+            "title": "reader.rs — ring-replay",
+            "label": "on_task"
+          },
+          {
+            "minutes": 16,
+            "app": "Terminal",
+            "title": "cargo test wraps_header_then_tombstone",
+            "label": "on_task"
+          },
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "tests/wrapped_header.rs",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 11,
+            "app": "Terminal",
+            "title": "cargo test --test replay / EOF fixture",
+            "label": "on_task"
+          },
+          {
+            "minutes": 16,
+            "app": "Code",
+            "title": "tests/fixtures/min-tail.jsonl",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Firefox",
+            "title": "Peekable in std::iter",
+            "label": "on_task",
+            "domain": "doc.rust-lang.org"
+          },
+          {
+            "minutes": 15,
+            "app": "Code",
+            "title": "src/reader.rs",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Terminal",
+            "title": "cargo test replay",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "trace-tool",
-      "day": "2026-09-20",
-      "title": "Make a trace minimizer for callback mismatches",
-      "description": "Add a tool that shrinks failing operation sequences while preserving the first observable divergence between the C and Rust callbacks.",
-      "category": "Migration lab",
-      "details": "The runner already reports divergence but cannot shrink reproductions.",
+      "title": "Implement the bounded mismatch reporter",
+      "description": "Add a streaming comparison tool and wire its error envelope into the CLI; test truncated tails.",
+      "details": "",
+      "category": "Software engineering",
       "estimate_minutes": 80,
-      "actual_minutes": 109,
+      "actual_minutes": 118,
       "sessions_minutes": [
-        58,
-        51
-      ]
-    },
-    {
-      "id": "suite-seeds",
-      "day": "2026-09-24",
-      "title": "Replay the decoder corpus",
-      "description": "Use last week’s driver to replay six saved seeds. Capture exit statuses and export the summary CSV.",
-      "category": "Migration lab",
-      "details": "Pause the timer during unattended runs if I switch to another task.",
-      "estimate_minutes": 35,
-      "actual_minutes": 34,
-      "sessions_minutes": [
-        18,
-        16
+        118
+      ],
+      "completion_note": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators.",
+      "day": "2026-09-09",
+      "activity": [
+        [
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "trace_diff.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "pytest tests/test_cli.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 30,
+            "app": "Code",
+            "title": "cli.py — registration",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Thunderbird",
+            "title": "Inbox",
+            "label": "uncertain"
+          },
+          {
+            "minutes": 11,
+            "app": "Terminal",
+            "title": "diff -u failing-tail.jsonl reduced.jsonl",
+            "label": "on_task"
+          },
+          {
+            "minutes": 27,
+            "app": "Code",
+            "title": "test_truncated_tail.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 12,
+            "app": "Terminal",
+            "title": "pytest -q / trace tools",
+            "label": "on_task"
+          }
+        ]
       ]
     },
     {
       "id": "suite-report",
-      "day": "2026-10-01",
-      "title": "Finish the migration results page",
-      "description": "Use the exported CSV and saved traces to explain the three remaining behavioral differences for code review.",
-      "category": "Migration lab",
-      "details": "No new implementation. I already checked the traces.",
-      "estimate_minutes": 55,
-      "actual_minutes": 38,
+      "title": "Write up three saved replay transcripts",
+      "description": "Fill the cursor table and explain one failure using saved logs. No code changes.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 45,
+      "actual_minutes": 29,
       "sessions_minutes": [
-        38
+        29
+      ],
+      "pdf": "ring-port",
+      "day": "2026-09-13",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Files",
+            "title": "artifacts/baseline",
+            "label": "on_task"
+          },
+          {
+            "minutes": 7,
+            "app": "Terminal",
+            "title": "less transcript.txt",
+            "label": "on_task"
+          },
+          {
+            "minutes": 13,
+            "app": "LibreOffice Writer",
+            "title": "Cursor comparison.odt",
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "app": "Okular",
+            "title": "Three saved replay transcripts",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bins",
+      "title": "Take recycling to the loading bay",
+      "description": "Break the two monitor boxes flat and return the cart.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 15,
+      "actual_minutes": 14,
+      "sessions_minutes": [
+        14
+      ],
+      "day": "2026-09-17",
+      "activity": [
+        [
+          {
+            "minutes": 14,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          }
+        ]
       ]
     },
     {
       "id": "boundary-debug",
-      "day": "2026-10-07",
-      "title": "Debug a translated length check",
-      "description": "Find why the new record parser consumes a byte after a truncated frame. Patch the parser and add a regression that compares the cursor positions.",
-      "category": "Migration lab",
-      "details": "I have one reproducer but do not know which branch first diverges.",
-      "estimate_minutes": 60,
-      "actual_minutes": 87,
+      "title": "Expose a ring cursor mismatch in the tool API",
+      "description": "Implement a first-bad-offset tool that handles an empty side and add three failing regression seeds.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 85,
+      "actual_minutes": 132,
       "sessions_minutes": [
-        48,
-        39
+        76,
+        56
+      ],
+      "completion_note": "The EOF fixture needed trimming before the bug appeared reliably.",
+      "day": "2026-09-21",
+      "activity": [
+        [
+          {
+            "minutes": 28,
+            "app": "Code",
+            "title": "src/codec.rs — bounded reader",
+            "label": "on_task"
+          },
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "pytest -k first_bad_offset",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Firefox",
+            "title": "Queue from rust stdlib",
+            "label": "on_task",
+            "domain": "doc.rust-lang.org"
+          },
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "trace_tool.py — empty side",
+            "label": "on_task"
+          },
+          {
+            "minutes": 9,
+            "app": "Terminal",
+            "title": "cat failing-seed-03.jsonl",
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 24,
+            "app": "Code",
+            "title": "tests/regression_tail.py",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Terminal",
+            "title": "pytest --last-failed",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 12,
+            "app": "Code",
+            "title": "trace_tool.py / first bad offset",
+            "label": "on_task"
+          }
+        ]
       ]
+    },
+    {
+      "id": "codec-caption",
+      "title": "Annotate the saved decoder comparison",
+      "description": "Take screenshots of two frozen transcripts and attach a one-paragraph comparison.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 40,
+      "actual_minutes": 27,
+      "sessions_minutes": [
+        27
+      ],
+      "day": "2026-09-25",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Terminal",
+            "title": "less artifacts/transcript-left.log",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "Screenshot",
+            "title": "Select a window",
+            "label": "on_task"
+          },
+          {
+            "minutes": 5,
+            "app": "Terminal",
+            "title": "less artifacts/transcript-right.log",
+            "label": "on_task"
+          },
+          {
+            "minutes": 12,
+            "app": "Obsidian",
+            "title": "Decoder comparison / captions",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "replay-cases",
+      "title": "Run the existing test pack",
+      "description": "Use the documented command with the saved seed manifest and attach the already-defined summary.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 35,
+      "actual_minutes": 38,
+      "sessions_minutes": [
+        38
+      ],
+      "day": "2026-09-29",
+      "activity": [
+        [
+          {
+            "minutes": 10,
+            "app": "Terminal",
+            "title": "replay --seed-manifest baseline.toml",
+            "label": "on_task"
+          },
+          {
+            "minutes": 6,
+            "app": "",
+            "title": "",
+            "idle": true,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 8,
+            "app": "Terminal",
+            "title": "less verification-summary.log",
+            "label": "on_task"
+          },
+          {
+            "minutes": 14,
+            "app": "Obsidian",
+            "title": "Seed pack summary",
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "held-seed",
+      "title": "Minimize the marker-word failure",
+      "description": "Reduce a captured failing trace without changing the bug; my branch builds.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 60,
+      "pdf": "ring-port",
+      "status": "paused",
+      "sessions_minutes": [
+        17
+      ],
+      "day": "2026-10-25",
+      "activity": [
+        [
+          {
+            "minutes": 6,
+            "app": "Terminal",
+            "title": "cat marker_word_fail.jsonl",
+            "label": "on_task"
+          },
+          {
+            "minutes": 11,
+            "app": "Code",
+            "title": "minimize_marker_seed.py",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "pickup",
+      "title": "Pick up the lab access card",
+      "description": "Collect the loaner card before the desk closes.",
+      "details": "",
+      "category": "Personal",
+      "estimate_minutes": 15,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-10-25"
     }
   ],
   "holdouts": [
     {
       "id": "patch-tool",
-      "day": "2026-10-14",
-      "title": "Implement the migration feedback tool",
-      "description": "Add a bounded tool that returns the first divergence in the C and Rust execution traces. Wire it into the repair loop and test it on the three supplied failures.",
-      "category": "Migration lab",
-      "details": "Need working code and tests. Analysis plots can wait.",
+      "title": "Implement first divergence for C and Rust traces",
+      "description": "Read the contract, implement the bounded streaming tool, register it in the repair loop and pass the four acceptance cases.",
+      "details": "Only part I. My environment already builds both decoders.",
+      "category": "Software engineering",
       "estimate_minutes": 85,
       "actual_minutes": 138,
       "sessions_minutes": [
-        50,
-        55,
-        33
+        72,
+        66
       ],
       "pdf": {
-        "title": "A bounded trace tool for source migration",
+        "title": "Replay lab · Find the first divergent operation",
+        "series": "Systems software studio · lab 6",
+        "kind": "Implementation handout",
         "sections": [
           {
-            "heading": "Given",
-            "body": "The starter includes parsers in two languages and an instrumented driver. Each operation emits a record with opcode, result, and cursor position. A repair assistant currently receives the entire trace after every attempt. The packet log uses the same monotonically increasing operation index on both sides. Some opcodes produce an empty result field; their cursor positions are still meaningful. A malformed packet must report failure at the first unread byte. Comparing only the final buffer length can hide a faulty repair."
+            "heading": "Repository tour and deliverable",
+            "body": "Your group maintains two decoders for a small write-ahead log. One decoder is C11 and the replacement is safe Rust. Their final checksums agree on the tiny smoke fixture even when they disagree about which logical entry was applied. Implement a bounded comparison tool the repair agent can call. The agent needs actionable context at the first mismatch without embedding a whole execution log in its prompt.\n\nStart with replay/c_driver.c, crates/replay/src/reader.rs and tools/trace_diff.py. Both decoders already write UTF-8 JSON lines to separate files. You may change the Python tool and its registration only. Preserve the CLI and the existing public Rust signature. The tool receives two file paths and a nonnegative history limit, normally two. The grading fixtures include files longer than memory. Stream from each file once."
           },
           {
-            "heading": "Implement",
-            "body": "Expose a first_difference operation returning the mismatched record and at most two predecessors. If one side ends early, represent the missing record explicitly. Never include later trace records in the tool response."
+            "heading": "Input contract",
+            "body": "A line has integer seq, operation kind, an address or null, and an eight-character hexadecimal value. The sequence counts logical operations within a trace. Ignorable heartbeat records have kind tick and do not participate in equality or predecessor context. Normalize hexadecimal letters to lower case. A missing address is different from address zero. Preserve the original line number for diagnostic output. Empty lines may be skipped; a malformed nonblank line must return a parse error with side and line.",
+            "code": "# C decoder                       # Rust decoder\n{\"seq\":2,\"kind\":\"tick\"}           {\"seq\":3,\"kind\":\"put\",\"addr\":0,\"v\":\"0000000a\"}\n{\"seq\":3,\"kind\":\"put\",\"addr\":0,   {\"seq\":5,\"kind\":\"del\",\"addr\":8,\"v\":\"00000000\"}\n \"v\":\"0000000A\"}\n# Display wraps above; the fixture stores each object on one line."
           },
           {
-            "heading": "Example inputs and output boundary",
-            "body": "Consider this source trace: (0, open, ok, 0), (1, header, ok, 2), (2, read, short, 2). The translated trace agrees through operation 1 but reports (2, read, short, 3). Your tool must identify index 2 without treating equal return codes as a match. On a trace with no difference, return an explicit no-divergence result; do not fabricate an index. If both traces are empty, that same result must be valid."
-          },
-          {
-            "heading": "Validate",
-            "body": "Use cases for different return codes, a cursor discrepancy with equal return codes, and one truncated trace. Capture the response on each fixture and verify the repair loop can request it twice without losing the original trace.",
+            "heading": "Part I · Implement and register the tool",
+            "body": "Report match or first_difference, then give the most recent k matching logical operations, their source line numbers, and the next logical operation on each side. Return at most k predecessors in total. A missing side at end of file is a literal null. When one iterator ends early the command must check whether the other side has any remaining non-heartbeat records. Do not claim equality because a zip iterator stopped.\n\nThe stdout contract permits exactly one JSON object. Use exit status 0 for match or first_difference, 2 for malformed input and 3 for inaccessible files. Diagnostic text belongs on stderr. Wire the tool into the repair loop with a function description and argument schema. Record one real call and show how a repair would identify the source line. A partial parser without registration cannot earn integration credit.",
             "page_break_before": true
           },
           {
-            "heading": "Short comparison protocol",
-            "body": "Run the provided scripted repair sequence with the old whole-trace response, then run it with the bounded response on the same fixtures. In a compact table, record which operation was first flagged and how many records were returned. Explain one case where omitting the preceding records obscures a bad cursor advance. You may use synthetic traces; the parser implementation is outside the repair scope."
+            "heading": "Acceptance cases",
+            "body": "Distribute the named regression cases across unit and CLI tests. Check structure and line numbers by parsing the JSON. Include one example where no code change is required because the normalized operations match.",
+            "table": {
+              "headers": [
+                "Fixture",
+                "Why the agent needs it",
+                "Expected observation"
+              ],
+              "rows": [
+                [
+                  "equal-after-ticks",
+                  "Different heartbeat placement and hex case",
+                  "match; no history dump"
+                ],
+                [
+                  "tail-drop",
+                  "Rust trace ends in heartbeats after the third put",
+                  "first_difference; Rust side null"
+                ],
+                [
+                  "reordered-delete",
+                  "Both sides have length five, middle operations swapped",
+                  "First mismatching operation and <=2 preceding matches"
+                ],
+                [
+                  "bad-line",
+                  "Input is valid through a final truncated JSON string",
+                  "parse_error with source and line; exit 2"
+                ]
+              ]
+            }
           },
           {
-            "heading": "Other deliverable",
-            "body": "A separate report-only track compares saved repair transcripts. It does not require modifying the assistant or rerunning translation."
+            "heading": "Part II · Interpret supplied measurements",
+            "body": "For the separate reporting task, use the three saved replay transcripts in artifacts/baseline. These files already include compiler versions, the invocation and the final classifications. Make a three-row comparison table and explain one case where identical exit codes hid a logical difference. Do not rerun the migration or implement new comparison logic for this part. Submit the write-up and name the transcript supporting each row."
+          },
+          {
+            "heading": "Appendix A · Starter interfaces and examples",
+            "page_break_before": true,
+            "body": "The launcher uses two paths within a single fixture directory. Its schema accepts c_trace, rust_trace, and a history count from zero to sixteen. Treat the paths in the prompt as untrusted input: the supplied loader opens fixture-relative paths and rejects a resolved path outside the run directory. Call that loader before creating either iterator. The model invokes the existing tool dispatcher; it never receives a shell command.\n\nThe excerpt below is from tail-drop, with comments and whitespace between records removed. Each row in the table lists one on-disk line. The Rust side logged its tick on a different line than the C side. Predecessors should identify the matched logical records from both sides; they do not have to share physical line numbers.",
+            "table": {
+              "headers": [
+                "Line",
+                "C trace",
+                "Rust trace"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "tick",
+                  "put(seq=8, addr=3, v=000000ef)"
+                ],
+                [
+                  "2",
+                  "put(seq=8, addr=3, v=000000EF)",
+                  "tick"
+                ],
+                [
+                  "3",
+                  "del(seq=9, addr=3, v=00000000)",
+                  "end of file"
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Worked output for k = 1",
+            "body": "This output illustrates the fields the autograder will read. It deliberately does not solve the streaming implementation. A predecessor count of zero is legitimate when the very first logical records differ. If the traces end together after a valid match, return match and a matched count.",
+            "code": "{\"status\":\"first_difference\", \"matched\":1,\n \"previous\":[{\"seq\":8, \"c_line\":2, \"rust_line\":1}],\n \"c\":{\"seq\":9,\"kind\":\"del\",\"addr\":3,\"v\":\"00000000\",\"line\":3},\n \"rust\":null}"
+          },
+          {
+            "heading": "Review questions for the implementation demo",
+            "body": "Suppose the kth predecessor is evicted just before the mismatch. What does your data structure store at that instant? Demonstrate that peak memory is bounded by k plus one current record on each side. Explain how you would distinguish an equal empty trace from a missing file. A fixture constructed by slicing the in-memory list of all records cannot be used as evidence of streaming behavior."
+          },
+          {
+            "heading": "Appendix B · Harness and submission tree",
+            "page_break_before": true,
+            "body": "A passing parse unit test is necessary but insufficient. The marker runs the dispatcher in a clean process on a freshly unpacked tree and inspects stdout and exit status. The starter tests use symbolic temporary paths; do not assume your local checkout path or an interactive working directory. With valid inputs, the CLI must return the same result after copying the fixture to a path containing spaces. The comparison function is reused by the agent and by the command-line front end.",
+            "code": "replay_lab/\n  tools/trace_diff.py          # parsing and bounded comparison\n  agent/tools_registry.py     # declares name, schema, and handler\n  tests/fixtures/tail-drop/    # C log, Rust log, expected JSON\n  tests/test_agent_tool.py     # end-to-end dispatch\n  artifacts/baseline/          # saved runs used by the report track\n  submission/manifest.json     # files and commands for the marker"
+          },
+          {
+            "heading": "Scoring and reproducibility",
+            "body": "For the code track, attach the command, source revision, input name and the exact JSON returned by the integration demonstration. Include a case where the repair agent's first conjecture is wrong and explain which diagnostic changes it. One failure that reproduces cleanly is worth more than a large unlabelled bundle of logs.",
+            "table": {
+              "headers": [
+                "Check",
+                "Weight",
+                "Evidence to include"
+              ],
+              "rows": [
+                [
+                  "Stream comparison and line origins",
+                  "35%",
+                  "Equal, reordered, malformed and truncated cases; memory bound."
+                ],
+                [
+                  "Registration and diagnostics",
+                  "30%",
+                  "Real dispatcher call; machine-readable statuses."
+                ],
+                [
+                  "Tests and regression design",
+                  "25%",
+                  "At least one failing fixture before patch and its passing output."
+                ],
+                [
+                  "Explanation",
+                  "10%",
+                  "Short account of how the trace evidence supports the repair."
+                ]
+              ]
+            }
+          },
+          {
+            "heading": "Reporting track only",
+            "body": "The separately assigned report uses the saved run manifest and the checksum table from the handout. Clearly identify which of the before/after pairs used identical inputs. If the saved manifest and filename disagree, flag that row rather than silently invent a source version. Do not append a new implementation or benchmark to satisfy the report exercise."
           }
         ]
       },
-      "check": "Working code plus harness tests should match implementation and debugging, not reviews of the same traces."
+      "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.34,
+          1.65
+        ],
+        "evidence_ids": [
+          "ring-port",
+          "trace-tool",
+          "boundary-debug"
+        ],
+        "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+        "expected_caution": {
+          "evidence_ids": [
+            "trace-tool",
+            "boundary-debug"
+          ],
+          "rationale": "The EOF regression fixture needed minimizing twice."
+        }
+      },
+      "day": "2026-10-26"
     },
     {
       "id": "patch-note",
-      "day": "2026-10-21",
-      "title": "Write the migration tool comparison",
-      "description": "Draft the report page from the saved transcripts for last week’s trace tool. Compare the failure messages and explain one unsuccessful repair.",
-      "category": "Migration lab",
-      "details": "The patch is merged. No coding or reruns for this submission.",
-      "estimate_minutes": 45,
-      "actual_minutes": 34,
+      "title": "Explain the three saved replay transcripts",
+      "description": "Part II only. Fill the comparison table from archived transcripts and explain one checksum collision.",
+      "details": "",
+      "category": "Software engineering",
+      "estimate_minutes": 40,
+      "actual_minutes": 28,
       "sessions_minutes": [
-        34
+        28
       ],
-      "check": "Look for the old results page and failure summaries despite the implementation language in the title."
+      "pdf": "patch-tool",
+      "check": "Two prior write-ups were quick when archived logs were already available.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.6,
+          0.84
+        ],
+        "evidence_ids": [
+          "suite-report",
+          "codec-caption"
+        ],
+        "rationale": "Two prior write-ups were quick when archived logs were already available."
+      },
+      "day": "2026-10-27"
     }
   ]
 }

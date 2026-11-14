@@ -27,9 +27,9 @@ PLANNER_MODEL=command-r7b-12-2024
 
 The hosted configuration uses **Command R7B** for estimates and activity classification. [Cohere Command R7B](https://docs.cohere.com/v2/docs/command-r7b)
 
-After pulling this update, install the updated requirements using your existing virtual environment and restart Streamlit. In **Options → Planner settings**, check the model and host. Create a task and expand **Why this estimate?** to see its source and explanation. To try a prediction based on earlier work, choose **Example history**, load the sample tasks and create a related task.
+After pulling this update, install the updated requirements using your existing virtual environment and restart Streamlit. In **Options → Planner settings**, check the model and host. Create a task and expand **Why this estimate?** to see its source and explanation. To try a prediction based on earlier work, choose **Dev**, select a sample history and add a related task.
 
-Task records, originals of PDFs and ActivityWatch logs are stored locally. Selecting a hosted endpoint sends relevant task descriptions, PDF text excerpts, and filtered activity observations to that provider for inference. No API key is needed for LM Studio.
+Task records, originals of PDFs and ActivityWatch logs are stored locally. Selecting a hosted endpoint sends relevant task descriptions, PDF text excerpts, relevant completion notes, and filtered activity observations to that provider for inference. No API key is needed for LM Studio.
 
 ### Local LM Studio
 
@@ -58,17 +58,25 @@ The elapsed time used for planning is the sum of running periods across sessions
 
 ## Estimates
 
-The new-task form marks the task name, description, estimate in minutes, and category with red asterisks. Extra details and PDFs are optional. Saving closes the form and puts the task on the planner immediately. Its card shows **Estimating task time…** during PDF parsing and model inference. You can start the timer, change days, or add another task. The range and **Why this estimate?** appear automatically when the forecast is available.
+Select a saved category when creating a task. Use **Options → Planner settings** to add your own categories. Task name, description, duration and category are required. Extra details and PDFs are optional. Select **Fixed duration** when an event occupies a known block on the calendar. The planner uses that scheduled length directly. Leave this off for meetings whose actual length varies.
 
-The parser extracts text from every readable PDF page, then selects page-labeled passages that match the task and cover different sections. Scanned PDFs can be attached but supply no text for estimation. Local Qdrant retrieves up to six completed tasks by cosine similarity using hashed words and word pairs. This needs no second embedding model. The configured model selects comparable work using the descriptions, notes and document excerpts. Python computes the median actual/original ratio and applies a smaller correction when there are few matches. If inference is unavailable, text similarity or category history provides a fallback. The app keeps the original estimate and its own prediction separately. With no timed, completed history, the model estimates the workload from the task and available PDF excerpts. The app labels that estimate low confidence. If the model fails to produce a usable answer, the planner uses the entered budget with a ±50% range and explains the fallback. The planner uses the history available at submission and saves each forecast once. Ranges and confidence labels are heuristics until evaluated on real history.
+The task is saved immediately. Its card shows **Estimating task time…** while PDFs are parsed and the model runs. You can start the timer or add another task. The range and **Why this estimate?** appear automatically when the forecast is available.
 
-## Local data and example history
+With no timed history, the model estimates independently from the description, details and relevant PDF passages. A failed request falls back to your budget with a ±50% range. With completed history, local Qdrant retrieves up to six candidates using hashed words and word pairs. The model compares the work involved, and Python uses the selected tasks’ actual-to-estimated ratios to adjust the new budget. Intervals and confidence labels are planning heuristics.
 
-Under **Options → Workspace**, choose **Example history** and click **Load example history** to try the estimator with five labeled examples. Choose **My planner** for personal tasks. These workspaces use separate SQLite databases and Qdrant indexes under `data/`. Set `PLANNER_DATA_DIR` to change the parent directory. Example tasks demonstrate how a prediction changes after completion. Their outcomes are illustrative. SQLite holds the task descriptions, original PDFs, extracted text, saved predictions, sessions, and completed reports. The vector index can be rebuilt from the task history. Keep this directory local.
+When finishing, optionally record what affected the time. The completion adds its actual duration, note and filtered activity report to the history for future estimates. Open tasks can then receive an updated forecast. The planner retains your budget and its first forecast for comparison. A caution on a card identifies the earlier tasks and the specific observation behind it.
 
-## Test the estimator
+PDF processing uses readable text from every page and selects passages relevant to the task. Image-only scans can be attached but supply no text.
 
-Open a disposable profile with synthetic history or score 20 held-out tasks against their recorded outcomes. The fixture runner uses your configured model and reports when it falls back. [Test histories and Windows commands](data/tasks/README.md)
+## Demo and Dev
+
+**Demo** opens your daily planner, including tasks you have already saved. **Dev** lets you choose any of ten independent synthetic histories. The current day includes unfinished work. Open **History details** to inspect past tasks, their dates and recorded durations. Add a new task, finish an existing one, or switch profiles and return later. **Reset sample history** restores only the selected sample. Dev replays synthetic ActivityWatch data and keeps your personal activity separate.
+
+SQLite stores the tasks, attached PDFs, completion notes, work sessions, forecasts and activity reports. Qdrant stores the searchable local task index. Set `PLANNER_DATA_DIR` to choose a different data directory.
+
+## Evaluate the models
+
+Score the same unseen tasks against the original estimate, a category baseline, the offline planner, and the model-backed planner. Predeclared ranges check whether a forecast learns the expected personal correction. The original and enriched suites are documented separately. [Histories and commands](data/tasks/README.md) · [Benchmark results](data/results/README.md)
 
 ## Tests
 

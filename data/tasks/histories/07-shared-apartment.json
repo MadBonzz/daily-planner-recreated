@@ -1,0 +1,347 @@
+{
+  "id": "07-shared-apartment",
+  "name": "Shared-apartment household and errands",
+  "scenario": "I use active time for housework. I usually stop the timer once the washing machine starts and pick it up again when I handle the clothes. Dinner cleanup includes drying the cast iron and resetting the sink.",
+  "tasks": [
+    {
+      "id": "chili-dishes",
+      "day": "2026-01-08",
+      "title": "Do the dishes after chili night",
+      "description": "Wash the dinner dishes for four, scrub the cast-iron pot and wipe the sink.",
+      "category": "Housework",
+      "details": "One full rack to drain, plus our heavy pot.",
+      "estimate_minutes": 30,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ],
+      "completion_note": "The handles and lid had cooked-on chili. I dried the iron and cleared the sink before stopping.",
+      "activity": [
+        [
+          {
+            "minutes": 36,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "towels-one",
+      "day": "2026-01-11",
+      "title": "Wash and fold the bath towels",
+      "description": "Strip the towel rail, start one load, then fold the dry towels and put them in the hall cupboard.",
+      "category": "Housework",
+      "details": "I can do other things while the washer runs. Count hands-on time.",
+      "estimate_minutes": 30,
+      "actual_minutes": 21,
+      "sessions_minutes": [
+        21
+      ],
+      "completion_note": "Stopped the timer during both machine cycles. The folding was straightforward.",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true,
+            "pause_after_minutes": 82
+          },
+          {
+            "minutes": 13,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "pasta-dishes",
+      "day": "2026-01-16",
+      "title": "Clear up the pasta supper",
+      "description": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board.",
+      "category": "Housework",
+      "details": "Sink is full after roommates cooked. No dishwasher.",
+      "estimate_minutes": 25,
+      "actual_minutes": 31,
+      "sessions_minutes": [
+        31
+      ],
+      "completion_note": "The smaller plates were easy, but the skillet needed a second scrub.",
+      "activity": [
+        [
+          {
+            "minutes": 31,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "filter-renewal",
+      "day": "2026-01-21",
+      "title": "Renew the filter subscription",
+      "description": "Check the cartridge code under the sink and move our household filter order to every other month.",
+      "category": "Personal admin",
+      "details": "Login is saved. Use the old order to get the exact model.",
+      "estimate_minutes": 15,
+      "actual_minutes": 18,
+      "sessions_minutes": [
+        18
+      ],
+      "completion_note": "Had to check whether the last order was a two-pack.",
+      "activity": [
+        [
+          {
+            "minutes": 8,
+            "app": "Firefox",
+            "title": "Filter supply / subscription",
+            "domain": "supply.example.org",
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          },
+          {
+            "minutes": 6,
+            "app": "Firefox",
+            "title": "Order frequency",
+            "domain": "supply.example.org",
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "sheets",
+      "day": "2026-01-25",
+      "title": "Wash the guest-room sheets",
+      "description": "Start one bedding load. Later make up the guest bed and put the spare covers on the shelf.",
+      "category": "Housework",
+      "details": "No timer during the machine cycle.",
+      "estimate_minutes": 35,
+      "actual_minutes": 23,
+      "sessions_minutes": [
+        9,
+        14
+      ],
+      "completion_note": "The fitted sheet took a few tries. The machine ran while I went shopping.",
+      "activity": [
+        [
+          {
+            "minutes": 9,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ],
+        [
+          {
+            "minutes": 14,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stew-dishes",
+      "day": "2026-02-01",
+      "title": "Reset the kitchen after stew",
+      "description": "Wash the cast-iron Dutch oven and the dinner place settings after friends leave. Dry the iron and wipe the basin.",
+      "category": "Housework",
+      "details": "Five people this time, same compact sink and hand-washing rack.",
+      "estimate_minutes": 35,
+      "actual_minutes": 42,
+      "sessions_minutes": [
+        42
+      ],
+      "completion_note": "The last twelve minutes were pot, lid and drying space. Counted through the final wipe.",
+      "activity": [
+        [
+          {
+            "minutes": 42,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ],
+      "prediction": {
+        "point_min": 40,
+        "low_min": 30,
+        "high_min": 55,
+        "confidence": "low",
+        "basis": "Synthetic prior estimate",
+        "explanation": "Dinner for five with one heavy pan to hand-wash.",
+        "evidence": []
+      }
+    },
+    {
+      "id": "mugs",
+      "day": "2026-02-04",
+      "title": "Rinse the two coffee mugs",
+      "description": "Wash two coffee mugs and a spoon before heading out.",
+      "category": "Housework",
+      "details": "No pans or drying up today.",
+      "estimate_minutes": 10,
+      "actual_minutes": 5,
+      "sessions_minutes": [
+        5
+      ],
+      "completion_note": "A quick rinse and onto the rack.",
+      "activity": [
+        [
+          {
+            "minutes": 5,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bike-box",
+      "day": "2026-02-07",
+      "title": "Collect the bike light",
+      "description": "Walk to the parcel locker for the bike light and bring the package upstairs.",
+      "category": "Errands",
+      "details": "Locker is on the normal route back from the market.",
+      "estimate_minutes": 20,
+      "actual_minutes": 19,
+      "sessions_minutes": [
+        19
+      ],
+      "completion_note": "The locker code opened on the second try.",
+      "activity": [
+        [
+          {
+            "minutes": 19,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": null
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-rice",
+      "day": "2026-03-02",
+      "title": "Pick up rice, ginger and limes",
+      "description": "Get pantry supplies for dinner on the way home.",
+      "category": "Errands",
+      "details": "Small grocery list, one store.",
+      "estimate_minutes": 22,
+      "status": "ready",
+      "sessions_minutes": []
+    },
+    {
+      "id": "paused-blue-load",
+      "day": "2026-03-02",
+      "title": "Wash and fold the blue work shirts",
+      "description": "Start the blue load and fold it once dry. Keep machine time off the clock.",
+      "category": "Housework",
+      "details": "Wash started. My next step is taking shirts out and hanging them.",
+      "estimate_minutes": 24,
+      "status": "paused",
+      "sessions_minutes": [
+        7
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 7,
+            "app": "",
+            "title": "",
+            "domain": "",
+            "label": "uncertain",
+            "idle": true
+          }
+        ]
+      ]
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "bake-dishes",
+      "day": "2026-03-03",
+      "title": "Do the dishes after the tray bake",
+      "description": "Hand-wash the dinner settings, clean the enameled tray and dry the cast-iron pan from the vegetables. Wipe the sink last.",
+      "category": "Housework",
+      "details": "Dinner for four. One full rack, same sink.",
+      "estimate_minutes": 30,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ],
+      "check": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work.",
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.15,
+          1.28
+        ],
+        "evidence_ids": [
+          "chili-dishes",
+          "pasta-dishes",
+          "stew-dishes"
+        ],
+        "rationale": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work."
+      }
+    },
+    {
+      "id": "duvet",
+      "day": "2026-03-04",
+      "title": "Wash the spare duvet cover",
+      "description": "Take the spare duvet cover through one load and make up the sofa bed. Pause the timer while the machine is running.",
+      "category": "Housework",
+      "details": "First time with this second-hand cover. The spare duvet is in the guest cupboard.",
+      "estimate_minutes": 30,
+      "actual_minutes": 58,
+      "sessions_minutes": [
+        9,
+        25,
+        24
+      ],
+      "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": null,
+        "evidence_ids": [],
+        "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio."
+      }
+    }
+  ]
+}

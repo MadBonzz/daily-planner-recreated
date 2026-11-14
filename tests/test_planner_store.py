@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import sqlite3
 import unittest
 
 from planner_store import PlannerStore
@@ -194,6 +195,98 @@ class StoreTests(unittest.TestCase):
         self.store.delete_task(task["id"])
         self.assertFalse(self.store.resolve_prediction(task["id"], claim["token"], self.budget))
         self.assertFalse(self.store.has_pending_predictions())
+
+    def test_creation_snapshot_then_latest_refresh_with_frozen_evidence(self):
+        earlier = self.finish_one("Earlier reading")
+        self.store.save_report(earlier["id"], {"summary": "first report"})
+        target = self.task("Next reading", prediction=None)
+        latest = self.task("Similar completion")
+        self.store.transition(latest["id"], "start")
+        self.now += 100
+        self.store.transition(latest["id"], "stop")
+        self.store.transition(latest["id"], "finish", completion_note="Had to revisit the proof.",
+                              report={"summary": "reviewed derivation"})
+        self.store.save_report(earlier["id"], {"summary": "later revision"})
+        reopened = PlannerStore(self.base / "live", clock=lambda: self.now)
+        initial = reopened.claim_prediction()
+        self.assertEqual([r["id"] for r in initial["history"]], [earlier["id"]])
+        self.assertEqual(initial["history"][0]["report"]["summary"], "first report")
+        self.assertNotIn("completion_note", initial["task"])
+        self.assertNotIn("actual_seconds", initial["task"])
+        self.assertTrue(reopened.resolve_prediction(target["id"], initial["token"], self.budget))
+        pending = reopened.get_task(target["id"])
+        self.assertTrue(pending["estimate_updating"])
+        self.assertEqual(pending["creation_prediction"], self.budget)
+        self.assertEqual(pending["prediction"], self.budget)
+        refresh = reopened.claim_prediction()
+        by_id = {r["id"]: r for r in refresh["history"]}
+        self.assertEqual(by_id[earlier["id"]]["report"]["summary"], "later revision")
+        self.assertEqual(by_id[latest["id"]]["completion_note"], "Had to revisit the proof.")
+        self.assertEqual(by_id[latest["id"]]["report"]["summary"], "reviewed derivation")
+        # Repeated Stop confirmation leaves an existing refresh's lease intact.
+        reopened.transition(latest["id"], "finish", completion_note="second submit")
+        self.assertTrue(reopened.resolve_prediction(target["id"], refresh["token"], {"point_min": 44}))
+        final = reopened.get_task(target["id"])
+        self.assertEqual(final["prediction"]["point_min"], 44)
+        self.assertEqual(final["creation_prediction"], self.budget)
+        self.assertFalse(final["estimate_updating"])
+        self.assertFalse(reopened.has_pending_predictions())
+
+    def test_fixed_length_and_newer_completion_revokes_an_obsolete_refresh(self):
+        fixed = self.task("Office hours", estimate_minutes=45.5, fixed_duration=True, prediction=None)
+        self.assertEqual([fixed["prediction"][k] for k in ("point_min","low_min","high_min")], [45.5] * 3)
+        self.assertFalse(fixed["estimate_updating"])
+        target = self.task("Writing")
+        source = self.finish_one("Revision")
+        stale = self.store.claim_prediction()
+        self.assertEqual(stale["task"]["id"], target["id"])
+        self.store.transition(fixed["id"], "start")
+        self.now += 60
+        self.store.transition(fixed["id"], "stop")
+        self.store.transition(fixed["id"], "finish", completion_note="Finished on the hour.",
+                              pdf_text="Page 1: Agenda")
+        self.assertFalse(self.store.resolve_prediction(target["id"], stale["token"], {"point_min": 900}))
+        latest = self.store.claim_prediction()
+        self.assertEqual({r["id"] for r in latest["history"]}, {source["id"], fixed["id"]})
+        self.assertEqual(next(r for r in latest["history"] if r["fixed_duration"])["pdf_text"], "Page 1: Agenda")
+        self.store.transition(target["id"], "start")
+        self.now += 30
+        self.store.transition(target["id"], "stop")
+        self.store.transition(target["id"], "finish")
+        self.assertFalse(self.store.resolve_prediction(target["id"], latest["token"], {"point_min": 999}))
+        self.assertEqual(self.store.get_task(target["id"])["prediction"], self.budget)
+        self.assertFalse(self.store.has_pending_predictions())
+
+    def test_refreshes_running_paused_and_ready_tasks_in_other_days(self):
+        ready, paused, running = (self.task(title) for title in ("Tuesday", "Paused", "Active"))
+        self.store.reschedule(ready["id"], "2026-11-15")
+        self.store.transition(paused["id"], "start")
+        self.store.transition(paused["id"], "pause")
+        prior = self.task("Source")
+        self.store.transition(prior["id"], "start")
+        self.now += 20
+        self.store.transition(prior["id"], "stop")
+        self.store.transition(running["id"], "start")
+        self.store.transition(prior["id"], "finish")
+        for task, state in ((ready, "ready"), (paused, "paused"), (running, "running")):
+            refreshed = self.store.get_task(task["id"])
+            self.assertTrue(refreshed["estimate_updating"])
+            self.assertEqual(refreshed["status"], state)
+        self.assertFalse(self.store.get_task(prior["id"])["estimate_updating"])
+
+    def test_previous_databases_preserve_creation_forecasts_and_pending_work(self):
+        known = self.task()
+        pending = self.task(prediction=None)
+        with sqlite3.connect(self.store.path) as db:
+            for column in ("creation_prediction", "completion_note", "fixed_duration", "refresh_waiting"):
+                db.execute(f"ALTER TABLE tasks DROP COLUMN {column}")
+            db.execute("ALTER TABLE prediction_history DROP COLUMN snapshot")
+        reopened = PlannerStore(self.store.data_dir)
+        self.assertEqual(reopened.get_task(known["id"])["creation_prediction"], self.budget)
+        self.assertIsNone(reopened.get_task(pending["id"])["creation_prediction"])
+        self.assertFalse(reopened.get_task(known["id"])["fixed_duration"])
+        self.assertEqual(reopened.get_task(known["id"])["completion_note"], "")
+        self.assertEqual(reopened.claim_prediction()["task"]["id"], pending["id"])
 
     def test_pending_job_rolls_back_with_invalid_pdf(self):
         with self.assertRaises(ValueError):

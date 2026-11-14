@@ -123,14 +123,14 @@ def _clean(text, limit=160):
     return abbreviated + "…"
 
 
-def _buckets():
+def _buckets(get, hostname):
     try:
-        raw = _get("buckets/")
+        raw = get("buckets/")
         if not isinstance(raw, dict):
             raise ValueError("Unexpected bucket list")
     except (OSError, ValueError, URLError):
         return [], ["ActivityWatch is unavailable on localhost:5600."]
-    hostname = socket.gethostname().split(".")[0].casefold()
+    hostname = hostname.split(".")[0].casefold()
     buckets = []
     for key, meta in raw.items():
         if not isinstance(meta, dict):
@@ -145,12 +145,12 @@ def _buckets():
     return buckets, warnings
 
 
-def _read_events(buckets, start, end, warnings):
+def _read_events(get, buckets, start, end, warnings):
     events = []
     for bucket, kind in buckets:
         try:
-            rows = _get("buckets/" + quote(bucket, safe="") + "/events",
-                        start=_iso(start), end=_iso(end))
+            rows = get("buckets/" + quote(bucket, safe="") + "/events",
+                       start=_iso(start), end=_iso(end))
             if not isinstance(rows, list):
                 raise ValueError("Unexpected event list")
         except (OSError, ValueError, URLError):
@@ -240,17 +240,19 @@ def _timeline(start, end, events, needles):
     return rows
 
 
-def _collect(periods, exclusions, capture, disabled_periods):
+def _collect(periods, exclusions, capture, disabled_periods, source=None):
     periods = _union(periods)
     segments = list(_segments(periods, disabled_periods, capture))
-    buckets, warnings = _buckets() if any(s[3] for s in segments) else ([], [])
+    get = source.get if source is not None else _get
+    hostname = source.hostname if source is not None else socket.gethostname()
+    buckets, warnings = _buckets(get, hostname) if any(s[3] for s in segments) else ([], [])
     if isinstance(exclusions, str):
         exclusions = exclusions.splitlines()
     needles = [s.strip().casefold() for s in exclusions if s.strip()]
     rows = []
     for period, start, end, enabled in segments:
         if enabled:
-            events = _read_events(buckets, start, end, warnings)
+            events = _read_events(get, buckets, start, end, warnings)
             part = _timeline(start, end, events, needles)
         else:
             part = [{"start": start, "end": end, "seconds": end-start, **_hidden()}]
@@ -276,7 +278,7 @@ LABEL_SCHEMA = {
 }
 
 
-def _classify(task, rows, warnings):
+def _classify(task, rows, warnings, reviewed_label=None):
     pending = []
     for index, row in enumerate(rows):
         row["label"] = "uncertain"
@@ -286,6 +288,9 @@ def _classify(task, rows, warnings):
             row["reason"] = "No foreground activity was recorded."
         elif row["idle"] is True:
             row["reason"] = "No recent input. The user may have been reading or away."
+        elif reviewed_label is not None:
+            # Only visible, non-idle evidence can inherit an earlier review.
+            row["label"], row["reason"] = reviewed_label(row)
         else:
             row["reason"] = "No valid classification was available."
             pending.append(index)
@@ -324,11 +329,12 @@ def _classify(task, rows, warnings):
             rows[i].update(label=item["label"], reason=_clean(item["reason"], 200))
 
 
-def build_report(task, periods, exclusions=(), *, capture=True, disabled_periods=()):
+def build_report(task, periods, exclusions=(), *, capture=True, disabled_periods=(),
+                 source=None, reviewed_label=None):
     """Analyze only the recorded running periods, excluding pauses and overnight gaps."""
-    report = _collect(periods, exclusions, capture, disabled_periods)
+    report = _collect(periods, exclusions, capture, disabled_periods, source)
     rows = report["intervals"]
-    _classify(task, rows, report["warnings"])
+    _classify(task, rows, report["warnings"], reviewed_label)
     totals = {label: 0.0 for label in LABELS}
     switches = 0
     for i, row in enumerate(rows):
