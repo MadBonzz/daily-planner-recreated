@@ -1,0 +1,1995 @@
+{
+  "metadata": {
+    "model": "ternary-bonsai-4b",
+    "publisher": "prism-ml",
+    "repository": "prism-ml/Ternary-Bonsai-4B-gguf",
+    "file": "Ternary-Bonsai-4B-Q2_0_g64.gguf",
+    "sha256": "9d968b04a3c9a794897bcc744c8072fb6a061c0e42efd03c989401ddf8baef0c",
+    "bytes": 1137806656,
+    "inference": "llmster 0.0.27-1; llama.cpp-linux-x86_64-avx2@2.66.0",
+    "gpu_offload": "off",
+    "context_tokens": 8192,
+    "temperature": 0,
+    "max_output_tokens": 480,
+    "parallel_slots": 1,
+    "start_utc": "2026-11-14T18:29:56.241362+00:00",
+    "elapsed_seconds": 1776.903,
+    "updated_utc": "2026-11-14T18:59:33.144125+00:00",
+    "threads": 3,
+    "cpu": "AMD EPYC 9V74 (host CPU model)",
+    "client_timeout_seconds": {
+      "initial": 90,
+      "resumed": 360
+    },
+    "brief_overlap": {
+      "work": "9B load and smoke request, affinity set to CPU 7 and 8.",
+      "start_utc": "2026-11-14T18:32:51+00:00",
+      "end_utc": "2026-11-14T18:33:46+00:00",
+      "case": "02-migration-lab/patch-tool"
+    },
+    "parallel_9b_benchmark": {
+      "start_utc": "2026-11-14T18:36:04+00:00",
+      "affects": "case 6 onward while the 9B engine was active",
+      "cpu_affinity": "9B cores 5–8. 4B initially unrestricted, pinned to 0–4 for resumed stage."
+    },
+    "resumed_utc": "2026-11-14T18:43:31.855916+00:00",
+    "initial_stage_end_utc": "2026-11-14T18:42:18.858039+00:00",
+    "resume_cpu_affinity": "0–4; first stage unrestricted. Three engine worker threads in both stages.",
+    "resume_reason": "Increase HTTP timeout after two 90s timeouts on sweep-again. Reused 8 completed model responses. Process restarted at a case boundary.",
+    "finished_utc": "2026-11-14T18:59:33.144021+00:00",
+    "cpu_cores": "4B used three worker threads for both stages.",
+    "timing_notes": "Elapsed time spans both stages and the restart gap. Case latencies are completed attempts only. Retries carry separate latencies. 9B shared the host for part of the run; it restarted during the later cases.",
+    "serving": "LM Studio llmster OpenAI-compatible local endpoint. CPU runtime used one slot, three threads, 8192 context tokens."
+  },
+  "cases": [
+    {
+      "history": "01-replica-proofs",
+      "task": "bridge-proof",
+      "title": "Solve part B of the bridge handout",
+      "original": 75,
+      "category": 85,
+      "planner": 104,
+      "actual": 119,
+      "range": [
+        62,
+        146
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 88.558,
+      "evidence": [
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove the snapshot cut is closed",
+          "estimate_min": 95,
+          "actual_min": 145.0,
+          "ratio": 1.5263157894736843,
+          "reason": "Both tasks involve proving safety properties in distributed systems with restarts and delayed messages, specifically focusing on the behavior of a system under controller recovery and delayed acknowledgments. The goal of Part B in the bridge handout—"
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Show a frozen epoch cannot accept new leases",
+          "estimate_min": 85,
+          "actual_min": 138.0,
+          "ratio": 1.6235294117647059,
+          "reason": "The 'Show a frozen epoch cannot accept new leases' task involves proving that a system with directory reboots and delayed grant messages fails to accept new leases due to inconsistent state assumptions. This directly parallels the safety requirement "
+        }
+      ],
+      "check": "Should favor the epoch and barrier arguments over quick trace-marking tasks in the same course.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:31:24.806630+00:00",
+        "started_utc": "2026-11-14T18:29:56.248630+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 906,
+        "completion_tokens": 216,
+        "candidate_task_ids_in_slot_order": [
+          "lease-restart",
+          "quorum-card",
+          "clock-two",
+          "barrier-proof",
+          "format-trace",
+          "epoch-proof"
+        ],
+        "model_matches": [
+          {
+            "slot": 4,
+            "reason": "Both tasks involve proving safety properties in distributed systems with restarts and delayed messages, specifically focusing on the behavior of a system under controller recovery and delayed acknowledgments. The goal of Part B in the bridge handout—proving that packets admitted before a cutoff are accounted for and no new route is exposed—is structurally similar to the 'Prove the snapshot cut is closed' task, which also requires safety arguments involving buffered sends, duplicate barrier markers, and recovery after restarts."
+          },
+          {
+            "slot": 6,
+            "reason": "The 'Show a frozen epoch cannot accept new leases' task involves proving that a system with directory reboots and delayed grant messages fails to accept new leases due to inconsistent state assumptions. This directly parallels the safety requirement in Part B of the bridge handout, which demands an invariant for packets admitted before cutoff and must cover controller recovery and delayed acknowledgments—core aspects of lease-based systems under restarts."
+          }
+        ],
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "01-replica-proofs",
+      "task": "bridge-trace",
+      "title": "Check a bridge execution before section",
+      "original": 35,
+      "category": 40,
+      "planner": 37,
+      "actual": 29,
+      "range": [
+        22,
+        57
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "ok",
+      "latency_seconds": 46.121,
+      "evidence": [
+        {
+          "task_id": "clock-two",
+          "title": "Fill in the missing logical clock entries",
+          "estimate_min": 35,
+          "actual_min": 22.0,
+          "ratio": 0.6285714285714286,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "lease-restart",
+          "title": "Find a bad lease handoff",
+          "estimate_min": 55,
+          "actual_min": 86.0,
+          "ratio": 1.5636363636363637,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "quorum-card",
+          "title": "Make a quorum revision card",
+          "estimate_min": 30,
+          "actual_min": 26.0,
+          "ratio": 0.8666666666666667,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Show a frozen epoch cannot accept new leases",
+          "estimate_min": 85,
+          "actual_min": 138.0,
+          "ratio": 1.6235294117647059,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "format-trace",
+          "title": "Typeset the lease solution",
+          "estimate_min": 55,
+          "actual_min": 40.0,
+          "ratio": 0.7272727272727273,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ack-traces",
+          "title": "Check three acknowledgment histories",
+          "estimate_min": 40,
+          "actual_min": 36.0,
+          "ratio": 0.9,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove the snapshot cut is closed",
+          "estimate_min": 95,
+          "actual_min": 145.0,
+          "ratio": 1.5263157894736843,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "fifo-example",
+          "title": "Build a counterexample to the FIFO shortcut",
+          "estimate_min": 40,
+          "actual_min": 55.0,
+          "ratio": 1.375,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Shared terminology with a hard proof should not dominate a short replay exercise.",
+      "inference": {
+        "attempt": 2,
+        "finished_utc": "2026-11-14T18:32:11.136072+00:00",
+        "started_utc": "2026-11-14T18:31:25.015072+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 754,
+        "completion_tokens": 6,
+        "candidate_task_ids_in_slot_order": [
+          "ack-traces",
+          "format-trace",
+          "clock-two",
+          "lease-restart",
+          "epoch-proof",
+          "barrier-proof"
+        ],
+        "model_matches": [],
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "02-migration-lab",
+      "task": "patch-tool",
+      "title": "Implement the migration feedback tool",
+      "original": 85,
+      "category": 83,
+      "planner": 123,
+      "actual": 138,
+      "range": [
+        110,
+        153
+      ],
+      "covered": true,
+      "confidence": "medium",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 24.961,
+      "evidence": [
+        {
+          "task_id": "trace-tool",
+          "title": "Make a trace minimizer for callback mismatches",
+          "estimate_min": 80,
+          "actual_min": 109.0,
+          "ratio": 1.3625,
+          "reason": "Both tasks involve implementing a bounded trace tool that detects the first divergence between C and Rust execution traces, with similar scope (trace analysis for migration) and goal (returning only the first mismatched record and at most two predece"
+        },
+        {
+          "task_id": "ring-port",
+          "title": "Port the packet ring to safe Rust",
+          "estimate_min": 75,
+          "actual_min": 135.0,
+          "ratio": 1.8,
+          "reason": "This task requires a bounded trace tool that preserves the first observable divergence between C and Rust callbacks, which is functionally similar to the migration feedback tool. Both involve analyzing execution traces for discrepancies and handling "
+        },
+        {
+          "task_id": "boundary-debug",
+          "title": "Debug a translated length check",
+          "estimate_min": 60,
+          "actual_min": 87.0,
+          "ratio": 1.45,
+          "reason": "Both tasks require identifying the first point of divergence between two traces (C and Rust) and understanding how cursor positions behave under truncation. The shared goal of detecting where a failure occurs and analyzing cursor discrepancies makes "
+        }
+      ],
+      "check": "Working code plus harness tests should match implementation and debugging, not reviews of the same traces.",
+      "inference": {
+        "attempt": 2,
+        "finished_utc": "2026-11-14T18:34:06.287267+00:00",
+        "started_utc": "2026-11-14T18:33:41.326267+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 1112,
+        "completion_tokens": 224,
+        "candidate_task_ids_in_slot_order": [
+          "trace-tool",
+          "ring-port",
+          "suite-report",
+          "codec-caption",
+          "suite-seeds",
+          "boundary-debug"
+        ],
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve implementing a bounded trace tool that detects the first divergence between C and Rust execution traces, with similar scope (trace analysis for migration) and goal (returning only the first mismatched record and at most two predecessors). The requirement to expose the first difference and handle edge cases like empty traces aligns directly."
+          },
+          {
+            "slot": 2,
+            "reason": "This task requires a bounded trace tool that preserves the first observable divergence between C and Rust callbacks, which is functionally similar to the migration feedback tool. Both involve analyzing execution traces for discrepancies and handling early termination or missing records, making them comparable in scope and technical focus."
+          },
+          {
+            "slot": 6,
+            "reason": "Both tasks require identifying the first point of divergence between two traces (C and Rust) and understanding how cursor positions behave under truncation. The shared goal of detecting where a failure occurs and analyzing cursor discrepancies makes this a strong match, despite different specific implementations."
+          }
+        ],
+        "overlap_with_9b": "9B smoke test",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "02-migration-lab",
+      "task": "patch-note",
+      "title": "Write the migration tool comparison",
+      "original": 45,
+      "category": 44,
+      "planner": 44,
+      "actual": 34,
+      "range": [
+        26,
+        81
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "ok",
+      "latency_seconds": 43.817,
+      "evidence": [
+        {
+          "task_id": "replay-cases",
+          "title": "Replay old codec cases",
+          "estimate_min": 40,
+          "actual_min": 28.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ring-port",
+          "title": "Port the packet ring to safe Rust",
+          "estimate_min": 75,
+          "actual_min": 135.0,
+          "ratio": 1.8,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "codec-caption",
+          "title": "Summarize packet test failures",
+          "estimate_min": 45,
+          "actual_min": 33.0,
+          "ratio": 0.7333333333333333,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "trace-tool",
+          "title": "Make a trace minimizer for callback mismatches",
+          "estimate_min": 80,
+          "actual_min": 109.0,
+          "ratio": 1.3625,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "suite-seeds",
+          "title": "Replay the decoder corpus",
+          "estimate_min": 35,
+          "actual_min": 34.0,
+          "ratio": 0.9714285714285714,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "suite-report",
+          "title": "Finish the migration results page",
+          "estimate_min": 55,
+          "actual_min": 38.0,
+          "ratio": 0.6909090909090909,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "boundary-debug",
+          "title": "Debug a translated length check",
+          "estimate_min": 60,
+          "actual_min": 87.0,
+          "ratio": 1.45,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Look for the old results page and failure summaries despite the implementation language in the title.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:34:50.107452+00:00",
+        "started_utc": "2026-11-14T18:34:06.290452+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 755,
+        "completion_tokens": 7,
+        "candidate_task_ids_in_slot_order": [
+          "suite-seeds",
+          "codec-caption",
+          "suite-report",
+          "replay-cases",
+          "trace-tool",
+          "ring-port"
+        ],
+        "model_matches": [],
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "03-reading-depth",
+      "task": "appendix-proof",
+      "title": "Prepare the calibration reading",
+      "original": 45,
+      "category": 36,
+      "planner": 64,
+      "actual": 76,
+      "range": [
+        38,
+        90
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 57.521,
+      "evidence": [
+        {
+          "task_id": "derive-noise",
+          "title": "Reproduce the noise bound",
+          "estimate_min": 40,
+          "actual_min": 68.0,
+          "ratio": 1.7,
+          "reason": "Both tasks involve deriving conditional expectations and understanding how thresholding or censoring affects zero-mean assumptions; they share a similar mathematical structure and focus on conditioning arguments, despite different notation."
+        },
+        {
+          "task_id": "derive-mixture",
+          "title": "Reconstruct the mixture proof",
+          "estimate_min": 65,
+          "actual_min": 103.0,
+          "ratio": 1.5846153846153845,
+          "reason": "Both tasks require reconstructing a proof from definitions and working through likelihood cases under specific conditions; the core challenge of deriving expressions from first principles is common, even if the context differs slightly."
+        }
+      ],
+      "check": "The PDF distinguishes a derivation from the easier main-text exercise.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:35:47.636695+00:00",
+        "started_utc": "2026-11-14T18:34:50.115695+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 794,
+        "completion_tokens": 100,
+        "candidate_task_ids_in_slot_order": [
+          "read-queues",
+          "metrics-sketch",
+          "derive-noise",
+          "replica-figs",
+          "read-storage",
+          "derive-mixture"
+        ],
+        "model_matches": [
+          {
+            "slot": 3,
+            "reason": "Both tasks involve deriving conditional expectations and understanding how thresholding or censoring affects zero-mean assumptions; they share a similar mathematical structure and focus on conditioning arguments, despite different notation."
+          },
+          {
+            "slot": 6,
+            "reason": "Both tasks require reconstructing a proof from definitions and working through likelihood cases under specific conditions; the core challenge of deriving expressions from first principles is common, even if the context differs slightly."
+          }
+        ],
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "03-reading-depth",
+      "task": "metrics-club",
+      "title": "Prepare a transport paper for club",
+      "original": 65,
+      "category": 53,
+      "planner": 52,
+      "actual": 46,
+      "range": [
+        42,
+        111
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 68.951,
+      "evidence": [
+        {
+          "task_id": "replica-figs",
+          "title": "Prepare journal club questions",
+          "estimate_min": 60,
+          "actual_min": 48.0,
+          "ratio": 0.8,
+          "reason": "Both tasks involve reading evaluation sections and analyzing plots (latency and loss), with a focus on observations or questions derived from visual data. The goal of extracting insights from results is similar, and both require careful analysis of f"
+        },
+        {
+          "task_id": "read-storage",
+          "title": "Review the storage benchmark",
+          "estimate_min": 70,
+          "actual_min": 46.0,
+          "ratio": 0.6571428571428571,
+          "reason": "Both tasks require reading multiple plots (workload definitions and throughput comparisons) to identify limitations; the scope and structure align in analyzing performance under different traffic conditions with a focus on quantitative observations."
+        },
+        {
+          "task_id": "derive-noise",
+          "title": "Reproduce the noise bound",
+          "estimate_min": 40,
+          "actual_min": 68.0,
+          "ratio": 1.7,
+          "reason": "Both tasks involve reading a brief theoretical document and deriving key mathematical expressions from it. The difficulty is comparable due to the need for understanding conditional expectations and thresholding effects, though the conditioning argum"
+        },
+        {
+          "task_id": "metrics-sketch",
+          "title": "Skim the results on burst traffic",
+          "estimate_min": 50,
+          "actual_min": 41.0,
+          "ratio": 0.82,
+          "reason": "Both tasks focus on understanding latency plots and extracting takeaways from their tails; the goal of interpreting run conditions and visualizing key trends matches closely in scope and effort."
+        },
+        {
+          "task_id": "read-cache",
+          "title": "Read the cache study for discussion",
+          "estimate_min": 55,
+          "actual_min": 37.0,
+          "ratio": 0.6727272727272727,
+          "reason": "Both involve skimming methods and identifying baseline metrics (e.g., hit rate) across traffic mixes. The familiarity with workload definitions and basic plot interpretation is shared, making this a direct match in reading and observation tasks."
+        }
+      ],
+      "check": "A broad reading-category correction mixes tasks with opposite errors. The matched empirical reads are more useful.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:36:56.591085+00:00",
+        "started_utc": "2026-11-14T18:35:47.640085+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 662,
+        "completion_tokens": 273,
+        "candidate_task_ids_in_slot_order": [
+          "replica-figs",
+          "read-storage",
+          "derive-noise",
+          "metrics-sketch",
+          "read-cache",
+          "read-queues"
+        ],
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve reading evaluation sections and analyzing plots (latency and loss), with a focus on observations or questions derived from visual data. The goal of extracting insights from results is similar, and both require careful analysis of figures without formal theoretical arguments."
+          },
+          {
+            "slot": 2,
+            "reason": "Both tasks require reading multiple plots (workload definitions and throughput comparisons) to identify limitations; the scope and structure align in analyzing performance under different traffic conditions with a focus on quantitative observations."
+          },
+          {
+            "slot": 3,
+            "reason": "Both tasks involve reading a brief theoretical document and deriving key mathematical expressions from it. The difficulty is comparable due to the need for understanding conditional expectations and thresholding effects, though the conditioning argument is new here, making it slightly more challenging than previous tasks."
+          },
+          {
+            "slot": 4,
+            "reason": "Both tasks focus on understanding latency plots and extracting takeaways from their tails; the goal of interpreting run conditions and visualizing key trends matches closely in scope and effort."
+          },
+          {
+            "slot": 5,
+            "reason": "Both involve skimming methods and identifying baseline metrics (e.g., hit rate) across traffic mixes. The familiarity with workload definitions and basic plot interpretation is shared, making this a direct match in reading and observation tasks."
+          }
+        ],
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "04-kernel-workbench",
+      "task": "async-flicker",
+      "title": "Triage a sporadic normalization mismatch",
+      "original": 60,
+      "category": 56,
+      "planner": 124,
+      "actual": 127,
+      "range": [
+        74,
+        188
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 62.263,
+      "evidence": [
+        {
+          "task_id": "warp-tail",
+          "title": "Fix the reduction tail failure",
+          "estimate_min": 45,
+          "actual_min": 141.0,
+          "ratio": 3.1333333333333333,
+          "reason": "Both tasks involve sporadic normalization mismatches that manifest only under specific conditions (e.g., overlapping request streams or partial reductions), and both require isolating the root cause through a reproducible failure case and patching it"
+        },
+        {
+          "task_id": "race-repro",
+          "title": "Isolate the scratch-buffer race",
+          "estimate_min": 75,
+          "actual_min": 154.0,
+          "ratio": 2.0533333333333332,
+          "reason": "Both tasks deal with normalization discrepancies in GPU systems when two streams overlap, and both emphasize creating a minimal reproducer to locate the first incorrect intermediate, which aligns with the goal of triaging sporadic issues under overla"
+        }
+      ],
+      "check": "Similar unknown-cause debugging tasks have a broad spread; a precise estimate matching routine implementation would be misleading.",
+      "inference": {
+        "attempt": 2,
+        "finished_utc": "2026-11-14T18:37:59.042034+00:00",
+        "started_utc": "2026-11-14T18:36:56.779034+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 804,
+        "completion_tokens": 123,
+        "candidate_task_ids_in_slot_order": [
+          "race-repro",
+          "warp-tail",
+          "throughput-table",
+          "vector-baseline",
+          "transpose-index",
+          "median-runs"
+        ],
+        "model_matches": [
+          {
+            "slot": 2,
+            "reason": "Both tasks involve sporadic normalization mismatches that manifest only under specific conditions (e.g., overlapping request streams or partial reductions), and both require isolating the root cause through a reproducible failure case and patching it while maintaining correctness across multiple launches."
+          },
+          {
+            "slot": 1,
+            "reason": "Both tasks deal with normalization discrepancies in GPU systems when two streams overlap, and both emphasize creating a minimal reproducer to locate the first incorrect intermediate, which aligns with the goal of triaging sporadic issues under overlapping conditions."
+          }
+        ],
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "04-kernel-workbench",
+      "task": "sweep-again",
+      "title": "Sweep normalization block sizes",
+      "original": 60,
+      "category": 56,
+      "planner": 55,
+      "actual": 61,
+      "range": [
+        32,
+        77
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 48.354,
+      "evidence": [
+        {
+          "task_id": "median-runs",
+          "title": "Compare block sizes for the gather",
+          "estimate_min": 55,
+          "actual_min": 42.0,
+          "ratio": 0.7636363636363637,
+          "reason": "Both tasks involve measuring four block sizes across six known-good shapes and reporting medians; they share the same goal of evaluating block size performance under consistent conditions with established correctness."
+        },
+        {
+          "task_id": "stride-kernel",
+          "title": "Implement the straightforward strided gather",
+          "estimate_min": 70,
+          "actual_min": 68.0,
+          "ratio": 0.9714285714285714,
+          "reason": "Both tasks implement and validate a gather operation using a provided index equation and validate against a NumPy reference; they have similar scope (kernel implementation), difficulty (validation against reference), and familiarity (use of index equ"
+        }
+      ],
+      "check": "Retrieve scripted sweeps, then check whether a correction helps a task whose original budget happened to be accurate.",
+      "inference": {
+        "attempt": 3,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:43:31.857206+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "median-runs",
+          "throughput-table",
+          "vector-baseline",
+          "transpose-index",
+          "race-repro",
+          "stride-kernel"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 565,
+        "completion_tokens": 107,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve measuring four block sizes across six known-good shapes and reporting medians; they share the same goal of evaluating block size performance under consistent conditions with established correctness."
+          },
+          {
+            "slot": 6,
+            "reason": "Both tasks implement and validate a gather operation using a provided index equation and validate against a NumPy reference; they have similar scope (kernel implementation), difficulty (validation against reference), and familiarity (use of index equation and validation)."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:44:20.216256+00:00"
+      }
+    },
+    {
+      "history": "05-studio-crit",
+      "task": "queue-revision",
+      "title": "Take a second pass at the ticket kiosk",
+      "original": 80,
+      "category": 72,
+      "planner": 114,
+      "actual": 132,
+      "range": [
+        68,
+        160
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 79.594,
+      "evidence": [
+        {
+          "task_id": "orientation-flow",
+          "title": "Rethink the building orientation screen",
+          "estimate_min": 75,
+          "actual_min": 122.0,
+          "ratio": 1.6266666666666667,
+          "reason": "Both tasks involve rethinking visitor decision flow and require exploring two genuinely different orders of decisions. The new task focuses on the timed-entry option's placement, while slot 5 addresses how visitors identify their entrance—both center"
+        },
+        {
+          "task_id": "menu-round2",
+          "title": "Revise the pop-up menu after critique",
+          "estimate_min": 90,
+          "actual_min": 147.0,
+          "ratio": 1.6333333333333333,
+          "reason": "The new task involves preparing a revision for critique after observing that visitors missed a timed-entry option due to its placement. Slot 2 explores content groupings affecting price perception, which is a related design decision-making process bu"
+        }
+      ],
+      "check": "A request for two alternatives and a rationale should select open revision history, despite available components.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:42:18.858039+00:00",
+        "started_utc": "2026-11-14T18:40:59.264039+00:00",
+        "finish_reason": "stop",
+        "prompt_tokens": 798,
+        "completion_tokens": 146,
+        "candidate_task_ids_in_slot_order": [
+          "menu-round2",
+          "crit-agenda",
+          "prep-print",
+          "type-fixes",
+          "orientation-flow",
+          "spacing-pass"
+        ],
+        "model_matches": [
+          {
+            "slot": 5,
+            "reason": "Both tasks involve rethinking visitor decision flow and require exploring two genuinely different orders of decisions. The new task focuses on the timed-entry option's placement, while slot 5 addresses how visitors identify their entrance—both center on user experience and the order of information delivery."
+          },
+          {
+            "slot": 1,
+            "reason": "The new task involves preparing a revision for critique after observing that visitors missed a timed-entry option due to its placement. Slot 2 explores content groupings affecting price perception, which is a related design decision-making process but not identical in scope or goal; however, both are studio-level tasks involving user observation and iterative design choices."
+          }
+        ],
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "05-studio-crit",
+      "task": "kiosk-print",
+      "title": "Apply the signed-off kiosk edits",
+      "original": 45,
+      "category": 40,
+      "planner": 39,
+      "actual": 53,
+      "range": [
+        23,
+        56
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 60.841,
+      "evidence": [
+        {
+          "task_id": "tablet-exports",
+          "title": "Export tablet images for install",
+          "estimate_min": 40,
+          "actual_min": 29.0,
+          "ratio": 0.725,
+          "reason": "Both tasks involve exporting approved screen variants for installation, with similar focus on frame alignment and price string updates. The shared goal of handling signed-off content for install is directly aligned with the new task's requirements."
+        },
+        {
+          "task_id": "prep-print",
+          "title": "Prepare print files for the signage test",
+          "estimate_min": 40,
+          "actual_min": 36.0,
+          "ratio": 0.9,
+          "reason": "Both tasks require exporting approved variants at final size, adding crop marks, and inspecting type at print scale—this matches the production pass and inspection details in the new task, indicating a similar workflow and output focus."
+        }
+      ],
+      "check": "Retrieve approved edits even though this export needed an extra revision. Check the downside of a large downward correction and whether the range covers the outcome.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:44:20.217524+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "tablet-exports",
+          "type-fixes",
+          "menu-round2",
+          "crit-agenda",
+          "prep-print",
+          "orientation-flow"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 672,
+        "completion_tokens": 112,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve exporting approved screen variants for installation, with similar focus on frame alignment and price string updates. The shared goal of handling signed-off content for install is directly aligned with the new task's requirements."
+          },
+          {
+            "slot": 5,
+            "reason": "Both tasks require exporting approved variants at final size, adding crop marks, and inspecting type at print scale—this matches the production pass and inspection details in the new task, indicating a similar workflow and output focus."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:45:21.062163+00:00"
+      }
+    },
+    {
+      "history": "06-library-data",
+      "task": "returns-merge",
+      "title": "Join the returns feed for the quarterly memo",
+      "original": 75,
+      "category": 129,
+      "planner": 129,
+      "actual": 137,
+      "range": [
+        61,
+        143
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 97.346,
+      "evidence": [
+        {
+          "task_id": "borrower-crosswalk",
+          "title": "Audit the membership type crosswalk",
+          "estimate_min": 65,
+          "actual_min": 112.0,
+          "ratio": 1.7230769230769232,
+          "reason": "Both tasks involve reconciling data from different sources with a focus on identifying discrepancies, key changes (e.g., label cutover), and preserving raw keys for review. The goal of joining datasets and documenting ambiguous or missing records ali"
+        },
+        {
+          "task_id": "locker-mapping",
+          "title": "Reconcile locker pickups with the branch register",
+          "estimate_min": 75,
+          "actual_min": 142.0,
+          "ratio": 1.8933333333333333,
+          "reason": "Both tasks require building a reusable map between two source files (locker export vs. location register) and handling unresolved or mismatched records. They share similar data structures, reconciliation logic, and acceptance checks involving raw key"
+        },
+        {
+          "task_id": "stock-import",
+          "title": "Load the January acquisitions CSV",
+          "estimate_min": 50,
+          "actual_min": 41.0,
+          "ratio": 0.82,
+          "reason": "Both tasks involve standardizing date formatting and validating row totals against headers using a known key (order-line key). The scope of cleaning and verifying data integrity is comparable, though the new task focuses on joins rather than direct i"
+        },
+        {
+          "task_id": "door-counters",
+          "title": "Combine entrance counter files",
+          "estimate_min": 90,
+          "actual_min": 154.0,
+          "ratio": 1.711111111111111,
+          "reason": "Both tasks involve joining or mapping data from two sources with time-based differences (local vs. cumulative timestamps) and flagging coverage gaps. The focus on aligning records across systems and identifying mismatches in timing and structure is s"
+        },
+        {
+          "task_id": "renewal-audit",
+          "title": "Check the digital renewal denominator",
+          "estimate_min": 75,
+          "actual_min": 131.0,
+          "ratio": 1.7466666666666666,
+          "reason": "Both tasks require tracing an anomaly back to a source system and writing reproducible checks for data integrity. The issue of ambiguous or misinterpreted fields (e.g., blank success field) mirrors the ambiguity handling in the returns reconciliation"
+        }
+      ],
+      "check": "Tests whether the supplied grain, key change and ambiguous joins prompt comparison with earlier reconciliation work.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:45:21.063650+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "borrower-crosswalk",
+          "locker-mapping",
+          "stock-import",
+          "door-counters",
+          "renewal-audit",
+          "turnaway-table"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 954,
+        "completion_tokens": 313,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve reconciling data from different sources with a focus on identifying discrepancies, key changes (e.g., label cutover), and preserving raw keys for review. The goal of joining datasets and documenting ambiguous or missing records aligns closely with the returns join and QA table in the new task."
+          },
+          {
+            "slot": 2,
+            "reason": "Both tasks require building a reusable map between two source files (locker export vs. location register) and handling unresolved or mismatched records. They share similar data structures, reconciliation logic, and acceptance checks involving raw keys and flagging of mismatches."
+          },
+          {
+            "slot": 3,
+            "reason": "Both tasks involve standardizing date formatting and validating row totals against headers using a known key (order-line key). The scope of cleaning and verifying data integrity is comparable, though the new task focuses on joins rather than direct import validation."
+          },
+          {
+            "slot": 4,
+            "reason": "Both tasks involve joining or mapping data from two sources with time-based differences (local vs. cumulative timestamps) and flagging coverage gaps. The focus on aligning records across systems and identifying mismatches in timing and structure is similar to the returns join task."
+          },
+          {
+            "slot": 5,
+            "reason": "Both tasks require tracing an anomaly back to a source system and writing reproducible checks for data integrity. The issue of ambiguous or misinterpreted fields (e.g., blank success field) mirrors the ambiguity handling in the returns reconciliation task."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:46:58.416426+00:00"
+      }
+    },
+    {
+      "history": "06-library-data",
+      "task": "april-chart",
+      "title": "Refresh circulation charts for the April packet",
+      "original": 60,
+      "category": 48,
+      "planner": 50,
+      "actual": 43,
+      "range": [
+        30,
+        70
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 63.34,
+      "evidence": [
+        {
+          "task_id": "renewal-chart",
+          "title": "Refresh the monthly renewals plot",
+          "estimate_min": 40,
+          "actual_min": 28.0,
+          "ratio": 0.7,
+          "reason": "Both tasks involve refreshing circulation-related charts with a month filter; they share the same subject (circulation), use existing notebooks and warehouse data, and require only a change to captions or filtering without altering core structure or "
+        },
+        {
+          "task_id": "board-summary",
+          "title": "Write the four-number board update",
+          "estimate_min": 45,
+          "actual_min": 36.0,
+          "ratio": 0.8,
+          "reason": "Both tasks are reporting-oriented and involve updating chart content with approved totals and percentage changes; they have similar scope and goal of modifying visual summaries based on pre-approved data, with a shared focus on explaining exclusions "
+        }
+      ],
+      "check": "Tests whether an ordinary refresh receives a lighter correction than the nearby complex returns task.",
+      "inference": {
+        "attempt": 2,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:47:00.616046+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "renewal-chart",
+          "turnaway-table",
+          "locker-mapping",
+          "stock-import",
+          "borrower-crosswalk",
+          "board-summary"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 788,
+        "completion_tokens": 120,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve refreshing circulation-related charts with a month filter; they share the same subject (circulation), use existing notebooks and warehouse data, and require only a change to captions or filtering without altering core structure or data sources."
+          },
+          {
+            "slot": 6,
+            "reason": "Both tasks are reporting-oriented and involve updating chart content with approved totals and percentage changes; they have similar scope and goal of modifying visual summaries based on pre-approved data, with a shared focus on explaining exclusions (e.g., holiday week)."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:48:03.960091+00:00"
+      }
+    },
+    {
+      "history": "07-museum-copy",
+      "task": "kids-weaving",
+      "title": "Prepare Spanish text for the weaving stop",
+      "original": 70,
+      "category": 106,
+      "planner": 94,
+      "actual": 111,
+      "range": [
+        56,
+        132
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 75.53,
+      "evidence": [
+        {
+          "task_id": "audio-route",
+          "title": "Rewrite an audio-guide stop in plain Spanish",
+          "estimate_min": 85,
+          "actual_min": 132.0,
+          "ratio": 1.5529411764705883,
+          "reason": "Both tasks involve adapting curatorial content for a child audience using plain Spanish, with clear production constraints (length, format, no diagrams). The goal of making text accessible and usable in a hands-on context aligns closely."
+        },
+        {
+          "task_id": "school-panel",
+          "title": "Adapt the ceramics panel for school visits",
+          "estimate_min": 80,
+          "actual_min": 119.0,
+          "ratio": 1.4875,
+          "reason": "Both require translating technical curatorial content into Spanish for children, preserving object names and key terminology (firing, glazing), and ensuring clarity without visual aids. The audience instruction and focus on intelligibility match the "
+        }
+      ],
+      "check": "Tests multilingual semantic comparison and audience adaptation when the clearest historical match discusses a different craft.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:48:03.965719+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "audio-route",
+          "school-panel",
+          "glossary",
+          "hours-notice",
+          "caption-proof",
+          "bilingual-calendar"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 958,
+        "completion_tokens": 120,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve adapting curatorial content for a child audience using plain Spanish, with clear production constraints (length, format, no diagrams). The goal of making text accessible and usable in a hands-on context aligns closely."
+          },
+          {
+            "slot": 2,
+            "reason": "Both require translating technical curatorial content into Spanish for children, preserving object names and key terminology (firing, glazing), and ensuring clarity without visual aids. The audience instruction and focus on intelligibility match the weaving stop task's requirements."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:49:19.503022+00:00"
+      }
+    },
+    {
+      "history": "07-museum-copy",
+      "task": "visitor-proof",
+      "title": "Proof the English and Spanish visitor map",
+      "original": 45,
+      "category": 31,
+      "planner": 41,
+      "actual": 44,
+      "range": [
+        29,
+        71
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 116.807,
+      "evidence": [
+        {
+          "task_id": "bilingual-calendar",
+          "title": "Update the bilingual event calendar",
+          "estimate_min": 45,
+          "actual_min": 39.0,
+          "ratio": 0.8666666666666667,
+          "reason": "Both tasks involve proofreading bilingual facility labels and addressing accents; they share the same subject (bilingual labels) and similar scope (six labels, approval status, accent checks), with overlapping difficulty in spelling and formatting. T"
+        },
+        {
+          "task_id": "audio-route",
+          "title": "Rewrite an audio-guide stop in plain Spanish",
+          "estimate_min": 85,
+          "actual_min": 132.0,
+          "ratio": 1.5529411764705883,
+          "reason": "This task involves proofreading bilingual content (event listings) with attention to accents and punctuation, similar to the visitor map task. However, it is an adaptation rather than a proofreading task, so it does not fit as a direct match due to d"
+        },
+        {
+          "task_id": "hours-notice",
+          "title": "Proofread the spring hours notice",
+          "estimate_min": 30,
+          "actual_min": 21.0,
+          "ratio": 0.7,
+          "reason": "Both tasks verify English and Spanish listings against an approved schedule and fix day name mismatches; they share the same core objective (bilingual verification) and similar scope (six entries, day names), with comparable difficulty in consistency"
+        },
+        {
+          "task_id": "caption-proof",
+          "title": "Revisar doce cartelas de la colección",
+          "estimate_min": 50,
+          "actual_min": 33.0,
+          "ratio": 0.66,
+          "reason": "This task compares approved English and Spanish labels for punctuation, inventory numbers, and accents—exactly matching the requirements of the visitor map task. Both involve detailed inspection of bilingual content, shared subject matter (labels), a"
+        },
+        {
+          "task_id": "newsletter",
+          "title": "Translate the member newsletter paragraph",
+          "estimate_min": 55,
+          "actual_min": 52.0,
+          "ratio": 0.9454545454545454,
+          "reason": "This task involves translation of a paragraph with approved terminology, but it does not require proofreading or correction of existing bilingual text. It differs in goal (translation vs. proofreading) and scope (general welcome content vs. facility "
+        },
+        {
+          "task_id": "glossary",
+          "title": "Resolve the craft glossary before translation",
+          "estimate_min": 60,
+          "actual_min": 94.0,
+          "ratio": 1.5666666666666667,
+          "reason": "This task focuses on preparing a glossary for tool names with regional variations and usage examples—related to terminology but distinct in purpose (preparation of a shortlist before translation). It does not involve proofreading or editing existing "
+        }
+      ],
+      "check": "Select approved bilingual proofreading examples and check whether the model overcorrects an already well-budgeted edit.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:49:19.505895+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "bilingual-calendar",
+          "audio-route",
+          "hours-notice",
+          "caption-proof",
+          "newsletter",
+          "glossary"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 612,
+        "completion_tokens": 429,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve proofreading bilingual facility labels and addressing accents; they share the same subject (bilingual labels) and similar scope (six labels, approval status, accent checks), with overlapping difficulty in spelling and formatting. The goal of correcting spelling and accents aligns directly with the task of verifying dates and accents in event listings."
+          },
+          {
+            "slot": 2,
+            "reason": "This task involves proofreading bilingual content (event listings) with attention to accents and punctuation, similar to the visitor map task. However, it is an adaptation rather than a proofreading task, so it does not fit as a direct match due to different goal and scope."
+          },
+          {
+            "slot": 3,
+            "reason": "Both tasks verify English and Spanish listings against an approved schedule and fix day name mismatches; they share the same core objective (bilingual verification) and similar scope (six entries, day names), with comparable difficulty in consistency and accuracy. The use of 'el museo' as a reference aligns with the bilingual context."
+          },
+          {
+            "slot": 4,
+            "reason": "This task compares approved English and Spanish labels for punctuation, inventory numbers, and accents—exactly matching the requirements of the visitor map task. Both involve detailed inspection of bilingual content, shared subject matter (labels), and similar scope (six labels, accent marks). The goal of ensuring correct formatting and consistency is identical."
+          },
+          {
+            "slot": 5,
+            "reason": "This task involves translation of a paragraph with approved terminology, but it does not require proofreading or correction of existing bilingual text. It differs in goal (translation vs. proofreading) and scope (general welcome content vs. facility labels), so it is not a good match."
+          },
+          {
+            "slot": 6,
+            "reason": "This task focuses on preparing a glossary for tool names with regional variations and usage examples—related to terminology but distinct in purpose (preparation of a shortlist before translation). It does not involve proofreading or editing existing bilingual text, so it is not a good match."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:51:16.316119+00:00"
+      }
+    },
+    {
+      "history": "08-field-maintenance",
+      "task": "hidden-elbow",
+      "title": "Restore pressure at the tool-shed bed",
+      "original": 90,
+      "category": 142,
+      "planner": 138,
+      "actual": 153,
+      "range": [
+        82,
+        193
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 151.004,
+      "evidence": [
+        {
+          "task_id": "south-line",
+          "title": "Replace the buried south-bed tee",
+          "estimate_min": 80,
+          "actual_min": 148.0,
+          "ratio": 1.85,
+          "reason": "Both tasks involve locating a hidden joint (under mulch or in gravel strip), isolating the affected branch, repairing it, and verifying pressure through testing. The work-order drawing guidance and need for tracing to identify the fault are similar t"
+        },
+        {
+          "task_id": "drip-splice",
+          "title": "Find the dripping splice near the compost fence",
+          "estimate_min": 90,
+          "actual_min": 157.0,
+          "ratio": 1.7444444444444445,
+          "reason": "Both tasks require tracing a supply line to a leaking joint, replacing the splice, and checking flow at the final emitter after a watering cycle. The shared focus on identifying a hidden leak, repairing it, and validating performance through testing "
+        }
+      ],
+      "check": "Tests prediction across several work periods on a buried fault; elapsed calendar time between visits must never become actual task time.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:51:16.317931+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "south-line",
+          "storage-door",
+          "tap-handle",
+          "drip-splice",
+          "screen-clean",
+          "hose-tags"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 888,
+        "completion_tokens": 138,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve locating a hidden joint (under mulch or in gravel strip), isolating the affected branch, repairing it, and verifying pressure through testing. The work-order drawing guidance and need for tracing to identify the fault are similar to restoring pressure at the tool-shed bed."
+          },
+          {
+            "slot": 4,
+            "reason": "Both tasks require tracing a supply line to a leaking joint, replacing the splice, and checking flow at the final emitter after a watering cycle. The shared focus on identifying a hidden leak, repairing it, and validating performance through testing aligns closely with the pressure loss restoration task."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:53:47.326583+00:00"
+      }
+    },
+    {
+      "history": "08-field-maintenance",
+      "task": "tap-tag",
+      "title": "Inspect the wash-station taps and relabel them",
+      "original": 50,
+      "category": 38,
+      "planner": 46,
+      "actual": 38,
+      "range": [
+        27,
+        65
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "ok",
+      "latency_seconds": 50.043,
+      "evidence": [
+        {
+          "task_id": "hose-tags",
+          "title": "Label the hose runs",
+          "estimate_min": 45,
+          "actual_min": 34.0,
+          "ratio": 0.7555555555555555,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "screen-clean",
+          "title": "Service the two accessible intake screens",
+          "estimate_min": 55,
+          "actual_min": 41.0,
+          "ratio": 0.7454545454545455,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Tests whether familiar site names incorrectly pull in previous repair overruns when the task is an inspection.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:53:47.328219+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "hose-tags",
+          "tap-handle",
+          "screen-clean",
+          "drip-splice",
+          "south-line",
+          "storage-door"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 742,
+        "completion_tokens": 7,
+        "model_matches": [],
+        "finished_utc": "2026-11-14T18:54:37.373642+00:00"
+      }
+    },
+    {
+      "history": "09-math-tutor",
+      "task": "slope-short",
+      "title": "Make a shortened slope clinic for revision week",
+      "original": 60,
+      "category": 50,
+      "planner": 50,
+      "actual": 44,
+      "range": [
+        39,
+        55
+      ],
+      "covered": true,
+      "confidence": "medium",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 75.58,
+      "evidence": [
+        {
+          "task_id": "slope-language",
+          "title": "Refresh the slope handout for a small group",
+          "estimate_min": 50,
+          "actual_min": 42.0,
+          "ratio": 0.84,
+          "reason": "Both tasks involve trimming and adapting a slope clinic for a small group, focusing on simplifying content while preserving key elements like exit questions and answer keys. The goal of reducing complexity to one graph pair and three practice questio"
+        },
+        {
+          "task_id": "slope-revisit",
+          "title": "Adapt the slope clinic for the Tuesday group",
+          "estimate_min": 65,
+          "actual_min": 54.0,
+          "ratio": 0.8307692307692308,
+          "reason": "This task shares the same core objective—shortening a slope clinic—to a 25-minute block, which is similar in scope and difficulty to the revision week task. Both reuse existing graphs and diagnostic materials, only changing numerical labels, indicati"
+        },
+        {
+          "task_id": "slope-practice",
+          "title": "Prepare the next slope practice set",
+          "estimate_min": 55,
+          "actual_min": 36.0,
+          "ratio": 0.6545454545454545,
+          "reason": "Both tasks use the same worked graph pair and maintain the original misconception and answer-key structure. The goal of preparing a practice set for a mixed revision group is directly comparable to reusing the clinic for another cohort, making it a n"
+        }
+      ],
+      "check": "Tests whether repeated reuse/familiarity limits the influence of the first expensive slope lesson. The estimator need not implement an explicit time trend.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:54:37.375885+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "slope-language",
+          "slope-revisit",
+          "slope-practice",
+          "first-slope",
+          "first-rate",
+          "grade-slope"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 776,
+        "completion_tokens": 205,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve trimming and adapting a slope clinic for a small group, focusing on simplifying content while preserving key elements like exit questions and answer keys. The goal of reducing complexity to one graph pair and three practice questions aligns with shortening the original clinic."
+          },
+          {
+            "slot": 2,
+            "reason": "This task shares the same core objective—shortening a slope clinic—to a 25-minute block, which is similar in scope and difficulty to the revision week task. Both reuse existing graphs and diagnostic materials, only changing numerical labels, indicating overlapping structure and familiarity with the original content."
+          },
+          {
+            "slot": 3,
+            "reason": "Both tasks use the same worked graph pair and maintain the original misconception and answer-key structure. The goal of preparing a practice set for a mixed revision group is directly comparable to reusing the clinic for another cohort, making it a natural fit in terms of scope, difficulty, and familiarity."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:55:52.959331+00:00"
+      }
+    },
+    {
+      "history": "09-math-tutor",
+      "task": "new-prob",
+      "title": "Design a first lesson about repeated chance trials",
+      "original": 75,
+      "category": 63,
+      "planner": 62,
+      "actual": 135,
+      "range": [
+        49,
+        123
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Model-selected tasks",
+      "model_status": "ok",
+      "latency_seconds": 127.924,
+      "evidence": [
+        {
+          "task_id": "new-scatter",
+          "title": "Prepare a new scatterplot misconception clinic",
+          "estimate_min": 80,
+          "actual_min": 128.0,
+          "ratio": 1.6,
+          "reason": "Both tasks involve designing two contrasting examples to address a common student misconception and include an exit ticket that changes the context or object being measured. The goal of clarifying a misunderstanding (e.g., 'a tail is due after three "
+        },
+        {
+          "task_id": "first-slope",
+          "title": "Design the first slope clinic",
+          "estimate_min": 90,
+          "actual_min": 147.0,
+          "ratio": 1.6333333333333333,
+          "reason": "Both tasks target a specific misconception in students' reasoning—here, about interpreting scatterplots (causation vs. correlation), and in the original task about probability misconceptions (e.g., thinking outcomes are dependent). The structure of t"
+        },
+        {
+          "task_id": "slope-practice",
+          "title": "Prepare the next slope practice set",
+          "estimate_min": 55,
+          "actual_min": 36.0,
+          "ratio": 0.6545454545454545,
+          "reason": "The first lesson on repeated chance trials requires a new misconception to be addressed through contrastive examples and an exit ticket. This matches the slope clinic's goal of addressing a misconception (steepness vs. height) via contrasting visuals"
+        },
+        {
+          "task_id": "unit-repeat",
+          "title": "Reuse the unit-rate station for adults",
+          "estimate_min": 60,
+          "actual_min": 49.0,
+          "ratio": 0.8166666666666667,
+          "reason": "The unit-rate station for adults involves updating existing examples to realistic household sizes, which is analogous to the repeated chance trials task where real-world contexts (e.g., coin or die sequences) are used. Both tasks require modifying fa"
+        },
+        {
+          "task_id": "grade-slope",
+          "title": "Mark the slope exit tickets",
+          "estimate_min": 40,
+          "actual_min": 32.0,
+          "ratio": 0.8,
+          "reason": "The marking task involves scoring student responses and adding feedback on a specific misconception (intercepts), which is directly related to the exit ticket in the repeated chance trials lesson that challenges students' independence assumptions. Th"
+        },
+        {
+          "task_id": "slope-language",
+          "title": "Refresh the slope handout for a small group",
+          "estimate_min": 50,
+          "actual_min": 42.0,
+          "ratio": 0.84,
+          "reason": "The slope clinic already has two worked examples and an exit question; both tasks use similar visual structures (annotated graphs) and diagnostic prompts to guide student understanding. Reusing the same misconception structure with minor adjustments "
+        }
+      ],
+      "check": "Tests whether a new topic with no reusable handout is matched to other first-time lesson designs despite the many quick adaptations in the same category.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:55:52.965593+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "new-scatter",
+          "first-slope",
+          "slope-practice",
+          "unit-repeat",
+          "grade-slope",
+          "slope-language"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 912,
+        "completion_tokens": 454,
+        "model_matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve designing two contrasting examples to address a common student misconception and include an exit ticket that changes the context or object being measured. The goal of clarifying a misunderstanding (e.g., 'a tail is due after three heads' or misinterpreting slope as steepness) aligns with the new task's focus on repeated chance trials and independence."
+          },
+          {
+            "slot": 2,
+            "reason": "Both tasks target a specific misconception in students' reasoning—here, about interpreting scatterplots (causation vs. correlation), and in the original task about probability misconceptions (e.g., thinking outcomes are dependent). The structure of two contrasting examples with an exit question that shifts context is shared, and both involve visual data and student inference."
+          },
+          {
+            "slot": 3,
+            "reason": "The first lesson on repeated chance trials requires a new misconception to be addressed through contrastive examples and an exit ticket. This matches the slope clinic's goal of addressing a misconception (steepness vs. height) via contrasting visuals and an exit question that changes units—both tasks use similar pedagogical scaffolding for student reasoning."
+          },
+          {
+            "slot": 4,
+            "reason": "The unit-rate station for adults involves updating existing examples to realistic household sizes, which is analogous to the repeated chance trials task where real-world contexts (e.g., coin or die sequences) are used. Both tasks require modifying familiar content to reflect new, more relevant scenarios while maintaining diagnostic and exit components."
+          },
+          {
+            "slot": 5,
+            "reason": "The marking task involves scoring student responses and adding feedback on a specific misconception (intercepts), which is directly related to the exit ticket in the repeated chance trials lesson that challenges students' independence assumptions. The shared focus on diagnosing and providing corrective feedback makes this a relevant match."
+          },
+          {
+            "slot": 6,
+            "reason": "The slope clinic already has two worked examples and an exit question; both tasks use similar visual structures (annotated graphs) and diagnostic prompts to guide student understanding. Reusing the same misconception structure with minor adjustments (labels, warm-up) supports the need for a new lesson on probability misconceptions using similar tools."
+          }
+        ],
+        "finished_utc": "2026-11-14T18:58:00.894495+00:00"
+      }
+    },
+    {
+      "history": "10-personal-admin",
+      "task": "tape",
+      "title": "Digitize a cassette for the neighborhood archive",
+      "original": 70,
+      "category": 70,
+      "planner": 70,
+      "actual": 126,
+      "range": [
+        35,
+        105
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "User estimate",
+      "model_status": "ok",
+      "latency_seconds": 44.905,
+      "evidence": [],
+      "check": "Tests an unseen category with a misleading archive keyword. A conservative cold-start estimate or low-confidence match is appropriate.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:58:00.897485+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "archive",
+          "books",
+          "walk-route",
+          "roster",
+          "receipt",
+          "trip-claims"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 733,
+        "completion_tokens": 6,
+        "model_matches": [],
+        "finished_utc": "2026-11-14T18:58:45.806353+00:00"
+      }
+    },
+    {
+      "history": "10-personal-admin",
+      "task": "permit",
+      "title": "Prepare the first street closure permit packet",
+      "original": 100,
+      "category": 77,
+      "planner": 88,
+      "actual": 169,
+      "range": [
+        52,
+        158
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "ok",
+      "latency_seconds": 47.33,
+      "evidence": [
+        {
+          "task_id": "receipt",
+          "title": "File the bus receipts",
+          "estimate_min": 30,
+          "actual_min": 23.0,
+          "ratio": 0.7666666666666667,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "postcard",
+          "title": "Check the postcard proof",
+          "estimate_min": 25,
+          "actual_min": 17.0,
+          "ratio": 0.68,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "trip-claims",
+          "title": "Resolve a duplicate travel claim",
+          "estimate_min": 45,
+          "actual_min": 71.0,
+          "ratio": 1.5777777777777777,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Tests broad same-category fallback on a specialized first-time application; similarities to routine approval or reimbursement tasks should be questioned.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:58:45.808436+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "trip-claims",
+          "walk-route",
+          "archive",
+          "roster",
+          "gate-key",
+          "postcard"
+        ],
+        "finish_reason": "stop",
+        "prompt_tokens": 737,
+        "completion_tokens": 7,
+        "model_matches": [],
+        "finished_utc": "2026-11-14T18:59:33.141730+00:00"
+      }
+    }
+  ],
+  "summary": {
+    "cases": 20,
+    "mae_minutes": {
+      "original": 34.45,
+      "category": 28.7,
+      "planner": 19.05
+    },
+    "ranges_covering_actual": 17,
+    "mean_range_width_minutes": 63.85,
+    "basis_counts": {
+      "Model-selected tasks": 15,
+      "Category history": 4,
+      "User estimate": 1
+    },
+    "model_status_counts": {
+      "ok": 20
+    },
+    "mean_prediction_seconds": 71.54
+  },
+  "retried_attempts": [
+    {
+      "history": "01-replica-proofs",
+      "task": "bridge-trace",
+      "title": "Check a bridge execution before section",
+      "original": 35,
+      "category": 40,
+      "planner": 37,
+      "actual": 29,
+      "range": [
+        22,
+        57
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "unavailable",
+      "latency_seconds": 0.196,
+      "evidence": [
+        {
+          "task_id": "clock-two",
+          "title": "Fill in the missing logical clock entries",
+          "estimate_min": 35,
+          "actual_min": 22.0,
+          "ratio": 0.6285714285714286,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "lease-restart",
+          "title": "Find a bad lease handoff",
+          "estimate_min": 55,
+          "actual_min": 86.0,
+          "ratio": 1.5636363636363637,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "quorum-card",
+          "title": "Make a quorum revision card",
+          "estimate_min": 30,
+          "actual_min": 26.0,
+          "ratio": 0.8666666666666667,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Show a frozen epoch cannot accept new leases",
+          "estimate_min": 85,
+          "actual_min": 138.0,
+          "ratio": 1.6235294117647059,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "format-trace",
+          "title": "Typeset the lease solution",
+          "estimate_min": 55,
+          "actual_min": 40.0,
+          "ratio": 0.7272727272727273,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ack-traces",
+          "title": "Check three acknowledgment histories",
+          "estimate_min": 40,
+          "actual_min": 36.0,
+          "ratio": 0.9,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove the snapshot cut is closed",
+          "estimate_min": 95,
+          "actual_min": 145.0,
+          "ratio": 1.5263157894736843,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "fifo-example",
+          "title": "Build a counterexample to the FIFO shortcut",
+          "estimate_min": 40,
+          "actual_min": 55.0,
+          "ratio": 1.375,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Shared terminology with a hard proof should not dominate a short replay exercise.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:31:25.010548+00:00",
+        "started_utc": "2026-11-14T18:31:24.814548+00:00",
+        "error": "LM Studio engine channel error (internal fetch failed).",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "02-migration-lab",
+      "task": "patch-tool",
+      "title": "Implement the migration feedback tool",
+      "original": 85,
+      "category": 83,
+      "planner": 84,
+      "actual": 138,
+      "range": [
+        50,
+        153
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "unavailable",
+      "latency_seconds": 90.106,
+      "evidence": [
+        {
+          "task_id": "replay-cases",
+          "title": "Replay old codec cases",
+          "estimate_min": 40,
+          "actual_min": 28.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ring-port",
+          "title": "Port the packet ring to safe Rust",
+          "estimate_min": 75,
+          "actual_min": 135.0,
+          "ratio": 1.8,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "codec-caption",
+          "title": "Summarize packet test failures",
+          "estimate_min": 45,
+          "actual_min": 33.0,
+          "ratio": 0.7333333333333333,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "trace-tool",
+          "title": "Make a trace minimizer for callback mismatches",
+          "estimate_min": 80,
+          "actual_min": 109.0,
+          "ratio": 1.3625,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "suite-seeds",
+          "title": "Replay the decoder corpus",
+          "estimate_min": 35,
+          "actual_min": 34.0,
+          "ratio": 0.9714285714285714,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "suite-report",
+          "title": "Finish the migration results page",
+          "estimate_min": 55,
+          "actual_min": 38.0,
+          "ratio": 0.6909090909090909,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "boundary-debug",
+          "title": "Debug a translated length check",
+          "estimate_min": 60,
+          "actual_min": 87.0,
+          "ratio": 1.45,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Working code plus harness tests should match implementation and debugging, not reviews of the same traces.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:33:41.303098+00:00",
+        "started_utc": "2026-11-14T18:32:11.197098+00:00",
+        "error": "HTTP client timed out after 90 seconds; server canceled generation.",
+        "overlap_with_9b": "9B smoke test",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "04-kernel-workbench",
+      "task": "async-flicker",
+      "title": "Triage a sporadic normalization mismatch",
+      "original": 60,
+      "category": 56,
+      "planner": 58,
+      "actual": 127,
+      "range": [
+        34,
+        188
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "unavailable",
+      "latency_seconds": 0.171,
+      "evidence": [
+        {
+          "task_id": "vector-baseline",
+          "title": "Add the fused bias baseline",
+          "estimate_min": 55,
+          "actual_min": 49.0,
+          "ratio": 0.8909090909090909,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "warp-tail",
+          "title": "Fix the reduction tail failure",
+          "estimate_min": 45,
+          "actual_min": 141.0,
+          "ratio": 3.1333333333333333,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "throughput-table",
+          "title": "Refresh the transfer table",
+          "estimate_min": 35,
+          "actual_min": 27.0,
+          "ratio": 0.7714285714285715,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "stride-kernel",
+          "title": "Implement the straightforward strided gather",
+          "estimate_min": 70,
+          "actual_min": 68.0,
+          "ratio": 0.9714285714285714,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "transpose-index",
+          "title": "Diagnose transposed labels",
+          "estimate_min": 50,
+          "actual_min": 38.0,
+          "ratio": 0.76,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "race-repro",
+          "title": "Isolate the scratch-buffer race",
+          "estimate_min": 75,
+          "actual_min": 154.0,
+          "ratio": 2.0533333333333332,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "median-runs",
+          "title": "Compare block sizes for the gather",
+          "estimate_min": 55,
+          "actual_min": 42.0,
+          "ratio": 0.7636363636363637,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "masked-add",
+          "title": "Add optional mask to bias kernel",
+          "estimate_min": 50,
+          "actual_min": 54.0,
+          "ratio": 1.08,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Similar unknown-cause debugging tasks have a broad spread; a precise estimate matching routine implementation would be misleading.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:36:56.773453+00:00",
+        "started_utc": "2026-11-14T18:36:56.602453+00:00",
+        "error": "LM Studio engine channel error (internal fetch failed).",
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "04-kernel-workbench",
+      "task": "sweep-again",
+      "title": "Sweep normalization block sizes",
+      "original": 60,
+      "category": 56,
+      "planner": 58,
+      "actual": 61,
+      "range": [
+        34,
+        81
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "unavailable",
+      "latency_seconds": 90.1,
+      "evidence": [
+        {
+          "task_id": "median-runs",
+          "title": "Compare block sizes for the gather",
+          "estimate_min": 55,
+          "actual_min": 42.0,
+          "ratio": 0.7636363636363637,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Retrieve scripted sweeps, then check whether a correction helps a task whose original budget happened to be accurate.",
+      "inference": {
+        "attempt": 1,
+        "finished_utc": "2026-11-14T18:39:29.146232+00:00",
+        "started_utc": "2026-11-14T18:37:59.046232+00:00",
+        "error": "HTTP client timed out after 90 seconds; server canceled generation.",
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "04-kernel-workbench",
+      "task": "sweep-again",
+      "title": "Sweep normalization block sizes",
+      "original": 60,
+      "category": 56,
+      "planner": 58,
+      "actual": 61,
+      "range": [
+        34,
+        81
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "unavailable",
+      "latency_seconds": 90.1,
+      "evidence": [
+        {
+          "task_id": "median-runs",
+          "title": "Compare block sizes for the gather",
+          "estimate_min": 55,
+          "actual_min": 42.0,
+          "ratio": 0.7636363636363637,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Retrieve scripted sweeps, then check whether a correction helps a task whose original budget happened to be accurate.",
+      "inference": {
+        "attempt": 2,
+        "finished_utc": "2026-11-14T18:40:59.250064+00:00",
+        "started_utc": "2026-11-14T18:39:29.150064+00:00",
+        "error": "HTTP client timed out after 90 seconds; server canceled generation.",
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 90
+      }
+    },
+    {
+      "history": "06-library-data",
+      "task": "april-chart",
+      "title": "Refresh circulation charts for the April packet",
+      "original": 60,
+      "category": 48,
+      "planner": 54,
+      "actual": 43,
+      "range": [
+        32,
+        76
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "unavailable",
+      "latency_seconds": 0.191,
+      "evidence": [
+        {
+          "task_id": "renewal-chart",
+          "title": "Refresh the monthly renewals plot",
+          "estimate_min": 40,
+          "actual_min": 28.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "board-summary",
+          "title": "Write the four-number board update",
+          "estimate_min": 45,
+          "actual_min": 36.0,
+          "ratio": 0.8,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "turnaway-table",
+          "title": "Tabulate computer booking turnaways",
+          "estimate_min": 55,
+          "actual_min": 48.0,
+          "ratio": 0.8727272727272727,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Tests whether an ordinary refresh receives a lighter correction than the nearby complex returns task.",
+      "inference": {
+        "attempt": 1,
+        "overlap_with_9b": "9B benchmark",
+        "http_timeout_seconds": 360,
+        "started_utc": "2026-11-14T18:46:58.418412+00:00",
+        "candidate_task_ids_in_slot_order": [
+          "renewal-chart",
+          "turnaway-table",
+          "locker-mapping",
+          "stock-import",
+          "borrower-crosswalk",
+          "board-summary"
+        ],
+        "error": "HTTPError: HTTP Error 400: Bad Request",
+        "finished_utc": "2026-11-14T18:46:58.613869+00:00",
+        "server_error": "LM Studio engine channel error (internal fetch failed)."
+      }
+    }
+  ]
+}
