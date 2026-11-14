@@ -89,6 +89,7 @@ def windows_database_candidates(config=None):
     if profile:
         downloads = Path(profile) / "Downloads"
         roots = sorted(downloads.glob("syncthing-windows-*/syncthing-windows-*/activity-watch-one-plus"))
+        roots.append(downloads / "activity-watch-one-plus")
         for root in roots:
             # Syncthing trees can put the store directly below a UUID or under
             # both a device/host directory and a UUID. Do not scan unrelated downloads.

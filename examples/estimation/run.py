@@ -232,6 +232,10 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None, activit
                 outcome, model_error = "unavailable", model_calls[-1]["error"]
             else:
                 outcome = "ok_after_retry" if len(model_calls) > 1 else "ok"
+        provenance = prediction.get("provenance", {})
+        if not offline and provenance.get("decision") == "fallback":
+            outcome = "unavailable"
+            model_error = prediction.get("model_error") or model_error
         actual = row["actual_minutes"]
         fields_to_score = {}
         if "evaluation" in row:
@@ -251,6 +255,8 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None, activit
             "range": [prediction["low_min"], prediction["high_min"]],
             "covered": prediction["low_min"] <= actual <= prediction["high_min"],
             "confidence": prediction["confidence"], "basis": prediction["basis"],
+            "provenance": provenance, "model_rationale": prediction.get("model_rationale"),
+            "confidence_reason": prediction.get("confidence_reason"),
             "model_status": outcome, "model_error": model_error, "model_seconds": round(model_seconds, 3),
             "latency_seconds": round(latency, 3),
             "evidence": prediction["evidence"], "check": row.get("check", ""),

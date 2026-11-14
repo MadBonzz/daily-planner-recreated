@@ -276,14 +276,14 @@ def _collect(periods, exclusions, capture, disabled_periods, source=None):
         hostname = source.hostname if source is not None else socket.gethostname()
         buckets, warnings = _buckets(get, hostname, database=personal and source is not None)
         explicit_phone = bool(config.get("PLANNER_ACTIVITYWATCH_PHONE_DB"))
-        if personal and (explicit_phone or not any(kind == "phone" for _, kind in buckets)):
+        if personal:
             # Use one copy if the same Android bucket is present in a synced
             # file and the desktop store (or exposed by its local server).
             try:
-                phone = activity_phone.configured_phone_source(config)
+                phone = activity_phone.configured_phone_source(config, desktop_path=getattr(source, "path", None))
             except (OSError, ValueError):
                 warnings.append("The synced ActivityWatch phone database could not be read.")
-            if explicit_phone:
+            if explicit_phone or phone is not None:
                 buckets = [(key, kind) for key, kind in buckets if kind != "phone"]
     if isinstance(exclusions, str):
         exclusions = exclusions.splitlines()

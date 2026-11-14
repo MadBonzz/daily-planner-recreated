@@ -34,10 +34,17 @@ class AndroidSource:
         return entries
 
 
-def configured_phone_source(config=None):
+def configured_phone_source(config=None, *, desktop_path=None):
     config = planner_settings() if config is None else config
     override = config.get("PLANNER_ACTIVITYWATCH_PHONE_DB")
-    candidates = (Path(override).expanduser(),) if override else windows_database_candidates(config)
+    if override:
+        candidates = (Path(override).expanduser(),)
+    else:
+        # A desktop DB can retain an old copy of a phone bucket. Syncthing
+        # updates the separate device store. Prefer that copy when available.
+        candidates = [path for path in windows_database_candidates(config)
+                      if desktop_path is None or path.resolve() != Path(desktop_path).resolve()]
+        candidates.sort(key=lambda path: path.name.casefold() != "test.db")
     for path in candidates:
         try:
             source = SQLiteActivitySource(path)

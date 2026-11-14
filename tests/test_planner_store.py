@@ -178,7 +178,8 @@ class StoreTests(unittest.TestCase):
         saved = reopened.get_task(task_id)
         self.assertEqual((saved["creation_prediction"], saved["prediction"]), (failed, self.budget))
         self.assertEqual((saved["status"], saved["actual_seconds"]), ("paused", 45))
-        self.assertFalse(reopened.retry_estimate(task_id))
+        self.assertTrue(reopened.retry_estimate(task_id))
+        self.assertFalse(self.store.retry_estimate(task_id))
 
     def test_completed_failed_forecast_stays_frozen(self):
         task = self.finish_one("Earlier work", prediction=dict(self.budget, retryable=True))

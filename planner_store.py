@@ -9,7 +9,7 @@ import sqlite3
 import time
 from uuid import uuid4
 
-from task_forecasts import can_retry_forecast, scheduled_prediction
+from task_forecasts import scheduled_prediction
 
 
 DEFAULT_CATEGORIES = ("Work", "Personal", "Study", "Health", "Creative")
@@ -287,11 +287,10 @@ class PlannerStore:
             return self._task(db, task_id)
 
     def retry_estimate(self, task_id):
-        """Queue an open fallback for another model attempt, preserving its initial forecast."""
+        """Recompute an unfinished task, preserving its timer and creation forecast."""
         with self._db(write=True) as db:
             task = self._task(db, task_id)
-            if (task["estimate_updating"] or task["status"] == "completed" or task["fixed_duration"]
-                    or not can_retry_forecast(task["prediction"])):
+            if task["estimate_updating"] or task["status"] == "completed" or task["fixed_duration"]:
                 return False
             _enqueue_prediction(db, task_id)
             return True
@@ -529,6 +528,8 @@ class PlannerStore:
                     if any(str(item.get("task_id")) == task_id for item in sources):
                         prediction["evidence"] = []
                         prediction.pop("cautions", None)
+                        prediction.pop("model_rationale", None)
+                        prediction.pop("confidence_reason", None)
                         prediction["explanation"] = "The supporting history included a deleted task."
                         db.execute(f"UPDATE tasks SET {column}=? WHERE id=?",
                                    (json.dumps(prediction), row["id"]))

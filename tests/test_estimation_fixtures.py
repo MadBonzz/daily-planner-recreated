@@ -19,6 +19,12 @@ def fixture_history():
             "tasks": tasks, "holdouts": holdouts}
 
 
+def estimate_reply():
+    return {"point_min": 23, "low_min": 16, "high_min": 34, "confidence": "medium",
+            "rationale": "One new draft needs review.", "confidence_reason": "Its length may vary.",
+            "comparisons": [], "warnings": []}
+
+
 def test_holdouts_use_only_pretask_inputs_and_fixed_history(tmp_path, monkeypatch):
     history = fixture_history()
     run.validate(history, tmp_path)
@@ -44,7 +50,7 @@ def test_holdouts_use_only_pretask_inputs_and_fixed_history(tmp_path, monkeypatc
 def test_isolated_profile_has_sessions_without_holdout_outcomes(tmp_path, monkeypatch):
     history = fixture_history()
     monkeypatch.setattr(run.estimator, "chat_json",
-                        lambda *args, **kwargs: {"matches": []})
+                        lambda *args, **kwargs: estimate_reply())
     profile = tmp_path / "separate-profile"
     run.populate_profile(history, tmp_path, profile)
     store = run.PlannerStore(profile / "live")
@@ -80,7 +86,7 @@ def test_strict_evaluation_saves_results_even_on_failure(tmp_path, monkeypatch, 
         if not available:
             raise run.ModelUnavailable("Model unavailable")
         # A functioning model may legitimately find no close match.
-        return {"matches": []}
+        return estimate_reply()
 
     monkeypatch.setattr(run.estimator, "chat_json", select)
     out = tmp_path / "scores.json"
@@ -91,6 +97,9 @@ def test_strict_evaluation_saves_results_even_on_failure(tmp_path, monkeypatch, 
     assert data["cases"][0]["model_status"] == ("ok" if available else "unavailable")
     assert data["configuration"]["endpoint"] == "https://api.cohere.com/v1/chat"
     assert data["configuration"]["model"] == "test-model"
+    if available:
+        assert all(case["provenance"]["decision"] == "direct" and case["planner"] == 23
+                   and case["confidence_reason"] for case in data["cases"])
     assert data["configuration"]["elapsed_seconds"] >= data["cases"][0]["model_seconds"]
 
 
@@ -175,3 +184,18 @@ def test_recovered_result_preserves_each_real_response(tmp_path, monkeypatch):
     assert row["model_status"] == "ok_after_retry" and row["model_error"] is None and run.model_succeeded(row)
     assert row["model_calls"][0]["error"] == "Output length exceeded"
     assert row["model_calls"][1]["response"] == {"1": 0}
+
+
+def test_strict_rejects_semantically_invalid_model_forecasts(tmp_path, monkeypatch):
+    import json
+
+    history = fixture_history()
+    monkeypatch.setattr(run, "histories", lambda selector: [history])
+    # A schema-valid response can still place the point above its upper bound.
+    monkeypatch.setattr(run.estimator, "chat_json", lambda *args, **kwargs: {**estimate_reply(), "point_min": 400})
+    path = tmp_path / "invalid.json"
+    assert run.main(["evaluate", "--strict-model", "--json", str(path)]) == 1
+    rows = json.loads(path.read_text())["cases"]
+    assert len(rows) == 2
+    assert all(row["model_status"] == "unavailable" and row["model_error"]
+               and row["provenance"]["decision"] == "fallback" for row in rows)

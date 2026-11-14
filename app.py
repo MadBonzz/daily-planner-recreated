@@ -14,7 +14,6 @@ import estimator
 from dev_workspace import dev_activity_report, history_choices, open_dev_workspace
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
-from task_forecasts import can_retry_forecast
 from pdf_reader import extract_pdf_text
 from model_client import model_settings
 from urllib.parse import urlsplit
@@ -87,17 +86,77 @@ def sync_index(store, index_dir, task):
         notice("Task saved. The planner will retry indexing it when it searches completed work.")
 
 
+def forecast_source(prediction):
+    provenance = prediction.get("provenance") or {}
+    decision = provenance.get("decision")
+    model = " · ".join(str(value) for value in (provenance.get("provider"), provenance.get("model")) if value)
+    if not decision:
+        basis = prediction.get("basis", "Saved forecast")
+        if basis == "Model-selected tasks":
+            return "A model selected past tasks. Plan Smarter calculated the minutes. Model identity was not recorded."
+        return f"{basis} · Model identity was not recorded"
+    role = {
+        "direct": "Model forecast",
+        "matches": "Selected comparable tasks",
+        "no_matches": "Found no comparable tasks",
+        "fallback": "Model estimate unavailable" if model else "Local fallback",
+        "unused": "No model call",
+        "fixed": "Scheduled duration",
+    }.get(decision, "Forecast")
+    return f"{role} · {model}" if model else role
+
+
 def show_prediction(prediction):
-    if not prediction or "point_min" not in prediction:
-        st.caption("No planner prediction was recorded for this example.")
-        return
     st.markdown(f"**{minutes(prediction['point_min'])} suggested** · "
-                f"{prediction['low_min']}–{prediction['high_min']} min planning range · "
-                f"{prediction['confidence']} confidence")
-    if prediction.get("basis"):
-        fallback = " (local fallback)" if can_retry_forecast(prediction) else ""
-        st.caption(f"Estimate source · {prediction['basis']}{fallback}")
-    st.html(f'<p class="task-copy">{escape(prediction.get("explanation", ""))}</p>')
+                f"{prediction['low_min']:g}–{prediction['high_min']:g} min planning range")
+    provenance = prediction.get("provenance") or {}
+    minutes_by = provenance.get("minutes_by")
+    calculation = {
+        "model": "The model supplied the minutes, planning range and confidence rating.",
+        "history": "Plan Smarter calculated the minutes from previous durations and your estimate.",
+        "user": "Plan Smarter used your own estimate as the point estimate.",
+        "schedule": "The event uses its scheduled duration.",
+    }.get(minutes_by)
+    decision = provenance.get("decision")
+    matched = decision in {"direct", "matches"} or (not decision and prediction.get("basis") == "Model-selected tasks")
+    reasons = []
+    if matched:
+        for row in prediction.get("evidence", []):
+            reason = row.get("model_rationale") or row.get("reason")
+            if (reason and row.get("reason_source", "model") == "model"
+                    and reason != "The model selected this task in the compact comparison."):
+                reasons.append((row["title"], reason, row.get("source_quote")))
+    rationale = prediction.get("model_rationale")
+    explanation = prediction.get("explanation", "")
+    # Older direct forecasts saved the provider's words after this exact prefix.
+    old_direct = "No timed personal history. This estimate is based on the task scope. "
+    if not provenance and prediction.get("basis") == "Model estimate from task scope" and explanation.startswith(old_direct):
+        rationale = explanation.removeprefix(old_direct)
+    if rationale or reasons:
+        st.markdown("**Model rationale**")
+        if rationale and all(reason != rationale for _, reason, _ in reasons):
+            st.html(f'<p class="task-copy">{escape(rationale)}</p>')
+        for title, reason, quote in reasons:
+            st.html(f'<p class="task-copy"><strong>{escape(title)}</strong> · {escape(reason)}</p>')
+            if quote:
+                st.html(f'<small>From the task · “{escape(quote)}”</small>')
+    elif matched:
+        st.caption("No model rationale was saved for this forecast.")
+
+    if calculation:
+        st.html(f'<p class="task-copy">{escape(calculation)}</p>')
+    if explanation and (not rationale or rationale not in explanation):
+        st.html(f'<p class="task-copy">{escape(explanation)}</p>')
+    st.markdown(f"**{prediction['confidence'].capitalize()} confidence**")
+    confidence_reason = prediction.get("confidence_reason")
+    if confidence_reason:
+        st.html(f'<p class="task-copy">{escape(confidence_reason)}</p>')
+    elif not provenance:
+        ratios = [row["ratio"] for row in prediction.get("evidence", []) if row.get("ratio") is not None]
+        if ratios:
+            st.caption(f"The {len(ratios)} saved comparison{'s' if len(ratios) != 1 else ''} had actual-to-estimated "
+                       f"ratios from {min(ratios):.2f}× to {max(ratios):.2f}×.")
+        st.caption("This saved forecast did not record the reason for its confidence rating.")
 
 
 @st.dialog("Add task", width="large")
@@ -334,21 +393,30 @@ def estimate_section(store, task):
     if initial_pending:
         values.append("Estimating task time…")
     elif "point_min" in prediction and not fixed:
-        values.append(f"Planner {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
+        budget_label = "Previous forecast" if estimate_pending(task) else "Planner"
+        values.append(f"{budget_label} {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
     if estimate_pending(task) and not initial_pending:
         values.append("Updating estimate…")
     if task["status"] != "running":
         values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
-    if initial_pending or fixed or not prediction:
+    if initial_pending or estimate_pending(task) or fixed:
         return
+    if task["status"] != "completed":
+        if st.button("Re-estimate", key=f"estimate-retry-{task['id']}",
+                     help="Use the current model, task details and completed history for another forecast."):
+            store.retry_estimate(task["id"])
+            st.rerun()
+    if not prediction or "point_min" not in prediction:
+        return
+    st.caption(forecast_source(prediction))
     cautions = prediction.get("cautions", [])
     if cautions:
         # Keep one observation visible while the full evidence is collapsed.
         first = cautions[0]
         source = next(iter(first.get("sources", [])), {})
-        preview = source.get("observation") or first["advice"]
+        preview = first.get("advice") or source.get("observation", "")
         st.html(f'<p class="task-copy"><strong>Watch for</strong> · {escape(preview)}</p>')
     with st.expander("Why this estimate?"):
         show_prediction(prediction)
@@ -357,22 +425,24 @@ def estimate_section(store, task):
             for caution in cautions:
                 st.html(f'<p class="task-copy">{escape(caution["advice"])}</p>')
                 for source in caution.get("sources", []):
-                    st.html(f'<small>{escape(source["title"])} · {escape(source["origin"])}</small>')
-        else:
+                    citation = f'{escape(source["title"])} · {escape(source["origin"])}'
+                    observation = source.get("observation")
+                    if observation and observation not in caution["advice"]:
+                        citation += f' · “{escape(observation)}”'
+                    st.html(f'<small>{citation}</small>')
+        elif prediction.get("provenance"):
             st.caption("No specific obstacle or distraction was identified in related task history.")
+        else:
+            st.caption("No planning caution was saved with this forecast.")
         evidence = prediction.get("evidence", [])
         if evidence:
             st.dataframe([{"Completed task": row["title"], "Your estimate (min)": row["estimate_min"],
                            "Actual (min)": round(row["actual_min"], 2),
-                           "Correction": f"{row['ratio']:.2f}×", "Why it matches": row["reason"]}
+                           "Actual ÷ estimate": f"{row['ratio']:.2f}×"}
                           for row in evidence], hide_index=True, width="stretch")
-        if can_retry_forecast(prediction) and task["status"] != "completed" and not estimate_pending(task):
-            if st.button("Retry model estimate", key=f"estimate-retry-{task['id']}"):
-                store.retry_estimate(task["id"])
-                st.rerun()
         original = task["creation_prediction"]
         if original and original != prediction and "point_min" in original:
-            st.caption(f"At creation: {minutes(original['point_min'])} "
+            st.caption(f"At creation · {minutes(original['point_min'])} "
                        f"({original['low_min']:g}–{original['high_min']:g} min).")
 
 

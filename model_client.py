@@ -4,6 +4,8 @@ import json
 import math
 import os
 import shlex
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
@@ -80,9 +82,31 @@ def model_settings(config=None):
     return config.get("PLANNER_MODEL_ENDPOINT") or API_URL, config.get("PLANNER_MODEL") or MODEL_ID
 
 
+_forecast_config = ContextVar("forecast_config", default=None)
+
+
+@contextmanager
+def forecast_endpoint():
+    """Pin settings for one forecast so its saved attribution matches all its calls."""
+    config = planner_settings()
+    endpoint, model = model_settings(config)
+    try:
+        host = urlsplit(endpoint).hostname
+    except ValueError:
+        host = None
+    provider = "Cohere" if host in COHERE_HOSTS else host
+    if host in {"127.0.0.1", "localhost", "::1"}:
+        provider = "Local endpoint"
+    token = _forecast_config.set(config)
+    try:
+        yield {"provider": provider, "model": model}
+    finally:
+        _forecast_config.reset(token)
+
+
 def chat_json(messages, schema, *, max_tokens=512):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
-    config = planner_settings()
+    config = _forecast_config.get() or planner_settings()
     endpoint, model = model_settings(config)
     try:
         timeout = float(config.get("PLANNER_MODEL_TIMEOUT_SECONDS") or 90)

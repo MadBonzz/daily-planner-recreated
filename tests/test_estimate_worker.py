@@ -132,7 +132,10 @@ def test_refresh_saves_grounded_caution_and_preserves_original_forecast(tmp_path
     store.transition(earlier["id"], "finish", completion_note=note)
 
     monkeypatch.setattr(worker.estimator, "chat_json", lambda *a, **kw: {
-        "matches": [{"slot": 1, "reason": "Same proof and goal.", "flag": 1}]
+        "point_min": 33, "low_min": 25, "high_min": 43, "confidence": "medium",
+        "rationale": "The earlier proof took another pass.", "confidence_reason": "One past proof is available.",
+        "comparisons": [{"slot": 1, "reason": "Both tasks derive the bound."}],
+        "warnings": [{"observation_id": "S1.1", "advice": "Reserve time for another pass over the inequality."}],
     })
     schedule_pending(store, store.data_dir / "vectors")
     drain(store)

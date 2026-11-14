@@ -20,7 +20,10 @@ def test_classify_history_uses_only_prior_evidence_and_records_failures(tmp_path
                 for row in payload['intervals']}
 
     monkeypatch.setattr(run.activity, 'chat_json', classify)
-    monkeypatch.setattr(run.estimator, 'chat_json', lambda *a, **kw: {'matches': []})
+    monkeypatch.setattr(run.estimator, 'chat_json', lambda *a, **kw: {
+        'point_min': 90, 'low_min': 68, 'high_min': 113, 'confidence': 'medium',
+        'rationale': 'Proof needs a separate trace.', 'confidence_reason': 'Scope is bounded.',
+        'comparisons': [], 'warnings': []})
     dest = tmp_path / 'results.json'
     status = run.main(['evaluate', '01', '--case', holdout['id'], '--classify-history',
                        '--strict-model', '--json', str(dest)])
