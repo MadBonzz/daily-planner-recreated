@@ -84,10 +84,6 @@ def show_error(error):
     st.error(str(error))
 
 
-def notice(message):
-    st.session_state["notice"] = message
-
-
 def forecast_source(prediction):
     provenance = prediction.get("provenance") or {}
     decision = provenance.get("decision")
@@ -247,7 +243,7 @@ def edit_time(store, task, dev):
 
 
 @st.dialog("Have you finished this task?", on_dismiss=close_time_dialog)
-def stop_confirmation(store, index_dir, task, dev):
+def stop_confirmation(store, task, dev):
     stopped = task["status"] == "awaiting_finish"
     st.html(f'<strong>{escape(task["title"])}</strong>')
     if task["actual_seconds"]:
@@ -302,7 +298,7 @@ def review_activity(store, task, dev):
     groups = activity.review_groups(task["report"])
     if not groups:
         return
-    choices = {"on_task": "Work", "off_task": "Distraction", "uncertain": "Uncertain"}
+    choices = activity.LABEL_NAMES
     by_name = {name: label for label, name in choices.items()}
     rows = []
     for group in groups.values():
@@ -760,7 +756,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
             if dialog == ("edit", key) and status in ("ready", "paused", "completed"):
                 edit_time(store, task, dev)
             elif dialog == ("finish", key) and status in ("ready", "paused", "awaiting_finish"):
-                stop_confirmation(store, index_dir, task, dev)
+                stop_confirmation(store, task, dev)
         if status == "running" and not dev:
             if st.toggle("Live activity", key=f"live-{key}", help="Preview the last two minutes."):
                 live_activity(store, task)

@@ -199,8 +199,7 @@ def _process(store, index_dir, job):
             if progress is not None:
                 prediction = workspace_forecast.unavailable(progress, prediction, "The background estimate could not be completed.")
             else:
-                prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.",
-                                                 retryable=True)
+                prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.")
         saved = store.resolve_prediction(task_id, token, prediction, pdf_text=pdf_text)
         if saved:
             try:

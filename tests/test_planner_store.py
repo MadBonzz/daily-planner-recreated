@@ -426,17 +426,15 @@ class StoreTests(unittest.TestCase):
         self.assertFalse(self.store.has_pending_predictions())
         self.assertIsNone(self.store.claim_prediction())
 
-    def test_demo_isolation_and_reset(self):
-        with self.assertRaises(ValueError):
-            self.store.seed_demo()
+    def test_clear_data_only_resets_its_workspace(self):
+        live_task = self.task()
         demo = PlannerStore(self.base / "demo")
-        demo.seed_demo()
-        demo.seed_demo()
-        self.assertEqual(len(demo.completed_tasks()), 5)
-        self.assertEqual(self.store.completed_tasks(), [])
+        demo.create_task(day="2026-11-14", title="Demo task", description="Check the example.", estimate_minutes=5)
+        demo.set_setting("capture_enabled", False)
         demo.clear_data()
         self.assertEqual(demo.list_tasks(None), [])
-        self.assertFalse(demo.get_setting("example_history_seeded", False))
+        self.assertIsNone(demo.get_setting("capture_enabled"))
+        self.assertEqual(self.store.get_task(live_task["id"]), live_task)
 
 
 if __name__ == "__main__":

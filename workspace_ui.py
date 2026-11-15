@@ -194,7 +194,7 @@ def display(data_root, *, confirm_stop):
             st.rerun()
     clock()
     if task["status"] == "awaiting_finish" and st.session_state.get("timer_dialog") == ("finish", task["id"]):
-        confirm_stop(store, store.data_dir/"vectors", task, bool(sample))
+        confirm_stop(store, task, bool(sample))
     reader, side = st.columns([7, 3], gap="medium")
     filename = None
     text = ""

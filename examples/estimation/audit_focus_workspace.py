@@ -5,7 +5,9 @@ python -m examples.estimation.audit_focus_workspace --output data/results/compon
 """
 import argparse
 from contextlib import ExitStack
+from functools import cache
 import json
+import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
@@ -60,6 +62,30 @@ def focus_case(root, case):
     return case["domain"] in policy["domains"]
 
 
+@cache
+def original_calls(archive):
+    rows = json.loads(archive.read_text())["results"]
+    return {(row["id"], focus_judge.key(call)): call
+            for row in rows for call in row["live_calls"]
+            if "request" in call and "replayed_from" not in call}
+
+
+def read_receipts(archives):
+    recorded = {}
+    for archive in archives:
+        for row in json.loads(archive.read_text())["results"]:
+            for call in row["live_calls"]:
+                source, source_id = archive, row["id"]
+                if "receipt_sha256" in call:
+                    source = archive.parent / call["replayed_from"]
+                    source_id = call["source_case"]
+                    call = original_calls(source)[source_id, call["receipt_sha256"]]
+                elif "request" not in call or "replayed_from" in call:
+                    continue
+                recorded[focus_judge.key(call["request"])] = (source, source_id, call)
+    return recorded
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -83,12 +109,7 @@ def main():
     if result["model"] != model:
         raise ValueError("Use a fresh output file for a different model.")
     completed = {row["id"] for row in result["results"]}
-    recorded = {}
-    for archive in args.receipts:
-        for prior in json.loads(archive.read_text())["results"]:
-            for call in prior["live_calls"]:
-                if "request" in call and "replayed_from" not in call:
-                    recorded[focus_judge.key(call["request"])] = (archive.name, call)
+    recorded = read_receipts(args.receipts)
     transport = retrieval._local_post
     for case in cases:
         if case["id"] in completed:
@@ -101,9 +122,10 @@ def main():
             assert url == endpoint
             previous = recorded.get(focus_judge.key(request))
             if previous:
-                filename, call = previous
+                source, source_case, call = previous
                 assert request == call["request"]
-                receipt.append({**call, "replayed_from": filename})
+                receipt.append({"replayed_from": Path(os.path.relpath(source, args.output.parent)).as_posix(),
+                                "source_case": source_case, "receipt_sha256": focus_judge.key(call)})
                 return {"answers": call["answers"]}
             if args.receipts_only:
                 raise ValueError(f"No exact receipt for {case['id']}")

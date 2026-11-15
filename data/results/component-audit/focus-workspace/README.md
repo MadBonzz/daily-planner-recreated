@@ -37,7 +37,7 @@ The following counts include only held-out website cases using a Kev decision.
 - Baseline used Kev on 4 cases (2 TP, 0 FP, 0 FN, 2 TN).
 - Website final used Kev on 7 cases (3 TP, 0 FP, 0 FN, 4 TN). 4 used an identical request from the earlier run.
 
-Inspect the requests and raw Kev scores in [Baseline](baseline.json), [Website revision 1](site-revision-one.json), [Website final](site-revision-two.json), [Workspace revision 1](workspace-revision-one.json), [Workspace revision 2](workspace-revision-two.json), [Workspace final](workspace-final.json).
+A reused call records the source file, case and SHA-256 of the complete original request and answer. The audit runner resolves these references for offline replay. Inspect the requests and raw Kev scores in [Baseline](baseline.json), [Website revision 1](site-revision-one.json), [Website final](site-revision-two.json), [Workspace revision 1](workspace-revision-one.json), [Workspace revision 2](workspace-revision-two.json), [Workspace final](workspace-final.json).
 
 ## Changes
 

@@ -1289,39 +1289,3 @@ class PlannerStore:
                 db.execute("UPDATE prediction_jobs SET token=NULL, lease_end=NULL WHERE token IS NOT NULL")
                 db.execute("UPDATE report_jobs SET generation=lower(hex(randomblob(16))) WHERE error IS NULL")
             _save_setting(db, key, value)
-
-    def seed_demo(self):
-        """Seed an explicitly separate example workspace once."""
-        if self.data_dir.name != "demo":
-            raise ValueError("Example history requires a separate demo workspace.")
-        examples = [
-            ("Work through the convergence proof", "Derive the equations in a math-heavy paper.", "Reading", 40, 60),
-            ("Reproduce a paper's main derivation", "Work through a theorem and write out the proof steps.", "Reading", 60, 90),
-            ("Check the assumptions of a proof", "Read each lemma and reproduce the mathematical derivation.", "Reading", 30, 48),
-            ("Review an empirical evaluation", "Skim the plots and summarize the experimental findings.", "Reading", 40, 32),
-            ("Implement a CUDA reduction", "Write a block reduction kernel and check correctness.", "Programming", 60, 84),
-        ]
-        with self._db(write=True) as db:
-            if _get_setting(db, "example_history_seeded", False):
-                return
-            for index, (title, desc, cat, estimate, actual) in enumerate(examples):
-                db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (cat.casefold(), cat))
-                task_id = str(uuid4())
-                day = date.today() - timedelta(days=len(examples) - index)
-                end = self.clock() - (len(examples) - index) * 86400
-                start = end - actual * 60
-                prediction = dict(point_min=estimate, low_min=estimate/2, high_min=estimate*1.5,
-                                  confidence="low", basis="Example", explanation="Staged example budget.", evidence=[])
-                db.execute("""
-                    INSERT INTO tasks(id,day,title,description,category,details,pdf_text,estimate_minutes,prediction,
-                                      status,created_at,completed_at,actual_seconds)
-                    VALUES (?,?,?,?,?,'','',?,?,'completed',?,?,?)
-                """, (task_id, day.isoformat(), title, desc, cat, estimate,
-                      json.dumps(prediction), start, end, actual * 60))
-                sid = db.execute("INSERT INTO sessions(task_id,started_at,stopped_at) VALUES (?,?,?)",
-                                 (task_id, start, end)).lastrowid
-                db.execute("INSERT INTO periods(session_id,start,end) VALUES (?,?,?)", (sid, start, end))
-            db.execute("""UPDATE tasks SET creation_prediction=prediction
-                          WHERE creation_prediction IS NULL AND status='completed'
-                          AND json_extract(prediction,'$.basis')='Example'""")
-            _save_setting(db, "example_history_seeded", True)

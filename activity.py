@@ -6,18 +6,18 @@ import re
 import socket
 from collections import defaultdict, deque
 from datetime import datetime, timezone
-from urllib.error import URLError
 from urllib.parse import quote, urlencode, urlsplit
-from urllib.request import HTTPRedirectHandler, ProxyHandler, build_opener
+from urllib.request import ProxyHandler, build_opener
 
 import activity_phone
 from activity_db import configured_desktop_source
-from model_client import ModelResponseTruncated, ModelUnavailable, chat_json, planner_settings
+from model_client import ModelResponseTruncated, ModelUnavailable, _NoRedirect, chat_json, planner_settings
 from pdf_reader import document_excerpt
 
 
 STREAMS = {"currentwindow": "window", "web.tab.current": "tab", "afkstatus": "afk"}
-LABELS = ("on_task", "off_task", "uncertain")
+LABEL_NAMES = {"on_task": "Work", "off_task": "Distraction", "uncertain": "Uncertain"}
+LABELS = tuple(LABEL_NAMES)
 BROWSERS = {
     "edge": "edge", "msedge": "edge", "microsoft edge": "edge", "microsoft-edge": "edge",
     "google chrome": "chrome", "google-chrome": "chrome", "chrome": "chrome",
@@ -27,16 +27,11 @@ BROWSERS = {
 }
 
 
-class NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        return None
-
-
 def _get(path, **query):
     url = "http://127.0.0.1:5600/api/0/" + path
     if query:
         url += "?" + urlencode(query)
-    opener = build_opener(ProxyHandler({}), NoRedirect())
+    opener = build_opener(ProxyHandler({}), _NoRedirect())
     with opener.open(url, timeout=4) as response:
         return json.load(response)
 
@@ -134,7 +129,7 @@ def _buckets(get, hostname, *, database=False):
         raw = get("buckets/")
         if not isinstance(raw, dict):
             raise ValueError("Unexpected bucket list")
-    except (OSError, ValueError, URLError):
+    except (OSError, ValueError):
         warning = ("The ActivityWatch SQLite database could not be read. Check the configured path and file."
                    if database else "ActivityWatch is unavailable on localhost:5600.")
         return [], [warning]
@@ -164,7 +159,7 @@ def _read_events(get, buckets, start, end, warnings):
                        start=_iso(start), end=_iso(end))
             if not isinstance(rows, list):
                 raise ValueError("Unexpected event list")
-        except (OSError, ValueError, URLError):
+        except (OSError, ValueError):
             warnings.append(f"Could not read the {kind} watcher for part of this task.")
             continue
         for row in rows:

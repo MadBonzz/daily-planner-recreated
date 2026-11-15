@@ -41,7 +41,7 @@ async function examine(id) {
 }
 
 async function apply(sites, revision, status) {
-  if (revision !== applied || applied === null) {
+  if (revision !== applied) {
     await chrome.declarativeNetRequest.updateSessionRules(ruleChange(sites));
     domains = sites;
     applied = revision;
@@ -51,7 +51,7 @@ async function apply(sites, revision, status) {
       if (tab.id >= 0) await examine(tab.id);
     }
   }
-  await chrome.storage.session.set({guardStatus: {message: status, domains, at: Date.now()}});
+  await chrome.storage.session.set({guardStatus: {message: status, domains}});
 }
 
 async function browserID() {

@@ -11,7 +11,7 @@ import time
 
 import streamlit as st
 
-from activity import device_label, exclusion_terms, visible_saved_event
+from activity import LABEL_NAMES, device_label, exclusion_terms, visible_saved_event
 from model_client import chat_json, forecast_endpoint, ModelUnavailable
 from planner_chat import answer_plan, asks_what_fits, planning_context
 
@@ -533,9 +533,8 @@ def _show_turn(turn):
                     st.caption(f"SQLite could not execute this query. {turn['query_error']}")
 
 
-_LABELS = {"on_task": "Work", "off_task": "Distraction", "uncertain": "Uncertain"}
 _DIRECTION_COLOR = {"domain": ["Under", "Exact", "Over"], "range": ["#c35c23", "#8793a2", "#3476a8"]}
-_ACTIVITY_COLOR = {"domain": list(_LABELS.values()), "range": ["#31836c", "#c35c23", "#8793a2"]}
+_ACTIVITY_COLOR = {"domain": list(LABEL_NAMES.values()), "range": ["#31836c", "#c35c23", "#8793a2"]}
 
 
 def _accuracy_plots(tasks, source, metrics):
@@ -587,7 +586,7 @@ def _activity_plots(logs):
     daily = Counter()
     distractions = Counter()
     for r in logs:
-        daily[r["started"][:10], _LABELS.get(r["classification"], "Uncertain")] += r["seconds"] / 60
+        daily[r["started"][:10], LABEL_NAMES.get(r["classification"], "Uncertain")] += r["seconds"] / 60
         if r["classification"] == "off_task":
             laptop = r["domain"] or r["window"] or r["app"]
             location = " + ".join(filter(None, [laptop, r["phone_app"]])) or "Unidentified"
@@ -640,7 +639,9 @@ def render_analytics(store, plan_day=None):
         st.caption("Choose an end date to apply the date range.")
         return
     start, end = (d.isoformat() for d in selected)
-    tasks = [t for t in tasks if start <= t["completed_day"] <= end and (not chosen or t["category"] in chosen)]
+    filters = {"dates": [] if (start, end) == (min(completed_days).isoformat(), max(completed_days).isoformat())
+               else [start, end], "categories": chosen}
+    tasks = _filter_tasks(tasks, filters)
     visible = {t["task_id"]: t["title"] for t in tasks}
     logs = [row for row in logs if row["task_id"] in visible]
 
@@ -663,7 +664,6 @@ def render_analytics(store, plan_day=None):
                           for t in tasks], hide_index=True, width="stretch")
 
     st.subheader("Activity logs")
-    labels = _LABELS
     days, which_task = st.columns(2)
     log_dates = [None, *sorted({row["started"][:10] for row in logs}, reverse=True)]
     log_day = days.selectbox("Activity day", log_dates, index=_selected_index(log_dates, previous.get("log_day")),
@@ -674,22 +674,16 @@ def render_analytics(store, plan_day=None):
     task_filter = which_task.selectbox("Task", [None, *choices], index=_selected_index([None, *choices], previous.get("task")), format_func=lambda key: choices.get(key, "All tasks"))
     find, assessment, device_column = st.columns(3)
     term = find.text_input("Search activity", value=previous.get("term", ""), placeholder="Task, app, site or window").strip().casefold()
-    label = assessment.selectbox("Classification", [None, *labels], index=_selected_index([None, *labels], previous.get("label")), format_func=lambda k: labels.get(k, "All classifications"))
+    label = assessment.selectbox("Classification", [None, *LABEL_NAMES], index=_selected_index([None, *LABEL_NAMES], previous.get("label")), format_func=lambda k: LABEL_NAMES.get(k, "All classifications"))
     device_options = [None, *sorted({r["device"] for r in logs})]
     device = device_column.selectbox("Device", device_options, index=_selected_index(device_options, previous.get("device")),
                                      format_func=lambda k: k or "All devices")
-    filtered_logs = [
-        row for row in logs
-        if (task_filter is None or row["task_id"] == task_filter) and
-        (log_day is None or row["started"][:10] == log_day) and (label is None or row["classification"] == label) and
-        (device is None or row["device"] == device) and
-        (not term or any(term in str(field).casefold() for field in (
-            visible[row["task_id"]], row["domain"], row["app"], row["phone_app"], row["window"])))
-    ]
+    filters.update(term=term, label=label, log_day=log_day, task=task_filter, device=device)
+    filtered_logs = _filter_logs(logs, visible, filters)
     if filtered_logs:
         _activity_plots(filtered_logs)
         st.dataframe([{"Start": row["started"].replace("T", " "), "Device": row["device"],
-                       "Classification": labels.get(row["classification"], "Uncertain"), "Task": visible[row["task_id"]],
+                       "Classification": LABEL_NAMES.get(row["classification"], "Uncertain"), "Task": visible[row["task_id"]],
                        "Seconds": round(row["seconds"], 1), "App": row["app"], "Window": row["window"],
                        "Site": row["domain"], "Phone app": row["phone_app"],
                        "Label source": row["source"],
@@ -699,9 +693,6 @@ def render_analytics(store, plan_day=None):
     else:
         st.caption("No visible activity intervals match these filters.")
 
-    filters = {"dates": [] if (start, end) == (min(completed_days).isoformat(), max(completed_days).isoformat())
-               else [start, end], "categories": chosen, "term": term, "label": label, "log_day": log_day,
-               "task": task_filter, "device": device}
     st.session_state["planner_chat_filters"] = {"path": str(store.path), "values": filters}
     render_shared_chat(store, plan_day, tasks=tasks, logs=filtered_logs)
 
@@ -715,21 +706,27 @@ def _saved_filters(store):
     return state.get("values", {}) if state.get("path") == str(store.path) else {}
 
 
-def _filter_history(tasks, logs, filters):
-    selected = filters.get("dates")
+def _filter_tasks(tasks, filters):
+    dates = filters.get("dates")
     categories = filters.get("categories")
-    tasks = [t for t in tasks if (not selected or selected[0] <= t["completed_day"] <= selected[1])
-             and (not categories or t["category"] in categories)]
-    visible = {t["task_id"]: t["title"] for t in tasks}
-    term = filters.get("term")
-    logs = [r for r in logs if r["task_id"] in visible and
-            (not filters.get("task") or r["task_id"] == filters["task"]) and
-            (not filters.get("log_day") or r["started"][:10] == filters["log_day"]) and
-            (not filters.get("label") or r["classification"] == filters["label"]) and
-            (not filters.get("device") or r["device"] == filters["device"]) and
-            (not term or any(term in v.casefold() for v in (
-                visible[r["task_id"]], r["domain"], r["app"], r["phone_app"], r["window"])))]
-    return tasks, logs
+    return [t for t in tasks if (not dates or dates[0] <= t["completed_day"] <= dates[1])
+            and (not categories or t["category"] in categories)]
+
+
+def _filter_logs(logs, titles, filters):
+    task_id, day, label, device, term = (filters.get(k) for k in ("task", "log_day", "label", "device", "term"))
+    return [r for r in logs if r["task_id"] in titles
+            and (not task_id or r["task_id"] == task_id)
+            and (not day or r["started"][:10] == day)
+            and (not label or r["classification"] == label)
+            and (not device or r["device"] == device)
+            and (not term or any(term in v.casefold() for v in
+                                 (titles[r["task_id"]], r["domain"], r["app"], r["phone_app"], r["window"])))]
+
+
+def _filter_history(tasks, logs, filters):
+    tasks = _filter_tasks(tasks, filters)
+    return tasks, _filter_logs(logs, {t["task_id"]: t["title"] for t in tasks}, filters)
 
 
 def render_shared_chat(store, plan_day, *, tasks=None, logs=None):

@@ -87,7 +87,7 @@ _REJECTED_MATCH = re.compile(
 )
 
 
-def grounded_comparison(task, prior, reason):
+def _grounded_comparison(prior, reason):
     """Attach the model's rationale to the exact pre-screened record it cited."""
     if not isinstance(reason, str):
         return None
@@ -105,19 +105,17 @@ def _object(properties):
 def _forecast_schema(history, sources):
     number = {"type": "integer"}
     string = {"type": "string"}
-    slots = {"type": "integer", "enum": [record["slot"] for record in history]} if history else number
-    ids = {"type": "string", "enum": list(sources)} if sources else string
-    comparisons = {"type": "array", "items": _object({"slot": slots, "reason": string})}
-    warnings = {"type": "array", "items": _object({"observation_id": ids, "advice": string})}
     # A model cannot cite an unavailable source. Omit the wire field when
     # there are no options; the persisted forecast always exposes both lists.
     # Put source selection before the free-text explanation. Short local
     # completions can allocate their first tokens to the evidence they use.
     fields = {}
     if sources:
-        fields["warnings"] = warnings
+        ids = {"type": "string", "enum": list(sources)}
+        fields["warnings"] = {"type": "array", "items": _object({"observation_id": ids, "advice": string})}
     if history:
-        fields["comparisons"] = comparisons
+        slots = {"type": "integer", "enum": [record["slot"] for record in history]}
+        fields["comparisons"] = {"type": "array", "items": _object({"slot": slots, "reason": string})}
     fields.update({
         "point_min": number, "low_min": number, "high_min": number,
         "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
@@ -132,7 +130,7 @@ def _evidence_row(row, fields):
             "actual_min": actual, "ratio": actual / row["estimate_minutes"], **fields}
 
 
-def _read_forecast(reply, task, candidates, sources):
+def _read_forecast(reply, candidates, sources):
     values = [reply.get(k) for k in ("low_min", "point_min", "high_min")]
     if not all(type(v) is int or (type(v) is float and v.is_integer()) for v in values):
         raise ValueError("Use whole minutes for all three durations.")
@@ -152,7 +150,7 @@ def _read_forecast(reply, task, candidates, sources):
         if slot in used:
             continue
         row = candidates[slot - 1][0]
-        fields = grounded_comparison(task, row, match["reason"])
+        fields = _grounded_comparison(row, match["reason"])
         if fields is None:
             raise ValueError(f"For comparison {slot}, explain which work both tasks require, or omit it.")
         evidence.append(_evidence_row(row, fields))
@@ -225,7 +223,7 @@ def _model_forecast(task, candidates, observations, timing_context):
         try:
             retrieval.check_lease()
             reply = chat_json(messages, schema, max_tokens=min(4000, max(950, 400 + 60 * len(history))))
-            return _read_forecast(reply, task, candidates, sources)
+            return _read_forecast(reply, candidates, sources)
         except (ValueError, ModelResponseInvalid) as error:
             if attempt:
                 raise ModelUnavailable(f"The model could not supply a valid forecast. {error}") from error
@@ -236,22 +234,22 @@ def _model_forecast(task, candidates, observations, timing_context):
             messages[0] = {"role": "system", "content": instructions + repair}
 
 
-def _fallback(estimate, explanation, *, retryable=False, cautions=None):
+def _fallback(estimate, explanation):
     return {"point_min": max(1, round(estimate)), "low_min": max(1, math.floor(estimate * 0.5)),
             "high_min": math.ceil(estimate * 1.5), "confidence": "low", "basis": "User estimate",
             "explanation": explanation + " Using your estimate with a default planning margin of ±50%.",
             "confidence_reason": "The local fallback has no reliable timing comparison for this task.",
-            "evidence": [], "cautions": cautions or [], "retryable": retryable,
+            "evidence": [], "cautions": [], "retryable": True,
             "provenance": {"decision": "fallback", "minutes_by": "user", "provider": None, "model": None}}
 
 
 def _offline_estimate(estimate, matches, observations, error):
+    note = f"Model estimate unavailable. {error}"
+    if not matches:
+        return _fallback(estimate, note)
     sources = [{"task_id": row["id"], "title": row["title"], **obs}
                for row, _ in matches for obs in observations[row["id"]]]
     cautions = cautions_from_sources(sources)
-    note = f"Model estimate unavailable. {error}"
-    if not matches:
-        return _fallback(estimate, note, retryable=True, cautions=cautions)
     evidence = [_evidence_row(row, {"reason": "Included in the relevant task selection.", "reason_source": "local"})
                 for row, _ in matches]
     ratios = [e["ratio"] for e in evidence]
