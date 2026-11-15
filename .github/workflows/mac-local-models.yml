@@ -5,6 +5,10 @@ on:
     paths:
       - '.github/workflows/mac-local-models.yml'
 
+concurrency:
+  group: mac-local-models-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -58,21 +62,52 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-      - name: Install the planner and headless LM Studio
+      - name: Install the planner
+        timeout-minutes: 8
         run: |
+          sw_vers
+          uname -m
           python -m pip install -r requirements.txt
-          curl -fsSL --retry 3 https://lmstudio.ai/install.sh | bash
-          echo "$HOME/.lmstudio/bin" >> "$GITHUB_PATH"
-      - name: Load the pinned GGUF and start the server
+          python -m pip check
+      - name: Install the headless LM Studio CLI
+        timeout-minutes: 8
         run: |
-          lms daemon up
+          curl -fsSL --retry 3 --connect-timeout 20 https://lmstudio.ai/install.sh -o "$RUNNER_TEMP/install-llmster.sh"
+          bash "$RUNNER_TEMP/install-llmster.sh" --no-modify-path
+          test -x "$HOME/.lmstudio/bin/lms"
+          echo "$HOME/.lmstudio/bin" >> "$GITHUB_PATH"
+      - name: Start the LM Studio daemon
+        timeout-minutes: 3
+        run: |
+          lms daemon up --json
+          lms daemon status --json
+      - name: Get the llama.cpp runtime
+        timeout-minutes: 8
+        run: |
           lms runtime get llama.cpp --yes
-          curl -fL --retry 3 "https://huggingface.co/$MODEL_REPO/resolve/$MODEL_REVISION/$MODEL_FILE" -o "$RUNNER_TEMP/$MODEL_FILE"
+          lms runtime ls
+      - name: Download the pinned GGUF
+        timeout-minutes: 15
+        run: |
+          curl -fL --retry 3 --connect-timeout 20 --speed-time 60 --speed-limit 1024 \
+            "https://huggingface.co/$MODEL_REPO/resolve/$MODEL_REVISION/$MODEL_FILE" -o "$RUNNER_TEMP/$MODEL_FILE"
+          ls -lh "$RUNNER_TEMP/$MODEL_FILE"
+      - name: Import the GGUF and list available models
+        timeout-minutes: 4
+        run: |
           lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --yes
-          lms load "$MODEL_FILE" --identifier "$MODEL_ID" --context-length "$MODEL_CONTEXT" --gpu off
+          lms ls --json
+      - name: Load the imported model on CPU
+        timeout-minutes: 8
+        run: lms load "$MODEL_REPO/$MODEL_FILE" --identifier "$MODEL_ID" --context-length "$MODEL_CONTEXT" --gpu off --yes
+      - name: Start the local inference server
+        timeout-minutes: 2
+        run: |
           lms server start --bind 127.0.0.1 --port 1234
           lms ps
+          curl -fsS --retry 3 --retry-connrefused http://127.0.0.1:1234/v1/models
       - name: Exercise the planner endpoint
+        timeout-minutes: 16
         run: |
           export PLANNER_MODEL="$MODEL_ID"
           python -m examples.estimation.check_local_models --component "$ROLE"
