@@ -64,7 +64,7 @@ jobs:
         run: |
           curl -fL --retry 3 --connect-timeout 20 --speed-time 60 --speed-limit 1024 \
             "https://huggingface.co/$MODEL_REPO/resolve/$REVISION/$MODEL_FILE" -o "$RUNNER_TEMP/$MODEL_FILE"
-          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --yes
+          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --hard-link --yes
           lms load "$PLANNER_MODEL" --identifier "$PLANNER_MODEL" --context-length 8192 --gpu off --yes
           lms server start --bind 127.0.0.1 --port 1234
           lms ps

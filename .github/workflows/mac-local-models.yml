@@ -95,7 +95,7 @@ jobs:
       - name: Import the GGUF and list available models
         timeout-minutes: 4
         run: |
-          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --yes
+          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --hard-link --yes
           lms ls --json > "$RUNNER_TEMP/lms-models.json"
           cat "$RUNNER_TEMP/lms-models.json"
           model_key=$(jq -er --arg path "$MODEL_REPO/$MODEL_FILE" \
