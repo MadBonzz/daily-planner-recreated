@@ -1,0 +1,42 @@
+{
+  "history": "02-migration-lab",
+  "query": "patch-note",
+  "query_pdf_characters": 8115,
+  "query_description_characters": 101,
+  "model": "qwen3-embedding-0.6b",
+  "weights": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+  "revision": "b69927d3aa1d1ddf283276fe2e7666cccb05f1d6",
+  "procedure": "For each input condition, use the production embed_task field serialization with omitted fields empty; compare query and candidate vectors with cosine similarity. The original details fields are empty. Output rounded to six decimals. No category, time budget or outcomes in the embedding.",
+  "candidates": [
+    {
+      "id": "suite-report",
+      "authored_timing_match": true,
+      "pdf_characters": 2599,
+      "titles_only": 0.932611,
+      "title_description": 0.658047,
+      "full": 0.5653,
+      "omit_query_pdf_only": 0.432808,
+      "omit_candidate_pdf_only": 0.583367
+    },
+    {
+      "id": "codec-caption",
+      "authored_timing_match": true,
+      "pdf_characters": 0,
+      "titles_only": 0.509763,
+      "title_description": 0.638753,
+      "full": 0.582648,
+      "omit_query_pdf_only": 0.638753,
+      "omit_candidate_pdf_only": 0.582648
+    },
+    {
+      "id": "trace-tool",
+      "authored_timing_match": false,
+      "pdf_characters": 0,
+      "titles_only": 0.277308,
+      "title_description": 0.425243,
+      "full": 0.582119,
+      "omit_query_pdf_only": 0.425243,
+      "omit_candidate_pdf_only": 0.582119
+    }
+  ]
+}
