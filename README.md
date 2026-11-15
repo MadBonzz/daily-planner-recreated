@@ -4,6 +4,8 @@ A local, daily-only planner for comparing the time you set aside with the time y
 
 ## Run on macOS
 
+**Already running LM Studio on port 1235?** Jump to [Start the planner with LM Studio on port 1235](#start-the-planner-with-lm-studio-on-port-1235).
+
 For a fully local Mac setup, install the planner in step 1, then follow [Run all three models live on a Mac](#run-all-three-models-live-on-a-mac). That route uses LM Studio for Qwen, Kev and Bonsai, including on the five Dev histories. The other option below uses the bundled Qwen and Kev results with a Cohere key for the final forecast. An Intel Mac can use the hosted setup. [LM Studio system requirements](https://lmstudio.ai/docs/app/system-requirements)
 
 1. Install Python 3.12 for macOS, or use `brew install python@3.12` if you have Homebrew. If `python3.12 --version` already reports 3.12, start at the clone command. [Python macOS installers](https://www.python.org/downloads/macos/) · [Homebrew formula](https://formulae.brew.sh/formula/python@3.12)
@@ -40,6 +42,45 @@ To check the bundled inputs for Nora’s editable history and replay on your own
 ```sh
 .venv/bin/python -m examples.estimation.package_demo --stage verify --history d1-systems-student
 ```
+
+### Start the planner with LM Studio on port 1235
+
+Use this on your Mac when LM Studio is already serving `http://localhost:1235/v1` and you have downloaded Qwen, Kev and Bonsai. Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal for all three blocks. If you still need the models, use the [Mac model download instructions](#run-all-three-models-live-on-a-mac).
+
+**1. Update the planner, activate its virtual environment and check the server.** The last command prints the model IDs available to the API.
+
+```sh
+git pull --ff-only
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+curl -fsS http://127.0.0.1:1235/v1/models | python -m json.tool
+```
+
+**2. Load Qwen and Kev for live inference.** Run each load command only if its `-live` identifier is missing from `lms ps`. These identifiers make the planner compute fresh results for the bundled Dev histories. With **Just in Time Model Loading** enabled in LM Studio, Bonsai can load when the planner first requests it. If a load command cannot find its model, run `lms ls` and substitute the installed model key, keeping the `--identifier` value.
+
+```sh
+lms ps
+lms load text-embedding-qwen3-embedding-0.6b --identifier qwen3-embedding-0.6b-live --context-length 8192 --gpu off --yes
+lms load kev-4b --identifier kev-4b-live --context-length 4096 --gpu off --yes
+```
+
+**3. Point all three model requests at port 1235 and launch.** If step 1 lists a different ID for your Bonsai model, use it on the `PLANNER_MODEL` line. The separate data directory keeps this local demo available on later runs.
+
+```sh
+export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
+export PLANNER_EMBEDDING_ENDPOINT=http://127.0.0.1:1235/v1/embeddings
+export PLANNER_DECISION_MODEL=kev-4b-live
+export PLANNER_DECISION_ENDPOINT=http://127.0.0.1:1235/v1/systemone
+export PLANNER_MODEL=ternary-bonsai-4b
+export PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1235/v1/chat/completions
+export PLANNER_MODEL_TIMEOUT_SECONDS=360
+export PLANNER_DATA_DIR="$HOME/Library/Application Support/Plan Smarter/lmstudio-live"
+
+python -m examples.estimation.check_local_models && \
+  python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
+```
+
+The check prints a 1,024-dimensional Qwen embedding, a Kev relevance decision and a Bonsai forecast in minutes. Once Streamlit starts, open <http://127.0.0.1:8501>. For the demo, select **Dev → Nora · distributed systems lab → Editable history**. On later runs, activate `.venv`, load any missing `-live` models and repeat step 3.
 
 ## Run on Windows
 
