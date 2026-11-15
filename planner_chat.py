@@ -18,7 +18,16 @@ def planning_context(tasks, selected_day, now):
         point = t.get("estimate_minutes") if pending else prediction["point_min"]
         spent = max(0, t.get("actual_seconds", 0)) / 60
         low, high = (None, None) if pending else (prediction.get("low_min"), prediction.get("high_min"))
-        left = max(0, ceil(point - spent)) if point is not None and point > spent else None
+        used = spent
+        if prediction.get("basis") == "Workspace progress forecast":
+            pause = prediction.get("workspace_update") or {}
+            adjustment = pause if pause.get("status") == "adjusted" else pause.get("last_adjusted") or {}
+            at_pause = adjustment.get("elapsed_minutes")
+            if at_pause is not None:
+                # Workspace forecasts store ceil(elapsed) + remaining. Discard that display
+                # rounding before calculating how much real work happened after the pause.
+                used = ceil(at_pause) + max(0, spent - at_pause)
+        left = ceil(point - used) if point is not None and point > used else None
         open_tasks.append({
             "id": t["id"], "title": t["title"], "description": (t.get("description") or "")[:250],
             "details": (t.get("details") or "")[:250], "category": t.get("category") or "Uncategorized",
@@ -26,8 +35,8 @@ def planning_context(tasks, selected_day, now):
             "estimate_source": "provisional user estimate" if pending else prediction.get("basis") or "planner estimate",
             "confidence": prediction.get("confidence"), "estimated_total_minutes": point,
             "recorded_minutes": round(spent, 2), "remaining_minutes": left,
-            "remaining_low": max(0, floor(low - spent)) if low is not None else None,
-            "remaining_high": max(0, ceil(high - spent)) if high is not None else None,
+            "remaining_low": max(0, floor(low - used)) if low is not None else None,
+            "remaining_high": max(0, ceil(high - used)) if high is not None else None,
         })
     return {"selected_day": selected_day.isoformat(), "now": now, "tasks": open_tasks}
 
@@ -66,9 +75,15 @@ def plan_window(question, snap, previous=None):
     if (previous.get("selected_day") == snap["selected_day"] and previous.get("day")
             and not any(word in q for word in ("today", "tomorrow", "yesterday")) and not explicit):
         day = date.fromisoformat(previous["day"])
-    # timestamp() resolves the machine's local timezone and DST transition at each wall time.
-    start = now if day == now.date() else datetime.combine(day, time.min).astimezone()
-    midnight = datetime.combine(day + timedelta(days=1), time.min).astimezone()
+    # The UI supplies a naive machine-local clock so each wall time resolves its own DST offset.
+    # Other callers can supply a specific zone (e.g. the user's timezone in a hosted app).
+    def wall_time(on_day, at):
+        value = datetime.combine(on_day, at, tzinfo=now.tzinfo)
+        return value if now.tzinfo is not None else value.astimezone()
+
+    local_now = now if now.tzinfo is not None else now.astimezone()
+    start = local_now if day == now.date() else wall_time(day, time.min)
+    midnight = wall_time(day + timedelta(days=1), time.min)
     end = midnight
     end_kind = "local midnight"
     budget = None
@@ -89,8 +104,8 @@ def plan_window(question, snap, previous=None):
                 if not 1 <= hour <= 12:
                     return {"error": "What local clock time should the plan end?"}
                 hour = hour % 12 + 12 * (match[3] == "pm")
-        if hour < 24:
-            end = datetime.combine(day, time(hour, minute)).astimezone()
+        if hour < 24 and (hour, minute) != (0, 0):
+            end = wall_time(day, time(hour, minute))
         end_kind = "your stated cutoff"
     elif not duration and re.search(r"\b(?:before|until|by)\s+(?:my |the )?(?:dinner|bedtime|lunch|class|meeting|exam|work)\b", q):
         return {"error": "What local time is that commitment, or how many free minutes do you have before it?"}
@@ -117,7 +132,7 @@ def plan_window(question, snap, previous=None):
                 elapsed = max(0, (start.timestamp() - datetime.fromisoformat(previous["start"]).timestamp()) / 60)
                 budget = max(0, ceil(budget - elapsed))
     calendar = 0 if day < now.date() else max(0, floor((end.timestamp() - start.timestamp()) / 60))
-    return {"selected_day": snap["selected_day"], "day": day.isoformat(), "local_now": now.isoformat(timespec="minutes"),
+    return {"selected_day": snap["selected_day"], "day": day.isoformat(), "local_now": local_now.isoformat(timespec="minutes"),
             "start": start.isoformat(timespec="minutes"), "end": end.isoformat(timespec="minutes"),
             "end_kind": end_kind, "calendar_minutes": calendar, "budget_minutes": budget,
             "available_minutes": min(calendar, budget) if budget is not None else calendar,

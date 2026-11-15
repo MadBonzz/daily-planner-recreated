@@ -8,6 +8,7 @@ import threading
 from uuid import uuid4
 
 from model_client import ModelUnavailable, chat_json, forecast_endpoint, planner_settings
+from pdf_reader import requested_pages
 from sample_retrieval import decision_hash
 import workspace_eligibility as eligibility
 
@@ -159,13 +160,15 @@ def start_workspace(store, token):
     raise ValueError("This task is already stopped or completed.")
 
 
-def passages(text, question, budget=15000):
+def passages(text, question, budget=15000, *, page_scope=()):
     """Search all readable pages and preserve a page-spanning sample for broad questions."""
     chunks = []
     for line in text.splitlines():
         match = re.fullmatch(r"Page (\d+): (.+)", line)
         if match:
             number, body = int(match[1]), match[2]
+            if page_scope and not any(first <= number <= last for first, last in page_scope):
+                continue
             for start in range(0, len(body), 760):
                 chunks.append((number, body[start:start+860]))
     if sum(len(body) for _, body in chunks) <= budget:
@@ -189,6 +192,18 @@ def passages(text, question, budget=15000):
     return [chunks[i] for i in sorted(chosen)]
 
 
+def _verified_excerpt(source, passages):
+    quote = " ".join(source["quote"].split()).casefold()
+    if not quote:
+        return False
+    for page, body in passages:
+        if page == source["page"]:
+            text = " ".join(body.split()).casefold()
+            if quote == text or (quote in text and len(re.findall(r"\w+", quote)) >= 2):
+                return True
+    return False
+
+
 def answer(task, question, *, document=None, text="", draft="", dialogue=()):
     """Return a grounded answer and validated page quotes for this selected attachment only."""
     body = {"task": {k: task.get(k, "") for k in ("title", "description", "details")},
@@ -199,13 +214,19 @@ def answer(task, question, *, document=None, text="", draft="", dialogue=()):
                    "Follow the user's question and distinguish a suggested approach from evidence.")
     if document is not None:
         query = question + " " + " ".join(m["content"] for m in dialogue[-2:] if m["role"] == "user")
-        selected = passages(text, query)
+        page_scope = requested_pages(question)
+        selected = passages(text, query, page_scope=page_scope)
+        if page_scope and not selected:
+            return {"provider": "Local document check", "model": "",
+                    "answer": "The requested page has no readable text in this document.", "sources": []}
         if not selected:
             raise ModelUnavailable("This PDF has no extractable page text. Its pages are still available in the reader.")
         body.update(document=document, passages=[{"page": p, "text": t} for p, t in selected])
-        instruction += (" Use the passages from the selected PDF to answer. If the provided pages do not support "
-                        "a factual answer, set supported=false. For each factual answer return at least one "
-                        "supporting page and an exact short quote from its passage.")
+        instruction += (" Answer from the selected PDF passages. Earlier dialogue can identify what the "
+                        "question refers to; it cannot supply missing evidence. For each factual claim, "
+                        "give its page and a short exact quotation that establishes the claim. A passage about "
+                        "the same topic may still omit the requested number, name or rule. In that case set "
+                        "supported=false and return no sources. Never guess a missing detail.")
         schema["properties"].update(supported={"type": "boolean"}, sources={"type": "array", "items": {
             "type": "object", "properties": {"page": {"type": "integer"}, "quote": {"type": "string"}},
             "required": ["page", "quote"], "additionalProperties": False}})
@@ -222,9 +243,8 @@ def answer(task, question, *, document=None, text="", draft="", dialogue=()):
                 return {**source, "answer": "I couldn’t find support for that answer in the selected pages.",
                         "sources": []}
             quotes = result["sources"]
-            if quotes and all(q["quote"].strip() and any(q["page"] == p and
-                    " ".join(q["quote"].split()).casefold() in t.casefold() for p, t in selected) for q in quotes):
+            if result["answer"].strip() and quotes and all(_verified_excerpt(q, selected) for q in quotes):
                 return {**source, "answer": result["answer"], "sources": quotes}
             messages.append({"role": "assistant", "content": json.dumps(result)})
-            messages.append({"role": "user", "content": "The page citations could not be verified. Copy an exact supporting excerpt and its page number or set supported=false."})
+            messages.append({"role": "user", "content": "The answer needs a verifiable citation. Copy a short phrase that establishes your answer with its page number, or set supported=false."})
         raise ModelUnavailable("The model could not provide a verifiable page citation. Try specifying a page or section.")

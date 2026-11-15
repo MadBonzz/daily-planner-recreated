@@ -18,7 +18,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from qdrant_client import QdrantClient, models
 
 from model_client import ModelUnavailable, _NoRedirect, planner_settings
-from pdf_reader import document_excerpt
+from pdf_reader import assigned_section_text, document_excerpt
 import sample_retrieval
 
 
@@ -165,14 +165,17 @@ def _live_vector(content, model, config):
         if not isinstance(vector, list) or not vector or not all(
                 type(v) in (int, float) and math.isfinite(v) for v in vector) or not any(vector):
             raise ValueError
+        if model == EMBEDDING_MODEL and len(vector) != sample_retrieval.DIMENSIONS:
+            raise ModelUnavailable(f"{model} returned {len(vector)} components. This configuration requires {sample_retrieval.DIMENSIONS}.")
     except (IndexError, KeyError, TypeError, ValueError) as exc:
         raise ModelUnavailable(f"{model} returned an invalid embedding.") from exc
     return vector
 
 
 def _decision_record(task):
+    scoped = {**task, "pdf_text": assigned_section_text(task)}
     return {"title": task.get("title", ""), "description": task.get("description", ""),
-            "details": task.get("details") or "", "document_excerpt": document_excerpt(task, 1000)}
+            "details": task.get("details") or "", "document_excerpt": document_excerpt(scoped, 1000)}
 
 
 def reviewed_examples(examples):
@@ -213,6 +216,23 @@ def decide_related(left, right, examples=()):
     if packaged is not None:
         return packaged
     return _live_decision(payload, config)
+
+
+def active_decision_order(left, right, examples=()):
+    """Choose one repeatable input order for an undirected active-task cell.
+
+    Legacy public schedules can ship only the opposite call. Its exact recorded Kev
+    verdict is used on every machine, including when a live server is available.
+    New inputs and cells with both archived directions always use canonical order.
+    """
+    def content_key(task):
+        return tuple(task.get(field) or "" for _, field in _FIELDS)
+    first, second = sorted((left, right), key=content_key)
+    model = planner_settings().get("PLANNER_DECISION_MODEL") or DECISION_MODEL
+    if sample_retrieval.decision_for(decision_payload(first, second, examples, model)) is None:
+        if sample_retrieval.decision_for(decision_payload(second, first, examples, model)) is not None:
+            return second, first
+    return first, second
 
 
 def _live_decision(payload, config):
@@ -340,22 +360,46 @@ def relevance_threshold(config):
     return max(MINIMUM_THRESHOLD, score)
 
 
-def search(task, history, index_dir, *, errors=None):
+def search(task, history, index_dir, *, errors=None, query_roles=("instructed", "bare")):
+    """Keep the best full-task cosine across query roles, then apply the configured floor."""
     if not history:
         return []
     config = planner_settings()
     name = _collection(config)
     threshold = relevance_threshold(config)
-    query = embed_query(task, config)
+    encoders = {"instructed": embed_query, "bare": embed_task}
+    queries = []
+    for role in query_roles:
+        try:
+            queries.append(encoders[role](task, config))
+        except ModelUnavailable as exc:
+            if errors is None:
+                raise
+            errors.add(f"The {role} task embedding was unavailable. {exc}")
+    if not queries:
+        return []
     with _index(index_dir) as client:
+        # Before validation, a malformed response could create a derived index with an
+        # incompatible size. Rebuild its eligible rows from SQLite using the verified model.
+        if (name == COLLECTION and len(queries[0]) == sample_retrieval.DIMENSIONS
+                and client.collection_exists(name)
+                and client.get_collection(name).config.params.vectors.size != sample_retrieval.DIMENSIONS):
+            check_lease()
+            client.delete_collection(name)
         rows = _upsert_tasks(client, name, history, config, errors)
         if not rows:
             return []
-        hits = client.query_points(
-            name, query=query, query_filter=models.Filter(must=[models.HasIdCondition(has_id=list(rows))]),
-            score_threshold=threshold, limit=len(rows), with_payload=["category"],
-        ).points
-    # Category breaks cosine ties. Allow relevant work from any category to reach the judge.
+        eligible = models.Filter(must=[models.HasIdCondition(has_id=list(rows))])
+        best = {}
+        # Local Qdrant's cosine threshold is strict. Our floor includes an exact match.
+        strict_floor = math.nextafter(threshold, -math.inf)
+        for query in queries:
+            for hit in client.query_points(name, query=query, query_filter=eligible,
+                                           score_threshold=strict_floor, limit=len(rows), with_payload=["category"]).points:
+                key = str(hit.id)
+                if key not in best or hit.score > best[key].score:
+                    best[key] = hit
     category = (task.get("category") or "").casefold()
-    hits.sort(key=lambda h: (-h.score, (h.payload or {}).get("category") != category, str(h.id)))
-    return [(rows[str(hit.id)], hit.score) for hit in hits]
+    ranked = sorted(best.values(), key=lambda hit: (-hit.score, (hit.payload or {}).get("category") != category,
+                                                      str(hit.id)))
+    return [(rows[str(hit.id)], hit.score) for hit in ranked]

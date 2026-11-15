@@ -9,6 +9,7 @@ import json
 import subprocess
 from datetime import datetime, timezone
 from functools import lru_cache
+from itertools import combinations
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -50,7 +51,7 @@ def collect(history, store, revision, requests):
     def timing_match(target, source):
         if tasks[target].get("fixed_duration") or tasks[source].get("fixed_duration"):
             return False
-        score = cosine(vectors[target]["query"], vectors[source]["document"])
+        score = max(cosine(vectors[target][role], vectors[source]["document"]) for role in ("query", "document"))
         if score < retrieval.MINIMUM_THRESHOLD:
             return False
         request = retrieval.decision_payload(tasks[target], tasks[source], [], retrieval.DECISION_MODEL)
@@ -66,7 +67,7 @@ def collect(history, store, revision, requests):
         if selected is None:
             selected = [source for source in sorted(finished) if timing_match(target, source)]
         sources = [ids[source] for source in selected]
-        evidence = focus_domains.single_requests(store, ids[target], sources, pdf_text=tasks[target]["pdf_text"],
+        evidence = focus_domains.site_requests(store, ids[target], sources, pdf_text=tasks[target]["pdf_text"],
                                                 config={"PLANNER_DECISION_MODEL": retrieval.DECISION_MODEL})
         checks = {}
         for domain, request in evidence.items():
@@ -101,10 +102,18 @@ def collect(history, store, revision, requests):
     for row in history["open_tasks"] + history["holdouts"]:
         target = row["id"]
         snapshot[target] = inspect(target)
-        # Adding or removing comparisons can leave one distraction source for a site.
-        # A lone source creates the same prompt regardless of other unrelated comparisons.
-        manual[target] = {source: checks for source in sorted(finished)
-                          if (checks := inspect(target, [source]))}
+        # A site's prompt only depends on sources with visits to that site. Cover all
+        # public combinations of those sources so arbitrary edits work without Kev.
+        singletons = {source: checks for source in sorted(finished)
+                      if (checks := inspect(target, [source]))}
+        manual[target] = dict(singletons)
+        for domain in sorted({domain for checks in singletons.values() for domain in checks}):
+            sources = [source for source, checks in singletons.items() if domain in checks]
+            for size in range(2, len(sources) + 1):
+                for group in combinations(sources, size):
+                    checks = inspect(target, group)
+                    if domain in checks:
+                        manual[target].setdefault("+".join(group), {})[domain] = checks[domain]
     return snapshot, manual, sorted(chronology)
 
 
@@ -138,11 +147,11 @@ def main():
             raise ValueError("Packaged focus decisions differ from the public prompts or coverage.")
     else:
         config = {**planner_settings(), "PLANNER_DECISION_MODEL": retrieval.DECISION_MODEL}
-        decisions = {}
+        decisions = {k: v for k, v in old.get("decisions", {}).items() if k in requests and type(v) is bool}
         if args.checkpoint and args.checkpoint.exists():
             prior = json.loads(args.checkpoint.read_text(encoding="utf-8"))
             if prior.get("public_revision") == revision:
-                decisions = {k: v for k, v in prior["decisions"].items() if k in requests and type(v) is bool}
+                decisions.update({k: v for k, v in prior["decisions"].items() if k in requests and type(v) is bool})
         ordered = sorted(requests.items(), key=lambda pair: pair[1]["state"])
         for index, (digest, request) in enumerate(ordered, 1):
             if digest in decisions:

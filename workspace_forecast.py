@@ -11,7 +11,7 @@ from retrieval import check_lease
 
 _TEXT = {"type": "string"}
 _MINUTES = {"type": "integer"}
-_KINDS = ["completed", "remaining", "blocker"]
+_KINDS = ["completed", "remaining", "blocker", "task_finished"]
 _SCHEMA = _object({
     "assessment": {"type": "string", "enum": ["supported", "insufficient_evidence"]},
     "remaining_min": _MINUTES, "remaining_low_min": _MINUTES, "remaining_high_min": _MINUTES,
@@ -39,9 +39,12 @@ discovered step can increase the total. First choose whether enough direct evide
 For insufficient_evidence use an empty evidence list and zero placeholders for the three remaining times.
 For supported, cite the turn number and a short exact user statement for each progress fact, retaining its
 negation and context. Estimate the remaining_min for the actual unfinished steps. Use zero only if the user
-reports the deliverable finished. Set a plausible ordered remaining_low_min to remaining_high_min range.
+reports that the whole deliverable is finished, with kind task_finished. Use completed for a partial milestone. Set a plausible ordered remaining_low_min to remaining_high_min range.
 The app will add already logged time to each value. Explain the effect of the cited steps on the remaining
-work in one or two sentences. Explain the uncertainty in confidence_reason. Return JSON matching the schema."""
+work in one or two sentences. Keep all fields concise. Examples: "If I had rehearsed verse two,
+I could record it" is hypothetical. Use insufficient_evidence. "I tried to record the verse but my microphone
+keeps disconnecting" is a supported blocker. "The lesson says to record two verses" is only an instruction.
+Explain the uncertainty in confidence_reason. Return JSON matching the schema."""
 
 
 def _messages(turns, new_start):
@@ -54,7 +57,14 @@ def _messages(turns, new_start):
         role = row["role"]
         if role not in ("user", "assistant") or not row["content"].strip():
             continue
-        content = row["content"][:min(budget, 1800 if role == "user" else 500)]
+        full = row["content"]
+        limit = min(budget, 1800 if role == "user" else 500)
+        if role == "user" and len(full) > limit and limit >= 100:
+            # A test trace or pasted passage often precedes the user's progress update.
+            tail = limit // 2
+            content = full[:limit - tail - 3] + " … " + full[-tail:]
+        else:
+            content = full[:limit]
         records.append({"role": role, "document": row.get("document") or "", "content": content,
                         "original": row["content"], "fresh": index >= new_start})
         budget -= len(content)
@@ -105,7 +115,14 @@ def _outside_question(quote, original):
         return declarative[0] + "\x00" if len(declarative) == 2 else "\x00"
 
     statements = re.sub(r".+?(?:[.!?;。！？](?=\s|$)|\n|$)", strip_question, original, flags=re.S)
-    return quote in statements
+    # A verbatim substring can reverse a statement: "finished the proof"
+    # appears inside "I have not yet finished the proof". Keep a nearby
+    # omitted negation in the citation so the user and the model see it.
+    for match in re.finditer(re.escape(quote), statements):
+        prefix = re.split(r"[.!?;，,。！？\n\x00]", statements[:match.start()])[-1]
+        if not re.search(r"(?:\b(?:not|never|no)|n['’]t)\s+(?:[\w'-]+\s+){0,2}$", prefix, re.I):
+            return True
+    return False
 
 
 def _assessment(reply, records, baseline, progress, endpoint):
@@ -125,6 +142,10 @@ def _assessment(reply, records, baseline, progress, endpoint):
         return retained
     evidence = []
     fresh_evidence = False
+    previous_pause = baseline.get("workspace_update") or {}
+    previous_evidence = previous_pause.get("evidence") or (previous_pause.get("last_adjusted") or {}).get("evidence", [])
+    earlier = [row["original"] for row in records if row["role"] == "user" and not row["fresh"]]
+    earlier.extend(item["quote"] for item in previous_evidence)
     for item in reply["evidence"]:
         number, quote = item["turn"], item["quote"].strip()
         if type(number) is not int or not 1 <= number <= len(records):
@@ -133,8 +154,12 @@ def _assessment(reply, records, baseline, progress, endpoint):
         if (record["role"] != "user" or not quote or quote not in record["content"]
                 or not _outside_question(quote, record["original"])):
             raise ValueError("Cite an exact user statement or work sample outside a question.")
+        if item["kind"] in {"completed", "task_finished"} and re.search(
+                r"\b(?:not|never|haven['’]t|hadn['’]t|didn['’]t)\s+(?:yet\s+)?"
+                r"(?:start(?:ed)?|begun|finish(?:ed)?|complet(?:e|ed)|submitt?ed|sent)\b", quote, re.I):
+            raise ValueError("A negated completion is remaining work, not a completed milestone. Cite the actual result.")
         evidence.append({"kind": item["kind"], "quote": quote, "document": record["document"]})
-        fresh_evidence |= record["fresh"]
+        fresh_evidence |= record["fresh"] and not any(quote.casefold() in old.casefold() for old in earlier)
     if not fresh_evidence:
         raise ValueError("A supported revision needs a verified user statement or work sample from a fresh turn.")
     values = [reply[key] for key in ("remaining_low_min", "remaining_min", "remaining_high_min")]
@@ -143,6 +168,10 @@ def _assessment(reply, records, baseline, progress, endpoint):
     low, remaining, high = map(int, values)
     if not 0 <= low <= remaining <= high:
         raise ValueError("Give a nonnegative ordered range for remaining minutes.")
+    finished = any(item["kind"] == "task_finished" and records[item["turn"] - 1]["fresh"]
+                   for item in reply["evidence"])
+    if (remaining == 0) != finished:
+        raise ValueError("Reserve zero remaining minutes and task_finished for an explicit fresh report that all work is finished.")
     explanation = reply["explanation"].strip()
     confidence_reason = reply["confidence_reason"].strip()
     if not explanation or not confidence_reason:

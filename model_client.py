@@ -38,7 +38,11 @@ class ModelUnavailable(RuntimeError):
     """The configured endpoint could not produce a usable response."""
 
 
-class ModelResponseTruncated(ModelUnavailable):
+class ModelResponseInvalid(ModelUnavailable):
+    """A completed HTTP response did not supply JSON matching the requested contract."""
+
+
+class ModelResponseTruncated(ModelResponseInvalid):
     """The endpoint explicitly reported that generation exhausted the response budget."""
 
 
@@ -171,5 +175,12 @@ def chat_json(messages, schema, *, max_tokens=512):
         return result
     except HTTPError as exc:
         raise ModelUnavailable(f"{url.hostname} returned HTTP {exc.code} for {model}.") from exc
-    except (OSError, KeyError, IndexError, ValueError, TypeError, AttributeError, ValidationError) as exc:
-        raise ModelUnavailable(f"{model} is unavailable or returned invalid JSON.") from exc
+    except OSError as exc:
+        raise ModelUnavailable(f"{model} is unavailable.") from exc
+    except ValidationError as exc:
+        # ValidationError.message can contain the entire response. Limit the
+        # retry hint to a field path and failed rule, so it cannot echo task text.
+        field = ".".join(map(str, exc.absolute_path)) or "response"
+        raise ModelResponseInvalid(f"{model} returned an invalid {field} field ({exc.validator}).") from exc
+    except (KeyError, IndexError, ValueError, TypeError, AttributeError) as exc:
+        raise ModelResponseInvalid(f"{model} returned an incomplete or invalid JSON object.") from exc

@@ -148,7 +148,8 @@ def _process_relation(store, job):
                 _read_documents(store, task)
             if revoked.is_set() or not store.renew_relation(pair, token, lease_seconds=_LEASE_SECONDS):
                 return
-            related = retrieval.decide_related(job["target"], job["candidate"], examples=job["examples"])
+            first, second = retrieval.active_decision_order(job["target"], job["candidate"], job["examples"])
+            related = retrieval.decide_related(first, second, examples=job["examples"])
         except ModelUnavailable as exc:
             _LOG.info("Pair relevance pending. %s", exc)
             related = None
@@ -185,7 +186,7 @@ def _process(store, index_dir, job):
                     prediction = workspace_forecast.revise(task, prediction, progress, refreshed_history=not workspace_only)
                 if not workspace_only:
                     try:
-                        focus_domains.review_singles(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
+                        focus_domains.review_sites(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
                     except Exception as exc:
                         # Site suggestions are optional. Preserve a completed time estimate if this review fails.
                         _LOG.warning("Website review did not finish (%s).", type(exc).__name__)

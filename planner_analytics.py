@@ -11,7 +11,7 @@ import time
 
 import streamlit as st
 
-from activity import device_label
+from activity import device_label, exclusion_terms, visible_saved_event
 from model_client import chat_json, forecast_endpoint, ModelUnavailable
 from planner_chat import answer_plan, planning_context
 
@@ -31,9 +31,7 @@ def model_minutes(task):
 def analytics_rows(completed, exclusions):
     """Project completed tasks and visible, sanitized report intervals into analytics."""
     tasks, logs = [], []
-    if isinstance(exclusions, str):
-        exclusions = exclusions.splitlines()
-    needles = [needle.strip().casefold() for needle in exclusions if needle.strip()]
+    needles = exclusion_terms(exclusions)
     for item in completed:
         timestamp = item.get("completed_at")
         day = datetime.fromtimestamp(timestamp).date().isoformat() if timestamp is not None else item["day"]
@@ -51,7 +49,7 @@ def analytics_rows(completed, exclusions):
         report = item.get("report") or {}
         for event in report.get("intervals", []):
             fields = {k: event.get(k) or "" for k in ("app", "domain", "title", "phone_app", "reason")}
-            if event.get("excluded") or any(n in str(v).casefold() for n in needles for v in fields.values()):
+            if not visible_saved_event(event, needles):
                 continue
             source = event.get("label_source") or "saved label"
             if source == "saved label" and report.get("classification_source") == "synthetic_annotations":
@@ -180,13 +178,22 @@ def _plan_schema(categories, *, needs_dates=False, planning=False):
     }
 
 
-_DISTRACTION_SQL = """SELECT device, app, domain, window, phone_app,
-       COUNT(DISTINCT task_id) AS tasks, COUNT(DISTINCT substr(started,1,10)) AS days,
+# Different tabs and browsers can belong to one distracting site. Keep window identity
+# for desktop activity with no domain, and keep simultaneous phone evidence intact.
+_DISTRACTION_SQL = """WITH distracted AS (
+   SELECT *, CASE WHEN domain LIKE 'www.%' THEN LOWER(SUBSTR(domain, 5)) ELSE LOWER(domain) END AS site
+   FROM logs WHERE classification = 'off_task'
+)
+SELECT device,
+       CASE WHEN MIN(app) = MAX(app) THEN MIN(app) ELSE '' END AS app,
+       site AS domain,
+       CASE WHEN MIN(window) = MAX(window) THEN MIN(window) ELSE '' END AS window,
+       phone_app, COUNT(DISTINCT task_id) AS tasks, COUNT(DISTINCT substr(started,1,10)) AS days,
        ROUND(SUM(seconds)/60.0, 1) AS minutes
-FROM logs
-WHERE classification = 'off_task'
-GROUP BY device, app, domain, window, phone_app
-ORDER BY minutes DESC, days DESC, tasks DESC"""
+FROM distracted
+GROUP BY device, site, CASE WHEN site = '' THEN app END,
+         CASE WHEN site = '' THEN window END, phone_app
+ORDER BY minutes DESC, days DESC, tasks DESC, domain, app, window, phone_app"""
 
 
 def _accuracy_sql(source):
@@ -257,6 +264,13 @@ _RELATIVE_TIME = re.compile(
     r"(?:days?|weeks?|months?|years?)\s+(?:ago|before)|so far this year)\b", re.I)
 
 
+_MONTH_NAME = (r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
+               r"Aug(?:ust)?|Sep(?:t|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?")
+_DAY_NUMBER = r"\d{1,2}(?:st|nd|rd|th)?"
+_CALENDAR_DATE = re.compile(
+    rf"\b(?:\d{{4}}-\d{{2}}-\d{{2}}|{_MONTH_NAME}\s+{_DAY_NUMBER}|{_DAY_NUMBER}\s+{_MONTH_NAME})\b", re.I)
+
+
 def _local_calendar(today):
     monday = today - timedelta(days=today.weekday())
     month_start = today.replace(day=1)
@@ -283,7 +297,7 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
     context["category_name_matches"] = [
         c for c in context["categories"] if question_words.intersection(re.findall(r"\w+", c.casefold()))
     ]
-    needs_dates = bool(_RELATIVE_TIME.search(question))
+    needs_dates = bool(_RELATIVE_TIME.search(question) or _CALENDAR_DATE.search(question))
     if needs_dates:
         context["local_calendar"] = _local_calendar(plan["now"].date() if plan else date.today())
     instructions = _PLAN_INSTRUCTIONS
@@ -733,7 +747,7 @@ def render_shared_chat(store, plan_day, *, tasks=None, logs=None):
         if tasks is None:
             all_tasks, all_logs = analytics_rows(store.completed_tasks(), exclusions)
             tasks, logs = _filter_history(all_tasks, all_logs, filters)
-        now = datetime.fromtimestamp(store.clock()).astimezone()
+        now = datetime.fromtimestamp(store.clock())
         plan = planning_context(store.list_tasks(), plan_day, now)
         try:
             result = ask_analytics(question, tasks, logs, chat["turns"], still_current=still_current, plan=plan)

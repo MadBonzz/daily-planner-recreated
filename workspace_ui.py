@@ -124,7 +124,8 @@ def pause_evidence(update, *, show_reason=True):
         st.caption("Workspace evidence behind the current forecast")
     for item in support.get("evidence", []):
         document = item.get("document")
-        label = {"completed": "Completed", "remaining": "Remaining", "blocker": "Blocker"}.get(item.get("kind"), "Progress")
+        label = {"completed": "Completed", "remaining": "Remaining", "blocker": "Blocker",
+                 "task_finished": "Reported finished"}.get(item.get("kind"), "Progress")
         st.text(f'{label} · “{item["quote"]}”' + (f" · {document}" if document else ""))
 
 

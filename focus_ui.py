@@ -66,7 +66,7 @@ def site_editor(store, task):
         elif not policy["pending"]:
             st.caption("No website was suggested from related work. You can add one yourself.")
         if policy["pending"]:
-            st.caption("These sites appeared during one related task. Re-estimate to retry the Kev review, or select a site yourself.")
+            st.caption("These sites appeared during related work. Re-estimate to retry the Kev review. Saving this list keeps unchecked pending sites available.")
             for domain, reason in policy["pending"].items():
                 st.text(f"{domain} · {reason}")
         domains = policy["domains"]
@@ -78,7 +78,7 @@ def site_editor(store, task):
             st.caption("Paired browsers block these domains and their subdomains while this task is running.")
             if st.form_submit_button("Save websites"):
                 try:
-                    focus_domains.save_domains(store, key, selected, reviewed=domains)
+                    focus_domains.save_domains(store, key, selected, reviewed=domains, pending=policy["pending"])
                     st.rerun()
                 except (ValueError, sqlite3.Error) as error:
                     st.error(str(error))

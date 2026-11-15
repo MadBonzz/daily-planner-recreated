@@ -20,7 +20,7 @@ def test_only_query_embeddings_receive_the_instruction(monkeypatch):
 
     def record(url, payload, config):
         sent.append(payload["input"])
-        return {"data": [{"embedding": [1.0]}]}
+        return {"data": [{"embedding": [1.] + [0.] * (cache.DIMENSIONS - 1)}]}
 
     monkeypatch.setattr(retrieval, "_local_post", record)
     task = {"title": "New scoped job", "description": "Compare two drill heads", "pdf_text": "Sheet 4."}

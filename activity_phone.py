@@ -1,7 +1,6 @@
 """Read the Android foreground-app stream from a locally synced ActivityWatch database."""
 
 from pathlib import Path
-from urllib.parse import quote
 
 from activity_db import SQLiteActivitySource, windows_database_candidates
 from model_client import planner_settings
@@ -20,18 +19,11 @@ class AndroidSource:
         self.store = store
         self.buckets = buckets
 
-    def events(self, start, end):
-        from activity import _iso, _stamp
+    def events(self, start, end, warnings=None):
+        from activity import _read_events
 
-        entries = []
-        for bucket in self.buckets:
-            path = "buckets/" + quote(bucket, safe="") + "/events"
-            for row in self.store.get(path, start=_iso(start), end=_iso(end)):
-                at = _stamp(row["timestamp"])
-                until = at + _stamp(row["duration"])
-                if until > start and at < end and until > at and isinstance(row["data"], dict):
-                    entries.append((at, until, "phone", bucket, row["data"]))
-        return entries
+        return _read_events(self.store.get, [(bucket, "phone") for bucket in self.buckets],
+                            start, end, warnings if warnings is not None else [])
 
 
 def configured_phone_source(config=None, *, desktop_path=None):

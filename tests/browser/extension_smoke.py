@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import os
 import sys
 from tempfile import TemporaryDirectory
 from threading import Thread
@@ -85,6 +86,7 @@ def main():
         save_domains(store, task, selected=["focus-blocked.example.com"], reviewed=[])
         context = p.chromium.launch_persistent_context(
             root / "test-browser", channel="chromium", headless=True,
+            executable_path=os.environ.get("PLANNER_TEST_CHROMIUM"),
             args=[f"--disable-extensions-except={extension}", f"--load-extension={extension}",
                   "--no-proxy-server", "--host-resolver-rules=MAP *.example.com 127.0.0.1"],
         )

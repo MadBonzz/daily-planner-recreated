@@ -11,8 +11,9 @@ def test_single_joint_embedding_includes_full_late_document_and_omits_outcome_an
     doc = "Page one " * 1800 + "Page 9: nonlinear stability criterion"
     task = dict(title="Proof", description="Stability", details="Two lemmas", pdf_text=doc,
                 category="COURSE_CATEGORY", completion_note="PRIVATE_OUTCOME")
-    with patch.object(retrieval, "_local_post", return_value={"data": [{"embedding": [1.0, 0.5]}]}) as send:
-        assert retrieval.embed_task(task) == [1.0, 0.5]
+    vector = [1.] + [0.] * (retrieval.sample_retrieval.DIMENSIONS - 1)
+    with patch.object(retrieval, "_local_post", return_value={"data": [{"embedding": vector}]}) as send:
+        assert retrieval.embed_task(task) == vector
     content = send.call_args.args[1]["input"]
     assert content == f"Title: Proof\nDescription: Stability\nDetails: Two lemmas\nDocuments: {doc}"
 
@@ -73,10 +74,10 @@ def test_threshold_is_applied_before_judging_and_cache_repairs_content(tmp_path,
     assert [r["id"] for r, _ in retrieval.search(target, [strong, weak], tmp_path)] == ["cross-category"]
     calls.clear()
     retrieval.search(target, [strong, weak], tmp_path)
-    assert calls == ["new"]
+    assert calls == ["new", "new"]
     strong["pdf_text"] = "New page"
     retrieval.search(target, [strong, weak], tmp_path)
-    assert calls == ["new", "new", "cross-category"]
+    assert calls == ["new", "new", "new", "new", "cross-category"]
 
 
 def test_forgotten_task_cannot_be_reinserted_by_revoked_worker(tmp_path, monkeypatch):
@@ -129,3 +130,75 @@ def test_native_lmstudio_prevents_silent_truncation_before_embedding(monkeypatch
                                            {"model": retrieval.EMBEDDING_MODEL, "input": input_text}, NativeClient(), 5)
     assert captured["input"] == input_text.encode()
     assert not any(k in captured["env"] for k in ("HTTPS_PROXY", "ALL_PROXY", "http_proxy"))
+
+
+def test_either_qwen_query_can_qualify_a_pair_and_each_candidate_appears_once(tmp_path, monkeypatch):
+    task = {"id": "target", "title": "Write the lab brief", "estimate_minutes": 30}
+    scores = {"instructed-only": [1, 0, 0], "plain-only": [0, 1, 0],
+              "both": [.6, .8, 0], "neither": [0, 0, 1]}
+    rows = [{**task, "id": key} for key in scores]
+
+    def embed(row, config, query=False):
+        if row["id"] == "target":
+            return [1, 0, 0] if query else [0, 1, 0]
+        return scores[row["id"]]
+
+    monkeypatch.setattr(retrieval, "embed_task", embed)
+    selected = retrieval.search(task, rows, tmp_path)
+    assert {row["id"]: score for row, score in selected} == pytest.approx(
+        {"instructed-only": 1, "plain-only": 1, "both": .8})
+    assert len(selected) == 3
+
+
+def test_one_unavailable_query_role_preserves_matches_and_discloses_incomplete_search(tmp_path, monkeypatch):
+    task = {"id": "new", "title": "Finish the lab", "estimate_minutes": 20}
+    prior = {**task, "id": "old"}
+
+    def embed(row, config, query=False):
+        if query:
+            raise retrieval.DocumentTooLong("The query instruction exceeds context capacity.")
+        return [0.6, 0.8]
+
+    monkeypatch.setattr(retrieval, "embed_task", embed)
+    errors = set()
+    hits = retrieval.search(task, [prior], tmp_path, errors=errors)
+    assert [row["id"] for row, _ in hits] == ["old"]
+    assert any("instructed task embedding" in message for message in errors)
+
+
+@pytest.mark.parametrize("threshold,expected", [("0.50", {"on-floor", "identical"}),
+                                              ("1.00", {"identical"})])
+def test_exact_configured_cosine_floor_is_inclusive(tmp_path, monkeypatch, threshold, expected):
+    import math
+
+    target = {"id": "query", "title": "Review", "estimate_minutes": 20}
+    vectors = {"query": [1., 0.], "identical": [1., 0.], "on-floor": [.5, math.sqrt(.75)],
+               "below": [0., 1.]}
+    candidates = [{**target, "id": key} for key in ("identical", "on-floor", "below")]
+    monkeypatch.setenv("PLANNER_RELEVANCE_THRESHOLD", threshold)
+    monkeypatch.setattr(retrieval, "embed_task", lambda task, *_: vectors[task["id"]])
+    assert {row["id"] for row, _ in retrieval.search(target, candidates, tmp_path)} == expected
+
+
+def test_default_qwen_rejects_wrong_dimensions_and_rebuilds_a_legacy_incompatible_index(tmp_path, monkeypatch):
+    target = {"id": "target", "title": "New quantitative task", "estimate_minutes": 20}
+    malformed = {**target, "id": "bad", "title": "Malformed output task"}
+    valid = {**target, "id": "valid", "title": "Past quantitative task"}
+    vector = [1.] + [0.] * (retrieval.sample_retrieval.DIMENSIONS - 1)
+
+    def serve(url, payload, config):
+        return {"data": [{"embedding": [1., 0.] if "Malformed" in payload["input"] else vector}]}
+
+    monkeypatch.setattr(retrieval, "_local_post", serve)
+    # Older code could create this index from an otherwise well-formed response.
+    with retrieval._index(tmp_path) as client:
+        client.create_collection(retrieval.COLLECTION,
+                                 vectors_config=retrieval.models.VectorParams(size=2, distance=retrieval.models.Distance.COSINE))
+    errors = set()
+    hits = retrieval.search(target, [malformed, valid], tmp_path, errors=errors)
+    assert [row["id"] for row, _ in hits] == ["valid"]
+    assert "requires 1024" in " ".join(errors)
+    with retrieval._index(tmp_path) as client:
+        assert client.count(retrieval.COLLECTION).count == 1
+        assert client.get_collection(retrieval.COLLECTION).config.params.vectors.size == 1024
+    assert retrieval.embed_task(malformed, {"PLANNER_EMBEDDING_MODEL": "custom"}) == [1., 0.]

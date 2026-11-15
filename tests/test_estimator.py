@@ -357,3 +357,55 @@ def test_overlong_historical_pdf_preserves_other_usable_comparisons(tmp_path, mo
     assert [item["task_id"] for item in result["related_tasks"]] == ["fits"]
     assert result["provenance"]["decision"] == "direct"
     assert "historical task was skipped" in result["retrieval_error"]
+
+
+def test_reference_scales_the_new_budget_and_keeps_provider_point(tmp_path):
+    prior = {**paper("past"), "estimate_minutes": 20, "actual_seconds": 30 * 60}
+    new = {**paper("now"), "estimate_minutes": 40}
+    with patch("estimator.chat_json", return_value=forecast()) as call:
+        result = estimator.predict(new, [prior], tmp_path)
+    record, = json.loads(call.call_args.args[0][1]["content"])["history"]
+    assert record["same_scope_minutes"] == 60
+    assert result["point_min"] == 87 and result["provenance"]["minutes_by"] == "model"
+
+
+def test_schema_error_gets_one_repair_but_connection_error_does_not(tmp_path):
+    from model_client import ModelResponseInvalid
+    for err, count in [(ModelResponseInvalid("invalid point_min field (type)"), 2),
+                       (estimator.ModelUnavailable("Connection refused"), 1)]:
+        with patch("estimator.chat_json", side_effect=[err, forecast()]) as model:
+            result = estimator.predict(paper("new"), [], tmp_path)
+        assert model.call_count == count
+        assert (result["provenance"]["decision"] == "direct") == (count == 2)
+        if count == 2:
+            assert "point_min" in model.call_args.args[0][0]["content"]
+
+
+def test_recurring_secondary_distraction_is_available_to_forecaster():
+    def source(domain, seconds):
+        return {"domain": domain, "seconds": seconds, "label": "off_task"}
+
+    history = [
+        {"report": {"intervals": [source("sports.example", 400), source("video.example", 120)]}},
+        {"report": {"intervals": [source("games.example", 480), source("video.example", 90)]}},
+    ]
+    for row in history:
+        obs = estimator._observations(row)
+        assert len(obs) == 2 and "video.example" in obs[1]["observation"]
+
+
+def test_paired_audit_cases_change_only_historical_timing_and_derived_fields(tmp_path):
+    from examples.estimation.forecast_audit import challenge
+
+    arms = {}
+    for target, past, _ in challenge():
+        if target["id"].startswith("same-indexing-"):
+            with patch("estimator.chat_json", return_value=forecast()) as model:
+                estimator.predict(target, past, tmp_path)
+            messages, schema = model.call_args.args
+            payload = json.loads(messages[1]["content"])
+            for row in payload["history"]:
+                for field in ("actual_minutes", "same_scope_minutes", "actual_to_budget_ratio"):
+                    del row[field]
+            arms[target["id"]] = (payload, messages[0], schema, model.call_args.kwargs)
+    assert arms["same-indexing-slower"] == arms["same-indexing-faster"] == arms["same-indexing-variable"]

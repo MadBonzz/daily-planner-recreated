@@ -171,3 +171,16 @@ def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monke
     result = activity.live_preview(BASE, BASE + 2)
     assert [(r["app"], r.get("phone_app"), r["seconds"]) for r in result["intervals"]] == [
         ("chrome.exe", "Current phone app", 2)]
+
+
+def test_one_corrupted_synced_phone_event_preserves_its_valid_neighbor(tmp_path, monkeypatch):
+    desktop = make_db(tmp_path / "desktop.db")
+    phone = make_db(tmp_path / "phone.db", android_only=True)
+    with sqlite3.connect(phone) as db:
+        db.execute("UPDATE events SET data='not-json' WHERE id=2")
+        db.execute("UPDATE events SET data=? WHERE id=3", (json.dumps({"app": "Garden notes"}),))
+    monkeypatch.setenv("PLANNER_ACTIVITYWATCH_DB", str(desktop))
+    monkeypatch.setenv("PLANNER_ACTIVITYWATCH_PHONE_DB", str(phone))
+    report = activity.live_preview(BASE, BASE + 10)
+    assert any("invalid phone event" in warning for warning in report["warnings"])
+    assert sum(row["seconds"] for row in report["intervals"] if row.get("phone_app") == "Garden notes") == 7.875

@@ -1,6 +1,9 @@
 """Workspace-local comparison choices and human-reviewed relevance examples."""
 
 
+from pdf_reader import document_excerpt
+
+
 FEEDBACK_SCHEMA = """
 CREATE TABLE IF NOT EXISTS relevance_choices (
     target_id TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
@@ -63,23 +66,28 @@ def save_choices(db, task_id, selected, previous, reviewed, now):
 
 
 def _descriptor(row, prefix):
-    return {field: row[prefix + field][:limit] for field, limit in (
+    record = {field: row[prefix + field][:limit] for field, limit in (
         ("title", 150), ("description", 220), ("details", 120), ("category", 60))}
+    record["pdf_text"] = document_excerpt({**record, "pdf_text": row[prefix + "pdf_text"]}, 240)
+    return record
 
 
-def relevance_examples(db, target):
-    """Sample reviewed pairs for both judge and forecaster, favoring the current category."""
+def relevance_examples(db, target, peer=None):
+    """Prefer examples from either participant's category for an undirected matrix cell."""
+    peer = peer or target
+    participants = (target.get("id") or "", peer.get("id") or "")
+    categories = (target.get("category", ""), peer.get("category", ""))
     examples = []
     for verdict in (1, 0):
         rows = db.execute("""
             SELECT f.target_id, f.source_id, f.related, f.changed_at,
-                   a.title, a.description, a.details, a.category,
+                   a.title, a.description, a.details, a.category, a.pdf_text,
                    b.title AS other_title,b.description AS other_description,
-                   b.details AS other_details,b.category AS other_category
+                   b.details AS other_details,b.category AS other_category,b.pdf_text AS other_pdf_text
             FROM relevance_choices f JOIN tasks a ON a.id=f.target_id JOIN tasks b ON b.id=f.source_id
-            WHERE f.user_changed=1 AND f.related=? AND f.target_id!=? AND f.source_id!=?
-            ORDER BY (a.category=? COLLATE NOCASE) DESC, f.changed_at DESC, a.id, b.id LIMIT 2
-        """, (verdict, target.get("id") or "", target.get("id") or "", target.get("category", "")))
+            WHERE f.user_changed=1 AND f.related=? AND f.target_id NOT IN (?,?) AND f.source_id NOT IN (?,?)
+            ORDER BY (a.category COLLATE NOCASE IN (?,?)) DESC, f.changed_at DESC, a.id, b.id LIMIT 2
+        """, (verdict, *participants, *participants, *categories))
         for row in rows:
             examples.append({"target_id": row["target_id"], "candidate_id": row["source_id"],
                              "target": _descriptor(row, ""), "candidate": _descriptor(row, "other_"),

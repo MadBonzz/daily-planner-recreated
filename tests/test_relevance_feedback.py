@@ -86,3 +86,32 @@ if not task["estimate_updating"]:
     next(b for b in app.button if b.label == "Save and re-estimate").click().run()
     assert not app.exception
     assert store.claim_prediction()["task"]["relevance_overrides"] == dict.fromkeys(pool, False)
+
+
+def test_reviewed_pairs_keep_pdf_scope_for_future_decision_and_forecast(tmp_path):
+    import retrieval
+
+    store = PlannerStore(tmp_path)
+
+    def assignment(text, prediction=BUDGET):
+        return store.create_task(day="2026-10-28", title="Assignment", description="Finish the attachment",
+                                 category="Math", estimate_minutes=30, pdf_text=text, prediction=prediction)["id"]
+
+    target_page = "Page 2: derive the variance bound and prove the final inequality."
+    prove_page = "Page 1: derive the sampling variance and verify it analytically."
+    code_page = "Page 1: implement a Monte Carlo run and graph the observed variance."
+    prove, code = assignment(prove_page), assignment(code_page)
+    for source in (prove, code):
+        store.transition(source, "finish", spent_seconds=1800, completion_note="PRIVATE OUTCOME")
+    target = assignment(target_page, dict(BUDGET, related_tasks=[{"task_id": code}]))
+    store.revise_related_tasks(target, [prove], previous_ids=[code], reviewed_ids=[prove, code])
+    changed = store.claim_prediction()
+    store.resolve_prediction(target, changed["token"], BUDGET)
+    add(store, "Follow-up assignment", prediction=None)
+    job = store.claim_prediction()
+    # Both the forecast and Kev serialize corrections with reviewed_examples().
+    examples = retrieval.reviewed_examples(job["task"]["relevance_examples"])
+    by_decision = {ex["related"]: ex["candidate"]["document_excerpt"] for ex in examples}
+    assert by_decision == {True: prove_page, False: code_page}
+    assert all(ex["target"]["document_excerpt"] == target_page for ex in examples)
+    assert "PRIVATE OUTCOME" not in str(examples)

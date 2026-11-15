@@ -26,22 +26,28 @@
   },
   "cosine_floor": 0.5,
   "decisions": {
+    "001abf91e41959593781e44882d752f4acce98c4fd1a0899263eb84f9b63d76b": true,
     "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61": true,
     "0b3fd41ba6d52fc5c94aabf7b2c6cbcffda27f1661d69be2a616134feaab2c8f": true,
     "1147fa89883cdc240e88ff6d090364310ebc7456d3f96b98666457788b6471a8": true,
+    "11edbe3cc8933c242ecde869a94a5a4368898d3bc4516ef791d0e319391ebce7": true,
     "126a2ad2b6444db0cf62415a1ce581ce64ae4193ee73028013b25e605a63b727": true,
     "12c17473f34ea5670f72b161dc9045c526b0c53a813e01156724443a00ba7319": true,
     "1476287e4defd3f979816705845878ef11e15810bc607b5a31d9b86688427f83": true,
     "147cebefb13f991497a5c9c6a1525125a80a5c288080c6f54fd729c1e65bb148": true,
+    "19ee5169a059c1e650c7018787948abfd8939e1c6114623209dd84cfb2463de9": true,
     "1a62c1b9235f38177658607df6ea7f37370b06b20bc4ca23d4c4d612c899afa0": true,
     "218000ef32d3c65a09545b6989ae7e80ebac47dea360d884ac33ce5b226bb037": true,
     "2319cdcb72fd3845784ecb138a81719002c3904cff727dc97ebb3a6a385a07b9": true,
     "2de9430f1f06b052d5f04eed7cc7341de9a358a39380ce9c9fe3f8bada1ddccb": true,
     "2e9b448cc00cfb90bf6302ec4f28b968649731381daf899858fffab2319f80f7": true,
     "390edb7ba3a2e2bfd6c374133aed9218ed8486f3bea6581a60f0b2a74659012b": false,
+    "4342467fbebba1af6eeb25752265a23b1d23746738278df2a35b771dda702077": true,
+    "47663342cfce94b541b78cc3046d604ccbcef5c1224e597ffc58cf90cccd9222": true,
     "4cdb853dba3830b4fdb412157484312c58f565360ab1104b7d994da87a2029cd": true,
     "4ea804dc84e8ce901ad41a9d7a28d10cccd231924d793fdc20a7af834b75f58d": true,
     "55cc8551b51d3c75bd1403f54b199fd4cc5c7d626ae2e621b04909edfe5fe9b4": true,
+    "5621c09bb31877b03de9b14a0c298a8ef13aab11a6a18c6cbb1361ca8d77de5b": true,
     "58a845956f18b2a2fd4c749e65bc1230e32ea6cf955006c851f90fc1e292fdfb": true,
     "5a5fff3f4b271aed03fe8cb8e5e5c09f66fa92e5d0017a59e280b9559b220f93": true,
     "5b80c60e5d57a036663da405b17cdce433bf3fca379d60eca0be895ea90534d5": true,
@@ -61,12 +67,14 @@
     "bc1590d7001ea0eafa6fa639045b62fbab43b891d6d2af3902d9fca1aac6ee9c": true,
     "c09fbef16a67dc72f3876b1a803bbd25c64099948f5031bd44dba42f6a907be0": true,
     "c3cbdbe2eb00c5529a1a8e270229ad7d62abd0d5e48bbd78df516f86bf5d7556": true,
+    "c92884e6857e87da6a719580787e32f2d417d08577e47341e5c3baaf1cdb84e2": true,
     "cc796c85f4f6806e4cbb811beb4615cb416d0d9e95ece952581096d7f452aaeb": true,
     "ce7030518eb755af8835bf04eaa2c8918cf6d2c51e1e2d93dd561afc356e53e1": true,
     "cf4f2656934f94cd6048560f01508cf5a243065428099938d7b351abd1e2be55": true,
     "d64acc2cefa1528c23209e58819d15fae39babe5ecd1e763d8b74c849e0a7355": true,
     "d85266e51de2ddfa5e36a8c11be60954814787b4715d98d3fbf5976eae911343": true,
     "da3ddd29d929e5d23759de6af5a1ad3f6337820c9722de6655b55ceb4824a5fd": true,
+    "dfcb832c8f845eee23bdf60a93377e05e24cf978d0bdab69dbb35f62738c05c5": true,
     "e13ce005ee1c6795e6dc21cc69ae7e75be9484aaa96d35e7493e1fa845ea6998": true,
     "e24f166b7d1c2b7d5a56d2a2c74aec8803564aedee536f6b28569ad81a3cbe1c": true,
     "e29281d33fc217f07c2f201477025be96beeda7144feb6ee8d56ca4b4d88de04": true,
@@ -163,6 +171,9 @@
         "stride-kernel": {
           "youtube.com": "c09fbef16a67dc72f3876b1a803bbd25c64099948f5031bd44dba42f6a907be0"
         },
+        "stride-kernel+warp-tail": {
+          "youtube.com": "c92884e6857e87da6a719580787e32f2d417d08577e47341e5c3baaf1cdb84e2"
+        },
         "warp-tail": {
           "youtube.com": "1147fa89883cdc240e88ff6d090364310ebc7456d3f96b98666457788b6471a8"
         }
@@ -170,6 +181,9 @@
       "dishsoap": {
         "stride-kernel": {
           "youtube.com": "fd23f1c0eb5c201fa1ef77fb940f6573ddc9e829c7a89c5e24ce822e5ce19379"
+        },
+        "stride-kernel+warp-tail": {
+          "youtube.com": "19ee5169a059c1e650c7018787948abfd8939e1c6114623209dd84cfb2463de9"
         },
         "warp-tail": {
           "youtube.com": "4ea804dc84e8ce901ad41a9d7a28d10cccd231924d793fdc20a7af834b75f58d"
@@ -179,6 +193,9 @@
         "stride-kernel": {
           "youtube.com": "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0"
         },
+        "stride-kernel+warp-tail": {
+          "youtube.com": "001abf91e41959593781e44882d752f4acce98c4fd1a0899263eb84f9b63d76b"
+        },
         "warp-tail": {
           "youtube.com": "55cc8551b51d3c75bd1403f54b199fd4cc5c7d626ae2e621b04909edfe5fe9b4"
         }
@@ -186,6 +203,9 @@
       "sweep-again": {
         "stride-kernel": {
           "youtube.com": "126a2ad2b6444db0cf62415a1ce581ce64ae4193ee73028013b25e605a63b727"
+        },
+        "stride-kernel+warp-tail": {
+          "youtube.com": "4342467fbebba1af6eeb25752265a23b1d23746738278df2a35b771dda702077"
         },
         "warp-tail": {
           "youtube.com": "cf4f2656934f94cd6048560f01508cf5a243065428099938d7b351abd1e2be55"
@@ -197,6 +217,9 @@
         "subarray-target": {
           "youtube.com": "e13ce005ee1c6795e6dc21cc69ae7e75be9484aaa96d35e7493e1fa845ea6998"
         },
+        "subarray-target+window-cost": {
+          "youtube.com": "11edbe3cc8933c242ecde869a94a5a4368898d3bc4516ef791d0e319391ebce7"
+        },
         "window-cost": {
           "youtube.com": "bb67d3b4f3146d41ac5a71b0116b6fb94c12c9d5507f641fa83d9cebbe67f89e"
         }
@@ -204,6 +227,9 @@
       "editorial-review": {
         "subarray-target": {
           "youtube.com": "4cdb853dba3830b4fdb412157484312c58f565360ab1104b7d994da87a2029cd"
+        },
+        "subarray-target+window-cost": {
+          "youtube.com": "47663342cfce94b541b78cc3046d604ccbcef5c1224e597ffc58cf90cccd9222"
         },
         "window-cost": {
           "youtube.com": "ec26e3a15c880a5aecbf7992f64a005c451e14b823b7d542180ab3a6659adc7e"
@@ -213,6 +239,9 @@
         "subarray-target": {
           "youtube.com": "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61"
         },
+        "subarray-target+window-cost": {
+          "youtube.com": "dfcb832c8f845eee23bdf60a93377e05e24cf978d0bdab69dbb35f62738c05c5"
+        },
         "window-cost": {
           "youtube.com": "78ab71c29be5b6ff5ad388460beb41603f89cfec9fb6e83eed850625ba75a571"
         }
@@ -220,6 +249,9 @@
       "shortest-window": {
         "subarray-target": {
           "youtube.com": "5b80c60e5d57a036663da405b17cdce433bf3fca379d60eca0be895ea90534d5"
+        },
+        "subarray-target+window-cost": {
+          "youtube.com": "5621c09bb31877b03de9b14a0c298a8ef13aab11a6a18c6cbb1361ca8d77de5b"
         },
         "window-cost": {
           "youtube.com": "861dde8a36922cc4388438ecf24e6375fcbacb163fa8fd4a935b459d06157d09"
@@ -350,7 +382,9 @@
       "potluck": {}
     },
     "04-kernel-workbench": {
-      "async-flicker": {},
+      "async-flicker": {
+        "youtube.com": "c92884e6857e87da6a719580787e32f2d417d08577e47341e5c3baaf1cdb84e2"
+      },
       "dishsoap": {},
       "recheck-tail": {
         "youtube.com": "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0"

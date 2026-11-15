@@ -187,8 +187,11 @@ SELECT t.*, clock.started_at,
        (t.status!='completed' AND t.archived=0 AND t.fixed_duration=0 AND EXISTS(
           SELECT 1 FROM task_relations r WHERE (r.left_id=t.id OR r.right_id=t.id)
           AND (r.refresh_due=1 OR (r.related IS NOT 0 AND EXISTS(
-              SELECT 1 FROM report_jobs j WHERE j.error IS NULL
-              AND j.task_id=CASE WHEN r.left_id=t.id THEN r.right_id ELSE r.left_id END
+              SELECT 1 FROM report_jobs j JOIN tasks source ON source.id=j.task_id
+              WHERE j.error IS NULL AND source.actual_seconds>0
+                AND (source.fixed_duration=0 OR EXISTS(SELECT 1 FROM relevance_choices f
+                     WHERE f.target_id=t.id AND f.source_id=source.id AND f.related=1))
+                AND j.task_id=CASE WHEN r.left_id=t.id THEN r.right_id ELSE r.left_id END
           )))
        )) AS awaiting_related_update,
        COALESCE(manual.total, 0) AS manual_seconds,
@@ -295,13 +298,17 @@ def _queue_related_target(db, target_id, *, workspace_only=False):
 
 def _refresh_related_estimates(db, source_id, *, corrected=False):
     """Propagate a timed completion or report edit along its known positive edges."""
+    source = db.execute("SELECT fixed_duration,actual_seconds FROM tasks WHERE id=?", (source_id,)).fetchone()
+    if not corrected and not source["actual_seconds"]:
+        return
     rows = db.execute("""
         SELECT r.left_id,r.right_id,r.related,t.id AS target_id FROM task_relations r
         JOIN tasks t ON t.id=CASE WHEN r.left_id=? THEN r.right_id ELSE r.left_id END
         WHERE (r.left_id=? OR r.right_id=?) AND r.related IS NOT 0
           AND t.archived=0 AND t.status!='completed' AND t.fixed_duration=0
-          AND (? OR EXISTS (SELECT 1 FROM tasks WHERE id=? AND actual_seconds>0))
-    """, (source_id, source_id, source_id, corrected, source_id)).fetchall()
+          AND (?=0 OR EXISTS(SELECT 1 FROM relevance_choices f WHERE f.target_id=t.id
+                              AND f.source_id=? AND f.related=1))
+    """, (source_id, source_id, source_id, source["fixed_duration"], source_id)).fetchall()
     for row in rows:
         if row["related"] is None:
             db.execute("UPDATE task_relations SET refresh_due=1 WHERE left_id=? AND right_id=?",
@@ -644,8 +651,8 @@ class PlannerStore:
             pair = tuple(row)
             db.execute("""UPDATE task_relations SET token=?,lease_end=?
                           WHERE left_id=? AND right_id=?""", (token, now + lease_seconds, *pair))
-            # The new task that created the matrix cell stays its target, even
-            # if it finishes before judging. Row insertion order breaks clock ties.
+            # The job identifies which task created the cell, even if it already
+            # finished. The worker chooses a stable model input order after loading PDFs.
             target, candidate = [dict(t) for t in db.execute("""
                 SELECT id,title,description,category,details,pdf_text,pdf_text_version FROM tasks WHERE id IN (?,?)
                 ORDER BY created_at DESC,rowid DESC""", pair)]
@@ -655,7 +662,7 @@ class PlannerStore:
                     task["attachments"] = [dict(row) for row in db.execute(
                         "SELECT id,name FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],))]
             return {"pair": pair, "target": target, "candidate": candidate, "token": token,
-                    "examples": relevance_examples(db, target)}
+                    "examples": relevance_examples(db, target, candidate)}
 
     def renew_relation(self, pair, token, *, lease_seconds=300):
         with self._db(write=True) as db:
@@ -701,8 +708,12 @@ class PlannerStore:
                 SELECT t.id,j.workspace_only FROM prediction_jobs j JOIN tasks t ON t.id=j.task_id
                 WHERE (t.archived=0 OR t.status='completed') AND (j.token IS NULL OR j.lease_end<=?)
                   AND (t.creation_prediction IS NULL OR NOT EXISTS (""" + _INITIAL_JOBS + """))
+                  AND (t.creation_prediction IS NULL OR NOT EXISTS (
+                      SELECT 1 FROM task_relations r WHERE (r.left_id=t.id OR r.right_id=t.id)
+                      AND r.refresh_due=1 AND r.related IS NULL AND r.retry_at<=?
+                      AND (r.token IS NULL OR r.lease_end<=?)))
                 ORDER BY t.creation_prediction IS NOT NULL,t.created_at,t.rowid LIMIT 1
-            """, (now,)).fetchone()
+            """, (now, now, now)).fetchone()
             if row is None:
                 return None
             task_id = row["id"]
@@ -715,7 +726,22 @@ class PlannerStore:
             )""", (task_id,))
             snapshots = dict(db.execute("SELECT source_id,snapshot FROM prediction_history WHERE task_id=?",
                                         (task_id,)))
+            # These tasks were judged as peers while both cards were open. A completion
+            # refresh must use the same verdict that triggered it, even if the newly
+            # completed task was originally the target of the symmetric matrix check.
+            peers = {row["source_id"]: row for row in db.execute("""
+                SELECT h.source_id,r.related,coalesce((SELECT json_group_array(s.source_id)
+                  FROM task_relation_sources s WHERE s.left_id=r.left_id AND s.right_id=r.right_id),'[]') AS examples
+                FROM prediction_history h JOIN task_relations r
+                  ON r.left_id=min(h.task_id,h.source_id) AND r.right_id=max(h.task_id,h.source_id)
+                WHERE h.task_id=? AND r.related IS NOT NULL""", (task_id,))}
+            from activity import exclusion_terms, visible_saved_event
+            needles = exclusion_terms(_get_setting(db, "exclusions", []))
             for source in history:
+                peer = peers.get(source["id"])
+                if peer is not None:
+                    source["matrix_related"] = bool(peer["related"])
+                    source["matrix_feedback_ids"] = json.loads(peer["examples"])
                 snapshot = snapshots[source["id"]]
                 if snapshot is not None:
                     fields = json.loads(snapshot)
@@ -723,6 +749,13 @@ class PlannerStore:
                     if source["pdf_text_version"]:
                         fields.pop("pdf_text", None)
                     source.update(fields)
+                if needles and source.get("report"):
+                    # A saved report may predate an exclusion. Apply today's rules to both
+                    # old snapshots and user-reviewed labels before exposing forecast evidence.
+                    report = source["report"]
+                    source["report"] = {"intervals": [event for event in report.get("intervals", [])
+                                                       if visible_saved_event(event, needles)],
+                                        "feedback_source_ids": report.get("feedback_source_ids", [])}
             # A task can finish before its forecast worker runs. Only information
             # available to the user at creation is a valid forecast input.
             inputs = {key: task[key] for key in ("id", "title", "description", "category", "details",
@@ -869,7 +902,7 @@ class PlannerStore:
                     if state == "completed" and (total != previous or task["time_edited_at"] is None):
                         db.execute("UPDATE tasks SET actual_seconds=?, report=NULL WHERE id=?", (total, task_id))
                         _enqueue_report(db, task_id)
-                        if previous == 0 and total > 0:
+                        if previous == 0 and total > 0 and not task["fixed_duration"]:
                             # This source only now qualifies as timed history. Later tasks may have no edge to it.
                             db.execute("""INSERT OR IGNORE INTO task_relations(left_id,right_id,refresh_due)
                                           SELECT MIN(?,id),MAX(?,id),1 FROM tasks
@@ -1063,12 +1096,18 @@ class PlannerStore:
                                      (task_id, generation))
                 if not claimed.rowcount:
                     return False
-            changed = db.execute("UPDATE tasks SET report=?, pdf_text=COALESCE(?,pdf_text) WHERE id=? AND status='completed'",
-                                 (json.dumps(report, allow_nan=False), pdf_text, task_id))
-            if not changed.rowcount:
+            source = db.execute("SELECT report,pdf_text,actual_seconds FROM tasks WHERE id=? AND status='completed'",
+                                (task_id,)).fetchone()
+            if source is None:
                 raise ValueError("Finish the task before saving its activity review.")
-            if refresh_estimates and db.execute("SELECT 1 FROM tasks WHERE id=? AND actual_seconds>0",
-                                                (task_id,)).fetchone():
+            # A rebuild can produce exactly the same observations. Preserve an in-flight
+            # forecast's lease (and its historical snapshot) when nothing changed.
+            if (source["report"] is not None and json.loads(source["report"]) == report
+                    and (pdf_text is None or pdf_text == source["pdf_text"])):
+                return True
+            db.execute("UPDATE tasks SET report=?, pdf_text=COALESCE(?,pdf_text) WHERE id=?",
+                       (json.dumps(report, allow_nan=False), pdf_text, task_id))
+            if refresh_estimates and source["actual_seconds"] > 0:
                 _refresh_related_estimates(db, task_id, corrected=True)
             return True
 
@@ -1245,6 +1284,10 @@ class PlannerStore:
             self.set_capture(value)
             return
         with self._db(write=True) as db:
+            if key == "exclusions" and value != _get_setting(db, key, []):
+                # A retry rereads the current exclusions before it can publish its result.
+                db.execute("UPDATE prediction_jobs SET token=NULL, lease_end=NULL WHERE token IS NOT NULL")
+                db.execute("UPDATE report_jobs SET generation=lower(hex(randomblob(16))) WHERE error IS NULL")
             _save_setting(db, key, value)
 
     def seed_demo(self):

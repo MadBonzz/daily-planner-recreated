@@ -76,3 +76,15 @@ def test_attached_resource_reference_is_forwarded_without_unrelated_pdf_text():
     relevant = request(target={**common, "pdf_text": "Open your saved game on the Chess server and annotate turn five."})
     assert "annotate turn five" in json.loads(relevant["state"])["site_reference_in_attachment"]
     assert focus_judge.key(relevant) != focus_judge.key(unrelated)
+
+
+@pytest.mark.parametrize("generic,needed,blocks", [(.85,.1,False), (.1,.8,False), (.1,.2,True)])
+def test_repeated_visits_still_check_identifiability_and_current_use(monkeypatch, generic, needed, blocks):
+    req = focus_judge.payload({"title": "Rebuild the workbench"}, "store.example",
+                              [{"title": "Replace a joint"}, {"title": "Sand the top"}],
+                              ["Maple rolltop desk auction ending in 10 minutes"], {})
+    assert set(req["questions"]) == {"generic", "needed"}
+    assert json.loads(req["state"])["related_tasks_with_off_task_visits"] == 2
+    reply = {"answers": {"generic": {"noul": generic}, "needed": {"noul": needed}}}
+    monkeypatch.setattr(focus_judge.retrieval, "_local_post", lambda *_: reply)
+    assert focus_judge.live_decision(req, {}) is blocks

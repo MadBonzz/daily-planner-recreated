@@ -103,20 +103,20 @@ def _site_evidence(db, target, sources, config):
         if re.search(r"(?<![\w-])" + re.escape(domain) + r"(?![\w-]|\.[\w-])", target_text):
             continue
         minutes = sum(visit["seconds"] for visit in observations.values()) / 60
-        if len(observations) == 1:
-            source_id, visit = next(iter(observations.items()))
-            source = tasks[source_id]
-            example = " / ".join(sorted(visit["titles"])[:2])
+        sources_here = [tasks[key] for key in observations]
+        titles = set().union(*(visit["titles"] for visit in observations.values()))
+        if len(sources_here) == 1:
+            source = sources_here[0]
+            example = " / ".join(sorted(titles)[:2])
             detail = f' The recorded window was “{example}”.' if example else ""
             reason = f'{minutes:.1f} minutes labeled distraction during one related task, “{source["title"]}”.{detail}'
-            if config is None:
-                config = planner_settings()
-            yield domain, reason, focus_judge.payload(target, domain, source, visit["titles"], config)
         else:
-            names = (tasks[k]["title"] for k in list(observations)[:2])
-            examples = " and ".join(f"“{name}”" for name in names)
-            reason = f"{minutes:.1f} minutes labeled distraction across {len(observations)} related tasks, including {examples}."
-            yield domain, reason, None
+            examples = " and ".join(f'“{source["title"]}”' for source in sources_here[:2])
+            reason = (f"{minutes:.1f} minutes labeled distraction across {len(observations)} related tasks, "
+                      f"including {examples}.")
+        if config is None:
+            config = planner_settings()
+        yield domain, reason, focus_judge.payload(target, domain, sources_here, titles, config)
 
 
 def _target(db, task_id):
@@ -127,24 +127,23 @@ def _target(db, task_id):
     return dict(row)
 
 
-def single_requests(store, task_id, source_ids, *, pdf_text=None, config=None):
+def site_requests(store, task_id, source_ids, *, pdf_text=None, config=None):
     if not source_ids:
         return {}
     with store._db() as db:
         target = _target(db, task_id)
         if pdf_text is not None:
             target["pdf_text"] = pdf_text
-        return {domain: request for domain, _, request in _site_evidence(db, target, source_ids, config)
-                if request is not None}
+        return {domain: request for domain, _, request in _site_evidence(db, target, source_ids, config)}
 
 
-def review_singles(store, task, prediction, pdf_text, previous):
+def review_sites(store, task, prediction, pdf_text, previous):
     """Run local inference outside SQLite; commit verdicts atomically with this forecast."""
     sources = related_ids(prediction)
     if not sources:
         return
     config = planner_settings()
-    requests = single_requests(store, task["id"], sources, pdf_text=pdf_text, config=config)
+    requests = site_requests(store, task["id"], sources, pdf_text=pdf_text, config=config)
     results = {}
     for request in requests.values():
         key = focus_judge.key(request)
@@ -164,9 +163,6 @@ def policy_from_db(db, task_id):
     stored = json.loads(task["prediction"]).get("focus_verdicts", {})
     suggestions, pending = {}, {}
     for domain, reason, request in _site_evidence(db, task, _related_sources(db, task), None):
-        if request is None:
-            suggestions[domain] = reason
-            continue
         verdict = stored.get(focus_judge.key(request))
         if type(verdict) is not bool:
             verdict = focus_judge.packaged(request)
@@ -178,7 +174,12 @@ def policy_from_db(db, task_id):
         "SELECT domain, blocked FROM focus_domain_choices WHERE task_id=?", (task_id,))}
     added = {d for d, enabled in choices.items() if enabled}
     removed = {d for d, enabled in choices.items() if not enabled}
-    return {"domains": sorted((suggestions.keys() | added) - removed), "suggestions": suggestions,
+    # Both a blocked parent and a blocked child can defeat an explicit unblock.
+    # An explicit user addition still wins over an overlapping automatic suggestion.
+    automatic = {domain for domain in suggestions if not any(
+        _blocked_by(domain, allow) or _blocked_by(allow, domain) for allow in removed
+    )}
+    return {"domains": sorted(automatic | added), "suggestions": suggestions,
             "added": sorted(added), "removed": sorted(removed),
             "pending": {d: why for d, why in pending.items() if d not in choices}}
 
@@ -188,12 +189,13 @@ def policy(store, task_id):
         return policy_from_db(db, task_id)
 
 
-def save_domains(store, task_id, selected, reviewed):
+def save_domains(store, task_id, selected, reviewed, *, pending=()):
     """Apply explicit additions and removals to the last displayed list, leaving new evidence live."""
     selected = {normalize_domain(v) for v in selected}
     reviewed = {normalize_domain(v) for v in reviewed}
+    pending = {normalize_domain(v) for v in pending}
     edits = [(task_id, domain, 1) for domain in selected - reviewed]
-    edits.extend((task_id, domain, 0) for domain in reviewed - selected)
+    edits.extend((task_id, domain, 0) for domain in (reviewed | pending) - selected)
     with store._db(write=True) as db:
         if not db.execute("SELECT 1 FROM tasks WHERE id=? AND archived=0", (task_id,)).fetchone():
             raise ValueError("This task is no longer available.")

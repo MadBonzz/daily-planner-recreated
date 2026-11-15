@@ -90,13 +90,18 @@ def test_eligibility_fallback_and_paired_kev_decision(monkeypatch):
     task = {"title":"Jog in the park", "description":"Run 3 km on the trail", "attachments":[]}
     request = gate.payload(task, {})
     monkeypatch.setattr(gate, "package", lambda: {})
-    monkeypatch.setattr(gate, "_local_post", lambda *a: {"answers":{"relevant":{"noul":0.9},"external":{"noul":1}}})
+    monkeypatch.setattr(gate, "_local_post", lambda *a: {"answers":{"relevant":{"noul":0.9},"external":{"noul":1},"needs_document":{"noul":0}}})
     assert gate.decide(request, {}) == (False, request["model"])
     def offline(*a):
         raise ModelUnavailable("Local Kev is offline")
     monkeypatch.setattr(gate, "_local_post", offline)
-    monkeypatch.setattr(gate, "chat_json", lambda *a, **k: {"eligible": False})
-    assert gate.decide(request, {})[0] is False
+    monkeypatch.setenv("PLANNER_MODEL", "ternary-bonsai-4b")
+    def fallback(messages, schema, **options):
+        assert "essential material is elsewhere" in messages[0]["content"]
+        return {"eligible": False}
+    monkeypatch.setattr(gate, "chat_json", fallback)
+    allowed, source = gate.decide(request, {})
+    assert allowed is False and source == "ternary-bonsai-4b"
 
 
 def test_every_actionable_sample_has_current_workspace_decision_without_model_calls(monkeypatch):
@@ -113,4 +118,54 @@ def test_every_actionable_sample_has_current_workspace_decision_without_model_ca
             labels[row["id"]] = gate.decide(request, {})[0]
     assert seen == set(gate.package())
     assert labels["bridge-proof"] and labels["patch-note"]
-    assert not any(labels[k] for k in ("bake-dishes", "duvet", "paused-blue-load", "async-flicker"))
+    assert not any(labels[k] for k in ("bake-dishes", "duvet", "paused-blue-load", "async-flicker", "held-seed"))
+
+
+@pytest.mark.parametrize("bad", ["{", "[]", '{"decisions": null}', '{"decisions": {"hash": "false"}}'])
+def test_invalid_workspace_cache_cannot_grant_access(tmp_path, monkeypatch, bad):
+    cache = tmp_path / "desk.json"
+    cache.write_text(bad)
+    monkeypatch.setattr(gate, "PACK", cache)
+    gate.package.cache_clear()
+    try:
+        assert gate.package() == {}
+    finally:
+        gate.package.cache_clear()
+
+
+def test_workspace_gate_requires_the_actual_source_even_if_a_reader_would_be_suitable(monkeypatch):
+    request = gate.payload({"title": "Read the trials paper", "description": "Read the article saved on my desktop.",
+                            "attachments": []}, {})
+    def decision(*args):
+        return {"answers": {"relevant": {"noul": .91}, "external": {"noul": .18},
+                            "needs_document": {"noul": .89}}}
+    monkeypatch.setattr(gate, "_local_post", decision)
+    assert gate.live(request, {}) is False
+
+
+def test_interrupted_workspace_packaging_keeps_prior_package_and_resumes(tmp_path, monkeypatch):
+    import json
+    from examples.estimation import package_workspaces as exporter
+
+    released = tmp_path / "published.json"
+    checkpoint = tmp_path / "progress.json"
+    previous = '{"model": "kev-4b", "decisions": {"old": true}}'
+    released.write_text(previous)
+    rows = [{"id": k, "title": k} for k in ("Read the next chapter", "Go to the store")]
+    monkeypatch.setattr(exporter, "PACK", released)
+    monkeypatch.setattr(exporter, "histories", lambda _: [{"id": "sample", "open_tasks": rows, "holdouts": []}])
+    calls = []
+    def judge(request, config):
+        calls.append(json.loads(request["state"])["task"]["title"])
+        if len(calls) == 2:
+            raise ModelUnavailable("Interrupted")
+        return len(calls) == 1
+    monkeypatch.setattr(exporter, "live", judge)
+    with pytest.raises(ModelUnavailable, match="Interrupted"):
+        exporter.build({}, checkpoint=checkpoint)
+    assert released.read_text() == previous and checkpoint.exists()
+    exporter.build({}, checkpoint=checkpoint)
+    exporter.build({}, check=True)
+    assert calls == [rows[0]["title"], rows[1]["title"], rows[1]["title"]]
+    bundle = json.loads(released.read_text())["decisions"]
+    assert len(bundle) == 2 and "old" not in bundle and sorted(bundle.values()) == [False, True]

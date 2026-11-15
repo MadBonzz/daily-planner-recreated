@@ -1,7 +1,6 @@
 """Compare bare and instructed Qwen queries on the same forecast requests and histories."""
 
 import argparse
-from contextlib import nullcontext
 import hashlib
 import json
 from pathlib import Path
@@ -113,13 +112,12 @@ def score_case(history, task, arm, directory, requests):
     production_search = estimator._search
 
     def record_search(*args, **kwargs):
-        result = production_search(*args, **kwargs)
+        result = production_search(*args, query_roles=(arm,), **kwargs)
         ranked.extend({'candidate': row['id'], 'cosine': score} for row, score in result)
         return result
 
     requests.case_calls.clear()
-    query = patch.object(retrieval, 'embed_query', retrieval.embed_task) if arm == 'bare' else nullcontext()
-    with query, patch.object(estimator, '_search', record_search), patch.object(estimator, 'chat_json', requests):
+    with patch.object(estimator, '_search', record_search), patch.object(estimator, 'chat_json', requests):
         row = run.evaluate(history, run.DATASET, directory / history['id'], case=task['id'])[0]
     if row['retrieval_error']:
         raise RuntimeError(row['retrieval_error'])

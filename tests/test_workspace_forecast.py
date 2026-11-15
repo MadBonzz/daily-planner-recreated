@@ -139,3 +139,58 @@ def test_unrevised_minutes_keep_their_last_verified_evidence_across_pauses(monke
         assert "last_adjusted" not in update["last_adjusted"]
     fresh_history = forecast.revise(TASK, BASE, newer, refreshed_history=True)
     assert "last_adjusted" not in fresh_history["workspace_update"]
+
+
+def test_duplicate_quote_on_fresh_turn_cannot_count_a_milestone_twice(monkeypatch):
+    quote = "I finished the core proof."
+    progress = snapshot(("user", quote), ("user", "As I said, " + quote), new_message_start=1)
+    model = Mock(side_effect=[supported(quote, 2), {"assessment": "insufficient_evidence"}])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    prediction = forecast.revise(TASK, BASE, progress)
+    assert prediction["workspace_update"]["status"] == "insufficient_evidence"
+    assert prediction["point_min"] == BASE["point_min"]
+
+
+def test_long_pasted_output_preserves_late_user_progress(monkeypatch):
+    quote = "I have repaired the zero case; only polishing remains."
+    progress = snapshot(("user", "Detailed test trace follows.\n" + "iteration: failed\n" * 220 + quote))
+    model = Mock(return_value=supported(quote))
+    monkeypatch.setattr(forecast, "chat_json", model)
+    prediction = forecast.revise(TASK, BASE, progress)
+    assert prediction["workspace_update"]["status"] == "adjusted"
+    messages = json.loads(model.call_args.args[0][1]["content"])["messages"]
+    assert len(messages[0]["content"]) <= 1800 and messages[0]["content"].endswith(quote)
+
+
+def test_a_quote_cannot_omit_the_negation_of_the_milestone(monkeypatch):
+    progress = snapshot(("user", "I have not yet finished the proof."))
+    model = Mock(side_effect=[supported("finished the proof"), {"assessment": "insufficient_evidence"}])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    result = forecast.revise(TASK, BASE, progress)
+    assert result["point_min"] == BASE["point_min"]
+    assert result["workspace_update"]["status"] == "insufficient_evidence"
+
+
+def test_negative_completion_report_can_only_describe_work_that_remains(monkeypatch):
+    quote = "I have not yet finished the proof."
+    corrected = supported(quote)
+    corrected["evidence"][0]["kind"] = "remaining"
+    model = Mock(side_effect=[supported(quote), corrected])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    prediction = forecast.revise(TASK, BASE, snapshot(("user", quote)))
+    assert model.call_count == 2
+    assert prediction["workspace_update"]["evidence"][0]["kind"] == "remaining"
+
+
+def test_partial_milestone_cannot_zero_the_remaining_work(monkeypatch):
+    partial = "The first draft is ready."
+    done = "I sent the final proof and finished the task."
+    false_zero = {**supported(partial), "remaining_min": 0, "remaining_low_min": 0}
+    final_zero = {**supported(done), "remaining_min": 0, "remaining_low_min": 0}
+    final_zero["evidence"][0]["kind"] = "task_finished"
+    model = Mock(side_effect=[false_zero, supported(partial), final_zero])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    result = forecast.revise(TASK, BASE, snapshot(("user", partial)))
+    assert result["workspace_update"]["remaining_min"] == 8
+    final = forecast.revise(TASK, BASE, snapshot(("user", done)))
+    assert final["workspace_update"]["remaining_min"] == 0

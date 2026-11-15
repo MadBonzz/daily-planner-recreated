@@ -103,3 +103,25 @@ class ActivityTests(unittest.TestCase):
         second = activity.live_preview(25, 35)["intervals"]
         self.assertEqual(len(first), 2)
         self.assertEqual([(r["seconds"], r["app"]) for r in second], [(10, "chrome.exe")])
+
+
+def test_truncated_interval_does_not_erase_other_batches(monkeypatch):
+    import model_client
+
+    calls = []
+
+    def classify(messages, schema, **kwargs):
+        ids = schema["required"]
+        calls.append(ids)
+        if "3" in ids:
+            raise model_client.ModelResponseTruncated("response length limit")
+        return {key: {"label": "on_task", "reason": "Focused test output."} for key in ids}
+
+    monkeypatch.setattr(activity, "chat_json", classify)
+    rows = [{"period": 0, "app": "Terminal", "title": f"Test result {i}", "domain": "", "idle": False,
+             "excluded": False, "seconds": 5} for i in range(10)]
+    warnings = []
+    activity._classify({"title": "Debug tests"}, rows, warnings)
+    assert [r["label"] for r in rows].count("on_task") == 9
+    assert rows[3]["label_source"] == "unavailable"
+    assert len(warnings) == 1 and calls[-1] == ["8", "9"]

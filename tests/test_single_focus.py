@@ -183,7 +183,7 @@ def test_saved_dev_forecast_picks_up_released_singleton_without_local_models(tmp
                                "related_tasks": [{"task_id": key} for key in related]})["id"]
     reopened = PlannerStore(store.data_dir)
     assert "focus_verdicts" not in reopened.get_task(target)["prediction"]
-    req = focus_domains.single_requests(reopened, target, related)["nba.com"]
+    req = focus_domains.site_requests(reopened, target, related)["nba.com"]
     assert focus_judge.packaged(req) is True
     choice = focus_domains.policy(reopened, target)
     assert "nba.com" in choice["domains"] and not choice["pending"]
@@ -213,3 +213,24 @@ def test_pending_single_site_is_selectable_in_task_editor_without_inference(tmp_
     assert not app.exception
     choice = focus_domains.policy(store, target)
     assert choice["added"] == ["puzzling.example"] and not choice["pending"]
+
+
+def test_timer_started_before_estimate_applies_committed_review_and_keeps_user_edits(tmp_path, model_calls):
+    store = PlannerStore(tmp_path / "live")
+    finished(store, [visit()])
+    target = create(store, "Fix the late print queue")
+    config = focus_bridge.bind(tmp_path, store.path)
+    store.transition(target, "start")
+    assert not focus_bridge.snapshot(tmp_path, config)["domains"]
+    focus_domains.save_domains(store, target, ["scores.example"], [])
+    assert focus_bridge.snapshot(tmp_path, config)["domains"] == ["scores.example"]
+    estimate(store)
+    assert focus_bridge.snapshot(tmp_path, config)["domains"] == ["puzzling.example", "scores.example"]
+    assert store.get_task(target)["status"] == "running"
+    store.transition(target, "pause")
+    assert not focus_bridge.snapshot(tmp_path, config)["domains"]
+    store.transition(target, "resume")
+    assert focus_bridge.snapshot(tmp_path, config)["domains"] == ["puzzling.example", "scores.example"]
+    store.archive_task(target)
+    assert not focus_bridge.snapshot(tmp_path, config)["domains"]
+    assert len(model_calls) == 1

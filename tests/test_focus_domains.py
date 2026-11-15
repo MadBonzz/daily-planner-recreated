@@ -1,4 +1,8 @@
+import json
+
 import pytest
+
+import focus_judge
 
 from activity import activity_key
 from focus_domains import normalize_domain, policy, policy_from_db, save_domains
@@ -23,7 +27,15 @@ def history(store, title, visits):
     return task
 
 
-def test_recurring_across_distinct_related_tasks_with_live_edits_and_deletion(tmp_path):
+@pytest.fixture
+def approved_repeats(monkeypatch):
+    """These policy composition tests supply a positive Kev verdict only for repeated evidence."""
+    def verdict(request):
+        return True if "previous_tasks" in json.loads(request["state"]) else None
+    monkeypatch.setattr(focus_judge, "packaged", verdict)
+
+
+def test_recurring_across_distinct_related_tasks_with_live_edits_and_deletion(tmp_path, approved_repeats):
     store = PlannerStore(tmp_path)
     a = history(store, "Tiling kernel", [visit(), visit(seconds=60), visit("tutorial.edu", "on_task")])
     b = history(store, "Shared memory", [visit("www.x.com"), visit("tutorial.edu")])
@@ -55,7 +67,7 @@ def test_recurring_across_distinct_related_tasks_with_live_edits_and_deletion(tm
         assert not db.execute("SELECT 1 FROM focus_domain_choices WHERE task_id=?", (target,)).fetchone()
 
 
-def test_mixed_use_phone_exclusions_target_links_and_label_correction(tmp_path):
+def test_mixed_use_phone_exclusions_target_links_and_label_correction(tmp_path, approved_repeats):
     store = PlannerStore(tmp_path)
     noisy = [visit("www.youtube.com"), visit("notes.example"), visit("overlap.example", phone_app="Sports"),
              visit("hidden.example", excluded=True), visit("idle.example", idle=True), visit("private.example"),
@@ -69,7 +81,7 @@ def test_mixed_use_phone_exclusions_target_links_and_label_correction(tmp_path):
     assert policy(store, t)["domains"] == []  # The submitted correction applies before report rebuilding.
 
 
-def test_saved_edits_merge_with_new_suggestions_and_manual_relations(tmp_path):
+def test_saved_edits_merge_with_new_suggestions_and_manual_relations(tmp_path, approved_repeats):
     store = PlannerStore(tmp_path)
     a = history(store, "Left", [visit("x.com"), visit("news.example")])
     b = history(store, "Right", [visit("x.com")])
@@ -106,3 +118,47 @@ def test_normalized_host(input, expected):
 def test_invalid_block_domain(bad):
     with pytest.raises(ValueError):
         normalize_domain(bad)
+
+
+def test_kev_can_reject_a_recurring_platform_needed_for_the_current_task(tmp_path, monkeypatch):
+    store = PlannerStore(tmp_path)
+    sources = [history(store, title, [visit("chess.com", title="Play blitz online")])
+               for title in ("Morning notebook", "Afternoon notebook")]
+    task = open_task(store, "Analyze my past blitz games", sources, details="Open my Chess games and compare the moves.")
+    # Missing, negative and positive Kev decisions are distinct. Page renders never run inference.
+    captured = []
+    monkeypatch.setattr(focus_judge, "packaged", lambda request: captured.append(request))
+    proposed = policy(store, task)
+    assert "chess.com" in proposed["pending"] and not proposed["domains"]
+    state = json.loads(captured[0]["state"])
+    assert state["previous_tasks"] == ["Afternoon notebook", "Morning notebook"]
+    assert "Play blitz online" in state["observed_off_task_browser_visit"]["tab_titles"]
+    monkeypatch.setattr(focus_judge, "packaged", lambda request: False)
+    assert not policy(store, task)["domains"] and not policy(store, task)["pending"]
+    save_domains(store, task, ["chess.com"], [])
+    assert policy(store, task)["domains"] == ["chess.com"]
+
+
+def test_explicit_unblock_survives_subdomain_variations_in_future_reports(tmp_path, monkeypatch):
+    store = PlannerStore(tmp_path)
+    source = history(store, "Review prior draft", [visit("stream.example")])
+    target = open_task(store, "Draft chapter two", [source])
+    monkeypatch.setattr(focus_judge, "packaged", lambda request: True)
+    save_domains(store, target, [], policy(store, target)["domains"])
+    store.save_report(source, {"intervals": [visit("clips.stream.example")]})
+    assert policy(store, target)["domains"] == []
+    # Explicitly choosing to block just this subdomain still works after unblocking the parent.
+    save_domains(store, target, ["clips.stream.example"], [])
+    assert policy(store, target)["domains"] == ["clips.stream.example"]
+
+
+def test_saving_an_unchecked_pending_site_remains_effective_after_kev_answers(tmp_path, monkeypatch):
+    store = PlannerStore(tmp_path)
+    source = history(store, "Write test script", [visit("video.example", title="Full match replay")])
+    target = open_task(store, "Debug another test", [source])
+    pending = policy(store, target)
+    assert "video.example" in pending["pending"]
+    save_domains(store, target, ["shop.example"], pending["domains"], pending=pending["pending"])
+    monkeypatch.setattr(focus_judge, "packaged", lambda req: True)
+    updated = policy(store, target)
+    assert updated["domains"] == ["shop.example"] and updated["removed"] == ["video.example"]

@@ -272,15 +272,17 @@ class StoreTests(unittest.TestCase):
         self.decide_pairs(lambda a,b: target["id"] in (a,b))
         stale = self.store.claim_prediction()
         self.assertEqual(stale["task"]["id"], target["id"])
-        self.store.transition(fixed["id"], "start")
+        newer = self.task("A second related revision", prediction=self.budget)
+        self.decide_pairs(lambda a,b: target["id"] in (a,b))
+        self.store.transition(newer["id"], "start")
         self.now += 60
-        self.store.transition(fixed["id"], "stop")
-        self.store.transition(fixed["id"], "finish", completion_note="Finished on the hour.",
+        self.store.transition(newer["id"], "stop")
+        self.store.transition(newer["id"], "finish", completion_note="Verified on the second pass.",
                               pdf_text="Page 1: Agenda")
         self.assertFalse(self.store.resolve_prediction(target["id"], stale["token"], {"point_min": 900}))
         latest = self.store.claim_prediction()
-        self.assertEqual({r["id"] for r in latest["history"]}, {source["id"], fixed["id"]})
-        self.assertEqual(next(r for r in latest["history"] if r["fixed_duration"])["pdf_text"], "Page 1: Agenda")
+        self.assertEqual({r["id"] for r in latest["history"]}, {source["id"], newer["id"]})
+        self.assertEqual(next(r for r in latest["history"] if r["id"] == newer["id"])["pdf_text"], "Page 1: Agenda")
         self.store.transition(target["id"], "start")
         self.now += 30
         self.store.transition(target["id"], "stop")

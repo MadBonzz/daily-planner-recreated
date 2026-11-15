@@ -475,7 +475,7 @@ def settings(store, index_dir, dev):
     with st.form("privacy_settings"):
         exclusions = st.text_area("Exclude apps, window titles or domains",
                                   value="\n".join(store.get_setting("exclusions", [])),
-                                  help="One text match per line, case-insensitive. Applies to newly generated reports and previews.")
+                                  help="One text match per line, case-insensitive. Applies to new reports, previews and historical activity used for forecasts.")
         interval = st.number_input("Live activity refresh (seconds)", min_value=1, max_value=60,
                                    value=store.get_setting("poll_seconds", 5))
         if st.form_submit_button("Save settings", type="primary"):
