@@ -13,7 +13,7 @@ import retrieval
 @pytest.fixture(autouse=True)
 def local_models(monkeypatch):
     # The forecast tests exercise the real index with deterministic model transports.
-    monkeypatch.setattr(retrieval, "embed_task", lambda task, config=None:
+    monkeypatch.setattr(retrieval, "embed_task", lambda task, config=None, query=False:
                         [0.6, 0.8] if task.get("pdf_text") else [0.8, 0.6])
     monkeypatch.setattr(retrieval, "decide_related", lambda *args: True)
 
@@ -41,6 +41,8 @@ def test_first_estimate_uses_only_task_scope_and_keeps_model_decisions(tmp_path)
     payload = json.loads(messages[-1]["content"])
     record = payload["new_task"]
     assert payload["history"] == [] and record["user_estimate_minutes"] == 60
+    assert payload["timing_context"] == prediction["timing_context"]
+    assert "no earlier completed tasks" in prediction["timing_context"].lower()
     assert record["description"] == task["description"]
     assert record["category"] == "Reading" and record["details"] == task["details"]
     assert "concentration bound" in record["document_excerpt"]
@@ -338,13 +340,14 @@ def test_unavailable_local_retrieval_preserves_cold_model_forecast(tmp_path, mon
         retrieval.ModelUnavailable("Embedding model unavailable.")))
     with patch("estimator.chat_json", return_value=forecast()) as model:
         result = estimator.predict(paper("new"), [paper("same-title")], tmp_path)
+    assert "incomplete" in json.loads(model.call_args.args[0][1]["content"])["timing_context"]
     assert model.called and result["related_tasks"] == [] and result["evidence"] == []
     assert result["point_min"] == 87 and result["provenance"]["decision"] == "direct"
     assert result["retryable"] and "Embedding model" in result["retrieval_error"]
 
 
 def test_overlong_historical_pdf_preserves_other_usable_comparisons(tmp_path, monkeypatch):
-    def embed(task, config):
+    def embed(task, config, query=False):
         if task["id"] == "long":
             raise retrieval.DocumentTooLong("The complete uploaded text exceeds the embedding context.")
         return [1.0, 0.0]

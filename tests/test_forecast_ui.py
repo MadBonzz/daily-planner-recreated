@@ -73,3 +73,13 @@ def test_warning_only_citation_counts_as_used():
                     used_task_ids=["a"], cautions=[{"advice": "Allow time for the jam.",
                         "sources": [{"task_id": "a", "title": "Print a flyer", "origin": "Completion note"}]}])
     assert "<strong>Used in this forecast</strong> · Print a flyer" in prose(show_card(result))
+
+def test_scope_only_forecast_always_shows_evidence_gap():
+    copy = prose(show_card(budget(
+        timing_context="No comparable timed task was selected from the available history.",
+        provenance={"decision": "direct", "minutes_by": "model"},
+        model_rationale="Allow time to label the six exchanges and verify their durable states.",
+        evidence=[],
+    )))
+    assert "No comparable timed task" in copy and "without a personal timing comparison" in copy
+    assert "six exchanges" in copy

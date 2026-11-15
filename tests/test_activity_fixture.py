@@ -154,3 +154,55 @@ def test_db_uses_model_for_open_phone_activity_with_seed_clock(tmp_path, monkeyp
     assert report['elapsed_seconds'] == pytest.approx(420)
     assert sum(r['seconds'] for r in report['intervals']) == pytest.approx(420)
     assert all('label' not in row and 'package' not in row and 'classname' not in row for row in calls)
+
+
+def test_all_packaged_histories_show_laptop_and_phone_distractions_from_completed_tasks():
+    import sqlite3
+    from examples.estimation.run import DATASET, histories
+
+    for history in histories(None):
+        path = DATASET / 'activitywatch' / (history['id'] + '.db')
+        with sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True) as db:
+            assert db.execute("SELECT count(*) FROM buckets WHERE client='aw-watcher-android'").fetchone()[0]
+        sets = replay_history(history, directory=DATASET)
+        all_events = [r for task in sets.values() for r in task['report']['intervals']]
+        distractions = [r for r in all_events if r['label'] == 'off_task']
+        assert {activity.device_label(r) for r in distractions} >= {'Laptop', 'Phone'}, history['id']
+        assert all(r['label_source'] == 'sample annotation' for r in distractions)
+        for task in history['tasks']:
+            report = sets[task['id']]['report']
+            assert report['elapsed_seconds'] == pytest.approx(task['actual_minutes'] * 60)
+        if history['id'] == '04-kernel-workbench':
+            assert sum(r['seconds'] for r in distractions if r['domain'] == 'youtube.com') == 660
+            assert sum(r['seconds'] for r in distractions if r.get('phone_app') == 'FotMob') == 480
+
+
+def test_device_labels_identify_legacy_foreground_and_redacted_rows():
+    assert activity.device_label({'phone_app': 'Clock', 'idle': True}) == 'Phone'
+    assert activity.device_label({'title': 'Spreadsheet', 'phone_app': 'Clock'}) == 'Laptop + phone'
+    assert activity.device_label({'domain': 'arxiv.org'}) == 'Laptop'
+    assert activity.device_label({'idle': True}) == 'Laptop'
+    assert activity.device_label({'idle': None}) == 'Unknown'
+    assert activity.device_label({'excluded': True, 'app': 'Firefox'}) == 'Unknown'
+
+
+def test_existing_gpu_profile_refreshes_only_unmodified_sample_reports(tmp_path, monkeypatch):
+    import dev_workspace as dev
+
+    monkeypatch.setattr(activity, 'chat_json', lambda *_a, **_kw: pytest.fail('Unexpected model request'))
+    profile = '04-kernel-workbench'
+    store = dev.open_dev_workspace(tmp_path, profile)
+    tasks = {r['title']: r for r in store.completed_tasks()}
+    fixture_task = tasks['Fix corruption on partial warp tails']
+    reviewed = next(t for t in tasks.values() if t['id'] != fixture_task['id'])
+    before = store.periods(fixture_task['id'])
+    old = {'classification_source': 'synthetic_annotations', 'summary': 'Old fixture', 'intervals': []}
+    store.save_report(fixture_task['id'], old, refresh_estimates=False)
+    user_report = {**reviewed['report'], 'classification_source': 'model', 'summary': 'Personally reviewed'}
+    store.save_report(reviewed['id'], user_report, refresh_estimates=False)
+    store.set_setting('dev_sample_activity_sha256', 'prior-fixture')
+    reopened = dev.open_dev_workspace(tmp_path, profile)
+    refreshed = reopened.get_task(fixture_task['id'])
+    assert refreshed['report']['totals']['off_task'] == 360
+    assert refreshed['day'] == fixture_task['day'] and reopened.periods(fixture_task['id']) == before
+    assert reopened.get_task(reviewed['id'])['report'] == user_report

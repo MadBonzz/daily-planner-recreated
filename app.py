@@ -12,7 +12,7 @@ import streamlit as st
 
 import activity
 import estimator
-from dev_workspace import history_choices, open_dev_workspace
+from dev_workspace import add_sample_task, history_choices, open_dev_workspace, sample_task_choices
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
 from relevance_feedback import related_ids
@@ -131,6 +131,11 @@ def show_prediction(prediction):
     old_direct = "No timed personal history. This estimate is based on the task scope. "
     if not provenance and prediction.get("basis") == "Model estimate from task scope" and explanation.startswith(old_direct):
         rationale = explanation.removeprefix(old_direct)
+    if prediction.get("timing_context") and not prediction.get("evidence"):
+        context = prediction["timing_context"]
+        if minutes_by == "model":
+            context += " This estimate uses the task description and budget without a personal timing comparison."
+        st.caption(context)
     if rationale or reasons:
         st.markdown("**Model rationale**")
         if rationale and all(reason != rationale for _, reason, _ in reasons):
@@ -202,19 +207,55 @@ def perform(store, task, action, **kwargs):
         return None
 
 
-@st.dialog("Have you finished this task?")
+def entered_minutes(task, *, optional):
+    hint = (f"Leave blank to keep {duration(task['actual_seconds'])}." if task["actual_seconds"]
+            else "Leave blank if you don’t know how much time you spent.")
+    return st.number_input("Total time spent (minutes)" + (" · optional" if optional else ""),
+                           min_value=0.0, value=None, step=1.0, placeholder="e.g. 30",
+                           help=hint if optional else "Enter the total across all sessions.")
+
+
+def close_time_dialog():
+    st.session_state.pop("timer_dialog", None)
+
+
+@st.dialog("Edit time spent", on_dismiss=close_time_dialog)
+def edit_time(store, task, dev):
+    st.write(task["title"])
+    st.caption(f"Current total · {duration(task['actual_seconds'])}")
+    with st.form(f"time-form-{task['id']}"):
+        value = entered_minutes(task, optional=False)
+        st.caption("A higher total adds time without ActivityWatch logs. A lower total removes the most recent minutes first.")
+        submitted = st.form_submit_button("Save time", type="primary")
+    if submitted:
+        if value is None:
+            st.error("Enter how many minutes you spent.")
+        elif perform(store, task, "adjust_time", spent_seconds=value * 60):
+            close_time_dialog()
+            if task["status"] == "completed":
+                schedule_reports(store, dev)
+            st.rerun()
+
+
+@st.dialog("Have you finished this task?", on_dismiss=close_time_dialog)
 def stop_confirmation(store, index_dir, task, dev):
+    stopped = task["status"] == "awaiting_finish"
     st.html(f'<strong>{escape(task["title"])}</strong>')
-    st.write(f"Your timer stopped at {duration(task['actual_seconds'])} of recorded work.")
+    if task["actual_seconds"]:
+        st.write(f"Time spent so far · {duration(task['actual_seconds'])}")
+    value = entered_minutes(task, optional=True)
+    spent = None if value is None else value * 60
     note = st.text_area("Completion note (optional)", key=f"finish-note-{task['id']}",
                         placeholder="What affected how long this took?")
     yes, no = st.columns(2)
     if yes.button("Yes, finish task", type="primary", width="stretch"):
-        if perform(store, task, "finish", completion_note=note, queue_report=True):
+        if perform(store, task, "finish", completion_note=note, spent_seconds=spent, queue_report=True):
+            close_time_dialog()
             schedule_reports(store, dev)
             st.rerun()
-    if no.button("No, continue later", width="stretch"):
-        if perform(store, task, "continue_later"):
+    if no.button("No, continue later" if stopped else "Cancel", width="stretch"):
+        if not stopped or perform(store, task, "continue_later", spent_seconds=spent):
+            close_time_dialog()
             st.rerun()
 
 
@@ -226,8 +267,9 @@ def timeline(intervals, *, show_date=False):
     spans_days = show_date or len({datetime.fromtimestamp(i["start"]).date() for i in intervals}) > 1
     for event in intervals:
         start = datetime.fromtimestamp(event["start"]).strftime("%b %d %H:%M:%S" if spans_days else "%H:%M:%S")
-        kind = "Excluded" if event["excluded"] else event.get("app") or "Unknown"
-        row = {"Start": start, "Length": duration(event["seconds"]), "App": kind,
+        kind = "Excluded" if event["excluded"] else event.get("app", "")
+        row = {"Start": start, "Length": duration(event["seconds"]), "Device": activity.device_label(event),
+               "Laptop app": kind,
                "Window or tab": event.get("title", ""), "Domain": event.get("domain", "")}
         if event.get("phone_app"):
             row["Phone app"] = event["phone_app"]
@@ -256,7 +298,7 @@ def review_activity(store, task, dev):
     rows = []
     for group in groups.values():
         labels = group["labels"]
-        rows.append({"App": group["app"], "Site": group["domain"], "Window": group["title"],
+        rows.append({"Device": activity.device_label(group), "Laptop app": group["app"], "Site": group["domain"], "Window": group["title"],
                      "Phone app": group["phone_app"], "Laptop idle": group["idle"],
                      "Time": duration(group["seconds"]), "Source": ", ".join(sorted(group["sources"])),
                      "Classification": choices[next(iter(labels))] if len(labels) == 1 else "Mixed"})
@@ -312,7 +354,13 @@ def running_clock(store, task_id):
     task = store.get_task(task_id)
     if task["status"] != "running":
         st.rerun()
-    st.markdown(f"**{duration(task['actual_seconds'])}** recorded")
+    st.markdown(f"**{duration(task['actual_seconds'])}** spent")
+    if task["actual_seconds"] >= 2 * 60 * task["estimate_minutes"]:
+        st.warning(f"Time spent has reached twice your {minutes(task['estimate_minutes'])} estimate. Still working?")
+        if st.button("Stop and review time", key=f"overdue-{task_id}"):
+            if perform(store, task, "stop"):
+                st.session_state["timer_dialog"] = ("finish", task_id)
+                st.rerun()
 
 
 def live_activity(store, task):
@@ -514,7 +562,12 @@ def estimate_section(store, task, *, read_only=False):
     if estimate_pending(task) and not initial_pending:
         values.append("Updating estimate…")
     if read_only or task["status"] != "running":
-        values.append(f"Recorded {duration(task['actual_seconds'])}")
+        if task.get("time_edited_at") is not None:
+            values.append(f"Time spent {duration(task['actual_seconds'])} (user-adjusted)")
+        elif task["status"] == "completed" and not task["actual_seconds"]:
+            values.append("Time spent unknown")
+        else:
+            values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
     if initial_pending or estimate_pending(task) or fixed:
         return
@@ -651,7 +704,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
                     if st.form_submit_button("Stop at corrected time"):
                         end_ts = datetime.combine(end_day, end_time).timestamp()
                         if perform(store, task, "stop", ended_at=end_ts):
-                            st.session_state["ask_finish"] = key
+                            st.session_state["timer_dialog"] = ("finish", key)
                             st.rerun()
         if not replay and status in ("running", "paused"):
             left, right = st.columns(2)
@@ -661,7 +714,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
                     st.rerun()
             if right.button("Stop", key=f"stop-{key}", width="stretch"):
                 if perform(store, task, "stop"):
-                    st.session_state["ask_finish"] = key
+                    st.session_state["timer_dialog"] = ("finish", key)
                     st.rerun()
         elif not replay and status == "ready":
             if st.button("Start", key=f"start-{key}", type="primary"):
@@ -669,6 +722,18 @@ def render_task(store, index_dir, task, dev, *, replay=False):
                     st.rerun()
         elif not replay and status == "awaiting_finish":
             if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
+                st.session_state["timer_dialog"] = ("finish", key)
+        if not replay and status in ("ready", "paused", "completed"):
+            controls = st.columns(2)
+            if controls[0].button("Edit time spent", key=f"edit-time-{key}"):
+                st.session_state["timer_dialog"] = ("edit", key)
+            if status != "completed" and controls[1].button("Mark complete", key=f"finish-{key}"):
+                st.session_state["timer_dialog"] = ("finish", key)
+        if not replay:
+            dialog = st.session_state.get("timer_dialog")
+            if dialog == ("edit", key) and status in ("ready", "paused", "completed"):
+                edit_time(store, task, dev)
+            elif dialog == ("finish", key) and status in ("ready", "paused", "awaiting_finish"):
                 stop_confirmation(store, index_dir, task, dev)
         if status == "running" and not dev:
             if st.toggle("Live activity", key=f"live-{key}", help="Preview the last two minutes."):
@@ -742,7 +807,7 @@ def replay_controls(store, history_id):
             jump.button("Open date", key="replay-jump", on_click=select_day, args=(selected,), width="stretch")
         if st.button("Restart replay", key="replay-reset", help="Start this schedule again from its first action."):
             open_dev_workspace(DATA_ROOT, history_id, reset=True, replay=True)
-            st.session_state.pop("ask_finish", None)
+            close_time_dialog()
             st.rerun()
 
 
@@ -780,10 +845,19 @@ def main():
                     date_column, jump = st.columns([3, 1], vertical_alignment="bottom")
                     target = date_column.selectbox("Task date", available_days, key=f"dev-date-{selected}")
                     jump.button("Open date", on_click=select_day, args=(target,), width="stretch")
+                samples = sample_task_choices(selected)
+                if samples:
+                    choice, add = st.columns([3, 1], vertical_alignment="bottom")
+                    sample_id = choice.selectbox("Try a sample task", list(samples),
+                                                 format_func=lambda key: samples[key]["title"], key=f"sample-task-{selected}",
+                                                 help="Add the task and its documents to the selected plan date. Its final estimate uses your configured forecast model.")
+                    if add.button("Add sample task", width="stretch"):
+                        add_sample_task(store, selected, sample_id, st.session_state["plan_day"])
+                        st.rerun()
                 if st.button("Reset sample history", help="Restore the original tasks and discard edits to this sample."):
                     open_dev_workspace(DATA_ROOT, selected, reset=True)
                     select_day(date.today())
-                    st.session_state.pop("ask_finish", None)
+                    close_time_dialog()
                     st.rerun()
     else:
         store = PlannerStore(DATA_ROOT / "live")
@@ -837,10 +911,7 @@ def main():
         st.subheader("Also worked on this day" if tasks else "Worked on this day")
         for task in other:
             render_task(store, index_dir, task, dev, replay=replay)
-    if not replay and (key := st.session_state.pop("ask_finish", None)):
-        stopped = store.get_task(key)
-        if stopped["status"] == "awaiting_finish":
-            stop_confirmation(store, index_dir, stopped, dev)
+
 
 
 if __name__ == "__main__":

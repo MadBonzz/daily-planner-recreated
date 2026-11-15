@@ -326,6 +326,19 @@ def reviewable(row):
     return not row.get("excluded") and any(row.get(key) for key in ("app", "domain", "title", "phone_app"))
 
 
+def device_label(event):
+    """Identify foreground sources on current or saved intervals. AFK is a laptop signal."""
+    if event.get("excluded"):
+        return "Unknown"
+    laptop = any(event.get(key) for key in ("app", "domain", "title"))
+    phone = bool(event.get("phone_app"))
+    if phone:
+        return "Laptop + phone" if laptop else "Phone"
+    if laptop or event.get("idle") is not None:
+        return "Laptop"
+    return "Unknown"
+
+
 def activity_key(row):
     """Group repeated observations of the same window and foreground phone context."""
     return json.dumps([row.get(key) or "" for key in ("app", "domain", "title", "phone_app")]
@@ -438,6 +451,10 @@ def build_report(task, periods, exclusions=(), *, capture=True, disabled_periods
                  source=None, reviewed_label=None, examples=(), overrides=None):
     """Analyze only the recorded running periods, excluding pauses and overnight gaps."""
     report = _collect(periods, exclusions, capture, disabled_periods, source)
+    if task.get("manual_seconds"):
+        report["manual_seconds"] = task["manual_seconds"]
+    if task.get("status") == "completed" and not report["intervals"] and not task.get("actual_seconds") and task.get("time_edited_at") is None:
+        report["time_unknown"] = True
     _classify(task, report["intervals"], report["warnings"], reviewed_label,
               examples=examples, overrides=overrides)
     if examples and any(row.get("label_source") == "model" for row in report["intervals"]):
@@ -462,6 +479,15 @@ def _summarize(report):
     summary = (f"Across {elapsed/60:.1f} recorded minutes, {totals['on_task']/60:.1f} min "
                f"were labeled on-task, {totals['off_task']/60:.1f} min off-task and "
                f"{totals['uncertain']/60:.1f} min uncertain.")
+    manual = report.get("manual_seconds", 0)
+    if manual:
+        elapsed += manual
+        totals["uncertain"] += manual
+        summary += f" You also entered {manual/60:g} minutes without a timer, for {elapsed/60:g} minutes in total. Those extra minutes have no activity timestamps and count as uncertain."
+        if not rows:
+            summary = f"You entered {manual/60:g} minutes without a timer. No activity timestamps are available for classification."
+    elif report.get("time_unknown"):
+        summary = "You completed this task without a recorded duration."
     interpreted = [row for row in rows if row["label"] in {"on_task", "off_task"}]
     if interpreted:
         example = max(interpreted, key=lambda row: row["seconds"])

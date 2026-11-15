@@ -6,6 +6,8 @@ import logging
 import sqlite3
 import threading
 
+import portalocker
+
 import estimator
 import retrieval
 from model_client import ModelUnavailable
@@ -42,16 +44,21 @@ def schedule_pending(store, index_dir):
 
 
 def run_one_job(store, index_dir):
-    """Run one currently claimable forecast or pair; return False when idle."""
-    job = store.claim_prediction(lease_seconds=_LEASE_SECONDS)
-    if job:
-        _process(store, index_dir, job)
-        return True
-    pair = store.claim_relation(lease_seconds=_LEASE_SECONDS)
-    if pair:
-        _process_relation(store, pair)
-        return True
-    return False
+    """Run one forecast or pair at a time across processes sharing the workspace."""
+    # Two Streamlit processes have separate worker registries. Lock before
+    # choosing the next job so a waiting worker rechecks first-forecast priority.
+    # Timer changes and new submissions never acquire this inference lock.
+    with (store.data_dir / "estimate-worker.lock").open("ab") as lockfile:
+        portalocker.lock(lockfile, portalocker.LOCK_EX)
+        job = store.claim_prediction(lease_seconds=_LEASE_SECONDS)
+        if job:
+            _process(store, index_dir, job)
+            return True
+        pair = store.claim_relation(lease_seconds=_LEASE_SECONDS)
+        if pair:
+            _process_relation(store, pair)
+            return True
+        return False
 
 
 def _drain(store, index_dir, key, wake):

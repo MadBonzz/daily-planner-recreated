@@ -28,7 +28,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 9,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "Played a geography guessing game while the USB connection was down."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           }
         ],
@@ -135,7 +144,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 10,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "label": "off_task",
+            "review_reason": "The geography game was unrelated to the IMU test."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           },
           {
@@ -218,7 +236,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 48,
+            "minutes": 12,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "uncertain",
+            "review_reason": "A note was open during the shift; its contents were unavailable."
+          },
+          {
+            "minutes": 33,
             "label": "uncertain"
           }
         ]
@@ -246,7 +273,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 8,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The phone game interrupted the rover bring-up."
+          },
+          {
+            "minutes": 4,
             "label": "uncertain"
           },
           {
@@ -580,5 +616,5 @@
       }
     }
   ],
-  "activitywatch_sha256": "9c9fd2e3dd80aeb98c3076d506181f34de6a2aa8e5f6345ee2c53c8fba1a2f66"
+  "activitywatch_sha256": "68ed7a81a32a67909c3ebc80b8147ce8d98f2d3dd3e07ad6a92bce1f9bc59de3"
 }

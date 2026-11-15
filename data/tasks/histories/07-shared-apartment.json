@@ -19,7 +19,16 @@
       "activity": [
         [
           {
-            "minutes": 36,
+            "minutes": 12,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "label": "off_task",
+            "review_reason": "Played a game during a break from the sheet-pan washing."
+          },
+          {
+            "minutes": 19,
             "label": "uncertain"
           }
         ]
@@ -68,7 +77,16 @@
       "activity": [
         [
           {
-            "minutes": 31,
+            "minutes": 10,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The phone game interrupted the cleanup."
+          },
+          {
+            "minutes": 18,
             "label": "uncertain"
           }
         ]
@@ -94,7 +112,12 @@
             "label": "on_task"
           },
           {
-            "minutes": 4,
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "Opened a shoe sale during filter checkout."
+          },
+          {
+            "minutes": 1,
             "label": "uncertain"
           },
           {
@@ -121,7 +144,16 @@
       "activity": [
         [
           {
-            "minutes": 9,
+            "minutes": 4,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "on_task",
+            "review_reason": "Set the washer reminder during the first part of the laundry."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           }
         ],
@@ -193,7 +225,16 @@
       "activity": [
         [
           {
-            "minutes": 19,
+            "minutes": 4,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "uncertain",
+            "review_reason": "The app could contain assembly advice or an unrelated discussion."
+          },
+          {
+            "minutes": 13,
             "label": "uncertain"
           }
         ]
@@ -285,5 +326,5 @@
       }
     }
   ],
-  "activitywatch_sha256": "68c76c4d764586fa66fcf5ca029c24b7b7ad345c3fbe9f3695edaf795b0c1ae2"
+  "activitywatch_sha256": "6156bf8b10c0cfa094799060438ec22644fae8dd49928d97d1cb6bd1fc90f90a"
 }

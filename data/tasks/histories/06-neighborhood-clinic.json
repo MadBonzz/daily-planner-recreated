@@ -19,7 +19,16 @@
       "activity": [
         [
           {
-            "minutes": 8,
+            "minutes": 2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "Played a phone game in the waiting room before the handover."
+          },
+          {
+            "minutes": 3,
             "label": "on_task"
           },
           {
@@ -79,7 +88,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 26,
+            "minutes": 10,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "on_task",
+            "review_reason": "Checked off the doors on the posting list."
+          },
+          {
+            "minutes": 13,
             "label": "uncertain"
           }
         ]
@@ -101,7 +119,16 @@
       "activity": [
         [
           {
-            "minutes": 9,
+            "minutes": 2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The crossword was unrelated to the clinic rota."
+          },
+          {
+            "minutes": 4,
             "label": "on_task"
           },
           {
@@ -183,7 +210,16 @@
       "activity": [
         [
           {
-            "minutes": 6,
+            "minutes": 1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2,
+            "label": "off_task",
+            "review_reason": "Returned to the game before the room assignment discussion."
+          },
+          {
+            "minutes": 3,
             "label": "on_task"
           },
           {
@@ -391,5 +427,5 @@
       }
     }
   ],
-  "activitywatch_sha256": "0fe17f044930af8d5f1c9e5df14c6eb0fd6e6d850a7e0c587cac96fbe40b4962"
+  "activitywatch_sha256": "517e631795ff857e5e023ebcc6dad4b1dbb16c67bb8aae7a9653deeb89ea4919"
 }

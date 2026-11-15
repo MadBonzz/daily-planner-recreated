@@ -179,3 +179,12 @@ def test_registry_upgrade_preserves_legacy_edits(profiles):
     reset = dev.open_dev_workspace(profiles, "sample-a", reset=True)
     assert reset.path != legacy.path and "Existing edited sample" not in by_title(reset)
     assert dev.open_dev_workspace(profiles, "sample-a").path == reset.path
+
+
+def test_add_sample_queues_real_forecast_without_copying_outcome(profiles):
+    store = dev.open_dev_workspace(profiles, "sample-a")
+    task = dev.add_sample_task(store, "sample-a", "holdout", date.today())
+    assert task["title"] == "Private scoring task"
+    assert task["status"] == "ready" and task["actual_seconds"] == 0
+    assert task["day"] == date.today().isoformat() and task["prediction"]["status"] == "pending"
+    assert "evaluation" not in task and not task["completion_note"]

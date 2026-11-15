@@ -33,6 +33,8 @@ def test_metrics_keep_archived_history_and_exclude_untimed_and_non_model_forecas
     tasks, logs = _records()
     assert len(logs) == 1 and logs[0]["domain"] == "docs.example"
     assert tasks[1]["archived"] == 1 and all(t["completed_day"] == "2025-02-10" for t in tasks)
+    assert tasks[-1]["actual_minutes"] is None
+    assert run_query("SELECT COUNT(actual_minutes) AS timed FROM tasks", tasks, logs)[0] == [{"timed": 3}]
     stats, = accuracy(tasks, "user_minutes")
     assert (stats["Tasks"], stats["Mean absolute error (min)"], stats["Exact"]) == (3, 5.0, 1)
     assert (stats["Under (%)"], stats["Mean shortfall (min)"]) == (33.3, 10)
@@ -56,7 +58,7 @@ def test_query_joins_scoped_rows_and_answer_shows_evidence():
     tasks, logs = _records()
     query = ("SELECT title, domain, sum(seconds) AS total_seconds FROM tasks JOIN logs USING(task_id) "
              "GROUP BY title, domain ORDER BY total_seconds DESC")
-    answers = [{"sql": query}, {"answer": "The flyer draft used docs.example for 25 seconds."}]
+    answers = [{"scope": "all", "tool": "custom_sql", "task_ids": [], "sql": query}, {"answer": "The flyer draft used docs.example for 25 seconds."}]
     with patch("planner_analytics.chat_json", side_effect=answers) as model:
         result = ask_analytics("Which task used docs.example?", tasks, logs)
     assert result["rows"] == [{"title": "Flyer 0", "domain": "docs.example", "total_seconds": 25}]
@@ -92,3 +94,99 @@ def test_purge_during_planning_does_not_send_old_results():
 def test_chat_cannot_answer_from_sql_constants_without_reading_records():
     with pytest.raises(ValueError):
         run_query("SELECT 'invented' AS answer", *_records())
+
+
+@pytest.mark.parametrize("tool", ["custom_sql", "distraction_sources"])
+def test_topic_query_scopes_distractions_to_gpu_and_preserves_phone_only_rows(tool):
+    tasks, _ = _records()
+    tasks[0].update(category="GPU lab", title="Bound the CUDA warp tail")
+    base = {"started": "2025-02-10T10:20:00", "app": "", "window": "", "domain": "",
+            "device": "Phone", "phone_app": "Word game", "seconds": 180, "source": "user", "reason": "",
+            "classification": "off_task"}
+    logs = [dict(base, task_id="0"), dict(base, task_id="1", seconds=7200, phone_app="Unrelated office app")]
+    sql = "SELECT phone_app, SUM(seconds)/60 AS minutes FROM logs WHERE classification='off_task' GROUP BY phone_app"
+    planned = {"scope": "category:GPU lab", "tool": tool, "task_ids": [], "sql": sql if tool == "custom_sql" else ""}
+    with patch("planner_analytics.forecast_endpoint") as endpoint, patch("planner_analytics.chat_json") as model:
+        endpoint.return_value.__enter__.return_value = {"provider": "Cohere", "model": "command-r7b-12-2024"}
+        reply = {"finding_ids": [1]} if tool == "distraction_sources" else {
+            "answer": "A phone word game appeared for three minutes."}
+        model.side_effect = [planned, reply]
+        result = ask_analytics("What distracts me on GPU programming tasks?", tasks, logs)
+    evidence, = result["rows"]
+    assert evidence["phone_app"] == "Word game" and evidence["minutes"] == 3.0
+    if tool == "distraction_sources":
+        assert (evidence["device"], evidence["tasks"], evidence["days"]) == ("Phone", 1, 1)
+    assert result["scope"]["task_count"] == 1 and result["scope"]["interval_count"] == 1
+    assert result["provider"] == "Cohere" and result["answer_source"] == result["query_source"] == "model"
+    assert "Unrelated office app" not in str(model.call_args_list)
+    assert "GPU programming" in model.call_args_list[0].args[0][-1]["content"]
+
+
+def test_no_matches_still_goes_to_model_for_a_grounded_explanation():
+    tasks, logs = _records()
+    sql = "SELECT phone_app FROM logs WHERE classification='off_task'"
+    plan = {"scope": "all", "tool": "custom_sql", "task_ids": [], "sql": sql}
+    with patch("planner_analytics.chat_json", side_effect=[plan, {"finding": "The selected data did not yield a matching result for this query.", "next_step": "Inspect the query and current filters below."}]) as model:
+        result = ask_analytics("Was my phone a distraction?", tasks, logs)
+    assert result["answer_source"] == "model" and result["rows"] == []
+    payload = json.loads(model.call_args_list[1].args[0][-1]["content"])
+    assert payload["visible_interval_counts"] == {"on_task": 1}
+    assert payload["result_rows"] == [] and payload["scope"]["interval_count"] == 1
+
+
+def test_unavailable_narrator_does_not_claim_model_authorship():
+    from model_client import ModelUnavailable
+    plan = {"scope": "all", "tool": "custom_sql", "task_ids": [], "sql": "SELECT COUNT(*) AS tasks FROM tasks"}
+    with patch("planner_analytics.chat_json", side_effect=[plan, ModelUnavailable("offline")]):
+        result = ask_analytics("How many?", *_records())
+    assert result["query_source"] == "model" and result["answer_source"] == "local status"
+    assert result["rows"] == [{"tasks": 4}]
+
+
+def test_analytics_page_charts_and_device_filter():
+    from streamlit.testing.v1 import AppTest
+    script = """
+from pathlib import Path
+import streamlit as st
+from planner_analytics import render_analytics
+class Sample:
+    path = Path("test-analytics")
+    def get_setting(self, key, default): return default
+    def completed_tasks(self):
+        return [{"id":"gpu", "title":"Debug a CUDA block", "category":"GPU lab", "day":"2025-01-02",
+                 "estimate_minutes":5, "actual_seconds":360, "report":{"intervals":[
+                 {"start":1735819200, "seconds":180, "phone_app":"Number game", "label":"off_task"},
+                 {"start":1735819380, "seconds":180, "app":"Editor", "title":"kernel.cu", "label":"on_task"}]}}]
+render_analytics(Sample())
+"""
+    app = AppTest.from_string(script).run()
+    assert not app.exception
+    charts = app.get("vega_lite_chart")
+    assert len(charts) == 4
+    scatter = json.loads(charts[1].proto.spec)
+    assert "params" not in scatter and scatter["layer"][1]["params"][0]["bind"] == "scales"
+    app.selectbox[-1].select("Phone").run()
+    assert not app.exception
+    logs = app.dataframe[-1].value
+    assert list(logs["Device"]) == ["Phone"] and list(logs["Classification"]) == ["Distraction"]
+
+
+def test_accuracy_query_stays_with_user_estimates_and_only_averages_actual_shortfalls():
+    plan = {"scope": "all", "tool": "user_estimate_accuracy", "task_ids": [], "sql": ""}
+    with patch("planner_analytics.chat_json", side_effect=[plan, {"answer": "Underestimated tasks ran 10 minutes over."}]):
+        result = ask_analytics("When I underestimate, by how many minutes?", *_records())
+    overall = next(row for row in result["rows"] if row["level"] == "overall")
+    assert overall["mean_underestimated_by_minutes"] == 10 and overall["underestimated_tasks"] == 1
+    assert overall["mean_overestimated_by_minutes"] == 5 and overall["overestimated_tasks"] == 1
+
+
+def test_empty_sql_aggregate_returns_no_measurement():
+    plan = {"scope": "all", "tool": "custom_sql", "task_ids": [],
+            "sql": "SELECT AVG(model_minutes) AS average FROM tasks WHERE 0"}
+    with patch("planner_analytics.chat_json", side_effect=[plan, {
+        "finding": "The calculation returned no measured value for the selected records.",
+        "next_step": "Inspect the query and current filters below."}]) as model:
+        result = ask_analytics("What is the average?", *_records())
+    assert result["rows"] == [{"average": None}]
+    assert "no measured value" in result["answer"]
+    assert "enum" in model.call_args.args[1]["properties"]["finding"]

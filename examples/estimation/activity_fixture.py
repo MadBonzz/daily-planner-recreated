@@ -117,7 +117,7 @@ def _render(history, *, render_events=True):
                     raise ValueError(f"{task['id']}: unsupported annotation {label!r}")
                 end = clock + _seconds(scene['minutes'])
                 watcher_slice(scene, clock, end)
-                item['annotations'].append((clock, end, label))
+                item['annotations'].append((clock, end, label, scene.get('review_reason')))
                 clock = end
                 if 'pause_after_minutes' in scene:
                     if offset == len(slices) - 1:
@@ -157,9 +157,14 @@ class ExportSource:
 
 
 def _review(row, *, annotations):
-    labels = {label for start, end, label in annotations if start < row['end'] and end > row['start']}
-    label = labels.pop() if len(labels) == 1 else 'uncertain'
-    return label, 'Synthetic fixture annotation for this observed foreground activity.'
+    matched = [(label, reason) for start, end, label, reason in annotations
+               if start < row['end'] - 1e-6 and end > row['start'] + 1e-6]
+    labels = {label for label, _ in matched}
+    if len(labels) != 1:
+        return 'uncertain', 'The observed interval has no single reviewed classification.'
+    reasons = {reason for _, reason in matched if reason}
+    reason = reasons.pop() if len(reasons) == 1 else 'Synthetic fixture annotation for this observed foreground activity.'
+    return labels.pop(), reason
 
 
 def _report(task, source, periods, annotations, exclusions, use_model=False, *, examples=(), overrides=None):
@@ -255,8 +260,8 @@ def replay_task_at(history, row, destination_sessions, periods, *, directory=Non
             if duration > 0:
                 mappings.append((start, start + duration, dest_start - start))
 
-    annotations = [(max(a, left) + delta, min(b, right) + delta, label)
-                   for a, b, label in item['annotations']
+    annotations = [(max(a, left) + delta, min(b, right) + delta, label, reason)
+                   for a, b, label, reason in item['annotations']
                    for left, right, delta in mappings if left < b and right > a]
     return _report(task_context or row, ShiftedSource(source, mappings), periods, annotations,
                    exclusions, use_model, examples=examples, overrides=overrides)

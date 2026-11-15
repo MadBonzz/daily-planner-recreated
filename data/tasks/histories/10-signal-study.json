@@ -38,7 +38,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 5,
+            "minutes": 1,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "Checked basketball scores between segments of the pulse-train lecture."
+          },
+          {
+            "minutes": 1,
             "label": "off_task"
           },
           {
@@ -90,7 +99,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 33,
+            "minutes": 9,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "on_task",
+            "review_reason": "Checked the phasor arithmetic on a scientific calculator."
+          },
+          {
+            "minutes": 22,
             "label": "uncertain"
           },
           {
@@ -131,7 +149,16 @@
         ],
         [
           {
-            "minutes": 7,
+            "minutes": 2,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The phone scoreboard interrupted the windowing lecture."
+          },
+          {
+            "minutes": 2,
             "label": "off_task"
           },
           {
@@ -263,7 +290,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 29,
+            "minutes": 6,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "on_task",
+            "review_reason": "Used the phone calculator to check a filter gain."
+          },
+          {
+            "minutes": 20,
             "label": "uncertain"
           },
           {
@@ -477,5 +513,5 @@
       }
     }
   ],
-  "activitywatch_sha256": "9c4fa49c21156a277e88ee12d1b26bf75de8a2ec76111041fa8bd557c8749acd"
+  "activitywatch_sha256": "38053e510ad81bdd865c557a4291672c7d9ea3cd47cec68fe50e63a20d683b86"
 }

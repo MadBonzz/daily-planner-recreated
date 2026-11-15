@@ -50,7 +50,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 10,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "Shopped for concert tickets during the booth preset check."
+          },
+          {
+            "minutes": 4,
             "label": "uncertain"
           }
         ]
@@ -72,7 +81,16 @@
       "activity": [
         [
           {
-            "minutes": 16,
+            "minutes": 4,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "on_task",
+            "review_reason": "Consulted the fixture reviewer’s handback checklist in Keep."
+          },
+          {
+            "minutes": 10,
             "label": "uncertain"
           }
         ]
@@ -125,7 +143,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 8,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The ticket purchase interrupted the relay check."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           }
         ]
@@ -200,7 +227,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 14,
+            "minutes": 3,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "Checked personal concert tickets while testing relay screens."
+          },
+          {
+            "minutes": 7,
             "label": "uncertain"
           }
         ]
@@ -402,5 +438,5 @@
       }
     }
   ],
-  "activitywatch_sha256": "0728503455c62f6e51af51d5b42abcca1a0e824cc5ca59009edf4b85a4675e46"
+  "activitywatch_sha256": "a7601aa81d140b9dbd5a375fc813d6a43e44617c33b3560a9c1f089e50a597ed"
 }

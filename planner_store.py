@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     created_at REAL NOT NULL,
     completed_at REAL,
     actual_seconds REAL,
+    time_edited_at REAL,
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS tasks_by_day ON tasks(day);
@@ -120,6 +121,13 @@ CREATE TABLE IF NOT EXISTS capture (
     end REAL CHECK (end >= start)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS one_capture_span ON capture((1)) WHERE end IS NULL;
+CREATE TABLE IF NOT EXISTS manual_work (
+    id INTEGER PRIMARY KEY,
+    task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
+    entered_at REAL NOT NULL,
+    seconds REAL NOT NULL CHECK (seconds > 0)
+);
+CREATE INDEX IF NOT EXISTS manual_work_by_task ON manual_work(task_id);
 CREATE TABLE IF NOT EXISTS attachments (
     id TEXT PRIMARY KEY,
     task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
@@ -145,7 +153,8 @@ SELECT t.*, clock.started_at,
               AND j.task_id=CASE WHEN r.left_id=t.id THEN r.right_id ELSE r.left_id END
           )))
        )) AS awaiting_related_update,
-       COALESCE(t.actual_seconds, clock.total, 0) AS measured
+       COALESCE(manual.total, 0) AS manual_seconds,
+       COALESCE(t.actual_seconds, COALESCE(clock.total, 0) + COALESCE(manual.total, 0)) AS measured
 FROM tasks AS t
 LEFT JOIN (
     SELECT s.task_id, SUM(MAX(0, COALESCE(p.end, ?) - p.start)) AS total,
@@ -153,6 +162,8 @@ LEFT JOIN (
     FROM sessions AS s JOIN periods AS p ON p.session_id = s.id
     GROUP BY s.task_id
 ) AS clock ON clock.task_id = t.id
+LEFT JOIN (SELECT task_id, SUM(seconds) AS total FROM manual_work GROUP BY task_id)
+  AS manual ON manual.task_id=t.id
 """
 
 
@@ -178,11 +189,16 @@ def _record_replay_forecast(db, task_id, at, initial, prediction_json):
                    (task_id, at, initial, prediction_json))
 
 
-def _forecast_sources(prediction):
+def _comparison_sources(prediction):
     rows = list(prediction.get("evidence", [])) + list(prediction.get("related_tasks", []))
     for caution in prediction.get("cautions", []):
         rows.extend(caution.get("sources", []))
-    return {str(row["task_id"]) for row in rows if row.get("task_id")} | set(prediction.get("feedback_source_ids", []))
+    return {str(row["task_id"]) for row in rows if row.get("task_id")}
+
+
+def _forecast_sources(prediction):
+    # Removal from memory also invalidates any examples used to teach the judge.
+    return _comparison_sources(prediction) | set(prediction.get("feedback_source_ids", []))
 
 
 def _enqueue_prediction(db, task_id):
@@ -190,10 +206,11 @@ def _enqueue_prediction(db, task_id):
     # the same transaction, so a newer completion cannot leak into the first estimate.
     db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
     db.execute("INSERT INTO prediction_jobs(task_id) VALUES (?)", (task_id,))
-    # Completed task identity, timer, note and attachments are immutable. Its
-    # report can be rebuilt, and its own first estimate/PDF can arrive later.
+    # Freeze mutable historical evidence at submission. A timer correction or
+    # rebuilt report while the queue is draining belongs to a later forecast.
     db.execute("""INSERT INTO prediction_history(task_id, source_id, snapshot)
                   SELECT ?, id, json_object(
+                      'actual_seconds', actual_seconds, 'completion_note', completion_note,
                       'report', json(report), 'pdf_text', pdf_text,
                       'prediction', json_object('point_min', json_extract(prediction, '$.point_min')),
                       'creation_prediction', json_object('point_min', json_extract(creation_prediction, '$.point_min')))
@@ -215,6 +232,10 @@ WHERE r.related IS NULL
   AND ((a.status!='completed' AND b.status!='completed') OR r.refresh_due=1)
 """
 
+_OBSOLETE_PAIRS = """DELETE FROM task_relations WHERE related IS NULL
+    AND left_id IN (SELECT id FROM tasks WHERE status='completed')
+    AND right_id IN (SELECT id FROM tasks WHERE status='completed')"""
+
 
 def _queue_related_target(db, target_id):
     row = db.execute("""SELECT creation_prediction FROM tasks WHERE id=? AND archived=0
@@ -227,21 +248,28 @@ def _queue_related_target(db, target_id):
         _enqueue_prediction(db, target_id)
 
 
-def _refresh_related_estimates(db, source_id):
+def _refresh_related_estimates(db, source_id, *, corrected=False):
     """Propagate a timed completion or report edit along its known positive edges."""
     rows = db.execute("""
         SELECT r.left_id,r.right_id,r.related,t.id AS target_id FROM task_relations r
         JOIN tasks t ON t.id=CASE WHEN r.left_id=? THEN r.right_id ELSE r.left_id END
         WHERE (r.left_id=? OR r.right_id=?) AND r.related IS NOT 0
           AND t.archived=0 AND t.status!='completed' AND t.fixed_duration=0
-          AND EXISTS (SELECT 1 FROM tasks WHERE id=? AND actual_seconds>0)
-    """, (source_id, source_id, source_id, source_id)).fetchall()
+          AND (? OR EXISTS (SELECT 1 FROM tasks WHERE id=? AND actual_seconds>0))
+    """, (source_id, source_id, source_id, corrected, source_id)).fetchall()
     for row in rows:
         if row["related"] is None:
             db.execute("UPDATE task_relations SET refresh_due=1 WHERE left_id=? AND right_id=?",
                        (row["left_id"], row["right_id"]))
         else:
             _queue_related_target(db, row["target_id"])
+    if corrected:
+        # Targets created after this source finished have no open-task matrix edge.
+        queued = {row["target_id"] for row in rows}
+        for target in db.execute("""SELECT id,prediction FROM tasks WHERE archived=0
+                                    AND status!='completed' AND fixed_duration=0""").fetchall():
+            if target["id"] not in queued and source_id in _comparison_sources(json.loads(target["prediction"])):
+                _queue_related_target(db, target["id"])
 
 
 def _enqueue_report(db, task_id, action="build"):
@@ -261,6 +289,56 @@ def _close_period(db, session_id, now):
     db.execute("UPDATE periods SET end=MAX(start, ?) WHERE id=?", (now, period["id"]))
 
 
+def _correct_total(db, task, seconds, now):
+    """Add unlocated time or remove the newest work first, clipping actual capture bounds."""
+    try:
+        seconds = float(seconds)
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError("Enter a finite, nonnegative time spent.") from None
+    if not math.isfinite(seconds) or seconds < 0:
+        raise ValueError("Enter a finite, nonnegative time spent.")
+    if task["status"] == "completed":
+        # Some imported records have a saved duration and no corresponding clock periods.
+        timed = db.execute("""SELECT COALESCE(SUM(p.end-p.start), 0) FROM periods p
+                              JOIN sessions s ON s.id=p.session_id WHERE s.task_id=?""", (task["id"],)).fetchone()[0]
+        legacy = task["actual_seconds"] - timed - task["manual_seconds"]
+        if legacy > 0.000001:
+            db.execute("INSERT INTO manual_work(task_id,entered_at,seconds) VALUES (?,?,?)",
+                       (task["id"], task["completed_at"], legacy))
+    difference = seconds - task["actual_seconds"]
+    if difference > 0:
+        db.execute("INSERT INTO manual_work(task_id, entered_at, seconds) VALUES (?,?,?)",
+                   (task["id"], now, difference))
+    elif difference < 0:
+        remove = -difference
+        work = db.execute("""
+            SELECT 'timer' AS kind, p.id, p.end AS at, p.end-p.start AS seconds
+            FROM periods p JOIN sessions s ON s.id=p.session_id WHERE s.task_id=? AND p.end IS NOT NULL
+            UNION ALL SELECT 'manual', id, entered_at, seconds FROM manual_work WHERE task_id=?
+            ORDER BY at DESC, kind, id DESC
+        """, (task["id"], task["id"])).fetchall()
+        for row in work:
+            if remove <= 0:
+                break
+            trim = min(remove, row["seconds"])
+            if row["kind"] == "manual":
+                if trim == row["seconds"]:
+                    db.execute("DELETE FROM manual_work WHERE id=?", (row["id"],))
+                else:
+                    db.execute("UPDATE manual_work SET seconds=seconds-? WHERE id=?", (trim, row["id"]))
+            elif trim == row["seconds"]:
+                db.execute("DELETE FROM periods WHERE id=?", (row["id"],))
+            else:
+                end = row["at"] - trim
+                db.execute("DELETE FROM capture WHERE period_id=? AND start>=?", (row["id"], end))
+                db.execute("UPDATE capture SET end=? WHERE period_id=? AND end>?", (end, row["id"], end))
+                db.execute("UPDATE periods SET end=? WHERE id=?", (end, row["id"]))
+            remove -= trim
+    if difference != 0 or task["time_edited_at"] is None:
+        db.execute("UPDATE tasks SET time_edited_at=? WHERE id=?", (now, task["id"]))
+    return seconds
+
+
 class PlannerStore:
     def __init__(self, data_dir, *, clock=time.time):
         self.data_dir = Path(data_dir)
@@ -274,7 +352,8 @@ class PlannerStore:
             if "snapshot" not in history_columns:
                 db.execute("ALTER TABLE prediction_history ADD COLUMN snapshot TEXT")
             columns = {row["name"] for row in db.execute("PRAGMA table_info(tasks)")}
-            for name, declaration in (("archived", "INTEGER NOT NULL DEFAULT 0"),
+            for name, declaration in (("time_edited_at", "REAL"),
+                                      ("archived", "INTEGER NOT NULL DEFAULT 0"),
                                       ("pdf_text_version", "INTEGER NOT NULL DEFAULT 0"),
                                       ("fixed_duration", "INTEGER NOT NULL DEFAULT 0"),
                                       ("completion_note", "TEXT NOT NULL DEFAULT ''"),
@@ -285,12 +364,23 @@ class PlannerStore:
                 db.execute("ALTER TABLE tasks ADD COLUMN creation_prediction TEXT")
                 db.execute("""UPDATE tasks SET creation_prediction=prediction
                               WHERE COALESCE(json_extract(prediction,'$.status'),'') != 'pending'""")
+            if not _get_setting(db, "forecast_timer_snapshots", False):
+                # Jobs saved by earlier versions treated a completed timer as immutable.
+                db.execute("""UPDATE prediction_history AS h SET snapshot=json_set(
+                                  coalesce(h.snapshot,'{}'), '$.actual_seconds', t.actual_seconds,
+                                  '$.completion_note', t.completion_note)
+                              FROM tasks AS t WHERE t.id=h.source_id
+                              AND json_type(h.snapshot,'$.actual_seconds') IS NULL""")
+                _save_setting(db, "forecast_timer_snapshots", True)
             if not _get_setting(db, "relation_matrix_initialized", False):
                 db.execute("""INSERT OR IGNORE INTO task_relations(left_id,right_id)
                               SELECT a.id,b.id FROM tasks a JOIN tasks b ON a.id<b.id
                               WHERE a.status!='completed' AND b.status!='completed'
                                 AND a.archived=0 AND b.archived=0""")
                 _save_setting(db, "relation_matrix_initialized", True)
+            if not _get_setting(db, "retired_completed_pairs", False):
+                db.execute(_OBSOLETE_PAIRS)
+                _save_setting(db, "retired_completed_pairs", True)
             if not _get_setting(db, "continue_later_is_pause", False):
                 db.execute("""UPDATE sessions SET stopped_at=NULL WHERE id IN (
                               SELECT MAX(s.id) FROM sessions s JOIN tasks t ON s.task_id=t.id
@@ -591,6 +681,19 @@ class PlannerStore:
     def resolve_prediction(self, task_id, token, prediction, *, pdf_text=None):
         """Save the current forecast while preserving the task's initial prediction."""
         with self._db(write=True) as db:
+            # A task submitted after a source finished has no open/open matrix
+            # edge to it. Until this forecast returns, the planner cannot know
+            # which of the historical records it used. Check those records now,
+            # before deleting the job cascades to its snapshots.
+            used = _comparison_sources(prediction)
+            changed_source = used and db.execute("""SELECT 1 FROM prediction_history h
+                JOIN tasks s ON s.id=h.source_id
+                WHERE h.task_id=? AND h.source_id IN (SELECT value FROM json_each(?))
+                AND h.snapshot IS NOT NULL
+                AND (s.actual_seconds IS NOT json_extract(h.snapshot,'$.actual_seconds')
+                     OR s.completion_note IS NOT json_extract(h.snapshot,'$.completion_note')
+                     OR json(s.report) IS NOT json_extract(h.snapshot,'$.report')) LIMIT 1""",
+                (task_id, json.dumps(sorted(used)))).fetchone()
             deleted = db.execute("DELETE FROM prediction_jobs WHERE task_id=? AND token=? AND lease_end>?",
                                  (task_id, token, self.clock()))
             if not deleted.rowcount:
@@ -602,7 +705,7 @@ class PlannerStore:
             db.execute("""UPDATE tasks SET prediction=?, creation_prediction=COALESCE(creation_prediction, ?),
                           pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
                        (data, data, pdf_text, task_id))
-            if waiting["refresh_waiting"] and waiting["status"] != "completed":
+            if (waiting["refresh_waiting"] or changed_source) and waiting["status"] != "completed":
                 _enqueue_prediction(db, task_id)
             return True
 
@@ -613,7 +716,7 @@ class PlannerStore:
                                              ORDER BY at,id""", (task_id,))]
 
     def transition(self, task_id, action, *, ended_at=None, completion_note="", report=None,
-                   pdf_text=None, refresh_estimates=True, queue_report=False):
+                   pdf_text=None, refresh_estimates=True, queue_report=False, spent_seconds=None):
         """Apply a timer action and return the committed state. Starting another task pauses the first."""
         with self._db(write=True) as db:
             task = self._task(db, task_id)
@@ -627,17 +730,41 @@ class PlannerStore:
                         "stop": "awaiting_finish", "finish": "completed", "continue_later": "paused"}
             if ended_at is not None and action != "stop":
                 raise ValueError("An end-time correction is only available when stopping a task.")
+            if spent_seconds is not None and action not in ("adjust_time", "finish", "continue_later"):
+                raise ValueError("Stop or pause the timer before editing total time.")
             if repeated.get(action) == state:
                 return task
             if ended_at is not None:
                 end = float(ended_at)
                 if state != "running" or not task["started_at"] <= end <= now:
                     raise ValueError("Choose an end time between the current timer start and now.")
+                db.execute("UPDATE tasks SET time_edited_at=? WHERE id=?", (now, task_id))
                 now = end
                 period = db.execute("SELECT id FROM periods WHERE session_id=? AND end IS NULL",
                                     (session["id"],)).fetchone()
                 db.execute("DELETE FROM capture WHERE period_id=? AND start>=?", (period["id"], end))
                 db.execute("UPDATE capture SET end=? WHERE period_id=? AND end>?", (end, period["id"], end))
+            if action == "adjust_time" or spent_seconds is not None:
+                if state == "running":
+                    raise ValueError("Stop or pause the timer before editing total time.")
+                previous = task["actual_seconds"]
+                total = _correct_total(db, task, spent_seconds, now)
+                task["actual_seconds"] = total
+                if action == "adjust_time":
+                    if state == "completed" and (total != previous or task["time_edited_at"] is None):
+                        db.execute("UPDATE tasks SET actual_seconds=?, report=NULL WHERE id=?", (total, task_id))
+                        _enqueue_report(db, task_id)
+                        if previous == 0 and total > 0:
+                            # This source only now qualifies as timed history. Later tasks may have no edge to it.
+                            db.execute("""INSERT OR IGNORE INTO task_relations(left_id,right_id,refresh_due)
+                                          SELECT MIN(?,id),MAX(?,id),1 FROM tasks
+                                          WHERE id!=? AND archived=0 AND fixed_duration=0 AND status!='completed'""",
+                                       (task_id, task_id, task_id))
+                        if total != previous:
+                            _refresh_related_estimates(db, task_id, corrected=True)
+                    elif state == "ready" and total > 0:
+                        db.execute("UPDATE tasks SET status='paused' WHERE id=?", (task_id,))
+                    return self._task(db, task_id)
             if action in ("start", "resume") and state in ("ready", "paused"):
                 active = db.execute("""
                     SELECT s.task_id, s.id FROM sessions s JOIN periods p ON p.session_id=s.id
@@ -658,9 +785,9 @@ class PlannerStore:
                 _close_period(db, session["id"], now)
                 state = "paused"
             elif action == "stop" and state in ("paused", "running"):
-                _close_period(db, session["id"], now)
-                db.execute("UPDATE sessions SET stopped_at=MAX(started_at,?) WHERE id=?",
-                           (now, session["id"]))
+                if session:
+                    _close_period(db, session["id"], now)
+                    db.execute("UPDATE sessions SET stopped_at=MAX(started_at,?) WHERE id=?", (now, session["id"]))
                 state = "awaiting_finish"
             elif action == "continue_later" and state == "awaiting_finish":
                 # Stop closed the timer immediately. Resume should use the same
@@ -668,7 +795,9 @@ class PlannerStore:
                 db.execute("""UPDATE sessions SET stopped_at=NULL WHERE id=(
                               SELECT MAX(id) FROM sessions WHERE task_id=?)""", (task_id,))
                 state = "paused"
-            elif action == "finish" and state == "awaiting_finish":
+            elif action == "finish" and state in ("ready", "paused", "awaiting_finish"):
+                if session:
+                    db.execute("UPDATE sessions SET stopped_at=MAX(started_at,?) WHERE id=?", (now, session["id"]))
                 db.execute("""UPDATE tasks SET completed_at=?, actual_seconds=?, completion_note=?,
                               report=?, pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
                            (now, task["actual_seconds"], completion_note.strip(),
@@ -681,8 +810,12 @@ class PlannerStore:
             else:
                 raise ValueError(f"Cannot {action.replace('_', ' ')} a {state} task.")
             db.execute("UPDATE tasks SET status=? WHERE id=?", (state, task_id))
-            if action == "finish" and refresh_estimates and task["actual_seconds"] > 0:
-                _refresh_related_estimates(db, task_id)
+            if action == "finish":
+                # No future completion can refresh either endpoint once both are
+                # finished. Keep decisions already made and retire obsolete jobs.
+                db.execute(_OBSOLETE_PAIRS + " AND (left_id=? OR right_id=?)", (task_id, task_id))
+                if refresh_estimates and task["actual_seconds"] > 0:
+                    _refresh_related_estimates(db, task_id)
             return self._task(db, task_id)
 
     def periods(self, task_id):
@@ -810,8 +943,9 @@ class PlannerStore:
                                  (json.dumps(report, allow_nan=False), pdf_text, task_id))
             if not changed.rowcount:
                 raise ValueError("Finish the task before saving its activity review.")
-            if refresh_estimates:
-                _refresh_related_estimates(db, task_id)
+            if refresh_estimates and db.execute("SELECT 1 FROM tasks WHERE id=? AND actual_seconds>0",
+                                                (task_id,)).fetchone():
+                _refresh_related_estimates(db, task_id, corrected=True)
             return True
 
     def cache_document_text(self, task_id, text):

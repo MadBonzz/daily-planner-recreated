@@ -85,7 +85,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 20,
+            "minutes": 5,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6,
+            "label": "off_task",
+            "review_reason": "Checked basketball scores in the middle of the derivation."
+          },
+          {
+            "minutes": 9,
             "label": "uncertain"
           },
           {
@@ -192,7 +201,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 12,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "The live basketball score was unrelated to the variance bound."
+          },
+          {
+            "minutes": 6,
             "label": "uncertain"
           },
           {
@@ -225,7 +243,16 @@
       "activity": [
         [
           {
-            "minutes": 10,
+            "minutes": 3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3,
+            "label": "uncertain",
+            "review_reason": "A notes app and the paper were open together; the phone note is unknown."
+          },
+          {
+            "minutes": 4,
             "label": "on_task"
           },
           {
@@ -427,5 +454,5 @@
       "day": "2026-10-27"
     }
   ],
-  "activitywatch_sha256": "6d13eb3871ddeb6244f73ec96c3d744e54d346c4fa782ba89aa6b3ee4b4c9f06"
+  "activitywatch_sha256": "4ac6e691b81a41cb2b714862e785fc1d1016efbfa2d0a59a5538a9dc36a2cfca"
 }

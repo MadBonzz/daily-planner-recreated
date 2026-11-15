@@ -29,6 +29,20 @@ def history_choices():
     return choices
 
 
+def sample_task_choices(history_id):
+    if not valid_id(history_id):
+        raise ValueError("Invalid history ID")
+    history = json.loads((DATASET / "histories" / f"{history_id}.json").read_text(encoding="utf-8"))
+    return {row["id"]: row for row in history["holdouts"]}
+
+
+def add_sample_task(store, history_id, sample_id, day):
+    sample = sample_task_choices(history_id)[sample_id]
+    fields, attachments = task_inputs(sample, history_id, DATASET)
+    fields["day"] = day
+    return store.create_task(**fields, attachments=attachments)
+
+
 def _import_task(store, history_id, directory, row, sessions, *, status, now, report=None):
     """Apply the same Start/Pause/Stop transitions used by the UI, with the fixture clock."""
     stamp = sessions[0][0][0] if sessions else now
@@ -76,6 +90,31 @@ def seed_completed(store, history, directory):
         report = entry["report"] if row.get("activity") else None
         _import_task(store, history["id"], directory, row, sessions,
                      status="completed", now=sessions[-1][-1][1], report=report)
+
+
+def _refresh_sample_activity(store, history, directory):
+    """Update untouched sample reports in place when their packaged watcher DB changes."""
+    fingerprint = history.get("activitywatch_sha256")
+    if not fingerprint or store.get_setting("dev_sample_activity_sha256") == fingerprint:
+        return
+    by_key = {row["id"]: row for row in history["tasks"]}
+    exclusions = store.get_setting("exclusions", [])
+    for task in store.completed_tasks():
+        previous = task.get("report") or {}
+        if previous.get("classification_source") != "synthetic_annotations":
+            continue
+        ref = store.get_setting(f"dev_activity_{task['id']}")
+        if not ref or ref.get("history") != history["id"] or ref["task"] not in by_key:
+            continue
+        updated = replay_task_at(history, by_key[ref["task"]], ref["sessions"], store.periods(task["id"]),
+                                 directory=directory, exclusions=exclusions, task_context=task)
+        # A concurrent user review, model report or time adjustment wins.
+        with store._db(write=True) as db:
+            db.execute("""UPDATE tasks SET report=? WHERE id=? AND json(report)=json(?)
+                          AND NOT EXISTS (SELECT 1 FROM report_jobs WHERE task_id=tasks.id)
+                          AND NOT EXISTS (SELECT 1 FROM activity_feedback WHERE task_id=tasks.id)""",
+                       (json.dumps(updated, allow_nan=False), task["id"], json.dumps(previous)))
+    store.set_setting("dev_sample_activity_sha256", fingerprint)
 
 
 def dev_activity_report(store, task, *, examples=(), overrides=None):
@@ -175,8 +214,8 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
         selected = registry.execute("SELECT generation FROM profiles WHERE id=?", (history_id,)).fetchone()
         current = profile / selected[0] if selected and selected[0] else profile
         previous = current
+        history = json.loads(source.read_text(encoding="utf-8"))
         if reset or not (current / "planner.sqlite3").is_file():
-            history = json.loads(source.read_text(encoding="utf-8"))
             current = Path(mkdtemp(dir=profile, prefix="generation-"))
             try:
                 fresh = PlannerStore(current)
@@ -188,6 +227,7 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
                 else:
                     seed_completed(fresh, history, DATASET)
                     _seed_open(fresh, history, time.time())
+                fresh.set_setting("dev_sample_activity_sha256", history.get("activitywatch_sha256"))
             except BaseException:
                 rmtree(current, ignore_errors=True)
                 raise
@@ -198,6 +238,7 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
         # paths forever. A late model reply from the previous generation can
         # finish only in its original workspace, even in another process.
         store = _read_generation(current)
+        _refresh_sample_activity(store, history, DATASET)
         if replay:
             # Use a fresh read on every tick. Workers and other tabs share the same virtual clock.
             path = store.path

@@ -99,7 +99,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 10,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6,
+            "label": "off_task",
+            "review_reason": "Hockey highlights filled part of the allocation wait."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           },
           {
@@ -137,7 +146,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 12,
+            "minutes": 3,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The phone showed live football scores during the sweep."
+          },
+          {
+            "minutes": 6,
             "label": "uncertain"
           },
           {
@@ -194,7 +212,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 9,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "label": "off_task",
+            "review_reason": "The post-game video interrupted the CUDA debugging session."
+          },
+          {
+            "minutes": 2,
             "label": "uncertain"
           },
           {
@@ -261,7 +288,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 10,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "label": "off_task",
+            "review_reason": "The football scoreboard was open while the reproducer waited."
+          },
+          {
+            "minutes": 4,
             "label": "uncertain"
           }
         ],
@@ -304,7 +340,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 9,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "uncertain",
+            "review_reason": "The inbox did not show whether any messages concerned the lab run."
+          },
+          {
+            "minutes": 6,
             "label": "uncertain"
           },
           {
@@ -449,5 +494,5 @@
       "day": "2026-10-27"
     }
   ],
-  "activitywatch_sha256": "d04643cfb050465de7a9b3e0a5b57475cd82d5ec4ebf8aae3f1451917f8d37ad"
+  "activitywatch_sha256": "96a34f5c34da9c1b45cd53ad5bf7ca90c18e5587f2fbe52ee97103c25f5b85f6"
 }

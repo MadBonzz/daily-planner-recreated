@@ -115,7 +115,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 11,
+            "minutes": 4,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "A chess game interrupted the recovery proof."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           },
           {
@@ -180,7 +189,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 10,
+            "minutes": 2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5,
+            "label": "off_task",
+            "review_reason": "The puzzle board was unrelated to the election proof."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           },
           {
@@ -259,7 +277,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 9,
+            "minutes": 4,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The phone returned to chess between proof steps."
+          },
+          {
+            "minutes": 2,
             "label": "uncertain"
           },
           {
@@ -302,7 +329,16 @@
       "activity": [
         [
           {
-            "minutes": 7,
+            "minutes": 2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2,
+            "label": "on_task",
+            "review_reason": "Checked the transit pass in the transit app."
+          },
+          {
+            "minutes": 3,
             "label": "on_task"
           },
           {
@@ -488,5 +524,5 @@
       "day": "2026-10-27"
     }
   ],
-  "activitywatch_sha256": "8830ad1ddf8a627eff96d25b5a51a21335c9b4262d3b5d63deda4bb9f17bb84b"
+  "activitywatch_sha256": "42bfd680bbcde4e8ef7fa162da403bc5459f18018f37aea5761fabcfb4b91fd8"
 }

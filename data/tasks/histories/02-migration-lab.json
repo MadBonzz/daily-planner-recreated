@@ -77,7 +77,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 16,
+            "minutes": 6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "The marketplace listing was unrelated to the decoder test."
+          },
+          {
+            "minutes": 6,
             "label": "on_task"
           },
           {
@@ -137,7 +146,12 @@
             "label": "on_task"
           },
           {
-            "minutes": 4,
+            "minutes": 3,
+            "label": "off_task",
+            "review_reason": "The game store interrupted the CLI work."
+          },
+          {
+            "minutes": 1,
             "label": "uncertain"
           },
           {
@@ -257,7 +271,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 6,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4,
+            "label": "off_task",
+            "review_reason": "The phone showed the game store during the regression run."
+          },
+          {
+            "minutes": 1,
             "label": "uncertain"
           },
           {
@@ -319,7 +342,16 @@
             "label": "on_task"
           },
           {
-            "minutes": 6,
+            "minutes": 1,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2,
+            "label": "uncertain",
+            "review_reason": "The inbox alone does not show whether mail concerned the replay."
+          },
+          {
+            "minutes": 3,
             "label": "uncertain"
           },
           {
@@ -576,5 +608,5 @@
       "day": "2026-10-27"
     }
   ],
-  "activitywatch_sha256": "2457c2f16aaad2afd9093f201b775d69df1aa25d4f1300a3ba3ae0d10b59517a"
+  "activitywatch_sha256": "802c528695d03eb82aba71c20b52f7892ed9f091a68bc5e636b180c7b7a5cb69"
 }
