@@ -96,10 +96,15 @@ jobs:
         timeout-minutes: 4
         run: |
           lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --yes
-          lms ls --json
+          lms ls --json > "$RUNNER_TEMP/lms-models.json"
+          cat "$RUNNER_TEMP/lms-models.json"
+          model_key=$(jq -er --arg path "$MODEL_REPO/$MODEL_FILE" \
+            'map(select(.path == $path)) | if length == 1 then .[0].modelKey else error("Expected the imported GGUF once") end' \
+            "$RUNNER_TEMP/lms-models.json")
+          echo "MODEL_KEY=$model_key" >> "$GITHUB_ENV"
       - name: Load the imported model on CPU
         timeout-minutes: 8
-        run: lms load "$MODEL_REPO/$MODEL_FILE" --identifier "$MODEL_ID" --context-length "$MODEL_CONTEXT" --gpu off --yes
+        run: lms load "$MODEL_KEY" --identifier "$MODEL_ID" --context-length "$MODEL_CONTEXT" --gpu off --yes
       - name: Start the local inference server
         timeout-minutes: 2
         run: |
