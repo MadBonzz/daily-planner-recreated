@@ -1,0 +1,1764 @@
+{
+  "id": "d4-signal-student",
+  "name": "Leila · interviews and signals evening class",
+  "scenario": "Leila studies signal processing two nights a week, solves interview problems at lunch, and helps with audio at a community station. Her Monday notes alternate between competitive-programming examples and listening exercises. A lecture edit can wait while she troubleshoots the microphone; the live stream itself has a fixed end.",
+  "tasks": [
+    {
+      "id": "subarray-target",
+      "title": "LeetCode practice · subarray sum equals k",
+      "description": "Solve from a blank editor using prefix counts; include a trace with negative values and duplicate prefix sums.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 45,
+      "actual_minutes": 54,
+      "sessions_minutes": [
+        54
+      ],
+      "completion_note": "Explaining why the initial prefix count is one took a second example.",
+      "day": "2026-02-26",
+      "session_starts": [
+        "2026-03-01T12:00-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.183333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.933333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 2.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.066666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.35,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "pulse-video",
+      "title": "Watch the Fourier pulse-train lecture",
+      "description": "Watch the recorded pulse-train lesson on YouTube and recreate the first two coefficient sketches in my notebook.",
+      "category": "Signal study",
+      "details": "Open the course playlist from the laptop and follow the worked example.",
+      "estimate_minutes": 40,
+      "actual_minutes": 55,
+      "sessions_minutes": [
+        28,
+        27
+      ],
+      "completion_note": "I opened two recommended clips during the lecture and left the timer going before returning to the coefficients.",
+      "day": "2026-02-27",
+      "session_starts": [
+        "2026-03-02T18:35-05:00",
+        "2026-03-03T19:15-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.7833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.566666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 1.5333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 1.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.566666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.433333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "Checked basketball scores between segments of the pulse-train lecture."
+          },
+          {
+            "minutes": 1.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 0.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.466666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "window-cost",
+      "title": "Practice the longest window with bounded replacement",
+      "description": "Write a solution from scratch and explain why discarding the left endpoint restores the invariant.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 40,
+      "actual_minutes": 50,
+      "sessions_minutes": [
+        50
+      ],
+      "day": "2026-03-02",
+      "session_starts": [
+        "2026-03-04T12:15-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.0,
+            "label": "off_task",
+            "review_reason": "The game highlights interrupted practice on the sliding window."
+          },
+          {
+            "minutes": 1.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.733333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "venue-mic",
+      "title": "Check the handheld mic cable",
+      "description": "Verify the spare XLR against the house mic, label it, and return the cable tester to the cabinet.",
+      "category": "Audio volunteer",
+      "details": "Stage box is already up. No soundcheck needed.",
+      "estimate_minutes": 20,
+      "actual_minutes": 19,
+      "sessions_minutes": [
+        19
+      ],
+      "completion_note": "Cable passed after reseating the latch.",
+      "day": "2026-03-04",
+      "session_starts": [
+        "2026-03-04T18:04-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 9.2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.6,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 9.2,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "cfg-paper",
+      "title": "Draw the manifest control-flow graph",
+      "description": "Do the written clinic questions only, including the exceptional edge and second loop pass.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 60,
+      "actual_minutes": 98,
+      "sessions_minutes": [
+        51,
+        47
+      ],
+      "completion_note": "The exception edge changed the exit facts.",
+      "pdf": "cfg-paper",
+      "pdf_path": "pdfs/05-interview-practice/cfg-paper.pdf",
+      "day": "2026-03-03",
+      "session_starts": [
+        "2026-03-05T14:30-05:00",
+        "2026-03-07T11:25-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.9166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.566666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.533333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.083333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain",
+            "review_reason": "A calculator was open but its entries were not recorded."
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 3.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.566666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "phasor-paper",
+      "title": "Do the complex exponential worksheet",
+      "description": "Solve four phasor problems on paper. Check a sign by evaluating the complex exponential at zero.",
+      "category": "Signal study",
+      "details": "Use the downloaded sheet. No video to watch.",
+      "estimate_minutes": 50,
+      "actual_minutes": 47,
+      "sessions_minutes": [
+        47
+      ],
+      "completion_note": "Only the last sign needed a correction.",
+      "day": "2026-03-06",
+      "session_starts": [
+        "2026-03-06T18:50-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 9.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "on_task",
+            "review_reason": "Checked the phasor arithmetic on a scientific calculator."
+          },
+          {
+            "minutes": 22.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "two-targets",
+      "title": "Practice two non-overlapping target ranges",
+      "description": "Design the prefix-index invariant, implement from blank, test negative and duplicate values, then explain it out loud.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 60,
+      "actual_minutes": 72,
+      "sessions_minutes": [
+        42,
+        30
+      ],
+      "day": "2026-03-08",
+      "session_starts": [
+        "2026-03-08T12:30-04:00",
+        "2026-03-09T12:10-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "Checked the game score between two prefix-sum attempts."
+          }
+        ],
+        [
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7833333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "window-video",
+      "title": "Work through the windowing video",
+      "description": "Watch the windowing and leakage lesson on YouTube. Pause to draw the rectangular and Hann examples.",
+      "category": "Signal study",
+      "details": "Use the course channel on the laptop. Both drawings go in my study notes.",
+      "estimate_minutes": 45,
+      "actual_minutes": 61,
+      "sessions_minutes": [
+        34,
+        27
+      ],
+      "completion_note": "Stayed on the course page at first, then watched a game highlight and part of a van conversion before finishing the second graph.",
+      "day": "2026-03-06",
+      "session_starts": [
+        "2026-03-09T18:30-04:00",
+        "2026-03-10T19:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 9.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.533333333333333,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 2.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "The phone scoreboard interrupted the windowing lecture."
+          },
+          {
+            "minutes": 2.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 0.9666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7833333333333334,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "description": "Use last week’s accepted answer; check the equality boundary and send the link.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "actual_minutes": 17,
+      "sessions_minutes": [
+        17
+      ],
+      "completion_note": "Worked straight from Tuesday's notes. The only edit was fixing which interval inherited the left endpoint.",
+      "day": "2026-03-11",
+      "session_starts": [
+        "2026-03-11T12:42-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.066666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "voice-repair",
+      "title": "Clean up the town-hall voice clip",
+      "description": "Remove the click at the start of the question, fade the tail and export a 48 kHz mono WAV.",
+      "category": "Audio volunteer",
+      "details": "The saved Audacity project already has markers.",
+      "estimate_minutes": 25,
+      "actual_minutes": 28,
+      "sessions_minutes": [
+        28
+      ],
+      "completion_note": "Auditioned the tail twice on headphones.",
+      "day": "2026-03-11",
+      "session_starts": [
+        "2026-03-11T17:42-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.966666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.966666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "cutlery",
+      "title": "Wash the lunch dishes",
+      "description": "Clean one pan, two bowls and cutlery; let the rack air dry.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 12,
+      "actual_minutes": 13,
+      "sessions_minutes": [
+        13
+      ],
+      "completion_note": "The drying rack was full, so I put the clean bowls away before rinsing the pans.",
+      "day": "2026-03-11",
+      "session_starts": [
+        "2026-03-11T19:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.95,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.0833333333333333,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.966666666666667,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "symmetry-video",
+      "title": "Take notes on Fourier symmetry",
+      "description": "Watch the course lecture on YouTube and sketch the odd-symmetry example. Work through the sign check before closing the notebook.",
+      "category": "Signal study",
+      "details": "Streaming from my desktop. Need a sketch I can use at revision.",
+      "estimate_minutes": 35,
+      "actual_minutes": 47,
+      "sessions_minutes": [
+        23,
+        24
+      ],
+      "completion_note": "A recommended pottery short turned into a chain of clips. Lost my place and replayed the sign check.",
+      "day": "2026-03-13",
+      "session_starts": [
+        "2026-03-13T18:10-04:00",
+        "2026-03-14T18:50-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.7333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 5.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.383333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2333333333333334,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "retype-stack",
+      "title": "Review the saved monotone stack solution",
+      "description": "Replay one example and type my existing solution; this is review rather than a fresh solve.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 30,
+      "actual_minutes": 21,
+      "sessions_minutes": [
+        21
+      ],
+      "day": "2026-03-12",
+      "session_starts": [
+        "2026-03-15T12:08-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.183333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.75,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stream-shift",
+      "title": "Monitor the club concert web stream",
+      "description": "Watch the public stream from the opening announcement until the timed playback ends. Leave the booth notes for the next volunteer.",
+      "category": "Audio volunteer",
+      "details": "Fixed 45-minute shift on the club’s video channel.",
+      "estimate_minutes": 45,
+      "actual_minutes": 45,
+      "sessions_minutes": [
+        45
+      ],
+      "completion_note": "The stream played through without interruption.",
+      "fixed_duration": true,
+      "day": "2026-03-14",
+      "session_starts": [
+        "2026-03-14T20:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.433333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "rubric",
+      "title": "Proofread the resource tracking write-up",
+      "description": "Check the terminal-state annotations and graph names against the sheet.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 30,
+      "actual_minutes": 28,
+      "sessions_minutes": [
+        28
+      ],
+      "pdf": "cfg-paper",
+      "pdf_path": "pdfs/05-interview-practice/cfg-paper.pdf",
+      "day": "2026-03-16",
+      "session_starts": [
+        "2026-03-16T12:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 6.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.233333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "cue-roundtrip",
+      "title": "Check the recorded intro against the cue sheet",
+      "description": "Open the saved talk recording, mark the four speaker changes in the first act, and export a short cue sheet for the station drive.",
+      "details": "No live stream today; Sam has already copied the WAV.",
+      "category": "Audio volunteer",
+      "estimate_minutes": 35,
+      "actual_minutes": 27,
+      "sessions_minutes": [
+        27
+      ],
+      "completion_note": "The guest spoke over the jingle, so I listened to that handover twice. Four cue marks went to Sam.",
+      "day": "2026-03-14",
+      "session_starts": [
+        "2026-03-17T17:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "placement-form",
+      "title": "Submit my interview availability",
+      "description": "Check the lab timetable and station rota, pick three non-overlapping interview slots and submit the campus recruiting form.",
+      "details": "The employer portal emails a confirmation. Check the timezone on the invite.",
+      "category": "Personal admin",
+      "estimate_minutes": 18,
+      "actual_minutes": 22,
+      "sessions_minutes": [
+        22
+      ],
+      "completion_note": "The invite defaulted to Pacific. I changed it to Eastern before forwarding the confirmation.",
+      "day": "2026-03-18",
+      "session_starts": [
+        "2026-03-18T10:14-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "filter-exercise",
+      "title": "Calculate the shelf filter gain",
+      "description": "Solve the filter response problems on the downloaded handout. Label the two break frequencies and check one answer numerically.",
+      "category": "Signal study",
+      "details": "Use calculator and paper. No course recording for these.",
+      "estimate_minutes": 40,
+      "actual_minutes": 43,
+      "sessions_minutes": [
+        43
+      ],
+      "completion_note": "I had to check the base of the logarithm once.",
+      "pdf": "filter-exercise",
+      "pdf_path": "pdfs/10-signal-study/filter-exercise.pdf",
+      "day": "2026-03-19",
+      "session_starts": [
+        "2026-03-19T18:40-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task",
+            "review_reason": "Used the phone calculator to check a filter gain."
+          },
+          {
+            "minutes": 20.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.066666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "quiet-news",
+      "title": "Listen back to the producer interview",
+      "description": "Check the local audio file for a dropout and add a marker at the start of each speaker turn.",
+      "category": "Audio volunteer",
+      "details": "Studio file is already downloaded. Only mark the first pass.",
+      "estimate_minutes": 30,
+      "actual_minutes": 30,
+      "sessions_minutes": [
+        30
+      ],
+      "completion_note": "Marked four speaker changes and handed over the index.",
+      "day": "2026-03-20",
+      "session_starts": [
+        "2026-03-20T15:10-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.433333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "queue-drill",
+      "title": "Trace monotone deque by hand",
+      "description": "I have two failing arrays with duplicate prefix values; finish the trace.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "status": "paused",
+      "sessions_minutes": [
+        6
+      ],
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-20T12:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "ready-headphone",
+      "title": "Pick up the repaired headphones",
+      "description": "Bring the repair ticket to the audio shop after class.",
+      "category": "Errands",
+      "details": "Shop closes at six.",
+      "estimate_minutes": 24,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-03-21"
+    },
+    {
+      "id": "analysis-extension",
+      "title": "Implement the optional leak-site analysis",
+      "description": "Add the forward worklist on the supplied AST; cover exceptional edges and cleanup.",
+      "details": "",
+      "category": "Program analysis",
+      "estimate_minutes": 115,
+      "status": "ready",
+      "sessions_minutes": [],
+      "pdf": "cfg-paper",
+      "pdf_path": "pdfs/05-interview-practice/cfg-paper.pdf",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "run-edit",
+      "title": "Trim the intro to the club interview",
+      "description": "Bring the theme bed under the host and leave three seconds of room tone.",
+      "category": "Audio volunteer",
+      "details": "I have isolated the first cut already.",
+      "estimate_minutes": 30,
+      "status": "running",
+      "sessions_minutes": [
+        8
+      ],
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-21T16:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "editorial-review",
+      "title": "Redo the saved interval merge after lunch",
+      "description": "Reimplement my saved solution and test endpoints touching. I have the example trace from my first pass.",
+      "details": "",
+      "category": "Interview practice",
+      "estimate_minutes": 25,
+      "status": "ready",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "overlap-pad",
+      "title": "Explain the two-window invariant without my notes",
+      "description": "Solve the practice question about two disjoint target windows on a blank page. Check the boundary case with a tiny counterexample and write the invariant in two sentences.",
+      "details": "This is the unfamiliar variant from the interview group; don't retype the saved solution.",
+      "category": "Interview practice",
+      "estimate_minutes": 45,
+      "status": "ready",
+      "day": "2026-03-21"
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "shortest-window",
+      "title": "Solve a new shortest-window problem",
+      "description": "From scratch find the shortest nonempty subarray summing to at least K with signed integers. Explain which prefix candidates can be discarded and test duplicates.",
+      "details": "No editorial. I want accepted code plus a spoken invariant, not just recognition.",
+      "category": "Interview practice",
+      "estimate_minutes": 50,
+      "day": "2026-03-21"
+    },
+    {
+      "id": "triangle-video",
+      "title": "Watch the triangular-wave Fourier lecture",
+      "description": "Work through the YouTube lecture on triangular waves and sketch two of the series reconstructions in my study notes.",
+      "category": "Signal study",
+      "details": "Use the course playlist in my usual browser. Pause for the second sketch.",
+      "estimate_minutes": 40,
+      "day": "2026-03-21"
+    },
+    {
+      "id": "triangle-sheet",
+      "title": "Complete the triangle-wave practice problems",
+      "description": "Calculate the first three nonzero coefficients on the worksheet and justify why the even terms vanish. Check one sum numerically.",
+      "category": "Signal study",
+      "details": "Downloaded exercise sheet, a pencil and a local calculator. No lecture or browser needed.",
+      "estimate_minutes": 45,
+      "pdf": "triangle-sheet",
+      "pdf_path": "pdfs/10-signal-study/triangle-sheet.pdf",
+      "day": "2026-03-21"
+    }
+  ],
+  "activitywatch_sha256": "7355f765c39dfacd1a3e7b9cabd5ad7c425b2252818679841dda512bf5cff584"
+}

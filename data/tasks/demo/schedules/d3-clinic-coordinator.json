@@ -1,0 +1,512 @@
+[
+  {
+    "day_offset": -25,
+    "minute": 1251,
+    "action": "create",
+    "task": "radio-cabaret"
+  },
+  {
+    "day_offset": -23,
+    "minute": 1037,
+    "action": "create",
+    "task": "mara-evening"
+  },
+  {
+    "day_offset": -23,
+    "minute": 1060,
+    "action": "start",
+    "task": "mara-evening"
+  },
+  {
+    "day_offset": -23,
+    "minute": 1100,
+    "action": "stop",
+    "task": "mara-evening"
+  },
+  {
+    "day_offset": -23,
+    "minute": 1100,
+    "action": "finish",
+    "task": "mara-evening"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1055,
+    "action": "create",
+    "task": "cabaret-load"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1065,
+    "action": "start",
+    "task": "cabaret-load"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1098,
+    "action": "stop",
+    "task": "cabaret-load"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1098,
+    "action": "finish",
+    "task": "cabaret-load"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1170,
+    "action": "start",
+    "task": "radio-cabaret"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1230,
+    "action": "stop",
+    "task": "radio-cabaret"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1230,
+    "action": "finish",
+    "task": "radio-cabaret"
+  },
+  {
+    "day_offset": -20,
+    "minute": 555,
+    "action": "create",
+    "task": "dev-stock"
+  },
+  {
+    "day_offset": -20,
+    "minute": 715,
+    "action": "start",
+    "task": "dev-stock"
+  },
+  {
+    "day_offset": -20,
+    "minute": 730,
+    "action": "stop",
+    "task": "dev-stock"
+  },
+  {
+    "day_offset": -20,
+    "minute": 730,
+    "action": "finish",
+    "task": "dev-stock"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1105,
+    "action": "create",
+    "task": "campus-posters"
+  },
+  {
+    "day_offset": -18,
+    "minute": 745,
+    "action": "start",
+    "task": "campus-posters"
+  },
+  {
+    "day_offset": -18,
+    "minute": 779,
+    "action": "stop",
+    "task": "campus-posters"
+  },
+  {
+    "day_offset": -18,
+    "minute": 779,
+    "action": "finish",
+    "task": "campus-posters"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1105,
+    "action": "create",
+    "task": "mara-capacity"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1105,
+    "action": "create",
+    "task": "short-on-air"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1049,
+    "action": "create",
+    "task": "usher-handback"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1050,
+    "action": "start",
+    "task": "mara-capacity"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1091,
+    "action": "stop",
+    "task": "mara-capacity"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1091,
+    "action": "finish",
+    "task": "mara-capacity"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1122,
+    "action": "start",
+    "task": "usher-handback"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1138,
+    "action": "stop",
+    "task": "usher-handback"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1138,
+    "action": "finish",
+    "task": "usher-handback"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1190,
+    "action": "start",
+    "task": "short-on-air"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1235,
+    "action": "stop",
+    "task": "short-on-air"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1235,
+    "action": "finish",
+    "task": "short-on-air"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1251,
+    "action": "create",
+    "task": "quiet-show"
+  },
+  {
+    "day_offset": -13,
+    "minute": 545,
+    "action": "create",
+    "task": "dev-packs"
+  },
+  {
+    "day_offset": -13,
+    "minute": 705,
+    "action": "start",
+    "task": "dev-packs"
+  },
+  {
+    "day_offset": -13,
+    "minute": 719,
+    "action": "stop",
+    "task": "dev-packs"
+  },
+  {
+    "day_offset": -13,
+    "minute": 719,
+    "action": "finish",
+    "task": "dev-packs"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1038,
+    "action": "create",
+    "task": "audio-preflight"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1084,
+    "action": "start",
+    "task": "audio-preflight"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1122,
+    "action": "stop",
+    "task": "audio-preflight"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1122,
+    "action": "finish",
+    "task": "audio-preflight"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1175,
+    "action": "start",
+    "task": "quiet-show"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1225,
+    "action": "stop",
+    "task": "quiet-show"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1225,
+    "action": "finish",
+    "task": "quiet-show"
+  },
+  {
+    "day_offset": -11,
+    "minute": 417,
+    "action": "create",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -11,
+    "minute": 490,
+    "action": "start",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -11,
+    "minute": 502,
+    "action": "stop",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -11,
+    "minute": 502,
+    "action": "finish",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -9,
+    "minute": 890,
+    "action": "create",
+    "task": "mara-late-room"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1050,
+    "action": "start",
+    "task": "mara-late-room"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1089,
+    "action": "stop",
+    "task": "mara-late-room"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1089,
+    "action": "finish",
+    "task": "mara-late-room"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1201,
+    "action": "create",
+    "task": "grain-pickup"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1224,
+    "action": "start",
+    "task": "grain-pickup"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1248,
+    "action": "stop",
+    "task": "grain-pickup"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1248,
+    "action": "finish",
+    "task": "grain-pickup"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1251,
+    "action": "create",
+    "task": "rota-text"
+  },
+  {
+    "day_offset": -6,
+    "minute": 714,
+    "action": "create",
+    "task": "dev-receipts"
+  },
+  {
+    "day_offset": -6,
+    "minute": 760,
+    "action": "start",
+    "task": "dev-receipts"
+  },
+  {
+    "day_offset": -6,
+    "minute": 776,
+    "action": "stop",
+    "task": "dev-receipts"
+  },
+  {
+    "day_offset": -6,
+    "minute": 776,
+    "action": "finish",
+    "task": "dev-receipts"
+  },
+  {
+    "day_offset": -4,
+    "minute": 722,
+    "action": "start",
+    "task": "rota-text"
+  },
+  {
+    "day_offset": -4,
+    "minute": 756,
+    "action": "stop",
+    "task": "rota-text"
+  },
+  {
+    "day_offset": -4,
+    "minute": 756,
+    "action": "finish",
+    "task": "rota-text"
+  },
+  {
+    "day_offset": -3,
+    "minute": 830,
+    "action": "create",
+    "task": "hearing-return"
+  },
+  {
+    "day_offset": -3,
+    "minute": 990,
+    "action": "start",
+    "task": "hearing-return"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1014,
+    "action": "stop",
+    "task": "hearing-return"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1014,
+    "action": "finish",
+    "task": "hearing-return"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1102,
+    "action": "create",
+    "task": "blue-relay"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1125,
+    "action": "start",
+    "task": "blue-relay"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1168,
+    "action": "stop",
+    "task": "blue-relay"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1168,
+    "action": "finish",
+    "task": "blue-relay"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "blue-show"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "ready-door"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "ready-ribbons"
+  },
+  {
+    "day_offset": -1,
+    "minute": 529,
+    "action": "create",
+    "task": "mara-dropoff"
+  },
+  {
+    "day_offset": -1,
+    "minute": 552,
+    "action": "start",
+    "task": "mara-dropoff"
+  },
+  {
+    "day_offset": -1,
+    "minute": 557,
+    "action": "stop",
+    "task": "mara-dropoff"
+  },
+  {
+    "day_offset": -1,
+    "minute": 557,
+    "action": "finish",
+    "task": "mara-dropoff"
+  },
+  {
+    "day_offset": -1,
+    "minute": 807,
+    "action": "create",
+    "task": "paused-flyer"
+  },
+  {
+    "day_offset": -1,
+    "minute": 880,
+    "action": "start",
+    "task": "paused-flyer"
+  },
+  {
+    "day_offset": -1,
+    "minute": 889,
+    "action": "pause",
+    "task": "paused-flyer"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "garden-readout"
+  },
+  {
+    "day_offset": 0,
+    "minute": 994,
+    "action": "create",
+    "task": "run-foyer"
+  },
+  {
+    "day_offset": 0,
+    "minute": 1040,
+    "action": "start",
+    "task": "run-foyer"
+  }
+]

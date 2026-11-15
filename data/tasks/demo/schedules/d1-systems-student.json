@@ -1,0 +1,506 @@
+[
+  {
+    "day_offset": -21,
+    "minute": 1251,
+    "action": "create",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -19,
+    "minute": 567,
+    "action": "create",
+    "task": "clock-two"
+  },
+  {
+    "day_offset": -19,
+    "minute": 640,
+    "action": "start",
+    "task": "clock-two"
+  },
+  {
+    "day_offset": -19,
+    "minute": 666,
+    "action": "stop",
+    "task": "clock-two"
+  },
+  {
+    "day_offset": -19,
+    "minute": 666,
+    "action": "finish",
+    "task": "clock-two"
+  },
+  {
+    "day_offset": -18,
+    "minute": 870,
+    "action": "start",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -18,
+    "minute": 953,
+    "action": "pause",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -17,
+    "minute": 908,
+    "action": "create",
+    "task": "lease-restart"
+  },
+  {
+    "day_offset": -16,
+    "minute": 590,
+    "action": "start",
+    "task": "lease-restart"
+  },
+  {
+    "day_offset": -16,
+    "minute": 662,
+    "action": "stop",
+    "task": "lease-restart"
+  },
+  {
+    "day_offset": -16,
+    "minute": 662,
+    "action": "finish",
+    "task": "lease-restart"
+  },
+  {
+    "day_offset": -16,
+    "minute": 820,
+    "action": "resume",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -16,
+    "minute": 874,
+    "action": "stop",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -16,
+    "minute": 874,
+    "action": "finish",
+    "task": "ring-port"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1105,
+    "action": "create",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -15,
+    "minute": 292,
+    "action": "create",
+    "task": "dish-rack"
+  },
+  {
+    "day_offset": -15,
+    "minute": 452,
+    "action": "start",
+    "task": "dish-rack"
+  },
+  {
+    "day_offset": -15,
+    "minute": 462,
+    "action": "stop",
+    "task": "dish-rack"
+  },
+  {
+    "day_offset": -15,
+    "minute": 462,
+    "action": "finish",
+    "task": "dish-rack"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1105,
+    "action": "create",
+    "task": "suite-report"
+  },
+  {
+    "day_offset": -14,
+    "minute": 805,
+    "action": "start",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -14,
+    "minute": 858,
+    "action": "pause",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -14,
+    "minute": 892,
+    "action": "resume",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -14,
+    "minute": 957,
+    "action": "stop",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -14,
+    "minute": 957,
+    "action": "finish",
+    "task": "trace-tool"
+  },
+  {
+    "day_offset": -13,
+    "minute": 650,
+    "action": "start",
+    "task": "suite-report"
+  },
+  {
+    "day_offset": -13,
+    "minute": 679,
+    "action": "stop",
+    "task": "suite-report"
+  },
+  {
+    "day_offset": -13,
+    "minute": 679,
+    "action": "finish",
+    "task": "suite-report"
+  },
+  {
+    "day_offset": -12,
+    "minute": 487,
+    "action": "create",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -12,
+    "minute": 560,
+    "action": "start",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -12,
+    "minute": 615,
+    "action": "pause",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1028,
+    "action": "create",
+    "task": "bins"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1038,
+    "action": "start",
+    "task": "bins"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1052,
+    "action": "stop",
+    "task": "bins"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1052,
+    "action": "finish",
+    "task": "bins"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1105,
+    "action": "create",
+    "task": "ack-traces"
+  },
+  {
+    "day_offset": -11,
+    "minute": 490,
+    "action": "resume",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -11,
+    "minute": 535,
+    "action": "stop",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -11,
+    "minute": 535,
+    "action": "finish",
+    "task": "epoch-proof"
+  },
+  {
+    "day_offset": -10,
+    "minute": 710,
+    "action": "start",
+    "task": "ack-traces"
+  },
+  {
+    "day_offset": -10,
+    "minute": 734,
+    "action": "stop",
+    "task": "ack-traces"
+  },
+  {
+    "day_offset": -10,
+    "minute": 734,
+    "action": "finish",
+    "task": "ack-traces"
+  },
+  {
+    "day_offset": -9,
+    "minute": 790,
+    "action": "create",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -9,
+    "minute": 800,
+    "action": "start",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -9,
+    "minute": 876,
+    "action": "pause",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1251,
+    "action": "create",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -7,
+    "minute": 940,
+    "action": "resume",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -7,
+    "minute": 996,
+    "action": "stop",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -7,
+    "minute": 996,
+    "action": "finish",
+    "task": "boundary-debug"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1105,
+    "action": "create",
+    "task": "codec-caption"
+  },
+  {
+    "day_offset": -6,
+    "minute": 625,
+    "action": "start",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -6,
+    "minute": 673,
+    "action": "pause",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -5,
+    "minute": 680,
+    "action": "start",
+    "task": "codec-caption"
+  },
+  {
+    "day_offset": -5,
+    "minute": 707,
+    "action": "stop",
+    "task": "codec-caption"
+  },
+  {
+    "day_offset": -5,
+    "minute": 707,
+    "action": "finish",
+    "task": "codec-caption"
+  },
+  {
+    "day_offset": -4,
+    "minute": 460,
+    "action": "create",
+    "task": "incident-card"
+  },
+  {
+    "day_offset": -4,
+    "minute": 620,
+    "action": "start",
+    "task": "incident-card"
+  },
+  {
+    "day_offset": -4,
+    "minute": 652,
+    "action": "stop",
+    "task": "incident-card"
+  },
+  {
+    "day_offset": -4,
+    "minute": 652,
+    "action": "finish",
+    "task": "incident-card"
+  },
+  {
+    "day_offset": -4,
+    "minute": 960,
+    "action": "resume",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1002,
+    "action": "stop",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1002,
+    "action": "finish",
+    "task": "barrier-proof"
+  },
+  {
+    "day_offset": -3,
+    "minute": 596,
+    "action": "create",
+    "task": "alias-window"
+  },
+  {
+    "day_offset": -3,
+    "minute": 669,
+    "action": "start",
+    "task": "alias-window"
+  },
+  {
+    "day_offset": -3,
+    "minute": 690,
+    "action": "stop",
+    "task": "alias-window"
+  },
+  {
+    "day_offset": -3,
+    "minute": 690,
+    "action": "finish",
+    "task": "alias-window"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1251,
+    "action": "create",
+    "task": "held-seed"
+  },
+  {
+    "day_offset": -2,
+    "minute": 434,
+    "action": "create",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -2,
+    "minute": 507,
+    "action": "start",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -2,
+    "minute": 523,
+    "action": "stop",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -2,
+    "minute": 523,
+    "action": "finish",
+    "task": "bus-pass"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "pickup"
+  },
+  {
+    "day_offset": -1,
+    "minute": 799,
+    "action": "create",
+    "task": "replay-cases"
+  },
+  {
+    "day_offset": -1,
+    "minute": 872,
+    "action": "start",
+    "task": "replay-cases"
+  },
+  {
+    "day_offset": -1,
+    "minute": 910,
+    "action": "stop",
+    "task": "replay-cases"
+  },
+  {
+    "day_offset": -1,
+    "minute": 910,
+    "action": "finish",
+    "task": "replay-cases"
+  },
+  {
+    "day_offset": -1,
+    "minute": 970,
+    "action": "create",
+    "task": "fix-proof"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "bridge-trace"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "ci-paste"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "soap"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1130,
+    "action": "start",
+    "task": "fix-proof"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1142,
+    "action": "pause",
+    "task": "fix-proof"
+  },
+  {
+    "day_offset": 0,
+    "minute": 655,
+    "action": "start",
+    "task": "held-seed"
+  },
+  {
+    "day_offset": 0,
+    "minute": 672,
+    "action": "pause",
+    "task": "held-seed"
+  }
+]

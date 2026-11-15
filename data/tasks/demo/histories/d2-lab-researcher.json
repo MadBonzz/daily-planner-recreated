@@ -1,0 +1,2070 @@
+{
+  "id": "d2-lab-researcher",
+  "name": "Ishan · paper reading and GPU research",
+  "scenario": "Ishan is preparing a reading-group presentation while maintaining the lab's GPU reference implementation. On a working kernel he can repeat a timing sweep in one allocation; scheduling a new reproducer or expanding a variance bound can take two sittings. He shops for the group lunch on his way back from lab.",
+  "tasks": [
+    {
+      "id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "description": "Derive a conditional second moment on paper and write an example where ignoring missing observations biases it.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 60,
+      "actual_minutes": 104,
+      "sessions_minutes": [
+        64,
+        40
+      ],
+      "completion_note": "I had to expand the conditional expectation one event at a time.",
+      "pdf": "derive-noise",
+      "pdf_path": "pdfs/03-reading-depth/derive-noise.pdf",
+      "day": "2026-02-27",
+      "session_starts": [
+        "2026-03-01T09:50-05:00",
+        "2026-03-02T08:30-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 6.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6.0,
+            "label": "off_task",
+            "review_reason": "Checked basketball scores in the middle of the derivation."
+          },
+          {
+            "minutes": 9.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.5833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.8333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4666666666666666,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 3.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.533333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.566666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "description": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 80,
+      "actual_minutes": 122,
+      "sessions_minutes": [
+        65,
+        57
+      ],
+      "completion_note": "I lost time getting a GPU allocation after I had reduced the failure.",
+      "pdf": "warp-tail",
+      "pdf_path": "pdfs/04-kernel-workbench/warp-tail.pdf",
+      "day": "2026-03-02",
+      "session_starts": [
+        "2026-03-02T14:10-05:00",
+        "2026-03-04T13:50-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.966666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.283333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.683333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.283333333333333,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 4.316666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6.0,
+            "label": "off_task",
+            "review_reason": "Hockey highlights filled part of the allocation wait."
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.466666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "read-cache",
+      "title": "Read the cutoff-vs-drain ablation",
+      "description": "Explain the observed-only baseline and the queue cutoff controls to journal club; skip the proof.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 45,
+      "actual_minutes": 32,
+      "sessions_minutes": [
+        32
+      ],
+      "pdf": "derive-noise",
+      "pdf_path": "pdfs/03-reading-depth/derive-noise.pdf",
+      "completion_note": "Used only the two inset plots on the front page. I copied the confidence bars, then stopped rather than tracing the appendix proof.",
+      "day": "2026-03-01",
+      "session_starts": [
+        "2026-03-04T10:34-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.733333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "description": "Run the existing sweep, copy four medians and list compiler/driver.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 60,
+      "actual_minutes": 59,
+      "sessions_minutes": [
+        59
+      ],
+      "pdf": "warp-tail",
+      "pdf_path": "pdfs/04-kernel-workbench/warp-tail.pdf",
+      "day": "2026-03-03",
+      "session_starts": [
+        "2026-03-05T15:20-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.066666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "The phone showed live football scores during the sweep."
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.566666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.43333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.43333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.433333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.4,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dishes",
+      "title": "Wash the pot and lunch boxes",
+      "description": "Soak the rice pot while I rinse the lunch containers.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 20,
+      "actual_minutes": 18,
+      "sessions_minutes": [
+        18
+      ],
+      "day": "2026-03-06",
+      "session_starts": [
+        "2026-03-06T19:17-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 13.833333333333334,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.48333333333333334,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 3.683333333333333,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "description": "Construct a non-contiguous input and fix the offset; run the odd-width regression.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 70,
+      "actual_minutes": 109,
+      "sessions_minutes": [
+        60,
+        49
+      ],
+      "completion_note": "Waiting for a GPU allocation delayed the reproducer.",
+      "day": "2026-03-05",
+      "session_starts": [
+        "2026-03-07T09:05-05:00",
+        "2026-03-09T14:15-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.36666666666666664,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.36666666666666664,
+            "label": "on_task",
+            "review_reason": "Checked the approval code while the lab window was still open."
+          },
+          {
+            "minutes": 0.36666666666666664,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 7.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 2.0833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5.0,
+            "label": "off_task",
+            "review_reason": "The post-game video interrupted the CUDA debugging session."
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "description": "Write out all conditioning steps and test the bound on a two-point loss table.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 50,
+      "actual_minutes": 86,
+      "sessions_minutes": [
+        86
+      ],
+      "completion_note": "Expanding the conditional expectation before taking the variance fixed my algebra.",
+      "day": "2026-03-06",
+      "session_starts": [
+        "2026-03-08T10:23-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.283333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4.0,
+            "label": "off_task",
+            "review_reason": "The live basketball score was unrelated to the variance bound."
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8833333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "clothes",
+      "title": "Fold the clothes from the drying rack",
+      "description": "Fold dry clothes and hang the shirts; the wash itself finished earlier.",
+      "details": "",
+      "category": "Home",
+      "estimate_minutes": 15,
+      "actual_minutes": 15,
+      "sessions_minutes": [
+        15
+      ],
+      "day": "2026-03-09",
+      "session_starts": [
+        "2026-03-09T18:24-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.8666666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.6,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 12.533333333333333,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "read-queues",
+      "title": "Prepare one slide about the delay experiment",
+      "description": "Compare two returned-inspection curves and identify the shared random seed strategy.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 45,
+      "actual_minutes": 30,
+      "sessions_minutes": [
+        30
+      ],
+      "day": "2026-03-07",
+      "session_starts": [
+        "2026-03-10T08:50-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain",
+            "review_reason": "A notes app and the paper were open together; the phone note is unknown."
+          },
+          {
+            "minutes": 2.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.533333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.433333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.9166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "race-repro",
+      "title": "Make the shared scratch race reproducible",
+      "description": "Build a two-row harness, isolate the missing ordering and explain why the poison fixture fails.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 90,
+      "actual_minutes": 138,
+      "sessions_minutes": [
+        78,
+        60
+      ],
+      "day": "2026-03-09",
+      "session_starts": [
+        "2026-03-11T14:50-04:00",
+        "2026-03-12T12:50-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 5.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.05,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5.0,
+            "label": "off_task",
+            "review_reason": "The football scoreboard was open while the reproducer waited."
+          },
+          {
+            "minutes": 4.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.183333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.316666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.016666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.783333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.683333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.216666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "check-jensen",
+      "title": "Verify the weighted-bin bound",
+      "description": "Derive the inequality from the indicator identity and calculate a numerical counterexample.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 55,
+      "actual_minutes": 97,
+      "sessions_minutes": [
+        49,
+        48
+      ],
+      "day": "2026-03-09",
+      "session_starts": [
+        "2026-03-12T08:30-04:00",
+        "2026-03-14T10:05-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.0833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.8333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4166666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.516666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 12.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 2.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.866666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.066666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task"
+          },
+          {
+            "minutes": 3.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.48333333333333334,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "median-runs",
+      "title": "Repeat the archived shape sweep",
+      "description": "Use the validated binary to collect timing medians and a screenshot.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 50,
+      "actual_minutes": 51,
+      "sessions_minutes": [
+        51
+      ],
+      "day": "2026-03-12",
+      "session_starts": [
+        "2026-03-15T15:27-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain",
+            "review_reason": "The inbox did not show whether any messages concerned the lab run."
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.1666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0833333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.283333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.55,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "variance-email",
+      "title": "Reply to Ada about the clipping step",
+      "description": "Check the use of Jensen in the audit estimator against the paper notes. Send Ada a short derivation explaining the conditioning, and one boundary example.",
+      "details": "The question is about the variance, not coding the estimator.",
+      "category": "Reading group",
+      "estimate_minutes": 45,
+      "actual_minutes": 71,
+      "sessions_minutes": [
+        71
+      ],
+      "completion_note": "I had divided before conditioning on the audit outcome. The boundary example exposed it; Ada signed off on the corrected algebra.",
+      "day": "2026-03-14",
+      "session_starts": [
+        "2026-03-16T09:25-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 5.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 7.416666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.266666666666667,
+            "label": "on_task",
+            "pause_after_minutes": 19
+          },
+          {
+            "minutes": 0.03333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.183333333333333,
+            "label": "off_task",
+            "review_reason": "Checked the cricket scorecard between two derivation checks."
+          },
+          {
+            "minutes": 6.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.233333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 8.483333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.233333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.183333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "allocation-desk",
+      "title": "Transfer a spare accelerator reservation",
+      "description": "Check the unused reservation, confirm the replacement owner in the group chat, and release my token once the lab dashboard shows her job.",
+      "details": "Mira is covering the quantization class this afternoon.",
+      "category": "Lab admin",
+      "estimate_minutes": 15,
+      "actual_minutes": 11,
+      "sessions_minutes": [
+        11
+      ],
+      "completion_note": "Mira's run appeared before my calendar reminder went off.",
+      "day": "2026-03-16",
+      "session_starts": [
+        "2026-03-16T13:06-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "replica-figs",
+      "title": "Explain a simulator control at group meeting",
+      "description": "Read the experiment and the ablation, give one headline and a caveat.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 40,
+      "actual_minutes": 31,
+      "sessions_minutes": [
+        31
+      ],
+      "day": "2026-03-18",
+      "session_starts": [
+        "2026-03-18T10:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.283333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3333333333333335,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "masked-add",
+      "title": "Review an already-passing scalar fallback",
+      "description": "Check three examples against the CPU output and update the docstring.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 30,
+      "actual_minutes": 24,
+      "sessions_minutes": [
+        24
+      ],
+      "completion_note": "The two-row example passed on the scalar branch; filed the annotated output in the meeting folder.",
+      "day": "2026-03-18",
+      "session_starts": [
+        "2026-03-20T14:48-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.65,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "audit-card",
+      "title": "Write two board prompts on audit delay",
+      "description": "Draft a short audience exercise on conditional independence; I have the note open.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 35,
+      "status": "paused",
+      "sessions_minutes": [
+        8
+      ],
+      "pdf": "derive-noise",
+      "pdf_path": "pdfs/03-reading-depth/derive-noise.pdf",
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-20T19:07-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.433333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5666666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "recheck-tail",
+      "title": "Compare old and new poison runs",
+      "description": "Annotate the two mismatching rows with their pitch and lane owner.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 35,
+      "status": "paused",
+      "sessions_minutes": [
+        10
+      ],
+      "pdf": "warp-tail",
+      "pdf_path": "pdfs/04-kernel-workbench/warp-tail.pdf",
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-21T10:15-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "potluck",
+      "title": "Bring bread for reading group",
+      "description": "Stop by the bakery and take it to the seminar room.",
+      "details": "",
+      "category": "Personal",
+      "estimate_minutes": 20,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-03-21"
+    },
+    {
+      "id": "dishsoap",
+      "title": "Return library adapter and buy soap",
+      "description": "Return the USB adapter and collect the grocery order on the way back.",
+      "details": "",
+      "category": "Personal",
+      "estimate_minutes": 25,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-03-21"
+    },
+    {
+      "id": "metrics-club",
+      "title": "Make one slide about the two ablations",
+      "description": "Use experiments 1 and 2 for one finding, one control and one confound. No derivation.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 45,
+      "pdf": "derive-noise",
+      "pdf_path": "pdfs/03-reading-depth/derive-noise.pdf",
+      "status": "ready",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "launch-offset",
+      "title": "Reproduce the first corrupted row after a short pitch",
+      "description": "Run the padded odd-width shape, inspect the captured indices and add an assertion on the first bad row before requesting a second accelerator slot.",
+      "details": "Reuse the stride benchmark. Passing the scalar baseline alone isn't sufficient.",
+      "category": "GPU programming",
+      "estimate_minutes": 75,
+      "status": "ready",
+      "day": "2026-03-21"
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "appendix-proof",
+      "title": "Prepare the appendix board derivation",
+      "description": "Prove the second-moment inequality in Appendix A and give the two-item example from B. I have read the abstract.",
+      "details": "",
+      "category": "Paper reading",
+      "estimate_minutes": 60,
+      "pdf": "derive-noise",
+      "pdf_path": "pdfs/03-reading-depth/derive-noise.pdf",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "async-flicker",
+      "title": "Fix nondeterministic segmented sums",
+      "description": "Task A only: minimize the non-power-of-two failure, correct the ownership rule and add one regression.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 85,
+      "pdf": "warp-tail",
+      "pdf_path": "pdfs/04-kernel-workbench/warp-tail.pdf",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "sweep-again",
+      "title": "Rerun the validated reference sweep",
+      "description": "Task B reporting on the passing branch. Save raw timings and four medians; no implementation.",
+      "details": "",
+      "category": "GPU lab",
+      "estimate_minutes": 60,
+      "pdf": "warp-tail",
+      "pdf_path": "pdfs/04-kernel-workbench/warp-tail.pdf",
+      "day": "2026-03-21"
+    }
+  ],
+  "activitywatch_sha256": "d2dbde5530fb375d0b121daf535f24fee6d528b22cf4c221dbcc397a13cd94d5"
+}

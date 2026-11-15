@@ -1,0 +1,1480 @@
+{
+  "id": "d5-field-engineer",
+  "name": "Xavier · robotics lab and shared home",
+  "scenario": "Xavier works on rover C at the repair collective after his day shift. Rental-laundry slots and family dinners share his calendar with test-bay bookings. He replays saved bags at home, but a new live capture means carrying the old USB bridge to the hall and sometimes starting the pass again.",
+  "tasks": [
+    {
+      "id": "chili-dishes",
+      "title": "Do the dishes after chili night",
+      "description": "Wash the dinner dishes for four, scrub the cast-iron pot and wipe the sink.",
+      "category": "Housework",
+      "details": "One full rack to drain, plus our heavy pot.",
+      "estimate_minutes": 30,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ],
+      "completion_note": "The handles and lid had cooked-on chili. I dried the iron and cleared the sink before stopping.",
+      "day": "2026-02-26",
+      "session_starts": [
+        "2026-02-28T18:32-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 6.3,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.9666666666666667,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 4.733333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5.0,
+            "label": "off_task",
+            "review_reason": "Played a game during a break from the sheet-pan washing."
+          },
+          {
+            "minutes": 3.1333333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.7,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 15.166666666666666,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "hall-encoder",
+      "title": "Log the hallway encoder run",
+      "description": "Connect my laptop to the club rover’s USB bridge, collect left and right counts over the chalk course, then export a clean trace.",
+      "category": "Robotics lab",
+      "details": "Use rover C, the old bridge and the usual bringup file. Need two traversals.",
+      "estimate_minutes": 40,
+      "actual_minutes": 63,
+      "sessions_minutes": [
+        30,
+        33
+      ],
+      "completion_note": "The USB bridge dropped twice when I restarted bag capture. Reconnected, checked the port name and ran both traversals again.",
+      "day": "2026-02-27",
+      "session_starts": [
+        "2026-03-01T17:10-05:00",
+        "2026-03-01T18:05-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.966666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 4.0,
+            "label": "off_task",
+            "review_reason": "Played a geography guessing game while the USB connection was down."
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 3.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.483333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 9.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8333333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "towels-one",
+      "title": "Wash and fold the bath towels",
+      "description": "Strip the towel rail, start one load, then fold the dry towels and put them in the hall cupboard.",
+      "category": "Housework",
+      "details": "I can do other things while the washer runs. Count hands-on time.",
+      "estimate_minutes": 30,
+      "actual_minutes": 21,
+      "sessions_minutes": [
+        21
+      ],
+      "completion_note": "Stopped the timer during both machine cycles. The folding was straightforward.",
+      "day": "2026-03-01",
+      "session_starts": [
+        "2026-03-03T09:10-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.65,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.65,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 4.7,
+            "label": "uncertain",
+            "pause_after_minutes": 82
+          },
+          {
+            "minutes": 5.983333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.9833333333333333,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.033333333333333,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "junction-replay",
+      "title": "Replay the line-junction bag",
+      "description": "Play back the saved junction bag on my laptop, add a plot of sensor threshold crossings, and export the two marked frames.",
+      "category": "Robotics lab",
+      "details": "The bag is already on disk; no rover connection required.",
+      "estimate_minutes": 45,
+      "actual_minutes": 42,
+      "sessions_minutes": [
+        42
+      ],
+      "completion_note": "The saved timestamp list lined up with both crossings.",
+      "day": "2026-02-28",
+      "session_starts": [
+        "2026-03-03T09:34-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.183333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.533333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.233333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6833333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "pasta-dishes",
+      "title": "Clear up the pasta supper",
+      "description": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board.",
+      "category": "Housework",
+      "details": "Sink is full after roommates cooked. No dishwasher.",
+      "estimate_minutes": 25,
+      "actual_minutes": 31,
+      "sessions_minutes": [
+        31
+      ],
+      "completion_note": "The smaller plates were easy, but the skillet needed a second scrub.",
+      "day": "2026-03-04",
+      "session_starts": [
+        "2026-03-04T19:30-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 3.3666666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.55,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.083333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "The phone game interrupted the cleanup."
+          },
+          {
+            "minutes": 9.7,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 7.783333333333333,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bicycle",
+      "title": "Swap the rear bike light",
+      "description": "Replace the cracked bracket and align the rear light with the rack.",
+      "category": "Repair",
+      "details": "Screwdriver and spare bracket in the saddle bag.",
+      "estimate_minutes": 25,
+      "actual_minutes": 24,
+      "sessions_minutes": [
+        24
+      ],
+      "completion_note": "The supplied washer fit.",
+      "day": "2026-03-05",
+      "session_starts": [
+        "2026-03-05T15:20-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 17.133333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.6333333333333333,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.233333333333333,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "filter-renewal",
+      "title": "Renew the filter subscription",
+      "description": "Check the cartridge code under the sink and move our household filter order to every other month.",
+      "category": "Personal admin",
+      "details": "Login is saved. Use the old order to get the exact model.",
+      "estimate_minutes": 15,
+      "actual_minutes": 18,
+      "sessions_minutes": [
+        18
+      ],
+      "completion_note": "Had to check whether the last order was a two-pack.",
+      "day": "2026-03-06",
+      "session_starts": [
+        "2026-03-06T19:02-05:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 8.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "Opened a shoe sale during filter checkout."
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 6.0,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "turntable",
+      "title": "Record a turning test on rover C",
+      "description": "Collect a timed spin on the club rover, check the on-board IMU against the marked turn and attach a short plot to the logbook.",
+      "category": "Robotics lab",
+      "details": "Actual cart on the floor. Laptop uses the original USB bridge.",
+      "estimate_minutes": 50,
+      "actual_minutes": 77,
+      "sessions_minutes": [
+        34,
+        43
+      ],
+      "completion_note": "Serial link dropped midway through the turn. Replugged USB, reselected the device and repeated the whole turn.",
+      "day": "2026-03-04",
+      "session_starts": [
+        "2026-03-07T17:15-05:00",
+        "2026-03-08T17:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.433333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 8.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.216666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.75,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.9833333333333334,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 0.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.033333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 5.0,
+            "label": "off_task",
+            "review_reason": "The geography game was unrelated to the IMU test."
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.1333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.35,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.033333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "sheets",
+      "title": "Wash the guest-room sheets",
+      "description": "Start one bedding load. Later make up the guest bed and put the spare covers on the shelf.",
+      "category": "Housework",
+      "details": "No timer during the machine cycle.",
+      "estimate_minutes": 35,
+      "actual_minutes": 23,
+      "sessions_minutes": [
+        9,
+        14
+      ],
+      "completion_note": "The fitted sheet took a few tries. The machine ran while I went shopping.",
+      "day": "2026-03-07",
+      "session_starts": [
+        "2026-03-09T08:40-04:00",
+        "2026-03-09T10:45-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 0.75,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.5166666666666667,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 2.7333333333333334,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "on_task",
+            "review_reason": "Set the washer reminder during the first part of the laundry."
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain"
+          }
+        ],
+        [
+          {
+            "minutes": 3.7666666666666666,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.7833333333333333,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 9.45,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "frame-drawing",
+      "title": "Work out the camera frame change",
+      "description": "Draw base, camera and tag axes and derive the transform that puts one observed point in the base frame.",
+      "category": "Written robotics",
+      "details": "Paper exercise. Check the camera translation before multiplying.",
+      "estimate_minutes": 45,
+      "actual_minutes": 52,
+      "sessions_minutes": [
+        52
+      ],
+      "completion_note": "I had the inverse rotation on the first attempt. Multiplying a known point exposed it.",
+      "pdf": "frame-drawing",
+      "pdf_path": "pdfs/09-rover-night/frame-drawing.pdf",
+      "day": "2026-03-07",
+      "session_starts": [
+        "2026-03-09T09:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 26.583333333333332,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.4166666666666667,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.25,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.933333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.2,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "stew-dishes",
+      "title": "Reset the kitchen after stew",
+      "description": "Wash the cast-iron Dutch oven and the dinner place settings after friends leave. Dry the iron and wipe the basin.",
+      "category": "Housework",
+      "details": "Five people this time, same compact sink and hand-washing rack.",
+      "estimate_minutes": 35,
+      "actual_minutes": 42,
+      "sessions_minutes": [
+        42
+      ],
+      "completion_note": "The last twelve minutes were pot, lid and drying space. Counted through the final wipe.",
+      "day": "2026-03-09",
+      "session_starts": [
+        "2026-03-11T18:55-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 18.866666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.48333333333333334,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 22.65,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "club-shift",
+      "title": "Cover the repair-club sign-in desk",
+      "description": "Sit the one-hour sign-in shift, hand out tags and log room numbers.",
+      "category": "Club service",
+      "details": "Fixed volunteer shift. A second volunteer takes over at the end.",
+      "estimate_minutes": 60,
+      "actual_minutes": 60,
+      "sessions_minutes": [
+        60
+      ],
+      "completion_note": "Handed the desk back on time.",
+      "fixed_duration": true,
+      "day": "2026-03-10",
+      "session_starts": [
+        "2026-03-12T18:00-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 12.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.3,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.9166666666666666,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 6.783333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.0,
+            "label": "uncertain",
+            "review_reason": "A note was open during the shift; its contents were unavailable."
+          },
+          {
+            "minutes": 30.516666666666666,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.7333333333333333,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 1.75,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mugs",
+      "title": "Rinse the two coffee mugs",
+      "description": "Wash two coffee mugs and a spoon before heading out.",
+      "category": "Housework",
+      "details": "No pans or drying up today.",
+      "estimate_minutes": 10,
+      "actual_minutes": 5,
+      "sessions_minutes": [
+        5
+      ],
+      "completion_note": "A quick rinse and onto the rack.",
+      "day": "2026-03-13",
+      "session_starts": [
+        "2026-03-13T08:22-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 5.0,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dock-trace",
+      "title": "Capture docking sensor traces on the club cart",
+      "description": "Connect through rover C’s USB bridge. Record the approach and reverse-out, then compare bumper signals against the marked docking line.",
+      "category": "Robotics lab",
+      "details": "Shared laptop bridge again. Use the foam dock and collect both directions.",
+      "estimate_minutes": 45,
+      "actual_minutes": 70,
+      "sessions_minutes": [
+        28,
+        42
+      ],
+      "completion_note": "Another disconnect when starting the second bag. Reconnecting the old USB bridge and redoing the reverse run cost most of the extra time.",
+      "pdf": "dock-trace",
+      "pdf_path": "pdfs/09-rover-night/dock-trace.pdf",
+      "day": "2026-03-11",
+      "session_starts": [
+        "2026-03-14T16:50-04:00",
+        "2026-03-15T18:35-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.716666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.1,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.0,
+            "label": "off_task",
+            "review_reason": "The phone game interrupted the rover bring-up."
+          },
+          {
+            "minutes": 4.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.5,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.9166666666666667,
+            "label": "on_task"
+          }
+        ],
+        [
+          {
+            "minutes": 2.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.9666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.316666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 12.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.7,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.5333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.6833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.1666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.8166666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.85,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.8333333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.6333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.4833333333333334,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "bike-box",
+      "title": "Collect the bike light",
+      "description": "Walk to the parcel locker for the bike light and bring the package upstairs.",
+      "category": "Errands",
+      "details": "Locker is on the normal route back from the market.",
+      "estimate_minutes": 20,
+      "actual_minutes": 19,
+      "sessions_minutes": [
+        19
+      ],
+      "completion_note": "The locker code opened on the second try.",
+      "day": "2026-03-16",
+      "session_starts": [
+        "2026-03-16T17:48-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.533333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.65,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 0.8166666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain",
+            "review_reason": "The app could contain assembly advice or an unrelated discussion."
+          },
+          {
+            "minutes": 8.533333333333333,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.9166666666666666,
+            "label": "uncertain",
+            "review_reason": "A brief phone opening does not establish what the person was doing away from the device."
+          },
+          {
+            "minutes": 3.55,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "caster-pass",
+      "title": "Record rover C going over the cabinet threshold",
+      "description": "At the club, mark the run strip, start the legacy USB logger and collect two threshold crossings with the rear caster loaded. Save both bags before leaving the bay.",
+      "details": "Use the loaner bridge with the tape flag. A laptop replay cannot produce the second pass.",
+      "category": "Robotics lab",
+      "estimate_minutes": 42,
+      "actual_minutes": 66,
+      "sessions_minutes": [
+        66
+      ],
+      "completion_note": "The legacy bridge vanished when the bag rolled over. Unplugged it, waited for the serial port and repeated the loaded pass.",
+      "day": "2026-03-17",
+      "session_starts": [
+        "2026-03-17T17:30-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.8,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.6,
+            "label": "off_task",
+            "review_reason": "Played a geography round while the original serial adapter was unavailable."
+          },
+          {
+            "minutes": 4.8,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 3.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 6.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.8,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.4,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "tenant-tap",
+      "title": "Meet the plumber at the kitchen shutoff",
+      "description": "Clear the under-sink shelf and show the plumber which valve drips. Photograph the work order and text the landlord after the inspection.",
+      "details": "Leave the timer paused while the plumber is away getting the washer.",
+      "category": "Housework",
+      "estimate_minutes": 25,
+      "actual_minutes": 29,
+      "sessions_minutes": [
+        29
+      ],
+      "completion_note": "The first valve was the dishwasher feed. The photo helped the landlord file the right part number.",
+      "day": "2026-03-18",
+      "session_starts": [
+        "2026-03-18T09:00-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 7.566666666666666,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.65,
+            "label": "uncertain",
+            "pause_after_minutes": 24
+          },
+          {
+            "minutes": 4.65,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 5.05,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.2666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.5166666666666666,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "wheel-ticks",
+      "title": "Replot the wheel slip from Thursday’s bag",
+      "description": "Open the recorded bag on the laptop, correct the wheel diameter in the plotting notebook and export the overlay.",
+      "category": "Robotics lab",
+      "details": "The physical robot is in another building and is not needed.",
+      "estimate_minutes": 35,
+      "actual_minutes": 36,
+      "sessions_minutes": [
+        36
+      ],
+      "completion_note": "Plot updated on the first full run.",
+      "day": "2026-03-17",
+      "session_starts": [
+        "2026-03-19T19:56-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.2833333333333334,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.15,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.566666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.683333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.7666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.55,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.45,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.816666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 1.3833333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.1666666666666665,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.0166666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5333333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.9,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.6666666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.433333333333333,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "grant-email",
+      "title": "Send the consumables estimate",
+      "description": "Write the repair-club treasurer a line-item estimate for caster wheels, cable ties and foam tape.",
+      "category": "Club service",
+      "details": "Supplier prices already in the spreadsheet.",
+      "estimate_minutes": 20,
+      "actual_minutes": 18,
+      "sessions_minutes": [
+        18
+      ],
+      "completion_note": "The treasurer accepted the existing links.",
+      "day": "2026-03-20",
+      "session_starts": [
+        "2026-03-20T12:15-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 4.583333333333333,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.466666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.0,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.95,
+            "label": "on_task"
+          },
+          {
+            "minutes": 3.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 0.5666666666666667,
+            "label": "on_task"
+          }
+        ]
+      ]
+    }
+  ],
+  "open_tasks": [
+    {
+      "id": "ready-rice",
+      "title": "Pick up rice, ginger and limes",
+      "description": "Get pantry supplies for dinner on the way home.",
+      "category": "Errands",
+      "details": "Small grocery list, one store.",
+      "estimate_minutes": 22,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-03-21"
+    },
+    {
+      "id": "ready-washers",
+      "title": "Inventory spare axle washers",
+      "description": "Count the washer bags and fill the parts-bin card.",
+      "category": "Repair",
+      "details": "Two small drawers in the club room.",
+      "estimate_minutes": 20,
+      "status": "ready",
+      "sessions_minutes": [],
+      "day": "2026-03-21"
+    },
+    {
+      "id": "paused-blue-load",
+      "title": "Wash and fold the blue work shirts",
+      "description": "Start the blue load and fold it once dry. Keep machine time off the clock.",
+      "category": "Housework",
+      "details": "Wash started. My next step is taking shirts out and hanging them.",
+      "estimate_minutes": 24,
+      "status": "paused",
+      "sessions_minutes": [
+        7
+      ],
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-20T19:10-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.5,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.0,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 1.5,
+            "label": "uncertain"
+          },
+          {
+            "minutes": 2.0,
+            "label": "uncertain"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "paused-frames",
+      "title": "Check the camera mast axes",
+      "description": "Draw the transformed optical axis for two different mast heights.",
+      "category": "Written robotics",
+      "details": "Stopped just before checking my second drawing.",
+      "estimate_minutes": 35,
+      "status": "paused",
+      "sessions_minutes": [
+        13
+      ],
+      "day": "2026-03-21",
+      "session_starts": [
+        "2026-03-21T11:20-04:00"
+      ],
+      "activity": [
+        [
+          {
+            "minutes": 5.3,
+            "label": "on_task"
+          },
+          {
+            "minutes": 4.866666666666666,
+            "label": "on_task"
+          },
+          {
+            "minutes": 2.8333333333333335,
+            "label": "on_task"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "replay-ramp",
+      "title": "Plot the ramp trial from yesterday’s recording",
+      "description": "Replay the ramp bag on the laptop, mark the two wheel-slip events and export the overlays.",
+      "category": "Robotics lab",
+      "details": "The archive is saved locally. This is offline analysis only; no rover or bridge is required.",
+      "estimate_minutes": 40,
+      "pdf": "replay-ramp",
+      "pdf_path": "pdfs/09-rover-night/replay-ramp.pdf",
+      "status": "ready",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "dock-parity",
+      "title": "Measure the loaded rover docking run after the belt change",
+      "description": "Capture two live docking approaches on the old USB bridge, mark the first contact packet in both traces, and return the cart to bay two.",
+      "details": "The overnight bag is only a reference. New captures are required with the belt under load.",
+      "category": "Robotics lab",
+      "estimate_minutes": 45,
+      "status": "ready",
+      "day": "2026-03-21"
+    }
+  ],
+  "holdouts": [
+    {
+      "id": "bake-dishes",
+      "title": "Do the dishes after the tray bake",
+      "description": "Hand-wash the dinner settings, clean the enameled tray and dry the cast-iron pan from the vegetables. Wipe the sink last.",
+      "category": "Housework",
+      "details": "Dinner for four. One full rack, same sink.",
+      "estimate_minutes": 30,
+      "day": "2026-03-21"
+    },
+    {
+      "id": "bump-crossing",
+      "title": "Record the cable-cover crossing on rover C",
+      "description": "Collect two real crossings of the rubber cable cover, compare IMU spikes and wheel speeds, and deliver the annotated plots.",
+      "category": "Robotics lab",
+      "details": "Use club rover C with its original USB bridge. The mat and laptop are already set up.",
+      "estimate_minutes": 45,
+      "pdf": "bump-crossing",
+      "pdf_path": "pdfs/09-rover-night/bump-crossing.pdf",
+      "day": "2026-03-21"
+    },
+    {
+      "id": "duvet",
+      "title": "Wash the spare duvet cover",
+      "description": "Take the spare duvet cover through one load and make up the sofa bed. Pause the timer while the machine is running.",
+      "category": "Housework",
+      "details": "First time with this second-hand cover. The spare duvet is in the guest cupboard.",
+      "estimate_minutes": 30,
+      "day": "2026-03-21"
+    }
+  ],
+  "activitywatch_sha256": "1b3a7cd1bfea196a29e256405b28fc4608df9de957b105101381ec05e5c32a86"
+}

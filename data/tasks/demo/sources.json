@@ -1,0 +1,488 @@
+{
+  "d1-systems-student": {
+    "clock-two": {
+      "history": "01-replica-proofs",
+      "task": "clock-two"
+    },
+    "ring-port": {
+      "history": "02-migration-lab",
+      "task": "ring-port"
+    },
+    "lease-restart": {
+      "history": "01-replica-proofs",
+      "task": "lease-restart"
+    },
+    "trace-tool": {
+      "history": "02-migration-lab",
+      "task": "trace-tool"
+    },
+    "dish-rack": {
+      "history": "01-replica-proofs",
+      "task": "dish-rack"
+    },
+    "suite-report": {
+      "history": "02-migration-lab",
+      "task": "suite-report"
+    },
+    "epoch-proof": {
+      "history": "01-replica-proofs",
+      "task": "epoch-proof"
+    },
+    "bins": {
+      "history": "02-migration-lab",
+      "task": "bins"
+    },
+    "ack-traces": {
+      "history": "01-replica-proofs",
+      "task": "ack-traces"
+    },
+    "boundary-debug": {
+      "history": "02-migration-lab",
+      "task": "boundary-debug"
+    },
+    "barrier-proof": {
+      "history": "01-replica-proofs",
+      "task": "barrier-proof"
+    },
+    "codec-caption": {
+      "history": "02-migration-lab",
+      "task": "codec-caption"
+    },
+    "bus-pass": {
+      "history": "01-replica-proofs",
+      "task": "bus-pass"
+    },
+    "replay-cases": {
+      "history": "02-migration-lab",
+      "task": "replay-cases"
+    },
+    "fix-proof": {
+      "history": "01-replica-proofs",
+      "task": "fix-proof"
+    },
+    "held-seed": {
+      "history": "02-migration-lab",
+      "task": "held-seed"
+    },
+    "soap": {
+      "history": "01-replica-proofs",
+      "task": "soap"
+    },
+    "pickup": {
+      "history": "02-migration-lab",
+      "task": "pickup"
+    },
+    "bridge-proof": {
+      "history": "01-replica-proofs",
+      "task": "bridge-proof"
+    },
+    "patch-tool": {
+      "history": "02-migration-lab",
+      "task": "patch-tool"
+    },
+    "bridge-trace": {
+      "history": "01-replica-proofs",
+      "task": "bridge-trace"
+    },
+    "patch-note": {
+      "history": "02-migration-lab",
+      "task": "patch-note"
+    }
+  },
+  "d2-lab-researcher": {
+    "derive-noise": {
+      "history": "03-reading-depth",
+      "task": "derive-noise"
+    },
+    "warp-tail": {
+      "history": "04-kernel-workbench",
+      "task": "warp-tail"
+    },
+    "read-cache": {
+      "history": "03-reading-depth",
+      "task": "read-cache"
+    },
+    "throughput-table": {
+      "history": "04-kernel-workbench",
+      "task": "throughput-table"
+    },
+    "dishes": {
+      "history": "03-reading-depth",
+      "task": "dishes"
+    },
+    "stride-kernel": {
+      "history": "04-kernel-workbench",
+      "task": "stride-kernel"
+    },
+    "bound-floor": {
+      "history": "03-reading-depth",
+      "task": "bound-floor"
+    },
+    "clothes": {
+      "history": "04-kernel-workbench",
+      "task": "clothes"
+    },
+    "read-queues": {
+      "history": "03-reading-depth",
+      "task": "read-queues"
+    },
+    "race-repro": {
+      "history": "04-kernel-workbench",
+      "task": "race-repro"
+    },
+    "check-jensen": {
+      "history": "03-reading-depth",
+      "task": "check-jensen"
+    },
+    "median-runs": {
+      "history": "04-kernel-workbench",
+      "task": "median-runs"
+    },
+    "replica-figs": {
+      "history": "03-reading-depth",
+      "task": "replica-figs"
+    },
+    "masked-add": {
+      "history": "04-kernel-workbench",
+      "task": "masked-add"
+    },
+    "audit-card": {
+      "history": "03-reading-depth",
+      "task": "audit-card"
+    },
+    "recheck-tail": {
+      "history": "04-kernel-workbench",
+      "task": "recheck-tail"
+    },
+    "potluck": {
+      "history": "03-reading-depth",
+      "task": "potluck"
+    },
+    "dishsoap": {
+      "history": "04-kernel-workbench",
+      "task": "dishsoap"
+    },
+    "appendix-proof": {
+      "history": "03-reading-depth",
+      "task": "appendix-proof"
+    },
+    "async-flicker": {
+      "history": "04-kernel-workbench",
+      "task": "async-flicker"
+    },
+    "metrics-club": {
+      "history": "03-reading-depth",
+      "task": "metrics-club"
+    },
+    "sweep-again": {
+      "history": "04-kernel-workbench",
+      "task": "sweep-again"
+    }
+  },
+  "d3-clinic-coordinator": {
+    "mara-evening": {
+      "history": "06-neighborhood-clinic",
+      "task": "mara-evening"
+    },
+    "radio-cabaret": {
+      "history": "08-community-playhouse",
+      "task": "radio-cabaret"
+    },
+    "dev-stock": {
+      "history": "06-neighborhood-clinic",
+      "task": "dev-stock"
+    },
+    "cabaret-load": {
+      "history": "08-community-playhouse",
+      "task": "cabaret-load"
+    },
+    "campus-posters": {
+      "history": "06-neighborhood-clinic",
+      "task": "campus-posters"
+    },
+    "usher-handback": {
+      "history": "08-community-playhouse",
+      "task": "usher-handback"
+    },
+    "mara-capacity": {
+      "history": "06-neighborhood-clinic",
+      "task": "mara-capacity"
+    },
+    "short-on-air": {
+      "history": "08-community-playhouse",
+      "task": "short-on-air"
+    },
+    "dev-packs": {
+      "history": "06-neighborhood-clinic",
+      "task": "dev-packs"
+    },
+    "audio-preflight": {
+      "history": "08-community-playhouse",
+      "task": "audio-preflight"
+    },
+    "bus-pass": {
+      "history": "06-neighborhood-clinic",
+      "task": "bus-pass"
+    },
+    "quiet-show": {
+      "history": "08-community-playhouse",
+      "task": "quiet-show"
+    },
+    "mara-late-room": {
+      "history": "06-neighborhood-clinic",
+      "task": "mara-late-room"
+    },
+    "grain-pickup": {
+      "history": "08-community-playhouse",
+      "task": "grain-pickup"
+    },
+    "dev-receipts": {
+      "history": "06-neighborhood-clinic",
+      "task": "dev-receipts"
+    },
+    "blue-relay": {
+      "history": "08-community-playhouse",
+      "task": "blue-relay"
+    },
+    "mara-dropoff": {
+      "history": "06-neighborhood-clinic",
+      "task": "mara-dropoff"
+    },
+    "ready-door": {
+      "history": "06-neighborhood-clinic",
+      "task": "ready-door"
+    },
+    "ready-ribbons": {
+      "history": "08-community-playhouse",
+      "task": "ready-ribbons"
+    },
+    "paused-flyer": {
+      "history": "06-neighborhood-clinic",
+      "task": "paused-flyer"
+    },
+    "run-foyer": {
+      "history": "08-community-playhouse",
+      "task": "run-foyer"
+    },
+    "mara-rooms": {
+      "history": "06-neighborhood-clinic",
+      "task": "mara-rooms"
+    },
+    "blue-show": {
+      "history": "08-community-playhouse",
+      "task": "blue-show"
+    },
+    "dev-april": {
+      "history": "06-neighborhood-clinic",
+      "task": "dev-april"
+    },
+    "sea-preflight": {
+      "history": "08-community-playhouse",
+      "task": "sea-preflight"
+    }
+  },
+  "d4-signal-student": {
+    "subarray-target": {
+      "history": "05-interview-practice",
+      "task": "subarray-target"
+    },
+    "pulse-video": {
+      "history": "10-signal-study",
+      "task": "pulse-video"
+    },
+    "window-cost": {
+      "history": "05-interview-practice",
+      "task": "window-cost"
+    },
+    "venue-mic": {
+      "history": "10-signal-study",
+      "task": "venue-mic"
+    },
+    "cfg-paper": {
+      "history": "05-interview-practice",
+      "task": "cfg-paper"
+    },
+    "phasor-paper": {
+      "history": "10-signal-study",
+      "task": "phasor-paper"
+    },
+    "two-targets": {
+      "history": "05-interview-practice",
+      "task": "two-targets"
+    },
+    "window-video": {
+      "history": "10-signal-study",
+      "task": "window-video"
+    },
+    "retype-merge": {
+      "history": "05-interview-practice",
+      "task": "retype-merge"
+    },
+    "voice-repair": {
+      "history": "10-signal-study",
+      "task": "voice-repair"
+    },
+    "cutlery": {
+      "history": "05-interview-practice",
+      "task": "cutlery"
+    },
+    "symmetry-video": {
+      "history": "10-signal-study",
+      "task": "symmetry-video"
+    },
+    "retype-stack": {
+      "history": "05-interview-practice",
+      "task": "retype-stack"
+    },
+    "stream-shift": {
+      "history": "10-signal-study",
+      "task": "stream-shift"
+    },
+    "rubric": {
+      "history": "05-interview-practice",
+      "task": "rubric"
+    },
+    "filter-exercise": {
+      "history": "10-signal-study",
+      "task": "filter-exercise"
+    },
+    "quiet-news": {
+      "history": "10-signal-study",
+      "task": "quiet-news"
+    },
+    "queue-drill": {
+      "history": "05-interview-practice",
+      "task": "queue-drill"
+    },
+    "ready-headphone": {
+      "history": "10-signal-study",
+      "task": "ready-headphone"
+    },
+    "analysis-extension": {
+      "history": "05-interview-practice",
+      "task": "analysis-extension"
+    },
+    "run-edit": {
+      "history": "10-signal-study",
+      "task": "run-edit"
+    },
+    "shortest-window": {
+      "history": "05-interview-practice",
+      "task": "shortest-window"
+    },
+    "triangle-video": {
+      "history": "10-signal-study",
+      "task": "triangle-video"
+    },
+    "editorial-review": {
+      "history": "05-interview-practice",
+      "task": "editorial-review"
+    },
+    "triangle-sheet": {
+      "history": "10-signal-study",
+      "task": "triangle-sheet"
+    }
+  },
+  "d5-field-engineer": {
+    "chili-dishes": {
+      "history": "07-shared-apartment",
+      "task": "chili-dishes"
+    },
+    "hall-encoder": {
+      "history": "09-rover-night",
+      "task": "hall-encoder"
+    },
+    "towels-one": {
+      "history": "07-shared-apartment",
+      "task": "towels-one"
+    },
+    "junction-replay": {
+      "history": "09-rover-night",
+      "task": "junction-replay"
+    },
+    "pasta-dishes": {
+      "history": "07-shared-apartment",
+      "task": "pasta-dishes"
+    },
+    "bicycle": {
+      "history": "09-rover-night",
+      "task": "bicycle"
+    },
+    "filter-renewal": {
+      "history": "07-shared-apartment",
+      "task": "filter-renewal"
+    },
+    "turntable": {
+      "history": "09-rover-night",
+      "task": "turntable"
+    },
+    "sheets": {
+      "history": "07-shared-apartment",
+      "task": "sheets"
+    },
+    "frame-drawing": {
+      "history": "09-rover-night",
+      "task": "frame-drawing"
+    },
+    "stew-dishes": {
+      "history": "07-shared-apartment",
+      "task": "stew-dishes"
+    },
+    "club-shift": {
+      "history": "09-rover-night",
+      "task": "club-shift"
+    },
+    "mugs": {
+      "history": "07-shared-apartment",
+      "task": "mugs"
+    },
+    "dock-trace": {
+      "history": "09-rover-night",
+      "task": "dock-trace"
+    },
+    "bike-box": {
+      "history": "07-shared-apartment",
+      "task": "bike-box"
+    },
+    "wheel-ticks": {
+      "history": "09-rover-night",
+      "task": "wheel-ticks"
+    },
+    "grant-email": {
+      "history": "09-rover-night",
+      "task": "grant-email"
+    },
+    "ready-rice": {
+      "history": "07-shared-apartment",
+      "task": "ready-rice"
+    },
+    "ready-washers": {
+      "history": "09-rover-night",
+      "task": "ready-washers"
+    },
+    "paused-blue-load": {
+      "history": "07-shared-apartment",
+      "task": "paused-blue-load"
+    },
+    "paused-frames": {
+      "history": "09-rover-night",
+      "task": "paused-frames"
+    },
+    "bake-dishes": {
+      "history": "07-shared-apartment",
+      "task": "bake-dishes"
+    },
+    "bump-crossing": {
+      "history": "09-rover-night",
+      "task": "bump-crossing"
+    },
+    "duvet": {
+      "history": "07-shared-apartment",
+      "task": "duvet"
+    },
+    "replay-ramp": {
+      "history": "09-rover-night",
+      "task": "replay-ramp"
+    }
+  }
+}

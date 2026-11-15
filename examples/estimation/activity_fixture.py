@@ -39,11 +39,17 @@ def _sessions_by_day(history):
                         for length in task['sessions_minutes']]
         if len(sessions) != len(task['sessions_minutes']):
             raise ValueError(f"{task['id']}: activity must cover every timer session")
+        starts = task.get('session_starts')
+        if starts is not None and len(starts) != len(sessions):
+            raise ValueError(f"{task['id']}: each session needs its recorded start time")
         for index, (slices, length) in enumerate(zip(sessions, task['sessions_minutes'])):
             if not slices or not math.isclose(sum(_seconds(s['minutes']) for s in slices),
                                               _seconds(length), rel_tol=0, abs_tol=1e-5):
                 raise ValueError(f"{task['id']}: activity duration differs from session {index + 1}")
-            days[task['day']].append((index, task, slices))
+            when = datetime.fromisoformat(starts[index]) if starts else None
+            stamp = activity._stamp(when) if when else None
+            day = when.date().isoformat() if when else task['day']
+            days[day].append((stamp if when else index, stamp, task, slices))
     return days
 
 
@@ -103,8 +109,10 @@ def _render(history, *, render_events=True):
         clock = datetime.combine(date.fromisoformat(day), time(8), timezone.utc).timestamp()
         # When two tasks share a date, the user can switch to the other task
         # before returning for the next session of the first.
-        for index, (_, task, slices) in enumerate(sorted(day_sessions, key=lambda entry: entry[0])):
-            if index:
+        for index, (_, stamp, task, slices) in enumerate(sorted(day_sessions, key=lambda entry: entry[0])):
+            if stamp is not None:
+                clock = stamp
+            elif index:
                 between(clock, clock + 15 * 60)
                 clock += 15 * 60
             item = agenda.setdefault(task['id'], {'sessions': [], 'annotations': []})

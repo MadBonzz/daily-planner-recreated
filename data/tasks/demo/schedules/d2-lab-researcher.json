@@ -1,0 +1,518 @@
+[
+  {
+    "day_offset": -22,
+    "minute": 1105,
+    "action": "create",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -20,
+    "minute": 590,
+    "action": "start",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -20,
+    "minute": 654,
+    "action": "pause",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1251,
+    "action": "create",
+    "task": "read-cache"
+  },
+  {
+    "day_offset": -19,
+    "minute": 510,
+    "action": "resume",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -19,
+    "minute": 550,
+    "action": "stop",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -19,
+    "minute": 550,
+    "action": "finish",
+    "task": "derive-noise"
+  },
+  {
+    "day_offset": -19,
+    "minute": 777,
+    "action": "create",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -19,
+    "minute": 850,
+    "action": "start",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -19,
+    "minute": 915,
+    "action": "pause",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1105,
+    "action": "create",
+    "task": "throughput-table"
+  },
+  {
+    "day_offset": -17,
+    "minute": 634,
+    "action": "start",
+    "task": "read-cache"
+  },
+  {
+    "day_offset": -17,
+    "minute": 666,
+    "action": "stop",
+    "task": "read-cache"
+  },
+  {
+    "day_offset": -17,
+    "minute": 666,
+    "action": "finish",
+    "task": "read-cache"
+  },
+  {
+    "day_offset": -17,
+    "minute": 830,
+    "action": "resume",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -17,
+    "minute": 887,
+    "action": "stop",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -17,
+    "minute": 887,
+    "action": "finish",
+    "task": "warp-tail"
+  },
+  {
+    "day_offset": -16,
+    "minute": 920,
+    "action": "start",
+    "task": "throughput-table"
+  },
+  {
+    "day_offset": -16,
+    "minute": 979,
+    "action": "stop",
+    "task": "throughput-table"
+  },
+  {
+    "day_offset": -16,
+    "minute": 979,
+    "action": "finish",
+    "task": "throughput-table"
+  },
+  {
+    "day_offset": -16,
+    "minute": 1105,
+    "action": "create",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1105,
+    "action": "create",
+    "task": "bound-floor"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1147,
+    "action": "create",
+    "task": "dishes"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1157,
+    "action": "start",
+    "task": "dishes"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1175,
+    "action": "stop",
+    "task": "dishes"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1175,
+    "action": "finish",
+    "task": "dishes"
+  },
+  {
+    "day_offset": -14,
+    "minute": 545,
+    "action": "start",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -14,
+    "minute": 605,
+    "action": "pause",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -14,
+    "minute": 1251,
+    "action": "create",
+    "task": "read-queues"
+  },
+  {
+    "day_offset": -13,
+    "minute": 623,
+    "action": "start",
+    "task": "bound-floor"
+  },
+  {
+    "day_offset": -13,
+    "minute": 709,
+    "action": "stop",
+    "task": "bound-floor"
+  },
+  {
+    "day_offset": -13,
+    "minute": 709,
+    "action": "finish",
+    "task": "bound-floor"
+  },
+  {
+    "day_offset": -12,
+    "minute": 855,
+    "action": "resume",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -12,
+    "minute": 904,
+    "action": "stop",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -12,
+    "minute": 904,
+    "action": "finish",
+    "task": "stride-kernel"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1058,
+    "action": "create",
+    "task": "clothes"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1104,
+    "action": "start",
+    "task": "clothes"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1105,
+    "action": "create",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1119,
+    "action": "stop",
+    "task": "clothes"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1119,
+    "action": "finish",
+    "task": "clothes"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1251,
+    "action": "create",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -11,
+    "minute": 530,
+    "action": "start",
+    "task": "read-queues"
+  },
+  {
+    "day_offset": -11,
+    "minute": 560,
+    "action": "stop",
+    "task": "read-queues"
+  },
+  {
+    "day_offset": -11,
+    "minute": 560,
+    "action": "finish",
+    "task": "read-queues"
+  },
+  {
+    "day_offset": -10,
+    "minute": 890,
+    "action": "start",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -10,
+    "minute": 968,
+    "action": "pause",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -9,
+    "minute": 510,
+    "action": "start",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -9,
+    "minute": 559,
+    "action": "pause",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -9,
+    "minute": 770,
+    "action": "resume",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -9,
+    "minute": 830,
+    "action": "stop",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -9,
+    "minute": 830,
+    "action": "finish",
+    "task": "race-repro"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1251,
+    "action": "create",
+    "task": "median-runs"
+  },
+  {
+    "day_offset": -7,
+    "minute": 605,
+    "action": "resume",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -7,
+    "minute": 653,
+    "action": "stop",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -7,
+    "minute": 653,
+    "action": "finish",
+    "task": "check-jensen"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1105,
+    "action": "create",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -6,
+    "minute": 927,
+    "action": "start",
+    "task": "median-runs"
+  },
+  {
+    "day_offset": -6,
+    "minute": 978,
+    "action": "stop",
+    "task": "median-runs"
+  },
+  {
+    "day_offset": -6,
+    "minute": 978,
+    "action": "finish",
+    "task": "median-runs"
+  },
+  {
+    "day_offset": -5,
+    "minute": 565,
+    "action": "start",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -5,
+    "minute": 601,
+    "action": "pause",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -5,
+    "minute": 620,
+    "action": "resume",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -5,
+    "minute": 655,
+    "action": "stop",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -5,
+    "minute": 655,
+    "action": "finish",
+    "task": "variance-email"
+  },
+  {
+    "day_offset": -5,
+    "minute": 763,
+    "action": "create",
+    "task": "allocation-desk"
+  },
+  {
+    "day_offset": -5,
+    "minute": 786,
+    "action": "start",
+    "task": "allocation-desk"
+  },
+  {
+    "day_offset": -5,
+    "minute": 797,
+    "action": "stop",
+    "task": "allocation-desk"
+  },
+  {
+    "day_offset": -5,
+    "minute": 797,
+    "action": "finish",
+    "task": "allocation-desk"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1251,
+    "action": "create",
+    "task": "audit-card"
+  },
+  {
+    "day_offset": -3,
+    "minute": 547,
+    "action": "create",
+    "task": "replica-figs"
+  },
+  {
+    "day_offset": -3,
+    "minute": 620,
+    "action": "start",
+    "task": "replica-figs"
+  },
+  {
+    "day_offset": -3,
+    "minute": 651,
+    "action": "stop",
+    "task": "replica-figs"
+  },
+  {
+    "day_offset": -3,
+    "minute": 651,
+    "action": "finish",
+    "task": "replica-figs"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1105,
+    "action": "create",
+    "task": "masked-add"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1251,
+    "action": "create",
+    "task": "recheck-tail"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "metrics-club"
+  },
+  {
+    "day_offset": -1,
+    "minute": 888,
+    "action": "start",
+    "task": "masked-add"
+  },
+  {
+    "day_offset": -1,
+    "minute": 912,
+    "action": "stop",
+    "task": "masked-add"
+  },
+  {
+    "day_offset": -1,
+    "minute": 912,
+    "action": "finish",
+    "task": "masked-add"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "dishsoap"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "launch-offset"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1147,
+    "action": "start",
+    "task": "audit-card"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1155,
+    "action": "pause",
+    "task": "audit-card"
+  },
+  {
+    "day_offset": 0,
+    "minute": 492,
+    "action": "create",
+    "task": "potluck"
+  },
+  {
+    "day_offset": 0,
+    "minute": 615,
+    "action": "start",
+    "task": "recheck-tail"
+  },
+  {
+    "day_offset": 0,
+    "minute": 625,
+    "action": "pause",
+    "task": "recheck-tail"
+  }
+]

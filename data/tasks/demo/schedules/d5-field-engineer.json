@@ -1,0 +1,590 @@
+[
+  {
+    "day_offset": -23,
+    "minute": 1105,
+    "action": "create",
+    "task": "chili-dishes"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1105,
+    "action": "create",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -21,
+    "minute": 1112,
+    "action": "start",
+    "task": "chili-dishes"
+  },
+  {
+    "day_offset": -21,
+    "minute": 1148,
+    "action": "stop",
+    "task": "chili-dishes"
+  },
+  {
+    "day_offset": -21,
+    "minute": 1148,
+    "action": "finish",
+    "task": "chili-dishes"
+  },
+  {
+    "day_offset": -21,
+    "minute": 1251,
+    "action": "create",
+    "task": "junction-replay"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1030,
+    "action": "start",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1060,
+    "action": "pause",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1085,
+    "action": "resume",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1105,
+    "action": "create",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1118,
+    "action": "stop",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -20,
+    "minute": 1118,
+    "action": "finish",
+    "task": "hall-encoder"
+  },
+  {
+    "day_offset": -18,
+    "minute": 550,
+    "action": "start",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -18,
+    "minute": 558,
+    "action": "pause",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -18,
+    "minute": 574,
+    "action": "start",
+    "task": "junction-replay"
+  },
+  {
+    "day_offset": -18,
+    "minute": 616,
+    "action": "stop",
+    "task": "junction-replay"
+  },
+  {
+    "day_offset": -18,
+    "minute": 616,
+    "action": "finish",
+    "task": "junction-replay"
+  },
+  {
+    "day_offset": -18,
+    "minute": 640,
+    "action": "resume",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -18,
+    "minute": 653,
+    "action": "stop",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -18,
+    "minute": 653,
+    "action": "finish",
+    "task": "towels-one"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1147,
+    "action": "create",
+    "task": "pasta-dishes"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1170,
+    "action": "start",
+    "task": "pasta-dishes"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1201,
+    "action": "stop",
+    "task": "pasta-dishes"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1201,
+    "action": "finish",
+    "task": "pasta-dishes"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1251,
+    "action": "create",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -16,
+    "minute": 760,
+    "action": "create",
+    "task": "bicycle"
+  },
+  {
+    "day_offset": -16,
+    "minute": 920,
+    "action": "start",
+    "task": "bicycle"
+  },
+  {
+    "day_offset": -16,
+    "minute": 944,
+    "action": "stop",
+    "task": "bicycle"
+  },
+  {
+    "day_offset": -16,
+    "minute": 944,
+    "action": "finish",
+    "task": "bicycle"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1069,
+    "action": "create",
+    "task": "filter-renewal"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1142,
+    "action": "start",
+    "task": "filter-renewal"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1160,
+    "action": "stop",
+    "task": "filter-renewal"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1160,
+    "action": "finish",
+    "task": "filter-renewal"
+  },
+  {
+    "day_offset": -14,
+    "minute": 1035,
+    "action": "start",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -14,
+    "minute": 1069,
+    "action": "pause",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -14,
+    "minute": 1105,
+    "action": "create",
+    "task": "frame-drawing"
+  },
+  {
+    "day_offset": -14,
+    "minute": 1105,
+    "action": "create",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -13,
+    "minute": 1055,
+    "action": "resume",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -13,
+    "minute": 1098,
+    "action": "stop",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -13,
+    "minute": 1098,
+    "action": "finish",
+    "task": "turntable"
+  },
+  {
+    "day_offset": -12,
+    "minute": 520,
+    "action": "start",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 529,
+    "action": "pause",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 575,
+    "action": "start",
+    "task": "frame-drawing"
+  },
+  {
+    "day_offset": -12,
+    "minute": 627,
+    "action": "stop",
+    "task": "frame-drawing"
+  },
+  {
+    "day_offset": -12,
+    "minute": 627,
+    "action": "finish",
+    "task": "frame-drawing"
+  },
+  {
+    "day_offset": -12,
+    "minute": 645,
+    "action": "resume",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 659,
+    "action": "stop",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 659,
+    "action": "finish",
+    "task": "sheets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1105,
+    "action": "create",
+    "task": "stew-dishes"
+  },
+  {
+    "day_offset": -11,
+    "minute": 1105,
+    "action": "create",
+    "task": "club-shift"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1135,
+    "action": "start",
+    "task": "stew-dishes"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1177,
+    "action": "stop",
+    "task": "stew-dishes"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1177,
+    "action": "finish",
+    "task": "stew-dishes"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1251,
+    "action": "create",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1080,
+    "action": "start",
+    "task": "club-shift"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1140,
+    "action": "stop",
+    "task": "club-shift"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1140,
+    "action": "finish",
+    "task": "club-shift"
+  },
+  {
+    "day_offset": -8,
+    "minute": 479,
+    "action": "create",
+    "task": "mugs"
+  },
+  {
+    "day_offset": -8,
+    "minute": 502,
+    "action": "start",
+    "task": "mugs"
+  },
+  {
+    "day_offset": -8,
+    "minute": 507,
+    "action": "stop",
+    "task": "mugs"
+  },
+  {
+    "day_offset": -8,
+    "minute": 507,
+    "action": "finish",
+    "task": "mugs"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1010,
+    "action": "start",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1038,
+    "action": "pause",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -6,
+    "minute": 1115,
+    "action": "resume",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -6,
+    "minute": 1157,
+    "action": "stop",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -6,
+    "minute": 1157,
+    "action": "finish",
+    "task": "dock-trace"
+  },
+  {
+    "day_offset": -5,
+    "minute": 1045,
+    "action": "create",
+    "task": "bike-box"
+  },
+  {
+    "day_offset": -5,
+    "minute": 1068,
+    "action": "start",
+    "task": "bike-box"
+  },
+  {
+    "day_offset": -5,
+    "minute": 1087,
+    "action": "stop",
+    "task": "bike-box"
+  },
+  {
+    "day_offset": -5,
+    "minute": 1087,
+    "action": "finish",
+    "task": "bike-box"
+  },
+  {
+    "day_offset": -4,
+    "minute": 890,
+    "action": "create",
+    "task": "caster-pass"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1050,
+    "action": "start",
+    "task": "caster-pass"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1105,
+    "action": "create",
+    "task": "wheel-ticks"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1116,
+    "action": "stop",
+    "task": "caster-pass"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1116,
+    "action": "finish",
+    "task": "caster-pass"
+  },
+  {
+    "day_offset": -3,
+    "minute": 517,
+    "action": "create",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -3,
+    "minute": 540,
+    "action": "start",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -3,
+    "minute": 553,
+    "action": "pause",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -3,
+    "minute": 577,
+    "action": "resume",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -3,
+    "minute": 593,
+    "action": "stop",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -3,
+    "minute": 593,
+    "action": "finish",
+    "task": "tenant-tap"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1105,
+    "action": "create",
+    "task": "paused-frames"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1196,
+    "action": "start",
+    "task": "wheel-ticks"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1232,
+    "action": "stop",
+    "task": "wheel-ticks"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1232,
+    "action": "finish",
+    "task": "wheel-ticks"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "dock-parity"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "ready-washers"
+  },
+  {
+    "day_offset": -1,
+    "minute": 689,
+    "action": "create",
+    "task": "grant-email"
+  },
+  {
+    "day_offset": -1,
+    "minute": 735,
+    "action": "start",
+    "task": "grant-email"
+  },
+  {
+    "day_offset": -1,
+    "minute": 753,
+    "action": "stop",
+    "task": "grant-email"
+  },
+  {
+    "day_offset": -1,
+    "minute": 753,
+    "action": "finish",
+    "task": "grant-email"
+  },
+  {
+    "day_offset": -1,
+    "minute": 990,
+    "action": "create",
+    "task": "paused-blue-load"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1150,
+    "action": "start",
+    "task": "paused-blue-load"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1157,
+    "action": "pause",
+    "task": "paused-blue-load"
+  },
+  {
+    "day_offset": 0,
+    "minute": 492,
+    "action": "create",
+    "task": "ready-rice"
+  },
+  {
+    "day_offset": 0,
+    "minute": 492,
+    "action": "create",
+    "task": "replay-ramp"
+  },
+  {
+    "day_offset": 0,
+    "minute": 680,
+    "action": "start",
+    "task": "paused-frames"
+  },
+  {
+    "day_offset": 0,
+    "minute": 693,
+    "action": "pause",
+    "task": "paused-frames"
+  }
+]

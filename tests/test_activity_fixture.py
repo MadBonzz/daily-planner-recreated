@@ -206,3 +206,18 @@ def test_existing_gpu_profile_refreshes_only_unmodified_sample_reports(tmp_path,
     assert refreshed['report']['totals']['off_task'] == 360
     assert refreshed['day'] == fixture_task['day'] and reopened.periods(fixture_task['id']) == before
     assert reopened.get_task(reviewed['id'])['report'] == user_report
+
+
+def test_logged_session_starts_keep_their_dates_offsets_and_pause_boundaries():
+    history = study_history()
+    task, clinic = history['tasks']
+    task['session_starts'] = ['2026-03-07T19:42-05:00', '2026-03-09T09:17-04:00']
+    clinic['session_starts'] = ['2026-03-07T20:14-05:00']
+    observed = replay_history(history)
+    sessions = observed['signals']['sessions']
+    first, second = map(activity._stamp, task['session_starts'])
+    assert sessions == [[(first, first + 360), (first + 720, first + 960)],
+                        [(second, second + 180)]]
+    assert observed['signals']['report']['intervals'][-1]['title'] == 'Fourier notes'
+    starts = [r['start'] for r in observed['call']['report']['intervals']]
+    assert starts == [activity._stamp(clinic['session_starts'][0])]

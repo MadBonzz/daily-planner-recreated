@@ -1,0 +1,572 @@
+[
+  {
+    "day_offset": -23,
+    "minute": 1251,
+    "action": "create",
+    "task": "subarray-target"
+  },
+  {
+    "day_offset": -22,
+    "minute": 1251,
+    "action": "create",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -20,
+    "minute": 720,
+    "action": "start",
+    "task": "subarray-target"
+  },
+  {
+    "day_offset": -20,
+    "minute": 774,
+    "action": "stop",
+    "task": "subarray-target"
+  },
+  {
+    "day_offset": -20,
+    "minute": 774,
+    "action": "finish",
+    "task": "subarray-target"
+  },
+  {
+    "day_offset": -19,
+    "minute": 1105,
+    "action": "create",
+    "task": "window-cost"
+  },
+  {
+    "day_offset": -19,
+    "minute": 1115,
+    "action": "start",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -19,
+    "minute": 1143,
+    "action": "pause",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1105,
+    "action": "create",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1155,
+    "action": "resume",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1182,
+    "action": "stop",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -18,
+    "minute": 1182,
+    "action": "finish",
+    "task": "pulse-video"
+  },
+  {
+    "day_offset": -17,
+    "minute": 735,
+    "action": "start",
+    "task": "window-cost"
+  },
+  {
+    "day_offset": -17,
+    "minute": 785,
+    "action": "stop",
+    "task": "window-cost"
+  },
+  {
+    "day_offset": -17,
+    "minute": 785,
+    "action": "finish",
+    "task": "window-cost"
+  },
+  {
+    "day_offset": -17,
+    "minute": 924,
+    "action": "create",
+    "task": "venue-mic"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1084,
+    "action": "start",
+    "task": "venue-mic"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1103,
+    "action": "stop",
+    "task": "venue-mic"
+  },
+  {
+    "day_offset": -17,
+    "minute": 1103,
+    "action": "finish",
+    "task": "venue-mic"
+  },
+  {
+    "day_offset": -16,
+    "minute": 870,
+    "action": "start",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -16,
+    "minute": 921,
+    "action": "pause",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1107,
+    "action": "create",
+    "task": "phasor-paper"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1130,
+    "action": "start",
+    "task": "phasor-paper"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1177,
+    "action": "stop",
+    "task": "phasor-paper"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1177,
+    "action": "finish",
+    "task": "phasor-paper"
+  },
+  {
+    "day_offset": -15,
+    "minute": 1251,
+    "action": "create",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -14,
+    "minute": 685,
+    "action": "resume",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -14,
+    "minute": 732,
+    "action": "stop",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -14,
+    "minute": 732,
+    "action": "finish",
+    "task": "cfg-paper"
+  },
+  {
+    "day_offset": -13,
+    "minute": 727,
+    "action": "create",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -13,
+    "minute": 750,
+    "action": "start",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -13,
+    "minute": 792,
+    "action": "pause",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 730,
+    "action": "resume",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 760,
+    "action": "stop",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 760,
+    "action": "finish",
+    "task": "two-targets"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1110,
+    "action": "start",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -12,
+    "minute": 1144,
+    "action": "pause",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -11,
+    "minute": 1175,
+    "action": "resume",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -11,
+    "minute": 1202,
+    "action": "stop",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -11,
+    "minute": 1202,
+    "action": "finish",
+    "task": "window-video"
+  },
+  {
+    "day_offset": -10,
+    "minute": 739,
+    "action": "create",
+    "task": "retype-merge"
+  },
+  {
+    "day_offset": -10,
+    "minute": 762,
+    "action": "start",
+    "task": "retype-merge"
+  },
+  {
+    "day_offset": -10,
+    "minute": 779,
+    "action": "stop",
+    "task": "retype-merge"
+  },
+  {
+    "day_offset": -10,
+    "minute": 779,
+    "action": "finish",
+    "task": "retype-merge"
+  },
+  {
+    "day_offset": -10,
+    "minute": 989,
+    "action": "create",
+    "task": "voice-repair"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1062,
+    "action": "start",
+    "task": "voice-repair"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1090,
+    "action": "stop",
+    "task": "voice-repair"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1090,
+    "action": "finish",
+    "task": "voice-repair"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1165,
+    "action": "create",
+    "task": "cutlery"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1175,
+    "action": "start",
+    "task": "cutlery"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1188,
+    "action": "stop",
+    "task": "cutlery"
+  },
+  {
+    "day_offset": -10,
+    "minute": 1188,
+    "action": "finish",
+    "task": "cutlery"
+  },
+  {
+    "day_offset": -9,
+    "minute": 1251,
+    "action": "create",
+    "task": "retype-stack"
+  },
+  {
+    "day_offset": -8,
+    "minute": 930,
+    "action": "create",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -8,
+    "minute": 1090,
+    "action": "start",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -8,
+    "minute": 1113,
+    "action": "pause",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1130,
+    "action": "resume",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1154,
+    "action": "stop",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1154,
+    "action": "finish",
+    "task": "symmetry-video"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1197,
+    "action": "create",
+    "task": "stream-shift"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1220,
+    "action": "start",
+    "task": "stream-shift"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1251,
+    "action": "create",
+    "task": "cue-roundtrip"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1265,
+    "action": "stop",
+    "task": "stream-shift"
+  },
+  {
+    "day_offset": -7,
+    "minute": 1265,
+    "action": "finish",
+    "task": "stream-shift"
+  },
+  {
+    "day_offset": -6,
+    "minute": 728,
+    "action": "start",
+    "task": "retype-stack"
+  },
+  {
+    "day_offset": -6,
+    "minute": 749,
+    "action": "stop",
+    "task": "retype-stack"
+  },
+  {
+    "day_offset": -6,
+    "minute": 749,
+    "action": "finish",
+    "task": "retype-stack"
+  },
+  {
+    "day_offset": -5,
+    "minute": 694,
+    "action": "create",
+    "task": "rubric"
+  },
+  {
+    "day_offset": -5,
+    "minute": 740,
+    "action": "start",
+    "task": "rubric"
+  },
+  {
+    "day_offset": -5,
+    "minute": 768,
+    "action": "stop",
+    "task": "rubric"
+  },
+  {
+    "day_offset": -5,
+    "minute": 768,
+    "action": "finish",
+    "task": "rubric"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1040,
+    "action": "start",
+    "task": "cue-roundtrip"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1067,
+    "action": "stop",
+    "task": "cue-roundtrip"
+  },
+  {
+    "day_offset": -4,
+    "minute": 1067,
+    "action": "finish",
+    "task": "cue-roundtrip"
+  },
+  {
+    "day_offset": -3,
+    "minute": 568,
+    "action": "create",
+    "task": "placement-form"
+  },
+  {
+    "day_offset": -3,
+    "minute": 614,
+    "action": "start",
+    "task": "placement-form"
+  },
+  {
+    "day_offset": -3,
+    "minute": 636,
+    "action": "stop",
+    "task": "placement-form"
+  },
+  {
+    "day_offset": -3,
+    "minute": 636,
+    "action": "finish",
+    "task": "placement-form"
+  },
+  {
+    "day_offset": -3,
+    "minute": 1251,
+    "action": "create",
+    "task": "run-edit"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1074,
+    "action": "create",
+    "task": "filter-exercise"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1120,
+    "action": "start",
+    "task": "filter-exercise"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1163,
+    "action": "stop",
+    "task": "filter-exercise"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1163,
+    "action": "finish",
+    "task": "filter-exercise"
+  },
+  {
+    "day_offset": -2,
+    "minute": 1236,
+    "action": "create",
+    "task": "overlap-pad"
+  },
+  {
+    "day_offset": -1,
+    "minute": 580,
+    "action": "create",
+    "task": "queue-drill"
+  },
+  {
+    "day_offset": -1,
+    "minute": 740,
+    "action": "start",
+    "task": "queue-drill"
+  },
+  {
+    "day_offset": -1,
+    "minute": 746,
+    "action": "pause",
+    "task": "queue-drill"
+  },
+  {
+    "day_offset": -1,
+    "minute": 887,
+    "action": "create",
+    "task": "quiet-news"
+  },
+  {
+    "day_offset": -1,
+    "minute": 910,
+    "action": "start",
+    "task": "quiet-news"
+  },
+  {
+    "day_offset": -1,
+    "minute": 940,
+    "action": "stop",
+    "task": "quiet-news"
+  },
+  {
+    "day_offset": -1,
+    "minute": 940,
+    "action": "finish",
+    "task": "quiet-news"
+  },
+  {
+    "day_offset": -1,
+    "minute": 1025,
+    "action": "create",
+    "task": "analysis-extension"
+  },
+  {
+    "day_offset": 0,
+    "minute": 492,
+    "action": "create",
+    "task": "editorial-review"
+  },
+  {
+    "day_offset": 0,
+    "minute": 492,
+    "action": "create",
+    "task": "ready-headphone"
+  },
+  {
+    "day_offset": 0,
+    "minute": 995,
+    "action": "start",
+    "task": "run-edit"
+  }
+]
