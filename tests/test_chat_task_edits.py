@@ -11,6 +11,51 @@ from planner_store import PlannerStore
 import task_workspace as desk
 
 
+def test_literal_creation_keeps_effort_scope_day_and_explicit_file(tmp_path):
+    from datetime import datetime
+    from chat_tasks import apply_action, literal_task_creation
+    plan = {"now": datetime(2026, 11, 15), "selected_day": "2026-11-19"}
+    scope = "it has theoretical questions to prove various properties in algorithms related to consensus, paxos, broadcast etc"
+    request = f"can you add a task for my distributed computing assignment, I expect it will take 4 hours, {scope}"
+    files = {"old": {"name": "old.txt", "data": b"old", "current": False}, "new": {
+        "name": "assignment.txt", "kind": "text", "data": b"assignment", "current": True}}
+    result = literal_task_creation(request, files, plan)
+    assert result["new_task"] == {"title": "Distributed computing assignment", "description": scope,
+                                  "details": "", "estimate_minutes": 240, "day": "2026-11-19",
+                                  "category": "", "fixed_duration": False}
+    assert not result["file_ids"]
+    request = request.replace("assignment,", "assignment for tomorrow,") + ". Attach assignment.txt to this task."
+    result = literal_task_creation(request, files, plan)
+    assert result["file_ids"] == ["new"]
+    store = PlannerStore(tmp_path)
+    saved = apply_action(store, result, files, "same submission")
+    assert apply_action(store, result, files, "same submission") == saved
+    task, = store.list_tasks()
+    file, = task["attachments"]
+    assert task["day"] == "2026-11-16" and store.attachment_bytes(file["id"]) == b"assignment"
+
+
+@pytest.mark.parametrize("request_text", [
+    "If I add a task for homework, it will take 4 hours, what happens?",
+    "How do I add a task for homework, 4 hours?",
+    "I added a task for homework, 4 hours.",
+    "Edit the homework task, it will take 4 hours.",
+    "Add a task for math or chemistry, 4 hours.",
+    "Add a task for homework and a task for laundry, 4 hours.",
+    "Add a task for homework before Tuesday, 4 hours.",
+    "Add a task for homework, it will take 4 to 6 hours.",
+    "Add a task for homework, 4 hours, then postpone my lecture to tomorrow.",
+    "Add a task for homework, 4 hours, it has two parts but don't add it yet.",
+    "Add a task for homework next week, 4 hours.",
+    "Add a task for homework, 4 hours. Attach this file.",
+    "Add a task for homework, 4 hours. Attach notes.pdf.",
+])
+def test_literal_creation_declines_ambiguous_or_non_creation_requests(request_text):
+    from chat_tasks import literal_task_creation
+    files = {key: {"name": "notes.pdf", "kind": "pdf", "current": True} for key in ("a", "b")}
+    assert literal_task_creation(request_text, files, {"selected_day": "2026-11-19"}) is None
+
+
 def edit(store, task, **changes):
     fields = {key: task[key] for key in ("title", "description", "category", "details", "fixed_duration", "estimate_minutes")}
     return store.edit_task(task["id"], expected_revision=task["edit_revision"], **{**fields, **changes})

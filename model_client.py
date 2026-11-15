@@ -93,6 +93,29 @@ def model_settings(config=None):
 _forecast_config = ContextVar("forecast_config", default=None)
 
 
+def _local_bonsai_names(config):
+    endpoint, name = model_settings(config)
+    if urlsplit(endpoint).hostname not in {"localhost", "127.0.0.1", "::1"}:
+        return ()
+    return tuple(value.casefold() for value in (name, config.get("PLANNER_MODEL_KEY"))
+                 if value and "bonsai-2-" in value.casefold())
+
+
+def using_local_bonsai():
+    return bool(_local_bonsai_names(_forecast_config.get() or planner_settings()))
+
+
+def plain_chat_reply(generate, messages, schema):
+    """Use the existing repair attempt with the original evidence and a complete final answer."""
+    if not using_local_bonsai():
+        return generate(messages, schema)
+    correction = ("Answer in the final assistant message with one complete JSON object. "
+                  "Fill the required fields using the supplied data. Return only that object.")
+    first, *rest = messages
+    repaired = [{**first, "content": first["content"] + "\n" + correction}, *rest]
+    return generate(repaired, schema, plain_local_retry=True)
+
+
 @contextmanager
 def forecast_endpoint():
     """Pin settings for one forecast so its saved attribution matches all its calls."""
@@ -244,7 +267,7 @@ def chat_json(messages, schema, *, plain_local_retry=False):
         raise ModelUnavailable("Invalid PLANNER_MODEL_ENDPOINT. Use the chat completions URL.") from None
 
     local = url.hostname in {"localhost", "127.0.0.1", "::1"}
-    bonsai = local and any("bonsai-2-" in name.casefold() for name in (model, config.get("PLANNER_MODEL_KEY") or ""))
+    bonsai = _local_bonsai_names(config)
     payload = {"model": model, "messages": messages, "temperature": 0}
     if cohere:
         if model in {"c4ai-aya-expanse-8b", "c4ai-aya-vision-8b"}:
@@ -264,7 +287,9 @@ def chat_json(messages, schema, *, plain_local_retry=False):
         payload["messages"] = [{"role": "system", "content": instruction}, *conversation]
     if bonsai:
         payload.update(temperature=0.7, top_p=0.8, reasoning_effort="none")
-    if not aya and not (bonsai and plain_local_retry):
+    # On Bonsai 2 MLX grammar constraints can consume the answer in the reasoning
+    # channel. Its system message already contains the full schema for local validation.
+    if not aya and not (bonsai and (plain_local_retry or any("mlx" in name for name in bonsai))):
         # Both LM Studio and Cohere's OpenAI compatibility endpoint accept this envelope.
         payload["response_format"] = {
             "type": "json_schema",

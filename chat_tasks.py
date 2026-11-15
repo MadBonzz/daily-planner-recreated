@@ -64,6 +64,65 @@ def _destination(request, reply, plan, *, infer_literal=False):
     return "", None
 
 
+_EXPLICIT_CREATE = re.compile(
+    r"(?:(?:can|could|would) you )?(?:please )?(?:add|create) (?:a |a new |another )?task "
+    r"(?:for |to |called |named )?(?:my )?(?P<title>[\w][\w &'’/()-]*?),\s*"
+    r"(?:I expect (?:it|this) (?:will|to) take |it (?:will|should) take |"
+    r"I (?:would )?estimate (?:it )?at )?(?:(?:around|about) )?"
+    r"(?P<amount>\d+(?:\.\d+)?)\s*(?P<unit>hours?|hrs?|minutes?|mins?)"
+    r"(?:\s*[,\.]\s*(?P<scope>(?:it (?:has|involves|requires)|the (?:task|assignment) "
+    r"(?:is|has|involves|requires))\s+.+))?", re.I)
+_CREATE_DAY = re.compile(r"\s+(?:on|for) (?P<day>" + _DAY_EXPRESSION + r")$", re.I)
+_OTHER_REQUEST = re.compile(
+    r"[?!;\n]|\.\s+\S|\b(?:if|unless|instead|maybe|possibly|example|hypothetical|already|previously|"
+    r"not|don['’]t|never|finished|completed|cancel|postpone|defer|reschedule|move|delete|remove|rename|edit|update|change|"
+    r"add|create|attach|attached|upload|uploaded|file|pdf|another task|second task|or|next|later|yesterday|"
+    r"deadline|due|before|after|until|every|daily|weekly|tonight|noon|morning|evening|weeks?|months?|"
+    r"at \d+|fixed|time[- ]?boxed|hours?|minutes?)\b|"
+    r"\d{1,4}[-/]\d{1,2}|\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|"
+    r"jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?) \d", re.I)
+
+
+def literal_task_creation(question, files, plan):
+    """Recover one explicit title and effort after an unusable local model response."""
+    text = question.strip().rstrip(".?!").strip()
+    file_ids = []
+    attachment = re.search(r"[,\.]\s*(?:please )?attach (.+)$", text, re.I)
+    if attachment:
+        reference = re.sub(r"\s+to (?:this|the) task$", "", attachment[1].casefold()).strip()
+        if reference in {"the attached file", "this file", "the attached pdf", "this pdf"}:
+            file_ids = [key for key, item in files.items() if item.get("current")
+                        and ("pdf" not in reference or item.get("kind") == "pdf")]
+        else:
+            file_ids = [key for key, item in files.items() if item["name"].casefold() == reference]
+        if len(file_ids) != 1:
+            return None
+        text = text[:attachment.start()].strip()
+    match = _EXPLICIT_CREATE.fullmatch(text)
+    if not match:
+        return None
+    title, scope = match["title"].strip(), (match["scope"] or "").strip()
+    day = plan["selected_day"]
+    when = _CREATE_DAY.search(title)
+    if when:
+        day = _day_for(when["day"], "", plan)
+        title = title[:when.start()].strip()
+    wording = title + " " + scope
+    if (title.casefold() in {"", "it", "this", "that", "this one", "that one", "the same"} or not day
+            or re.search(r"\b(?:and|plus|tasks?)\b", title, re.I)
+            or _OTHER_REQUEST.search(wording) or _SIMPLE_DAY.search(wording)
+            or any(item["name"].casefold() in wording.casefold() for item in files.values())):
+        return None
+    minutes = float(match["amount"]) * (60 if match["unit"].lower().startswith("h") else 1)
+    if not 0 < minutes < float("inf"):
+        return None
+    title = title[:1].upper() + title[1:]
+    fields = {"title": title, "description": scope or title, "estimate_minutes": minutes,
+              "day": day, "details": "", "category": "", "fixed_duration": False}
+    return {"tool": "create_task", "new_task": fields, "file_ids": file_ids,
+            "query_source": "local task command", "answer_source": "local records"}
+
+
 def handle_request(tool, question, history, files, plan, categories, chat_json, tasks=()):
     if tool in {"edit_task", "postpone_task"}:
         return _change_request(tool, question, history, files, plan, categories, tasks, chat_json)

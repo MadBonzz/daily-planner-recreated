@@ -1,3 +1,4 @@
+import sys
 import time
 
 import pytest
@@ -28,6 +29,8 @@ def forecast(minutes_by):
 
 @pytest.mark.parametrize("minutes_by", ["user", "history", "model"])
 def test_finishing_dish_soap_shows_recorded_time_and_the_last_precompletion_estimate(tmp_path, monkeypatch, minutes_by):
+    # AppTest installs the simulated app as __main__. Restore the test runner for spawned processes.
+    monkeypatch.setitem(sys.modules, "__main__", sys.modules["__main__"])
     store = PlannerStore(tmp_path)
     initial = forecast("user")
     task = store.create_task(title="Pick up dish soap", description="Buy the unscented refill on the way home.",

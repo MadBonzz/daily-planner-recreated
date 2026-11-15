@@ -44,6 +44,23 @@ class ModelClientTests(unittest.TestCase):
         self.assertEqual(body["response_format"]["json_schema"]["schema"], self.schema)
 
     @patch("model_client.build_opener")
+    def test_bonsai_2_mlx_uses_prompt_schema_from_first_request(self, opener):
+        for model, key, mlx in [
+            ("ternary-bonsai-2-4b-mlx", "", True),
+            ("demo-alias", "prism-ml/Ternary-Bonsai-2-4B-mlx-2bit", True),
+            ("ternary-bonsai-2-4b-gguf", "", False),
+        ]:
+            with self.subTest(model=model), patch.dict(os.environ, PLANNER_MODEL=model, PLANNER_MODEL_KEY=key):
+                opener.return_value.open.reset_mock()
+                opener.return_value.open.return_value = self.reply('{"label":"on_task"}')
+                self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
+                opener.return_value.open.assert_called_once()
+                payload = json.loads(opener.return_value.open.call_args.args[0].data)
+                self.assertEqual("response_format" not in payload, mlx)
+                self.assertEqual(payload["reasoning_effort"], "none")
+                self.assertIn(json.dumps(self.schema), payload["messages"][0]["content"])
+
+    @patch("model_client.build_opener")
     def test_only_local_bonsai_retries_unsupported_reasoning_effort(self, opener):
         for local, endpoint in [(True, API_URL), (False, "https://api.cohere.ai/compatibility/v1/chat/completions")]:
             with self.subTest(endpoint=endpoint), patch.dict(

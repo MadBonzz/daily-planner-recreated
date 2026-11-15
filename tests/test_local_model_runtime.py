@@ -4,19 +4,25 @@ import multiprocessing
 import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from unittest.mock import patch
 
 import pytest
 
 import estimator
+import local_model_runtime
 import model_client
+import planner_analytics
 import retrieval
 import sample_retrieval
+from chat_tasks import apply_action
 from examples.estimation.package_retrieval import inputs
 from examples.estimation.run import histories
 from fallback_provenance import capture_fallbacks
 from examples.estimation import check_local_models
+from planner_chat import planning_context
+from planner_store import PlannerStore
 
 
 QWEN = "text-embedding-qwen3-embedding-0.6b"
@@ -27,6 +33,11 @@ FORECAST = {
     "point_min": 20, "low_min": 15, "high_min": 25, "confidence": "low",
     "rationale": "Compare each printed copy with the checklist.",
     "confidence_reason": "The number of corrections is unknown.",
+}
+CHAT_DRAFT = {
+    "action": "create", "title": "Review Paxos proofs", "description": "Review consensus proofs.",
+    "details": "", "estimate_minutes": 240, "estimate_phrase": "4 hours", "category": "",
+    "day": "", "when": "", "fixed_duration": False, "file_ids": [], "reply": "",
 }
 
 
@@ -114,7 +125,11 @@ class BionicHandler(BaseHTTPRequestHandler):
                 server.forecast_requests.append(body)
                 return self.reply({"choices": [{"message": server.chat_replies.pop(0), "finish_reason": "stop"}]})
             answer = dict(FORECAST)
-            properties = body["response_format"]["json_schema"]["schema"]["properties"]
+            if "response_format" in body:
+                schema = body["response_format"]["json_schema"]["schema"]
+            else:
+                schema = json.loads(body["messages"][0]["content"].split("matching this schema:\n")[-1])
+            properties = schema["properties"]
             if "warnings" in properties:
                 answer["warnings"] = []
             if "comparisons" in properties:
@@ -190,6 +205,57 @@ def test_full_local_check_switches_once_per_role_and_reuses_bonsai(bionic, sdk_u
     assert [body.get("parallel") for body in bionic.load_requests] == [None, None, 1]
 
 
+def ask_about_paxos(question):
+    now = datetime(2026, 11, 15, 9)
+    return planner_analytics.ask_analytics(question, [], [], plan=planning_context([], now.date(), now),
+                                          create_categories=["Study"])
+
+
+def test_chat_router_and_creation_share_one_managed_bonsai_instance(bionic, tmp_path, monkeypatch):
+    bionic.loaded.update({"qwen-resident": (QWEN, 2048), "kev-resident": (KEV, 4096)})
+    monkeypatch.setenv("PLANNER_CHAT_CONTEXT_LENGTH", "6144")
+    bionic.chat_replies = [{"content": json.dumps(answer)} for answer in ({"intent": "create_task"}, CHAT_DRAFT)]
+    result = ask_about_paxos("I need to review Paxos proofs, which should take 4 hours.")
+    assert result["tool"] == "create_task" and result["query_source"] == "model"
+    store = PlannerStore(tmp_path / "plan")
+    saved = apply_action(store, result, {}, "paxos-chat-turn")
+    task = store.get_task(saved["affected_task_id"])
+    assert (task["title"], task["estimate_minutes"]) == (CHAT_DRAFT["title"], 240)
+    assert set(bionic.events[:2]) == {("unload", "qwen-resident"), ("unload", "kev-resident")}
+    assert bionic.events[2:] == [("load", BONSAI, 6144), ("/v1/chat/completions", BONSAI + ":1"),
+                                 ("/v1/chat/completions", BONSAI + ":1")]
+    assert bionic.load_requests == [{"model": BONSAI, "context_length": 6144, "parallel": 1}]
+    assert bionic.loaded == {BONSAI + ":1": (BONSAI, 6144)}
+
+
+def test_background_forecast_waits_for_chat_before_switching_to_qwen(bionic, tmp_path, monkeypatch):
+    bionic.chat_replies = [{"content": json.dumps(CHAT_DRAFT)}]
+    bionic.release_chat.clear()
+    forecast_waiting = threading.Event()
+    lock = local_model_runtime.portalocker.lock
+
+    def observed_lock(handle, flags):
+        if bionic.chat_started.is_set():
+            forecast_waiting.set()
+        return lock(handle, flags)
+
+    monkeypatch.setattr(local_model_runtime.portalocker, "lock", observed_lock)
+    task = {**check_local_models.TASK, "id": "new"}
+    prior = {**check_local_models.PRIOR, "id": "prior", "estimate_minutes": 20, "actual_seconds": 1500}
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        chat = pool.submit(ask_about_paxos, "Add a task to review Paxos proofs. I expect it to take 4 hours.")
+        try:
+            assert bionic.chat_started.wait(5)
+            forecast = pool.submit(estimator.predict, task, [prior], tmp_path / "vectors")
+            assert forecast_waiting.wait(5)
+            assert bionic.events == [("load", BONSAI, 8192), ("/v1/chat/completions", BONSAI + ":1")]
+        finally:
+            bionic.release_chat.set()
+        assert chat.result()["new_task"]["estimate_minutes"] == 240
+        assert forecast.result()["provenance"]["decision"] == "direct"
+    assert [event[1] for event in bionic.events if event[0] == "load"] == [BONSAI, QWEN, KEV, BONSAI]
+
+
 def test_regular_forecast_uses_both_qwen_queries_and_past_timing_without_sdk(bionic, sdk_unavailable, tmp_path):
     task = {**check_local_models.TASK, "id": "new", "pdf_text": "Compare each checklist annotation. " * 800}
     prior = {**check_local_models.PRIOR, "id": "prior", "estimate_minutes": 20,
@@ -229,8 +295,8 @@ def test_nora_marker_word_recovers_a_real_forecast_after_reasoning_only_reply(bi
     assert forecast["evidence"][0]["title"] == "Port the wraparound header reader"
     assert forecast["cautions"][0]["sources"][0]["task_id"] == "ring-port"
     first, retry = bionic.forecast_requests
-    assert "response_format" in first and "response_format" not in retry
     for payload in (first, retry):
+        assert "response_format" not in payload
         assert payload["model"] == BONSAI + ":1"
         assert payload["reasoning_effort"] == "none"
         assert {"max_tokens", "max_completion_tokens", "max_output_tokens"}.isdisjoint(payload)

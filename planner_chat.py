@@ -4,7 +4,7 @@ from math import ceil, floor
 import json
 import re
 
-from model_client import ModelResponseInvalid, ModelUnavailable
+from model_client import ModelResponseInvalid, ModelUnavailable, plain_chat_reply
 
 
 def planning_context(tasks, selected_day, now):
@@ -248,8 +248,8 @@ def _rank_plan(rows, data, chat_json, still_current=None):
     if still_current and not still_current():
         return None
     try:
-        reply = chat_json([{"role": "system", "content": _COVERAGE_PROMPT}, payload],
-                          _priority_schema(rows))
+        reply = plain_chat_reply(chat_json, [{"role": "system", "content": _COVERAGE_PROMPT}, payload],
+                                 _priority_schema(rows))
         ranks = {}
         for row in rows:
             entry = reply["priorities"][str(row["id"])]

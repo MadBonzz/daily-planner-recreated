@@ -133,7 +133,7 @@ def test_bonsai_forecast_recovers_once_with_the_same_grounding_and_validation(tm
         client.return_value.open.side_effect = complete
         result = estimator.predict(paper("now"), [history], tmp_path)
     first, second = attempts
-    assert "response_format" in first and "response_format" not in second
+    assert all("response_format" not in request for request in attempts)
     assert first["messages"][-1] == second["messages"][-1]
     assert "observation_id" in second["messages"][0]["content"] and "properties" in second["messages"][0]["content"]
     assert result["provenance"]["minutes_by"] == ("model" if valid_citation else "history")

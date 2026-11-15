@@ -226,6 +226,7 @@ def test_nora_distraction_questions_use_the_filtered_records(tmp_path, monkeypat
     for question, tool in [
         ("which websites do I use the most when I get distracted?", "distraction_websites"),
         ("what are my biggest distractions when working?", "distraction_sources"),
+        ("what are the biggest distractions I need to avoid while working?", "distraction_sources"),
     ]:
         def respond(messages, schema):
             fields = schema["properties"]
