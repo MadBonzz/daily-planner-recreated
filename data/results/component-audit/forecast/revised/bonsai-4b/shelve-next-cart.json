@@ -1,0 +1,118 @@
+{
+  "task": "shelve-next-cart",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:25:18.503568+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ddecaa9a64ffaab158225a15bf891fd5e0a1fe9546170b170778c511e271605b",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "461de5f0071147355822e99ddcfce873ec25887aaf7eecb55d1a1a3825af294d",
+      "max_tokens": 950,
+      "payload_sha256": "aed3d5d884522c1032637e321975d16cea7dde0f23f610b1593ca169cb96475c",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 241,
+        "prompt_tokens": 677,
+        "total_tokens": 918,
+        "prompt_tokens_details": {
+          "cached_tokens": 329
+        }
+      },
+      "timings": {
+        "cache_n": 329,
+        "prompt_n": 348,
+        "prompt_ms": 8547.0,
+        "prompt_per_token_ms": 24.560344827586206,
+        "prompt_per_second": 40.716040716040716,
+        "predicted_n": 241,
+        "predicted_ms": 82116.868,
+        "predicted_per_token_ms": 342.15361666666666,
+        "predicted_per_second": 2.9226638307734776
+      },
+      "content_sha256": "d70d78f7f9d1076b01b93bc3545dd6f292e4c5588e8e3c82f8f5a1b750a4b5eb",
+      "response": {
+        "warnings": [],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope as new task; actual completion time of 26.0 minutes is 65% of budget, indicating efficiency in prior task."
+          }
+        ],
+        "point_min": 26,
+        "low_min": 24,
+        "high_min": 28,
+        "confidence": "low",
+        "rationale": "The time-driving step is scanning and shelling books in a consistent order, which was completed efficiently in past tasks. The strongest relevant comparison is the first task (Scan and shelve a standard 40-book returns cart) with actual minutes of 26.0, which is 65% of the user's estimated 40 minutes. This suggests the new task will likely take around 26 minutes, with a plausible range of 24 to 28 minutes. The confidence is low due to lack of direct evidence of current conditions or equipment changes affecting the process.",
+        "confidence_reason": "No recent changes in equipment, environment, or user workflow are documented, and the current task lacks specific details about scanning speed or shelving precision."
+      },
+      "seconds": 141.28
+    }
+  ],
+  "prediction": {
+    "point_min": 26,
+    "low_min": 24,
+    "high_min": 28,
+    "confidence": "low",
+    "confidence_reason": "No recent changes in equipment, environment, or user workflow are documented, and the current task lacks specific details about scanning speed or shelving precision.",
+    "model_rationale": "The time-driving step is scanning and shelling books in a consistent order, which was completed efficiently in past tasks. The strongest relevant comparison is the first task (Scan and shelve a standard 40-book returns cart) with actual minutes of 26.0, which is 65% of the user's estimated 40 minutes. This suggests the new task will likely take around 26 minutes, with a plausible range of 24 to 28 minutes. The confidence is low due to lack of direct evidence of current conditions or equipment changes affecting the process.",
+    "explanation": "The time-driving step is scanning and shelling books in a consistent order, which was completed efficiently in past tasks. The strongest relevant comparison is the first task (Scan and shelve a standard 40-book returns cart) with actual minutes of 26.0, which is 65% of the user's estimated 40 minutes. This suggests the new task will likely take around 26 minutes, with a plausible range of 24 to 28 minutes. The confidence is low due to lack of direct evidence of current conditions or equipment changes affecting the process.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Scan and shelve a standard 40-book returns cart",
+        "estimate_min": 40,
+        "actual_min": 26.0,
+        "ratio": 0.65,
+        "reason": "Same scope as new task; actual completion time of 26.0 minutes is 65% of budget, indicating efficiency in prior task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope as new task; actual completion time of 26.0 minutes is 65% of budget, indicating efficiency in prior task.",
+        "source_quote": "Scan and shelve a standard 40-book returns cart"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Scan and shelve a standard 40-book returns cart",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Scan and shelve another 40-book returns cart",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

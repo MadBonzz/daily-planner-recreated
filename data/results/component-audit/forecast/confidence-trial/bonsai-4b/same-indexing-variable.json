@@ -1,0 +1,125 @@
+{
+  "task": "same-indexing-variable",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:56:38.697001+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "353c21ec71d96f62f40be50f6cd1881a7795a952c8c5d676d70645e1938ae208",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": null,
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "e3f3e78637462bd250b34466a245cfda6f1caa526424c91874179e45bbd3cc91",
+      "max_tokens": 950,
+      "payload_sha256": "4f68a2e746ce35308401ea06126b9c6b76ee0b378103888b6c6fd90778f43efe",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 837,
+        "total_tokens": 1029,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 834,
+        "prompt_ms": 19152.245,
+        "prompt_per_token_ms": 22.964322541966425,
+        "prompt_per_second": 43.54580885948358,
+        "predicted_n": 192,
+        "predicted_ms": 51583.664,
+        "predicted_per_token_ms": 270.0715392670157,
+        "predicted_per_second": 3.7027226293967797
+      },
+      "content_sha256": "f19e34c22d2b939cb94f6c715883dd7a4b7ebe984347fb882662e0016faec3ac",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The Monday task took 25 minutes, which is 62% of the user's estimate, indicating a consistent early finish pattern. This suggests that the current task may also finish quickly if the same workflow is followed."
+          }
+        ],
+        "point_min": 25,
+        "low_min": 25,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The Wednesday task took 95 minutes, which is 2.38 times the estimate, showing a significant overrun. This implies that the current task may take longer due to unaccounted delays, such as script inefficiencies or unexpected file corruption.",
+        "confidence_reason": "The Wednesday task's high overrun (2.38x) indicates that the current task may face similar issues if not addressed, especially if the same script or workstation is used without optimization."
+      },
+      "seconds": 132.56
+    }
+  ],
+  "prediction": {
+    "point_min": 25,
+    "low_min": 25,
+    "high_min": 60,
+    "confidence": "medium",
+    "confidence_reason": "The Wednesday task's high overrun (2.38x) indicates that the current task may face similar issues if not addressed, especially if the same script or workstation is used without optimization.",
+    "model_rationale": "The Wednesday task took 95 minutes, which is 2.38 times the estimate, showing a significant overrun. This implies that the current task may take longer due to unaccounted delays, such as script inefficiencies or unexpected file corruption.",
+    "explanation": "The Wednesday task took 95 minutes, which is 2.38 times the estimate, showing a significant overrun. This implies that the current task may take longer due to unaccounted delays, such as script inefficiencies or unexpected file corruption.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 25.0,
+        "ratio": 0.625,
+        "reason": "The Monday task took 25 minutes, which is 62% of the user's estimate, indicating a consistent early finish pattern. This suggests that the current task may also finish quickly if the same workflow is followed.",
+        "reason_source": "model",
+        "model_rationale": "The Monday task took 25 minutes, which is 62% of the user's estimate, indicating a consistent early finish pattern. This suggests that the current task may also finish quickly if the same workflow is followed.",
+        "source_quote": "Run the Monday indexing and checksum check on 20 images"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

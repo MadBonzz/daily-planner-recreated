@@ -163,9 +163,13 @@ def plan_window(question, snap, previous=None):
             "past": day < now.date(), "future": day > now.date()}
 
 
-_ORDER_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["order"],
-                 "properties": {"order": {"type": "array", "items": {"type": "object", "additionalProperties": False,
-                     "required": ["id", "reason"], "properties": {"id": {"type": "integer"}, "reason": {"type": "string"}}}}}}
+def _priority_schema(rows):
+    ranking = {"type": "object", "additionalProperties": False, "required": ["rank", "reason"],
+               "properties": {"rank": {"type": "integer"}, "reason": {"type": "string"}}}
+    fields = {str(row["id"]): ranking for row in rows}
+    return {"type": "object", "additionalProperties": False, "required": ["priorities"],
+            "properties": {"priorities": {"type": "object", "additionalProperties": False,
+                                            "properties": fields, "required": list(fields)}}}
 
 
 def _work_amount(t):
@@ -211,23 +215,27 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
         return {"answer": "Your records changed. Ask again using the current data."}
     try:
         reply = chat_json([{"role": "system", "content":
-            "Help the user decide which work to do now or defer. Return every supplied task ID once in your recommended sequence. Prefer explicit "
+            "Rank the supplied unfinished tasks. For EVERY supplied ID give an integer rank, 1 first, "
+            "and one short reason tied to a supplied task fact. For example, if two tasks fit and "
+            "one must finish before the other can start, rank that prerequisite first. "
+            "Distinct tasks should have different ranks, including tasks to defer. Prefer explicit "
             "requirements in the question/task text, time-sensitive dependencies, work already in progress and "
             "achievable scope. Give one short reason per task based only on the supplied data. Do not invent "
             "deadlines, commitments, priorities or free time. If no deadline is given, do not imply one. "
             "Use a previous answer or historical errors only when relevant. Python checks remaining minutes "
             "and the cumulative fit. Do not claim you changed, moved, scheduled or completed anything."},
-            {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], _ORDER_SCHEMA, max_tokens=900)
+            {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], _priority_schema(rows),
+                          max_tokens=max(900, min(3200, len(rows) * 42)))
+        priorities = reply["priorities"]
+        priority_note = ""
     except ModelUnavailable as exc:
-        return {**base, "answer": f"The model could not prioritize this plan. {exc}"}
-    order = {}
-    for item in reply["order"]:
-        i = item["id"]
-        if 1 <= i <= len(rows):
-            order.setdefault(i, item["reason"].strip())
-    got_model_priority = bool(order)
-    for r in rows:
-        order.setdefault(r["id"], "")
+        priorities = {}
+        priority_note = f" The model could not rank these tasks ({exc}). Tasks use their plan order."
+    ranks = {r["id"]: priorities[str(r["id"])] for r in rows if str(r["id"]) in priorities}
+    ordered_ids = sorted((r["id"] for r in rows),
+                         key=lambda i: (i not in ranks, ranks[i]["rank"] if i in ranks else 0))
+    if len({entry["rank"] for entry in ranks.values()}) < len(ranks):
+        priority_note += " Tasks with the same model rank keep their plan order."
     cutoff = datetime.fromisoformat(window["end"]).strftime("%H:%M")
     if window["budget_minutes"] is not None:
         intro = f"You gave a {window['budget_minutes']}-minute work budget. Up to {remaining} min fit before {cutoff}."
@@ -240,8 +248,10 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
     audit = []
     upper_total = 0
     all_have_range = True
-    for i, reason in order.items():
+    for i in ordered_ids:
         r = rows[i-1]
+        reason = ranks[i]["reason"].strip() if i in ranks else ""
+        rank = ranks[i]["rank"] if i in ranks else None
         effort = r["remaining_minutes"]
         if effort is None or r["status"] == "awaiting_finish":
             group = "Confirm remaining work"
@@ -271,15 +281,16 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
         audit.append({"Task": r["title"], "Status": r["status"], "Total estimate (min)": r["estimated_total_minutes"],
                       "Recorded (min)": r["recorded_minutes"], "Remaining (min)": effort,
                       "Range (min)": f"{r['remaining_low']}–{r['remaining_high']}" if r["remaining_high"] is not None else "",
-                      "Estimate source": r["estimate_source"], "Suggestion": group})
+                      "Estimate source": r["estimate_source"], "Suggestion": group, "Model rank": rank,
+                      "Model reason": ranks[i]["reason"].strip() if i in ranks else ""})
     if upper_total > window["available_minutes"]:
         intro += f" The upper estimates of the fitting tasks add up to {upper_total} min, so the plan can overrun."
     elif sections[fit_label] and not all_have_range:
         intro += " At least one fitting task has no planning range yet."
-    text = intro + backlog_note + "\n\n" + "\n\n".join("**" + name + "**\n\n" + "\n".join(items)
+    text = intro + priority_note + backlog_note + "\n\n" + "\n\n".join("**" + name + "**\n\n" + "\n".join(items)
                                           for name, items in sections.items() if items)
     if not any(re.search(r"\b(due|deadline|must|priority|urgent|hand-in|submit before)\b", text, re.I)
                for text in [question, *(r["details"] + " " + r["description"] for r in rows)]):
         text += "\n\nShare any hard deadlines or priorities that should change this order."
-    return {**base, "answer": text, "answer_source": "model" if got_model_priority else "local order",
+    return {**base, "answer": text, "answer_source": "model" if ranks else "local order",
             "plan_rows": audit}

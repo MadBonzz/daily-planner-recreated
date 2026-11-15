@@ -438,7 +438,8 @@ def _explain_distractions(result, payload):
                                                    ensure_ascii=False)}], schema)
     except ModelUnavailable as exc:
         return {**result, "answer": f"The model could not interpret these query results. {exc}"}
-    chosen = [observations[i - 1] for i in dict.fromkeys(response["finding_ids"]) if 1 <= i <= len(observations)][:5]
+    indices = dict.fromkeys(map(int, response["finding_ids"]))
+    chosen = [observations[i - 1] for i in indices if 1 <= i <= len(observations)][:5]
     if not chosen:
         return {**result, "answer": "The model selected no findings. The matching distraction intervals are below."}
     return {**result, "answer_source": "model", "answer": "\n".join("- " + finding for finding in chosen)}

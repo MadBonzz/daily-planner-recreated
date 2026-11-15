@@ -194,3 +194,13 @@ def test_partial_milestone_cannot_zero_the_remaining_work(monkeypatch):
     assert result["workspace_update"]["remaining_min"] == 8
     final = forecast.revise(TASK, BASE, snapshot(("user", done)))
     assert final["workspace_update"]["remaining_min"] == 0
+
+
+@pytest.mark.parametrize("turn,valid", [(1.0, True), (True, False), (1.5, False)])
+def test_integral_json_number_can_cite_a_turn(monkeypatch, turn, valid):
+    quote = "I checked both sections."
+    model = Mock(side_effect=[supported(quote, turn), {"assessment": "insufficient_evidence"}])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    result = forecast.revise(TASK, BASE, snapshot(("user", quote)))
+    assert (result["workspace_update"]["status"] == "adjusted") == valid
+    assert model.call_count == (1 if valid else 2)

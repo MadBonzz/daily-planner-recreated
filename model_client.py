@@ -38,6 +38,10 @@ class ModelUnavailable(RuntimeError):
     """The configured endpoint could not produce a usable response."""
 
 
+class ModelContextExceeded(ModelUnavailable):
+    """The provider rejected an oversized input before producing a completion."""
+
+
 class ModelResponseInvalid(ModelUnavailable):
     """A completed HTTP response did not supply JSON matching the requested contract."""
 
@@ -110,6 +114,19 @@ def forecast_endpoint():
         _forecast_config.reset(token)
 
 
+def _canonical_integers(value, schema):
+    """JSON Schema integers can arrive as 1.0. Only coerce declared integer fields after validation."""
+    if type(value) is float and schema.get("type") == "integer":
+        return int(value)
+    if isinstance(value, dict) and "properties" in schema:
+        props = schema["properties"]
+        return {key: _canonical_integers(item, props[key]) if key in props else item
+                for key, item in value.items()}
+    if isinstance(value, list) and isinstance(schema.get("items"), dict):
+        return [_canonical_integers(item, schema["items"]) for item in value]
+    return value
+
+
 def chat_json(messages, schema, *, max_tokens=512):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
     config = _forecast_config.get() or planner_settings()
@@ -172,8 +189,20 @@ def chat_json(messages, schema, *, max_tokens=512):
             content = content.split("\n", 1)[1][:-3].strip()
         result = json.loads(content)
         validate(result, schema)
-        return result
+        return _canonical_integers(result, schema)
     except HTTPError as exc:
+        if exc.code in (400, 413):
+            try:
+                body = json.loads(exc.read(16384))
+                detail = body.get("error") if isinstance(body, dict) else None
+            except (OSError, ValueError):
+                detail = None
+            if isinstance(detail, dict) and any(detail.get(k) in ("exceed_context_size_error", "context_length_exceeded")
+                                               for k in ("type", "code")):
+                count, limit = detail.get("n_prompt_tokens"), detail.get("n_ctx")
+                sizes = (f" ({count:,} input tokens, {limit:,} available)"
+                         if type(count) is int and type(limit) is int and count > 0 and limit > 0 else "")
+                raise ModelContextExceeded(f"{model} rejected the input because it exceeds the context window{sizes}.") from exc
         raise ModelUnavailable(f"{url.hostname} returned HTTP {exc.code} for {model}.") from exc
     except OSError as exc:
         raise ModelUnavailable(f"{model} is unavailable.") from exc

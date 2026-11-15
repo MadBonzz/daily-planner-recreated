@@ -107,3 +107,53 @@ def test_uninformative_quote_is_repaired_before_showing_document_answer(monkeypa
     result = task_workspace.answer({}, "What is the deadline?", document="Protocol",
                                    text="Page 1: Submit the signed laboratory worksheet.")
     assert result["sources"] == [] and "March" not in result["answer"]
+
+
+def test_schema_valid_integral_float_ids_work_for_priorities_and_distractions():
+    from unittest.mock import patch
+    from jsonschema import validate
+    from planner_chat import answer_plan, planning_context
+
+    now = datetime(2026, 11, 13, 14)
+    day = now.date().isoformat()
+    task = {"id": "a", "title": "Write", "status": "ready", "estimate_minutes": 15, "day": day}
+    def rank(messages, schema, **kwargs):
+        if "priorities" in schema["properties"]:
+            reply = {"priorities": {"1": {"rank": 1.0, "reason": "It fits."}}}
+        else:
+            reply = {"order": [{"id": 1.0, "reason": "It fits."}, {"id": 999.0, "reason": "Invalid ID"}]}
+        validate(reply, schema)
+        return reply
+    result = answer_plan("What fits in 20 minutes?", planning_context([task], now.date(), now), [], [], rank)
+    assert [row["Task"] for row in result["plan_rows"]] == ["Write"]
+    evidence = {"question": "Which sites?", "scope": {}, "result_rows": [
+        {"device": "Laptop", "app": "Browser", "domain": "sport.test", "window": "", "phone_app": "",
+         "minutes": 4, "tasks": 1, "days": 1}]}
+    with patch.object(analytics, "chat_json", return_value={"finding_ids": [1.0, 1, 999.0]}):
+        result = analytics._explain_distractions({}, evidence)
+    assert result["answer"].count("sport.test") == 1
+
+
+def test_every_open_task_needs_a_model_rank_and_actual_reason_is_visible():
+    import json
+    from jsonschema import ValidationError, validate
+    from planner_chat import answer_plan, planning_context
+
+    now = datetime(2026, 11, 13, 14)
+    def task(tid, title, budget):
+        return {"id": tid, "title": title, "status": "ready", "estimate_minutes": budget, "day": now.date().isoformat()}
+    tasks = [task("slow", "Read report", 60), task("quick", "Send receipt", 15)]
+    def rank(messages, schema, **kwargs):
+        with pytest.raises(ValidationError):
+            validate({"order": []}, schema)
+        with pytest.raises(ValidationError):
+            validate({"priorities": {"1": {"rank": 1, "reason": "One item."}}}, schema)
+        assert len(json.loads(messages[-1]["content"])["unfinished_tasks"]) == 2
+        reply = {"priorities": {"1": {"rank": 2, "reason": "The report needs 60 minutes."},
+                                "2": {"rank": 1, "reason": "The receipt fits the 20-minute budget."}}}
+        validate(reply, schema)
+        return reply
+    result = answer_plan("What fits in 20 minutes?", planning_context(tasks, now.date(), now), [], [], rank)
+    assert result["answer_source"] == "model"
+    assert [(r["Task"], r["Model rank"]) for r in result["plan_rows"]] == [("Send receipt", 1), ("Read report", 2)]
+    assert all(r["Model reason"] in result["answer"] for r in result["plan_rows"])

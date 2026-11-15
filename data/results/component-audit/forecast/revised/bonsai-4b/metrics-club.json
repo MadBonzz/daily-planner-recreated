@@ -1,0 +1,85 @@
+{
+  "task": "metrics-club",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:32:47.154275+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "082eecad8e0aa087366d44de1c82e9ac14bf2130a4d545316ae81a60928e2bce",
+  "frozen_candidates": [],
+  "budget": 45,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.6,
+      0.87
+    ],
+    "expected_evidence": [
+      "read-cache",
+      "read-queues",
+      "replica-figs"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "49e96f7e6536671eae0a731f3259004e2cf93928b7e10502d89f8bbbe31c4ff4",
+      "max_tokens": 950,
+      "payload_sha256": "50c2991c6f87fc19476bfb83c6a5339e013bcb0a59232362ea4a2bea791ae7f1",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 178,
+        "prompt_tokens": 809,
+        "total_tokens": 987,
+        "prompt_tokens_details": {
+          "cached_tokens": 329
+        }
+      },
+      "timings": {
+        "cache_n": 329,
+        "prompt_n": 480,
+        "prompt_ms": 15040.288,
+        "prompt_per_token_ms": 31.333933333333334,
+        "prompt_per_second": 31.91428249246291,
+        "predicted_n": 178,
+        "predicted_ms": 96922.3,
+        "predicted_per_token_ms": 547.5836158192091,
+        "predicted_per_second": 1.8262051148187777
+      },
+      "content_sha256": "8c4f988e8793f85733cf35283597af9a16f0f5edc435b58b7cf773f91931b93c",
+      "response": {
+        "point_min": 45,
+        "low_min": 40,
+        "high_min": 55,
+        "confidence": "low",
+        "rationale": "The task requires synthesizing two ablation experiments (1 and 2) into a single slide with a finding, control, and confound, which involves summarizing results and identifying key comparisons. No prior comparable task exists with measurable timing, so the estimate is based solely on the user's initial budget and the task's scope. The main assumption is that the slide will be constructed efficiently without derivation or additional analysis, which may be impacted by unfamiliarity with the ablation setup or loss tables.",
+        "confidence_reason": "The task's lack of prior comparable timing makes it difficult to refine the estimate; if the user encounters confusion in interpreting the loss tables or ablation differences, the time could increase significantly."
+      },
+      "seconds": 152.61
+    }
+  ],
+  "prediction": {
+    "point_min": 45,
+    "low_min": 40,
+    "high_min": 55,
+    "confidence": "low",
+    "confidence_reason": "The task's lack of prior comparable timing makes it difficult to refine the estimate; if the user encounters confusion in interpreting the loss tables or ablation differences, the time could increase significantly.",
+    "model_rationale": "The task requires synthesizing two ablation experiments (1 and 2) into a single slide with a finding, control, and confound, which involves summarizing results and identifying key comparisons. No prior comparable task exists with measurable timing, so the estimate is based solely on the user's initial budget and the task's scope. The main assumption is that the slide will be constructed efficiently without derivation or additional analysis, which may be impacted by unfamiliarity with the ablation setup or loss tables.",
+    "explanation": "The task requires synthesizing two ablation experiments (1 and 2) into a single slide with a finding, control, and confound, which involves summarizing results and identifying key comparisons. No prior comparable task exists with measurable timing, so the estimate is based solely on the user's initial budget and the task's scope. The main assumption is that the slide will be constructed efficiently without derivation or additional analysis, which may be impacted by unfamiliarity with the ablation setup or loss tables.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

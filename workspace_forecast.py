@@ -35,7 +35,9 @@ it was discussed. A user can report their progress and ask a question in the sam
 Use the task scope and baseline forecast to understand the deliverable. Assess the latest state across
 the conversation. For an existing workspace forecast a revision must cite fresh evidence, and a restatement
 of an earlier milestone does not imply further progress. A blocker or a newly
-discovered step can increase the total. First choose whether enough direct evidence exists for a revision.
+discovered step can increase the total. A reported failed attempt and its new repair step are direct
+evidence even if the repair duration is unknown. Use a wider interval and lower confidence for that
+timing uncertainty. First choose whether enough direct evidence exists for a revision.
 For insufficient_evidence use an empty evidence list and zero placeholders for the three remaining times.
 For supported, cite the turn number and a short exact user statement for each progress fact, retaining its
 negation and context. Estimate the remaining_min for the actual unfinished steps. Use zero only if the user
@@ -142,12 +144,15 @@ def _assessment(reply, records, baseline, progress, endpoint):
         return retained
     evidence = []
     fresh_evidence = False
+    fresh_finished = False
     previous_pause = baseline.get("workspace_update") or {}
     previous_evidence = previous_pause.get("evidence") or (previous_pause.get("last_adjusted") or {}).get("evidence", [])
     earlier = [row["original"] for row in records if row["role"] == "user" and not row["fresh"]]
     earlier.extend(item["quote"] for item in previous_evidence)
     for item in reply["evidence"]:
         number, quote = item["turn"], item["quote"].strip()
+        if type(number) is float and number.is_integer():
+            number = int(number)
         if type(number) is not int or not 1 <= number <= len(records):
             raise ValueError("Cite an existing user turn number.")
         record = records[number - 1]
@@ -159,7 +164,9 @@ def _assessment(reply, records, baseline, progress, endpoint):
                 r"(?:start(?:ed)?|begun|finish(?:ed)?|complet(?:e|ed)|submitt?ed|sent)\b", quote, re.I):
             raise ValueError("A negated completion is remaining work, not a completed milestone. Cite the actual result.")
         evidence.append({"kind": item["kind"], "quote": quote, "document": record["document"]})
-        fresh_evidence |= record["fresh"] and not any(quote.casefold() in old.casefold() for old in earlier)
+        fresh = record["fresh"] and not any(quote.casefold() in old.casefold() for old in earlier)
+        fresh_evidence |= fresh
+        fresh_finished |= fresh and item["kind"] == "task_finished"
     if not fresh_evidence:
         raise ValueError("A supported revision needs a verified user statement or work sample from a fresh turn.")
     values = [reply[key] for key in ("remaining_low_min", "remaining_min", "remaining_high_min")]
@@ -168,9 +175,7 @@ def _assessment(reply, records, baseline, progress, endpoint):
     low, remaining, high = map(int, values)
     if not 0 <= low <= remaining <= high:
         raise ValueError("Give a nonnegative ordered range for remaining minutes.")
-    finished = any(item["kind"] == "task_finished" and records[item["turn"] - 1]["fresh"]
-                   for item in reply["evidence"])
-    if (remaining == 0) != finished:
+    if (remaining == 0) != fresh_finished:
         raise ValueError("Reserve zero remaining minutes and task_finished for an explicit fresh report that all work is finished.")
     explanation = reply["explanation"].strip()
     confidence_reason = reply["confidence_reason"].strip()

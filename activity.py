@@ -333,6 +333,15 @@ LABEL_SCHEMA = {
 }
 
 
+DUAL_DEVICE_SCHEMA = {
+    "type": "object",
+    "properties": {"laptop": LABEL_SCHEMA["properties"]["label"], "phone": LABEL_SCHEMA["properties"]["label"],
+                   "reason": LABEL_SCHEMA["properties"]["reason"]},
+    "required": ["laptop", "phone", "reason"],
+    "additionalProperties": False,
+}
+
+
 def reviewable(row):
     return not row.get("excluded") and any(row.get(key) for key in ("app", "domain", "title", "phone_app"))
 
@@ -438,9 +447,9 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
     )
     if any(rows[i].get("phone_app") for i in pending):
         system += (" phone_app is the foreground Android app during the same seconds. "
-                   "idle applies to the laptop only. If the two devices give conflicting signals "
-                   "and the user's focus is unclear, label the interval uncertain. For example, a relevant "
-                   "test open on an active laptop while a game is open on the phone is uncertain. "
+                   "idle applies to the laptop only. For rows requesting laptop and phone labels, "
+                   "judge the devices independently. Use only the laptop fields for laptop and phone_app "
+                   "for phone; neither device's evidence establishes attention on the other. "
                    "A generic phone app name alone does not establish what was viewed.")
     batches = deque(pending[offset:offset + 8] for offset in range(0, len(pending), 8))
     while batches:
@@ -453,9 +462,12 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
                     {"role": "user", "content": json.dumps({"task": context, "personal_examples": examples, "intervals": observations})}]
         # A required object key per ID prevents small models from dropping repeated
         # observations or returning one interval several times.
-        keys = [str(i) for i in batch]
-        schema = {"type": "object", "properties": {key: LABEL_SCHEMA for key in keys},
-                  "required": keys, "additionalProperties": False}
+        contracts = {}
+        for i in batch:
+            both_active = rows[i].get("idle") is not True and device_label(rows[i]) == "Laptop + phone"
+            contracts[str(i)] = DUAL_DEVICE_SCHEMA if both_active else LABEL_SCHEMA
+        schema = {"type": "object", "properties": contracts, "required": list(contracts),
+                  "additionalProperties": False}
         try:
             labels = chat_json(messages, schema, max_tokens=600)
         except ModelResponseTruncated:
@@ -473,7 +485,16 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
             break
         for i in batch:
             item = labels[str(i)]
-            rows[i].update(label=item["label"], reason=_clean(item["reason"], 200), label_source="model")
+            reason = item["reason"]
+            if "laptop" in item:
+                laptop, phone = item["laptop"], item["phone"]
+                label = laptop if laptop == phone else "uncertain"
+                if laptop != phone:
+                    reason = (f"Laptop: {laptop.replace('_', '-')}. Phone: {phone.replace('_', '-')}. "
+                              "The active device is unclear.")
+            else:
+                label = item["label"]
+            rows[i].update(label=label, reason=_clean(reason, 200), label_source="model")
 
 
 def build_report(task, periods, exclusions=(), *, capture=True, disabled_periods=(),

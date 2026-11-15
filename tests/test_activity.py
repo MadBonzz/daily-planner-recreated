@@ -125,3 +125,20 @@ def test_truncated_interval_does_not_erase_other_batches(monkeypatch):
     assert [r["label"] for r in rows].count("on_task") == 9
     assert rows[3]["label_source"] == "unavailable"
     assert len(warnings) == 1 and calls[-1] == ["8", "9"]
+
+
+def test_concurrent_devices_are_judged_independently_and_counted_once(monkeypatch):
+    def classify(messages, schema, **kwargs):
+        assert schema["properties"]["0"]["required"] == ["laptop", "phone", "reason"]
+        assert schema["properties"]["1"]["required"] == ["label", "reason"]
+        return {"0": {"laptop": "on_task", "phone": "off_task", "reason": "Code and a phone game."},
+                "1": {"label": "off_task", "reason": "Phone game while the laptop is idle."}}
+
+    monkeypatch.setattr(activity, "chat_json", classify)
+    base = {"period": 0, "app": "Code", "title": "cleanup_test.py", "domain": "", "phone_app": "Chess",
+            "excluded": False, "seconds": 60}
+    rows = [{**base, "idle": False}, {**base, "idle": True}]
+    activity._classify({"title": "Debug the cleanup tests"}, rows, [])
+    assert rows[0]["label"] == "uncertain" and "Phone: off-task" in rows[0]["reason"]
+    report = activity._summarize({"intervals": rows})
+    assert report["totals"] == {"on_task": 0, "off_task": 60, "uncertain": 60}

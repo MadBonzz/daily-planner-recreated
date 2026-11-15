@@ -1,0 +1,139 @@
+{
+  "task": "shortest-window",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:50:36.605410+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ae00c2d615820d17cd646583ec956b223e7debb85fdcf611c4da67ec5e483e2e",
+  "frozen_candidates": [
+    "subarray-target",
+    "two-targets"
+  ],
+  "budget": 50,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.13,
+      1.31
+    ],
+    "expected_evidence": [
+      "subarray-target",
+      "window-cost",
+      "two-targets"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "9603fc65fb52d0bb07526fe49bec8123955f07381c402d75f132d7025dd69e6f",
+      "max_tokens": 950,
+      "payload_sha256": "f86f8315cb296dd6be79c8f094d6140a88b4df257ccd54707de299b418d1607a",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 224,
+        "prompt_tokens": 770,
+        "total_tokens": 994,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 767,
+        "prompt_ms": 36467.049,
+        "prompt_per_token_ms": 47.545044328552805,
+        "prompt_per_second": 21.032686247795922,
+        "predicted_n": 224,
+        "predicted_ms": 69865.063,
+        "predicted_per_token_ms": 313.2962466367713,
+        "predicted_per_second": 3.191867156836315
+      },
+      "content_sha256": "10a9132af2b64413c2937a637cd3546f9c2e70d9b5dce8f73c75ce02b289d976",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Test the prefix sum pairing before the run to avoid duplicate or off-target subarrays."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The 45-minute estimate for subarray sum equals K was 54 minutes actual, indicating a 1.2x overhead due to edge cases and explanation depth."
+          }
+        ],
+        "point_min": 60,
+        "low_min": 50,
+        "high_min": 75,
+        "confidence": "low",
+        "rationale": "The time-driving step is validating prefix sum pairs to ensure the subarray sum meets or exceeds K, and the strongest comparison is the 45-minute estimate from the subarray sum equals K task, which took 54 minutes due to negative values and duplicate prefix sums. This suggests a similar effort will be needed, with a confidence_reason that unhandled edge cases or off-task distractions could widen the range.",
+        "confidence_reason": "Unhandled edge cases or off-task distractions could widen the range."
+      },
+      "seconds": 176.76
+    }
+  ],
+  "prediction": {
+    "point_min": 60,
+    "low_min": 50,
+    "high_min": 75,
+    "confidence": "low",
+    "confidence_reason": "Unhandled edge cases or off-task distractions could widen the range.",
+    "model_rationale": "The time-driving step is validating prefix sum pairs to ensure the subarray sum meets or exceeds K, and the strongest comparison is the 45-minute estimate from the subarray sum equals K task, which took 54 minutes due to negative values and duplicate prefix sums. This suggests a similar effort will be needed, with a confidence_reason that unhandled edge cases or off-task distractions could widen the range.",
+    "explanation": "The time-driving step is validating prefix sum pairs to ensure the subarray sum meets or exceeds K, and the strongest comparison is the 45-minute estimate from the subarray sum equals K task, which took 54 minutes due to negative values and duplicate prefix sums. This suggests a similar effort will be needed, with a confidence_reason that unhandled edge cases or off-task distractions could widen the range.",
+    "evidence": [
+      {
+        "task_id": "subarray-target",
+        "title": "LeetCode practice · subarray sum equals k",
+        "estimate_min": 45,
+        "actual_min": 54.0,
+        "ratio": 1.2,
+        "reason": "The 45-minute estimate for subarray sum equals K was 54 minutes actual, indicating a 1.2x overhead due to edge cases and explanation depth.",
+        "reason_source": "model",
+        "model_rationale": "The 45-minute estimate for subarray sum equals K was 54 minutes actual, indicating a 1.2x overhead due to edge cases and explanation depth.",
+        "source_quote": "Solve from a blank editor using prefix counts; include a trace with negative values and duplicate prefix sums."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the prefix sum pairing before the run to avoid duplicate or off-target subarrays.",
+        "sources": [
+          {
+            "task_id": "subarray-target",
+            "title": "LeetCode practice · subarray sum equals k",
+            "origin": "ActivityWatch",
+            "observation": "4.0 min on youtube.com labeled off-task (Game highlights — overtime finish)."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "subarray-target",
+        "title": "LeetCode practice · subarray sum equals k",
+        "source": "decision model",
+        "score": 0.7125559194417129
+      },
+      {
+        "task_id": "two-targets",
+        "title": "Practice two non-overlapping target ranges",
+        "source": "decision model",
+        "score": 0.5093962323147673
+      }
+    ],
+    "used_task_ids": [
+      "subarray-target"
+    ],
+    "feedback_source_ids": []
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "task": "bake-dishes",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:29:31.652954+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "d625eb5df62ccd31e40c24d53094ff1c82f1f994a12809e05b3e8073eb962ad0",
+  "frozen_candidates": [
+    "pasta-dishes",
+    "chili-dishes",
+    "stew-dishes"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.15,
+      1.28
+    ],
+    "expected_evidence": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "cd134bfc0f4395d0e2fda5722356f7d49fc40abcbf98176d9347cdf8f7899d22",
+      "max_tokens": 950,
+      "payload_sha256": "77cba2a8adb614ae9362d7cfea6dfe75b8a63b6788b40832ea7f678ae65a999e",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 295,
+        "prompt_tokens": 1021,
+        "total_tokens": 1316,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 1018,
+        "prompt_ms": 24501.26,
+        "prompt_per_token_ms": 24.06803536345776,
+        "prompt_per_second": 41.548883608434835,
+        "predicted_n": 295,
+        "predicted_ms": 131210.242,
+        "predicted_per_token_ms": 446.29334013605444,
+        "predicted_per_second": 2.2406787421366086
+      },
+      "content_sha256": "dfbb8227ef9ffdf46383518ec92e249817378cc512246cdbf283157379f2be7f",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Pre-dry the cast-iron pan before scrubbing to reduce the time spent on the pot and lid, as the same task in the pasta supper took 31 minutes with a second scrub required."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The same task (washing dinner settings and scrubbing the skillet) took 31 minutes in the pasta supper, with a second scrub noted; this suggests a need for extra scrubbing effort in similar scenarios."
+          }
+        ],
+        "point_min": 35,
+        "low_min": 30,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The task involves scrubbing a heavy cast-iron pot and handling dinner settings, which historically took 36 minutes (same_scope) with a second scrub required. This indicates that scrubbing effort is a time-driving factor, and the current estimate of 30 minutes underestimates the required scrubbing time due to the heavy pot and cooked-on residue.",
+        "confidence_reason": "The presence of cooked-on residue in previous tasks (e.g., chili night, stew) suggests that scrubbing effort increases with food residue, which is not accounted for in the current estimate. This could widen the range to 38–48 minutes if additional residue or scrubbing steps are required."
+      },
+      "seconds": 205.61
+    }
+  ],
+  "prediction": {
+    "point_min": 35,
+    "low_min": 30,
+    "high_min": 45,
+    "confidence": "medium",
+    "confidence_reason": "The presence of cooked-on residue in previous tasks (e.g., chili night, stew) suggests that scrubbing effort increases with food residue, which is not accounted for in the current estimate. This could widen the range to 38–48 minutes if additional residue or scrubbing steps are required.",
+    "model_rationale": "The task involves scrubbing a heavy cast-iron pot and handling dinner settings, which historically took 36 minutes (same_scope) with a second scrub required. This indicates that scrubbing effort is a time-driving factor, and the current estimate of 30 minutes underestimates the required scrubbing time due to the heavy pot and cooked-on residue.",
+    "explanation": "The task involves scrubbing a heavy cast-iron pot and handling dinner settings, which historically took 36 minutes (same_scope) with a second scrub required. This indicates that scrubbing effort is a time-driving factor, and the current estimate of 30 minutes underestimates the required scrubbing time due to the heavy pot and cooked-on residue.",
+    "evidence": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "estimate_min": 25,
+        "actual_min": 31.0,
+        "ratio": 1.24,
+        "reason": "The same task (washing dinner settings and scrubbing the skillet) took 31 minutes in the pasta supper, with a second scrub noted; this suggests a need for extra scrubbing effort in similar scenarios.",
+        "reason_source": "model",
+        "model_rationale": "The same task (washing dinner settings and scrubbing the skillet) took 31 minutes in the pasta supper, with a second scrub noted; this suggests a need for extra scrubbing effort in similar scenarios.",
+        "source_quote": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Pre-dry the cast-iron pan before scrubbing to reduce the time spent on the pot and lid, as the same task in the pasta supper took 31 minutes with a second scrub required.",
+        "sources": [
+          {
+            "task_id": "pasta-dishes",
+            "title": "Clear up the pasta supper",
+            "origin": "Completion note",
+            "observation": "The smaller plates were easy, but the skillet needed a second scrub."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "source": "decision model",
+        "score": 0.710379170627452
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "source": "decision model",
+        "score": 0.7078707760635019
+      },
+      {
+        "task_id": "stew-dishes",
+        "title": "Reset the kitchen after stew",
+        "source": "decision model",
+        "score": 0.6901440283809372
+      }
+    ],
+    "used_task_ids": [
+      "pasta-dishes"
+    ],
+    "feedback_source_ids": []
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "task": "appendix-proof",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:15:12.304942+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "95b7eb84b9abfa0cd8c9bfd1910f7c3cf7ec374693cce2a978e440af02c81778",
+  "frozen_candidates": [
+    "derive-noise",
+    "bound-floor",
+    "check-jensen"
+  ],
+  "budget": 60,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.48,
+      1.86
+    ],
+    "expected_evidence": [
+      "derive-noise",
+      "bound-floor",
+      "check-jensen"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "6dd8ac27eaa241a3816846dfcc5bbbec6786c029a16e9ec16560a72fba5558b5",
+      "max_tokens": 950,
+      "payload_sha256": "b1325aef26a32cc2b43a12fbd0c197524b1299193f31d32e223586536eb010a2",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 443,
+        "prompt_tokens": 1468,
+        "total_tokens": 1911,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1468,
+        "prompt_ms": 45968.385,
+        "prompt_per_token_ms": 31.313613760217986,
+        "prompt_per_second": 31.93499184276324,
+        "predicted_n": 443,
+        "predicted_ms": 156794.458,
+        "predicted_per_token_ms": 354.738592760181,
+        "predicted_per_second": 2.8189771860431443
+      },
+      "content_sha256": "d5acf0d2978dd6ba3836fdbce13b85f6b4995558f64b9b202d7e66265846bfce",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Expand the conditional expectation one event at a time to avoid algebraic errors."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task required deriving a conditional second moment and testing bias from missing observations; the actual time (104.0 minutes) exceeds the user estimate (60 minutes) due to detailed expansion of expectations."
+          },
+          {
+            "slot": 2,
+            "reason": "The epsilon-floor variance lemma required careful conditioning steps; the actual time (86.0 minutes) is higher than the user estimate (50 minutes) because the user failed to fully account for the conditional structure in the indicator identity."
+          },
+          {
+            "slot": 3,
+            "reason": "The weighted-bin bound verification involved numerical counterexamples and conditional expectations; the actual time (97.0 minutes) is above the user estimate (55 minutes) due to the need for explicit simulation and validation of the bound."
+          }
+        ],
+        "point_min": 80,
+        "low_min": 70,
+        "high_min": 100,
+        "confidence": "high",
+        "rationale": "The time-driving step is the detailed derivation of conditional expectations and variance bounds in a finite loss table, which required explicit handling of each event's contribution. The strongest comparison is the 'Verify the weighted-bin bound' task (actual: 97.0 min, user estimate: 55 min), which shows a significant overrun due to the need for numerical validation and off-task distractions. The range is wide because the user's estimate assumes a simpler, faster derivation, and the actual work includes multiple conditional expansions and off-task activities that were not accounted for in the original planning.",
+        "confidence_reason": "The actual time for the 'Verify the weighted-bin bound' task (97.0 minutes) is significantly higher than the user estimate (55 minutes), indicating that detailed conditional analysis and numerical validation are time-intensive. This overrun is supported by the observation that the user spent 3.0 minutes on a sports example off-task, which likely diverted focus from the core derivation steps."
+      },
+      "seconds": 217.01
+    }
+  ],
+  "prediction": {
+    "point_min": 80,
+    "low_min": 70,
+    "high_min": 100,
+    "confidence": "high",
+    "confidence_reason": "The actual time for the 'Verify the weighted-bin bound' task (97.0 minutes) is significantly higher than the user estimate (55 minutes), indicating that detailed conditional analysis and numerical validation are time-intensive. This overrun is supported by the observation that the user spent 3.0 minutes on a sports example off-task, which likely diverted focus from the core derivation steps.",
+    "model_rationale": "The time-driving step is the detailed derivation of conditional expectations and variance bounds in a finite loss table, which required explicit handling of each event's contribution. The strongest comparison is the 'Verify the weighted-bin bound' task (actual: 97.0 min, user estimate: 55 min), which shows a significant overrun due to the need for numerical validation and off-task distractions. The range is wide because the user's estimate assumes a simpler, faster derivation, and the actual work includes multiple conditional expansions and off-task activities that were not accounted for in the original planning.",
+    "explanation": "The time-driving step is the detailed derivation of conditional expectations and variance bounds in a finite loss table, which required explicit handling of each event's contribution. The strongest comparison is the 'Verify the weighted-bin bound' task (actual: 97.0 min, user estimate: 55 min), which shows a significant overrun due to the need for numerical validation and off-task distractions. The range is wide because the user's estimate assumes a simpler, faster derivation, and the actual work includes multiple conditional expansions and off-task activities that were not accounted for in the original planning.",
+    "evidence": [
+      {
+        "task_id": "derive-noise",
+        "title": "Rebuild the loss estimate under one audit coin",
+        "estimate_min": 60,
+        "actual_min": 104.0,
+        "ratio": 1.7333333333333334,
+        "reason": "The task required deriving a conditional second moment and testing bias from missing observations; the actual time (104.0 minutes) exceeds the user estimate (60 minutes) due to detailed expansion of expectations.",
+        "reason_source": "model",
+        "model_rationale": "The task required deriving a conditional second moment and testing bias from missing observations; the actual time (104.0 minutes) exceeds the user estimate (60 minutes) due to detailed expansion of expectations.",
+        "source_quote": "Derive a conditional second moment on paper and write an example where ignoring missing observations biases it."
+      },
+      {
+        "task_id": "bound-floor",
+        "title": "Work out the epsilon-floor variance lemma",
+        "estimate_min": 50,
+        "actual_min": 86.0,
+        "ratio": 1.72,
+        "reason": "The epsilon-floor variance lemma required careful conditioning steps; the actual time (86.0 minutes) is higher than the user estimate (50 minutes) because the user failed to fully account for the conditional structure in the indicator identity.",
+        "reason_source": "model",
+        "model_rationale": "The epsilon-floor variance lemma required careful conditioning steps; the actual time (86.0 minutes) is higher than the user estimate (50 minutes) because the user failed to fully account for the conditional structure in the indicator identity.",
+        "source_quote": "Write out all conditioning steps and test the bound on a two-point loss table."
+      },
+      {
+        "task_id": "check-jensen",
+        "title": "Verify the weighted-bin bound",
+        "estimate_min": 55,
+        "actual_min": 97.0,
+        "ratio": 1.7636363636363637,
+        "reason": "The weighted-bin bound verification involved numerical counterexamples and conditional expectations; the actual time (97.0 minutes) is above the user estimate (55 minutes) due to the need for explicit simulation and validation of the bound.",
+        "reason_source": "model",
+        "model_rationale": "The weighted-bin bound verification involved numerical counterexamples and conditional expectations; the actual time (97.0 minutes) is above the user estimate (55 minutes) due to the need for explicit simulation and validation of the bound.",
+        "source_quote": "Derive the inequality from the indicator identity and calculate a numerical counterexample."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Expand the conditional expectation one event at a time to avoid algebraic errors.",
+        "sources": [
+          {
+            "task_id": "derive-noise",
+            "title": "Rebuild the loss estimate under one audit coin",
+            "origin": "Completion note",
+            "observation": "I had to expand the conditional expectation one event at a time."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "derive-noise",
+        "title": "Rebuild the loss estimate under one audit coin",
+        "source": "decision model",
+        "score": 0.8847854005296033
+      },
+      {
+        "task_id": "bound-floor",
+        "title": "Work out the epsilon-floor variance lemma",
+        "source": "decision model",
+        "score": 0.5577083000739383
+      },
+      {
+        "task_id": "check-jensen",
+        "title": "Verify the weighted-bin bound",
+        "source": "decision model",
+        "score": 0.5026706072138061
+      }
+    ],
+    "used_task_ids": [
+      "derive-noise",
+      "bound-floor",
+      "check-jensen"
+    ],
+    "feedback_source_ids": []
+  }
+}

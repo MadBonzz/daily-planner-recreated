@@ -1,0 +1,138 @@
+{
+  "task": "replay-ramp",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:43:41.793854+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "0b4551e2b1dd34c62b4e8a45e9e9835efbc6f381f0a99c4900ed6df0c70542bd",
+  "frozen_candidates": [
+    "wheel-ticks",
+    "junction-replay"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "near",
+    "expected_band": [
+      0.85,
+      1.12
+    ],
+    "expected_evidence": [
+      "junction-replay",
+      "wheel-ticks"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "89ec4931c5e19b8634f4cd13299a483c77610ae315f4899038a009c2abde3a54",
+      "max_tokens": 950,
+      "payload_sha256": "2ee8775e4eebc518ca3afd780235a40cad3de44c3cf5c681b089d466accb32da",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 270,
+        "prompt_tokens": 1088,
+        "total_tokens": 1358,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 1085,
+        "prompt_ms": 28520.899,
+        "prompt_per_token_ms": 26.28654285714286,
+        "prompt_per_second": 38.04227910207178,
+        "predicted_n": 270,
+        "predicted_ms": 100836.827,
+        "predicted_per_token_ms": 374.858092936803,
+        "predicted_per_second": 2.6676761655739125
+      },
+      "content_sha256": "ef77d499f37021c61f37463e0e9d44c5e16039804b4a5058695a58ac36e9c1fa",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the wheel-slip event marking interval before plotting to ensure alignment with the ramp entry/exit tape."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The previous task (replotting Thursday’s ramp bag) took 36 minutes, which is within the 35-minute estimate, showing a consistent and uneventful completion with no significant delays or skipped steps."
+          }
+        ],
+        "point_min": 35,
+        "low_min": 34,
+        "high_min": 38,
+        "confidence": "low",
+        "rationale": "The time-driving step is correctly identifying and marking wheel-slip events within the defined interval. The strongest relevant comparison is the Thursday’s ramp bag (36 minutes), which was completed with no deviation from the expected forward motion assumption, indicating a reliable baseline for this task. A potential widening factor is if the wheel wrap behavior differs due to a change in sensor calibration or operator marking timing.",
+        "confidence_reason": "The task relies on accurate wheel-slip detection within a bounded interval, and the prior successful completion with a minimal ratio (1.03) suggests stability. However, if the wheel wrap logic or the interval definition changes, the time could shift significantly."
+      },
+      "seconds": 259.45
+    }
+  ],
+  "prediction": {
+    "point_min": 35,
+    "low_min": 34,
+    "high_min": 38,
+    "confidence": "low",
+    "confidence_reason": "The task relies on accurate wheel-slip detection within a bounded interval, and the prior successful completion with a minimal ratio (1.03) suggests stability. However, if the wheel wrap logic or the interval definition changes, the time could shift significantly.",
+    "model_rationale": "The time-driving step is correctly identifying and marking wheel-slip events within the defined interval. The strongest relevant comparison is the Thursday’s ramp bag (36 minutes), which was completed with no deviation from the expected forward motion assumption, indicating a reliable baseline for this task. A potential widening factor is if the wheel wrap behavior differs due to a change in sensor calibration or operator marking timing.",
+    "explanation": "The time-driving step is correctly identifying and marking wheel-slip events within the defined interval. The strongest relevant comparison is the Thursday’s ramp bag (36 minutes), which was completed with no deviation from the expected forward motion assumption, indicating a reliable baseline for this task. A potential widening factor is if the wheel wrap behavior differs due to a change in sensor calibration or operator marking timing.",
+    "evidence": [
+      {
+        "task_id": "wheel-ticks",
+        "title": "Replot the wheel slip from Thursday’s bag",
+        "estimate_min": 35,
+        "actual_min": 36.0,
+        "ratio": 1.0285714285714285,
+        "reason": "The previous task (replotting Thursday’s ramp bag) took 36 minutes, which is within the 35-minute estimate, showing a consistent and uneventful completion with no significant delays or skipped steps.",
+        "reason_source": "model",
+        "model_rationale": "The previous task (replotting Thursday’s ramp bag) took 36 minutes, which is within the 35-minute estimate, showing a consistent and uneventful completion with no significant delays or skipped steps.",
+        "source_quote": "Open the recorded bag on the laptop, correct the wheel diameter in the plotting notebook and export the overlay."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the wheel-slip event marking interval before plotting to ensure alignment with the ramp entry/exit tape.",
+        "sources": [
+          {
+            "task_id": "wheel-ticks",
+            "title": "Replot the wheel slip from Thursday’s bag",
+            "origin": "Completion note",
+            "observation": "Plot updated on the first full run."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "wheel-ticks",
+        "title": "Replot the wheel slip from Thursday’s bag",
+        "source": "decision model",
+        "score": 0.6561302670155655
+      },
+      {
+        "task_id": "junction-replay",
+        "title": "Replay the line-junction bag",
+        "source": "decision model",
+        "score": 0.5635425464660696
+      }
+    ],
+    "used_task_ids": [
+      "wheel-ticks"
+    ],
+    "feedback_source_ids": []
+  }
+}

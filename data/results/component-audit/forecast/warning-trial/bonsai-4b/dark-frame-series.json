@@ -1,0 +1,154 @@
+{
+  "task": "dark-frame-series",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:34:55.470321+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "af2115f4675bd434ecc9e49fce46aed76e6fcb85019ce990c16f48e6e9ee948a",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [
+      "prior-1",
+      "prior-2"
+    ],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "4cd9ea3d268672f419a6739704afff91c672f81eafd99d7d18a0a0f88961b7a7",
+      "max_tokens": 950,
+      "payload_sha256": "c2d9002bb6d7fd7f25c42d6cc6a464b40952d76f53685cef93ec821cccd97299",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 274,
+        "prompt_tokens": 736,
+        "total_tokens": 1010,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 733,
+        "prompt_ms": 19129.369,
+        "prompt_per_token_ms": 26.097365620736696,
+        "prompt_per_second": 38.31804384138337,
+        "predicted_n": 274,
+        "predicted_ms": 103713.42,
+        "predicted_per_token_ms": 379.90263736263734,
+        "predicted_per_second": 2.632253376660417
+      },
+      "content_sha256": "971efb796720d1cc1c5f0265dea0d672d3b871ad01df9a2101b30df7caddee9c",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Re-pair the cooling controller before the camera stabilizes to ensure consistent capture timing and avoid USB pairing delays that caused previous overruns."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope as previous task; actual minutes (59.0) exceed user estimate (40) due to cooling controller USB pairing issues."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope as previous task; actual minutes (60.0) exceed user estimate (40) due to re-pairing required before stabilization."
+          }
+        ],
+        "point_min": 59,
+        "low_min": 40,
+        "high_min": 60,
+        "confidence": "high",
+        "rationale": "The time-driving step is consistent camera acquisition with stable cooling controller pairing. The strongest comparison is the previous task with 59.0 minutes (same_scope_minutes), which shows a clear overrun due to repeated USB pairing failures. The range is wide due to variability in controller stability and user response time during re-pairing.",
+        "confidence_reason": "The main assumption is that cooling controller pairing remains stable; however, if user experience with re-pairing improves or controller firmware updates are applied, the time could narrow significantly."
+      },
+      "seconds": 147.44
+    }
+  ],
+  "prediction": {
+    "point_min": 59,
+    "low_min": 40,
+    "high_min": 60,
+    "confidence": "high",
+    "confidence_reason": "The main assumption is that cooling controller pairing remains stable; however, if user experience with re-pairing improves or controller firmware updates are applied, the time could narrow significantly.",
+    "model_rationale": "The time-driving step is consistent camera acquisition with stable cooling controller pairing. The strongest comparison is the previous task with 59.0 minutes (same_scope_minutes), which shows a clear overrun due to repeated USB pairing failures. The range is wide due to variability in controller stability and user response time during re-pairing.",
+    "explanation": "The time-driving step is consistent camera acquisition with stable cooling controller pairing. The strongest comparison is the previous task with 59.0 minutes (same_scope_minutes), which shows a clear overrun due to repeated USB pairing failures. The range is wide due to variability in controller stability and user response time during re-pairing.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "estimate_min": 40,
+        "actual_min": 59.0,
+        "ratio": 1.475,
+        "reason": "Same scope as previous task; actual minutes (59.0) exceed user estimate (40) due to cooling controller USB pairing issues.",
+        "reason_source": "model",
+        "model_rationale": "Same scope as previous task; actual minutes (59.0) exceed user estimate (40) due to cooling controller USB pairing issues.",
+        "source_quote": "Collect and export 20 dark frames on this camera"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "estimate_min": 40,
+        "actual_min": 60.0,
+        "ratio": 1.5,
+        "reason": "Same scope as previous task; actual minutes (60.0) exceed user estimate (40) due to re-pairing required before stabilization.",
+        "reason_source": "model",
+        "model_rationale": "Same scope as previous task; actual minutes (60.0) exceed user estimate (40) due to re-pairing required before stabilization.",
+        "source_quote": "Acquire the weekly batch of 20 dark frames"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Re-pair the cooling controller before the camera stabilizes to ensure consistent capture timing and avoid USB pairing delays that caused previous overruns.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Collect and export 20 dark frames on this camera",
+            "origin": "Completion note",
+            "observation": "Cooling controller lost its USB pairing twice; re-pairing delayed capture."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2"
+    ],
+    "feedback_source_ids": []
+  }
+}

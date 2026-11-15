@@ -1,0 +1,127 @@
+{
+  "task": "export-only",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:27:32.396350+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "f1f6d698474b4029e9977be5b57628aaf8606e46782c593d158caf749307cd3a",
+  "frozen_candidates": [
+    "prior-1"
+  ],
+  "budget": 20,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "0b7056bd3b8c622726c1cf6faaa7d98722ca5a1692aa831e55e30b272fdd43b6",
+      "max_tokens": 950,
+      "payload_sha256": "8de49b0a8c9c60d22fc4b11e91430d34f08656f66ad3a99aadbdc403c86b8f0f",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 240,
+        "prompt_tokens": 582,
+        "total_tokens": 822,
+        "prompt_tokens_details": {
+          "cached_tokens": 329
+        }
+      },
+      "timings": {
+        "cache_n": 329,
+        "prompt_n": 253,
+        "prompt_ms": 5901.395,
+        "prompt_per_token_ms": 23.325671936758894,
+        "prompt_per_second": 42.87121943201565,
+        "predicted_n": 240,
+        "predicted_ms": 92078.88,
+        "predicted_per_token_ms": 385.26728033472807,
+        "predicted_per_second": 2.595600641536908
+      },
+      "content_sha256": "1f1a4947f2d9de16ed2685318f3f40799e9fcf2a6b2dab258b89151a77429d9b",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the export before the final run to ensure no unexpected delays from client arrival."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The previous task of copyedit, layout, review, and export took 39 minutes, which is 1.95 times the user's estimate of 20 minutes, indicating a significant overrun due to client review delays."
+          }
+        ],
+        "point_min": 5,
+        "low_min": 5,
+        "high_min": 10,
+        "confidence": "low",
+        "rationale": "The export step is the only remaining task and is typically 5 minutes, but the prior task's 39-minute duration suggests that client-related delays can extend the process. The main assumption is that client review will not be delayed again, which could widen the range if the user misses a deadline or if the client requires additional feedback.",
+        "confidence_reason": "The confidence is low because the prior task's delay was due to client arrival, and if the new task involves similar client interaction, it could repeat, increasing the time range."
+      },
+      "seconds": 133.89
+    }
+  ],
+  "prediction": {
+    "point_min": 5,
+    "low_min": 5,
+    "high_min": 10,
+    "confidence": "low",
+    "confidence_reason": "The confidence is low because the prior task's delay was due to client arrival, and if the new task involves similar client interaction, it could repeat, increasing the time range.",
+    "model_rationale": "The export step is the only remaining task and is typically 5 minutes, but the prior task's 39-minute duration suggests that client-related delays can extend the process. The main assumption is that client review will not be delayed again, which could widen the range if the user misses a deadline or if the client requires additional feedback.",
+    "explanation": "The export step is the only remaining task and is typically 5 minutes, but the prior task's 39-minute duration suggests that client-related delays can extend the process. The main assumption is that client review will not be delayed again, which could widen the range if the user misses a deadline or if the client requires additional feedback.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Copyedit, lay out, review and export the two-slide deck. Export takes 5 minutes.",
+        "estimate_min": 20,
+        "actual_min": 39.0,
+        "ratio": 1.95,
+        "reason": "The previous task of copyedit, layout, review, and export took 39 minutes, which is 1.95 times the user's estimate of 20 minutes, indicating a significant overrun due to client review delays.",
+        "reason_source": "model",
+        "model_rationale": "The previous task of copyedit, layout, review, and export took 39 minutes, which is 1.95 times the user's estimate of 20 minutes, indicating a significant overrun due to client review delays.",
+        "source_quote": "Copyedit, lay out, review and export the two-slide deck. Export takes 5 minutes."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the export before the final run to ensure no unexpected delays from client arrival.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Copyedit, lay out, review and export the two-slide deck. Export takes 5 minutes.",
+            "origin": "Completion note",
+            "observation": "Client arrived late to the review."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "1 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Copyedit, lay out, review and export the two-slide deck. Export takes 5 minutes.",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

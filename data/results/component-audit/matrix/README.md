@@ -75,3 +75,13 @@ The development boards contain three positive and nine negative pairs. The valid
 | Production stable order | Validation | 4 | 0 | 14 | 0 | 100% | 100% |
 
 All 20 additions per configuration created exactly one pending cell per previous open task and preserved existing decisions. Each step, request hash, probability and stored verdict is in the run file. [Original order](kev-baseline.json) · [Prompt trial](kev-method-trial.json) · [Stable order](kev-canonical.json)
+
+### Three-task lifecycle with live Bonsai forecasts
+
+A release memo and a package-signing task were open when a second package-signing task was added with a 30-minute budget. The independent memo finished in 75 minutes, then the related signing task finished in 90 minutes. Each model saw the same recorded Qwen embeddings and Kev verdicts. Only the new task received live Bonsai time forecasts.
+
+| Model | Initial total | After unrelated completion | After related completion | Cited the 90-minute signing task | Model-authored forecasts |
+| --- | ---: | ---: | ---: | --- | ---: |
+| Bonsai 4B | 45 min | 45 min | 60 min | Yes | 2/2 |
+
+The relevant completion tests whether the actual reaches the forecaster and whether the forecast moves in the expected direction. The new task has no labeled actual duration. [Frozen Qwen/Kev responses](lifecycle-inputs.json) · [4B transitions and receipts](lifecycle-4b.json) · [9B transitions and receipts](lifecycle-9b.json)

@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import time
+from contextlib import ExitStack
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
@@ -91,12 +92,27 @@ def challenge():
     ]
 
 
+def confidence_cases():
+    # Independent transfer pair. Only prior duration and its derived
+    # arithmetic vary within this pair, also preserving mean and median.
+    def inventory(name, counts):
+        task, rows, labels = scenario(name, "Individually count and reconcile the same 16 sealed supply bins "
+            "against the shelf cards and initial the weekly sheet. Same count sheet, scanner, bin count and procedure.", 30,
+            [(f"Count and reconcile all 16 supply bins using the weekly sheet, batch {tag}", 30, actual, "")
+             for tag, actual in zip(("N", "R", "V"), counts, strict=True)])
+        task["title"] = "Reconcile the weekly 16-bin supply count"
+        return task, rows, labels
+
+    old = [case for case in challenge() if case[0]["id"] in {"same-indexing-slower", "same-indexing-variable"}]
+    return old + [inventory("supply-count-tight", (39, 40, 41)), inventory("supply-count-variable", (18, 40, 62))]
+
+
 @lru_cache(maxsize=None)
 def past(history_id):
     return fixtures.historical_rows(fixtures.histories(history_id)[0], fixtures.DATASET)
 
 
-def published():
+def published(integrated=False):
     result = []
     for history in fixtures.histories(None):
         for task in history["holdouts"]:
@@ -111,11 +127,23 @@ def published():
             rubric = {"direction": direction, "expected_band": band, "expected_evidence": labels["evidence_ids"],
                       "expected_sources": labels.get("expected_caution", {}).get("evidence_ids"),
                       "low_confidence": False}
-            result.append((target, [dict(by_id[c["task_id"]], saved_cosine=c["score"]) for c in selected], rubric))
+            rows = (list(by_id.values()) if integrated else
+                    [dict(by_id[c["task_id"]], saved_cosine=c["score"]) for c in selected])
+            result.append((target, rows, rubric))
     return result
 
 
-def evaluate(case, destination, model):
+def idle_slots(endpoint):
+    server = endpoint.removesuffix("/v1/chat/completions")
+    with build_opener(ProxyHandler({})).open(server + "/slots", timeout=15) as response:
+        slots = json.load(response)
+    idle = sum(slot.get("is_processing") is False for slot in slots)
+    if not slots or idle != len(slots):
+        raise RuntimeError("The no-queue check requires the shared server to be idle.")
+    return {"idle": idle, "total": len(slots)}
+
+
+def evaluate(case, destination, model, *, integrated=False, solo=False):
     task, rows, rubric = case
     path = destination / (task["id"] + ".json")
     case_digest = hashlib.sha256(json.dumps(case, sort_keys=True).encode()).hexdigest()
@@ -149,10 +177,31 @@ def evaluate(case, destination, model):
         finally:
             receipt["seconds"] = round(time.monotonic() - start, 2)
 
-    with TemporaryDirectory() as tmp, patch.object(estimator, "chat_json", record), patch.object(
-        estimator, "_search", return_value=[(r, r.get("saved_cosine")) for r in rows]), patch.object(estimator.retrieval, "decide_related",
-                                                                                  return_value=True):
+    ranked = []
+    endpoint, _ = model_client.model_settings()
+    before_slots = idle_slots(endpoint) if solo else None
+    with TemporaryDirectory() as tmp, ExitStack() as stack:
+        stack.enter_context(patch.object(estimator, "chat_json", record))
+        if integrated:
+            # Inspect the actual two-query Qdrant search and run the normal
+            # per-candidate decision path. A missing packaged inference is a
+            # harness failure; no substitute embedding or label is permitted.
+            production_search = estimator._search
+
+            def record_search(*args, **kwargs):
+                matches = production_search(*args, **kwargs)
+                ranked.extend({"task_id": r["id"], "cosine": score} for r, score in matches)
+                return matches
+
+            stack.enter_context(patch.object(estimator, "_search", record_search))
+            stack.enter_context(patch.object(estimator.retrieval, "_local_post",
+                                            side_effect=AssertionError("Missing a packaged Qwen/Kev result")))
+        else:
+            stack.enter_context(patch.object(estimator, "_search", return_value=[(r, r.get("saved_cosine")) for r in rows]))
+            stack.enter_context(patch.object(estimator.retrieval, "decide_related", return_value=True))
         prediction = estimator.predict(task, rows, Path(tmp))
+    if integrated and prediction.get("retrieval_error"):
+        raise RuntimeError(prediction["retrieval_error"])
     if receipts and all("error" in r and not r["invalid_reply"] for r in receipts):
         raise RuntimeError(f"No model result for {task['id']}: {receipts}")
     result = {"task": task["id"], "model": model, "time_utc": datetime.now(timezone.utc).isoformat(),
@@ -160,6 +209,14 @@ def evaluate(case, destination, model):
               "frozen_candidates": [r["id"] for r in rows], "budget": task["estimate_minutes"],
               "fixed": task.get("fixed_duration", False), "rubric": rubric, "receipts": receipts,
               "prediction": prediction}
+    if solo:
+        result["server_slots_before"] = before_slots
+        result["server_slots_after"] = idle_slots(endpoint)
+    if integrated:
+        result.pop("frozen_candidates")
+        result["supplied_candidates"] = [r["task_id"] for r in prediction["related_tasks"]]
+        result["qwen_candidates"] = ranked
+        result["retrieval"] = "Production Qdrant lookup and Kev screening using exact packaged inference outputs"
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = path.with_suffix(".tmp")
     tmp_path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
@@ -172,6 +229,12 @@ def main():
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--model", choices=MODELS, required=True)
     parser.add_argument("--run", required=True)
+    parser.add_argument("--confidence-trial", action="store_true", help="Run the frozen confidence instruction.")
+    parser.add_argument("--warning-trial", action="store_true", help="Run the frozen alternative warning instruction.")
+    parser.add_argument("--solo", action="store_true",
+                        help="For a single-user timing check: require all server slots to be idle before and after.")
+    parser.add_argument("--integrated", action="store_true",
+                        help="Run normal Qwen retrieval and Kev screening on the public history using the packaged outputs.")
     parser.add_argument("cases", nargs="+")
     args = parser.parse_args()
     if urlsplit(args.endpoint).hostname not in {"localhost", "127.0.0.1", "::1"}:
@@ -181,13 +244,24 @@ def main():
     with build_opener(ProxyHandler({})).open(args.endpoint.removesuffix("/chat/completions") + "/models") as response:
         if args.model not in {record["id"] for record in json.load(response)["data"]}:
             parser.error("Endpoint does not serve requested model")
-    groups = {"challenge": challenge(), "published": published()}
+    if args.warning_trial and args.run not in {"warning-trial", "confidence-control"}:
+        parser.error("Record the warning variant in warning-trial or confidence-control.")
+    if args.confidence_trial and (args.run != "confidence-trial" or args.warning_trial):
+        parser.error("Record the confidence variant in its own confidence-trial run.")
+    if args.solo and (args.run == "revised" or args.cases != ["patch-tool"] or args.integrated):
+        parser.error("Use a separate run with --solo patch-tool (the median archived prompt size).")
+    if args.integrated and (args.run == "revised" or any(name not in {"patch-note", "patch-tool"} for name in args.cases)):
+        parser.error("Use a dedicated run and the two declared integrated cases: patch-note and patch-tool.")
+    groups = {"challenge": challenge(), "published": published(args.integrated), "confidence": confidence_cases()}
     pool = {case[0]["id"]: case for group in groups.values() for case in group}
     for name in args.cases:
         if name not in groups and name not in pool:
             parser.error(f"Unknown case {name}")
         for case in groups[name] if name in groups else [pool[name]]:
-            evaluate(case, OUT / args.run / MODELS[args.model], args.model)
+            versions = json.loads((OUT / "prompt-versions.json").read_text())
+            version = "confidence-trial" if args.confidence_trial else "warning-trial" if args.warning_trial else "revised"
+            with patch.object(estimator, "_FORECAST_INSTRUCTIONS", versions[version]):
+                evaluate(case, OUT / args.run / MODELS[args.model], args.model, integrated=args.integrated, solo=args.solo)
 
 
 if __name__ == "__main__":

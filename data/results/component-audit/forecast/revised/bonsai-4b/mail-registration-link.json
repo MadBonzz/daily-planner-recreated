@@ -1,0 +1,134 @@
+{
+  "task": "mail-registration-link",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:30:54.777004+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ff0de501552258edaaf4aed1dd7029b5fa65988e615e6e206de53a9a3aadfea4",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 15,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "fab2e7ff35bb4e8e8beaa29007d9203142f19c899875db1918c4218ce9380e69",
+      "max_tokens": 950,
+      "payload_sha256": "6fdc992effc26ad195482d9d03b9de24cb789c2bd61ee934bd64aafb40844d2c",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 249,
+        "prompt_tokens": 674,
+        "total_tokens": 923,
+        "prompt_tokens_details": {
+          "cached_tokens": 65
+        }
+      },
+      "timings": {
+        "cache_n": 65,
+        "prompt_n": 609,
+        "prompt_ms": 14582.669,
+        "prompt_per_token_ms": 23.945269293924465,
+        "prompt_per_second": 41.761902433635434,
+        "predicted_n": 249,
+        "predicted_ms": 68435.383,
+        "predicted_per_token_ms": 275.949125,
+        "predicted_per_second": 3.623856390195113
+      },
+      "content_sha256": "41037b7b49ffc127b1153ba637a2e4b5040f6f320d0526a28650c3bc71af35cc",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the email delivery before sending to ensure all messages are successfully received."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope (12-address mailing list, check delivery) with identical method; actual time (12.0 minutes) is 80% of user estimate (15 minutes), indicating efficiency."
+          }
+        ],
+        "point_min": 12,
+        "low_min": 10,
+        "high_min": 15,
+        "confidence": "high",
+        "rationale": "The time-driving step is sending and verifying email delivery to the 12-address list. The strongest comparison is the prior task with identical scope and method, which took 12.0 minutes. This task has no steps skipped and uses the same method, so time should be close to the prior successful delivery. The main assumption is stable internet and no technical issues with the email service.",
+        "confidence_reason": "The prior successful delivery (12.0 minutes) demonstrates that the task can be completed efficiently under normal conditions; however, unexpected issues like server outages or email filters could widen the range."
+      },
+      "seconds": 130.01
+    }
+  ],
+  "prediction": {
+    "point_min": 12,
+    "low_min": 10,
+    "high_min": 15,
+    "confidence": "high",
+    "confidence_reason": "The prior successful delivery (12.0 minutes) demonstrates that the task can be completed efficiently under normal conditions; however, unexpected issues like server outages or email filters could widen the range.",
+    "model_rationale": "The time-driving step is sending and verifying email delivery to the 12-address list. The strongest comparison is the prior task with identical scope and method, which took 12.0 minutes. This task has no steps skipped and uses the same method, so time should be close to the prior successful delivery. The main assumption is stable internet and no technical issues with the email service.",
+    "explanation": "The time-driving step is sending and verifying email delivery to the 12-address list. The strongest comparison is the prior task with identical scope and method, which took 12.0 minutes. This task has no steps skipped and uses the same method, so time should be close to the prior successful delivery. The main assumption is stable internet and no technical issues with the email service.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Email the registration link to 12 members and check delivery",
+        "estimate_min": 15,
+        "actual_min": 12.0,
+        "ratio": 0.8,
+        "reason": "Same scope (12-address mailing list, check delivery) with identical method; actual time (12.0 minutes) is 80% of user estimate (15 minutes), indicating efficiency.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (12-address mailing list, check delivery) with identical method; actual time (12.0 minutes) is 80% of user estimate (15 minutes), indicating efficiency.",
+        "source_quote": "Email the registration link to 12 members and check delivery"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the email delivery before sending to ensure all messages are successfully received.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Email the registration link to 12 members and check delivery",
+            "origin": "Completion note",
+            "observation": "All messages delivered."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Email the registration link to 12 members and check delivery",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Print and distribute registration flyers around campus",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

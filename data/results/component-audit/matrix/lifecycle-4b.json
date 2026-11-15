@@ -1,0 +1,171 @@
+{
+  "model": "ternary-bonsai-4b",
+  "budget_minutes": 30,
+  "control_cards": "Independent memo and related signing task start with a saved 30-minute estimate.",
+  "steps": [
+    {
+      "stage": "after_add",
+      "queued": true,
+      "jobs": 4,
+      "matrix": {
+        "memo/sign": 0,
+        "sign/verify": 1,
+        "memo/verify": 0
+      },
+      "timeline_length": 1,
+      "minutes": 45,
+      "range": [
+        35,
+        60
+      ],
+      "provenance": {
+        "provider": "Local endpoint",
+        "model": "ternary-bonsai-4b",
+        "decision": "direct",
+        "minutes_by": "model"
+      },
+      "rationale": "The task involves retrieving artifacts, unlocking a signing token, signing package manifests, and verifying signatures in an empty container. This requires a sequence of steps where each step is time-consuming and dependent on the previous one, especially the token unlocking and verification in a container with no prior artifacts.",
+      "model_error": null,
+      "retrieval_error": null,
+      "selected": [],
+      "cited": []
+    },
+    {
+      "stage": "after_independent_completion",
+      "queued": false,
+      "jobs": 0,
+      "matrix": {
+        "memo/sign": 0,
+        "sign/verify": 1,
+        "memo/verify": 0
+      },
+      "timeline_length": 1,
+      "minutes": 45,
+      "range": [
+        35,
+        60
+      ],
+      "provenance": {
+        "provider": "Local endpoint",
+        "model": "ternary-bonsai-4b",
+        "decision": "direct",
+        "minutes_by": "model"
+      },
+      "rationale": "The task involves retrieving artifacts, unlocking a signing token, signing package manifests, and verifying signatures in an empty container. This requires a sequence of steps where each step is time-consuming and dependent on the previous one, especially the token unlocking and verification in a container with no prior artifacts.",
+      "model_error": null,
+      "retrieval_error": null,
+      "selected": [],
+      "cited": []
+    },
+    {
+      "stage": "after_related_completion",
+      "queued": true,
+      "jobs": 1,
+      "matrix": {
+        "memo/sign": 0,
+        "sign/verify": 1,
+        "memo/verify": 0
+      },
+      "timeline_length": 2,
+      "minutes": 60,
+      "range": [
+        45,
+        90
+      ],
+      "provenance": {
+        "provider": "Local endpoint",
+        "model": "ternary-bonsai-4b",
+        "decision": "direct",
+        "minutes_by": "model"
+      },
+      "rationale": "The signing token verification step is the primary time driver, as it caused a 3.0 overrun in the prior task. A similar step in the new task could repeat if token access is not validated beforehand.",
+      "model_error": null,
+      "retrieval_error": null,
+      "selected": [
+        {
+          "task_id": "sign",
+          "title": "Sign the Linux release",
+          "source": "active-task decision model",
+          "score": null
+        }
+      ],
+      "cited": [
+        "sign"
+      ]
+    }
+  ],
+  "http": [
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "7436949e84ab5a937439e828d825dd510af2e19a2eae7f40553a8d7fa07f715c"
+    },
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "774af26861f0fa3839d7acd4b2ced4af0b9791f4aef18e0ead83a18f12de31df"
+    },
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "94b2d96739ebcc26fd6f3f60a67a1a70cf1279ba4a1e6ee59060ff75196c2b03"
+    },
+    {
+      "stage": "forecast",
+      "model": "ternary-bonsai-4b"
+    },
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "774af26861f0fa3839d7acd4b2ced4af0b9791f4aef18e0ead83a18f12de31df"
+    },
+    {
+      "stage": "kev",
+      "model": "kev-4b",
+      "from_recorded_run": true,
+      "request_sha256": "6f97a928bbe01a15a1c523fdb47c82ac5f668a053f006030ff47fdbc4726ed12"
+    },
+    {
+      "stage": "kev",
+      "model": "kev-4b",
+      "from_recorded_run": true,
+      "request_sha256": "20e9c2adf5759f8712e51424df592c2a76297398e1eee812cc6b4d8ebebedd5d"
+    },
+    {
+      "stage": "kev",
+      "model": "kev-4b",
+      "from_recorded_run": true,
+      "request_sha256": "b480d20c659cc8633a7edec865a937638b1576704b0fa56287c1e411ee9007a2"
+    },
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "7436949e84ab5a937439e828d825dd510af2e19a2eae7f40553a8d7fa07f715c"
+    },
+    {
+      "stage": "qwen",
+      "model": "qwen3-embedding-0.6b",
+      "from_recorded_run": true,
+      "request_sha256": "774af26861f0fa3839d7acd4b2ced4af0b9791f4aef18e0ead83a18f12de31df"
+    },
+    {
+      "stage": "forecast",
+      "model": "ternary-bonsai-4b"
+    }
+  ],
+  "checks": {
+    "expected_matrix": true,
+    "independent_queued_nothing": true,
+    "independent_preserved_forecast": true,
+    "related_triggered_one_refresh": true,
+    "only_related_evidence_reached_forecaster": true,
+    "model_cited_related_source": true,
+    "model_revised_up_after_overrun": true,
+    "model_wrote_both_forecasts": true
+  }
+}

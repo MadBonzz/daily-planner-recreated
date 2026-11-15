@@ -1,0 +1,157 @@
+{
+  "task": "supply-count-variable",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T08:02:43.639775+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "144d8c5a403011344780337b06814e372ab4cb0011309f9d7ea1aa9419c8f8a9",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": null,
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "c228cfdf56927f1c3ea7d989f620ba9f7c8f4d8524881c586e8a92c8f2ae9b4b",
+      "max_tokens": 950,
+      "payload_sha256": "1fa2648b6e606a628e14644959bef11c307fbfd94333ea6e9a036a948e407e67",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 299,
+        "prompt_tokens": 860,
+        "total_tokens": 1159,
+        "prompt_tokens_details": {
+          "cached_tokens": 366
+        }
+      },
+      "timings": {
+        "cache_n": 366,
+        "prompt_n": 494,
+        "prompt_ms": 12128.836,
+        "prompt_per_token_ms": 24.552299595141697,
+        "prompt_per_second": 40.72938244032651,
+        "predicted_n": 299,
+        "predicted_ms": 100605.789,
+        "predicted_per_token_ms": 337.6033187919463,
+        "predicted_per_second": 2.96205618943061
+      },
+      "content_sha256": "2a49b066bae8abe4dccade83a83f68f366335abf685752adf4d29eec2f856b07",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope, same tools, same procedure; actual time (18.0) is significantly below user estimate (30), indicating efficiency in prior execution."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope, same tools, same procedure; actual time (40.0) exceeds user estimate (30), suggesting a step delay or inconsistency in batch R."
+          },
+          {
+            "slot": 3,
+            "reason": "Same scope, same tools, same procedure; actual time (62.0) is substantially higher than user estimate (30), indicating a major inefficiency or procedural deviation in batch V."
+          }
+        ],
+        "point_min": 30,
+        "low_min": 18,
+        "high_min": 62,
+        "confidence": "medium",
+        "rationale": "The task involves individually counting and reconciling 16 sealed supply bins using a weekly sheet and scanner, with no evidence of skipped steps or recurring obstacles. The strongest comparison is batch V (62.0 minutes), which shows a significant overrun despite identical scope and procedure, indicating a potential procedural or environmental issue. A tighter cluster of actual durations would improve confidence, but current data lacks consistency.",
+        "confidence_reason": "The range is wide due to lack of consistent timing across batches, even though the task itself is identical. A more reliable estimate would require multiple comparable runs with similar conditions."
+      },
+      "seconds": 200.01
+    }
+  ],
+  "prediction": {
+    "point_min": 30,
+    "low_min": 18,
+    "high_min": 62,
+    "confidence": "medium",
+    "confidence_reason": "The range is wide due to lack of consistent timing across batches, even though the task itself is identical. A more reliable estimate would require multiple comparable runs with similar conditions.",
+    "model_rationale": "The task involves individually counting and reconciling 16 sealed supply bins using a weekly sheet and scanner, with no evidence of skipped steps or recurring obstacles. The strongest comparison is batch V (62.0 minutes), which shows a significant overrun despite identical scope and procedure, indicating a potential procedural or environmental issue. A tighter cluster of actual durations would improve confidence, but current data lacks consistency.",
+    "explanation": "The task involves individually counting and reconciling 16 sealed supply bins using a weekly sheet and scanner, with no evidence of skipped steps or recurring obstacles. The strongest comparison is batch V (62.0 minutes), which shows a significant overrun despite identical scope and procedure, indicating a potential procedural or environmental issue. A tighter cluster of actual durations would improve confidence, but current data lacks consistency.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch N",
+        "estimate_min": 30,
+        "actual_min": 18.0,
+        "ratio": 0.6,
+        "reason": "Same scope, same tools, same procedure; actual time (18.0) is significantly below user estimate (30), indicating efficiency in prior execution.",
+        "reason_source": "model",
+        "model_rationale": "Same scope, same tools, same procedure; actual time (18.0) is significantly below user estimate (30), indicating efficiency in prior execution.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch N"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch R",
+        "estimate_min": 30,
+        "actual_min": 40.0,
+        "ratio": 1.3333333333333333,
+        "reason": "Same scope, same tools, same procedure; actual time (40.0) exceeds user estimate (30), suggesting a step delay or inconsistency in batch R.",
+        "reason_source": "model",
+        "model_rationale": "Same scope, same tools, same procedure; actual time (40.0) exceeds user estimate (30), suggesting a step delay or inconsistency in batch R.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch R"
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch V",
+        "estimate_min": 30,
+        "actual_min": 62.0,
+        "ratio": 2.066666666666667,
+        "reason": "Same scope, same tools, same procedure; actual time (62.0) is substantially higher than user estimate (30), indicating a major inefficiency or procedural deviation in batch V.",
+        "reason_source": "model",
+        "model_rationale": "Same scope, same tools, same procedure; actual time (62.0) is substantially higher than user estimate (30), indicating a major inefficiency or procedural deviation in batch V.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch V"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch N",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch R",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch V",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "feedback_source_ids": []
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "task": "async-flicker",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:14:46.849034+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ac0430ff31355236168f4b831ec36a749165af81d5e61f519cabc6560a4201d9",
+  "frozen_candidates": [
+    "warp-tail",
+    "stride-kernel"
+  ],
+  "budget": 85,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.38,
+      1.68
+    ],
+    "expected_evidence": [
+      "warp-tail",
+      "stride-kernel",
+      "race-repro"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "260084eea53794b1a8a16f3eda9efdf4c8c88474753963fda23345c83fc209d4",
+      "max_tokens": 950,
+      "payload_sha256": "0e000bc670b6e57a2782d982d85a3cf2f47b65f30572a364ec144042b7faee08",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 235,
+        "prompt_tokens": 1133,
+        "total_tokens": 1368,
+        "prompt_tokens_details": {
+          "cached_tokens": 329
+        }
+      },
+      "timings": {
+        "cache_n": 329,
+        "prompt_n": 804,
+        "prompt_ms": 23512.904,
+        "prompt_per_token_ms": 29.244905472636813,
+        "prompt_per_second": 34.193989819377485,
+        "predicted_n": 235,
+        "predicted_ms": 82459.58,
+        "predicted_per_token_ms": 352.39136752136756,
+        "predicted_per_second": 2.83775396382082
+      },
+      "content_sha256": "f245f324d8065267d2b59f2285b5e3c3372a70c8b2ebd3e51ebd32fd6aefca05",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the GPU allocation before proceeding with kernel development to avoid delays in execution."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The original task had a 1.52 ratio between actual and budget minutes, indicating a significant overrun due to allocation delays; this is directly relevant to the current task's potential for similar delays."
+          }
+        ],
+        "point_min": 100,
+        "low_min": 80,
+        "high_min": 120,
+        "confidence": "low",
+        "rationale": "The time-driving step is the kernel development and ownership mapping, which historically took 122 minutes under the same scope. The strong comparison is the prior task 'Fix corruption on partial warp tails' with a 1.52 ratio, which shows that allocation-related delays are a recurring issue. The range is wide due to unaccounted for off-task activities or unpredictable GPU scheduling.",
+        "confidence_reason": "The range is widened by unmeasured off-task distractions or variable GPU allocation times not captured in the historical records."
+      },
+      "seconds": 191.56
+    }
+  ],
+  "prediction": {
+    "point_min": 100,
+    "low_min": 80,
+    "high_min": 120,
+    "confidence": "low",
+    "confidence_reason": "The range is widened by unmeasured off-task distractions or variable GPU allocation times not captured in the historical records.",
+    "model_rationale": "The time-driving step is the kernel development and ownership mapping, which historically took 122 minutes under the same scope. The strong comparison is the prior task 'Fix corruption on partial warp tails' with a 1.52 ratio, which shows that allocation-related delays are a recurring issue. The range is wide due to unaccounted for off-task activities or unpredictable GPU scheduling.",
+    "explanation": "The time-driving step is the kernel development and ownership mapping, which historically took 122 minutes under the same scope. The strong comparison is the prior task 'Fix corruption on partial warp tails' with a 1.52 ratio, which shows that allocation-related delays are a recurring issue. The range is wide due to unaccounted for off-task activities or unpredictable GPU scheduling.",
+    "evidence": [
+      {
+        "task_id": "warp-tail",
+        "title": "Fix corruption on partial warp tails",
+        "estimate_min": 80,
+        "actual_min": 122.0,
+        "ratio": 1.525,
+        "reason": "The original task had a 1.52 ratio between actual and budget minutes, indicating a significant overrun due to allocation delays; this is directly relevant to the current task's potential for similar delays.",
+        "reason_source": "model",
+        "model_rationale": "The original task had a 1.52 ratio between actual and budget minutes, indicating a significant overrun due to allocation delays; this is directly relevant to the current task's potential for similar delays.",
+        "source_quote": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the GPU allocation before proceeding with kernel development to avoid delays in execution.",
+        "sources": [
+          {
+            "task_id": "warp-tail",
+            "title": "Fix corruption on partial warp tails",
+            "origin": "Completion note",
+            "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "warp-tail",
+        "title": "Fix corruption on partial warp tails",
+        "source": "decision model",
+        "score": 0.8254453068630736
+      },
+      {
+        "task_id": "stride-kernel",
+        "title": "Debug a mismatched pitch in the strided kernel",
+        "source": "decision model",
+        "score": 0.5704855097598562
+      }
+    ],
+    "used_task_ids": [
+      "warp-tail"
+    ],
+    "feedback_source_ids": []
+  }
+}

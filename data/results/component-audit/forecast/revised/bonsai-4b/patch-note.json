@@ -1,0 +1,84 @@
+{
+  "task": "patch-note",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:35:51.035001+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "41ec5bbbd08702b5e259a53378db4952907dcdecf6a70f1ca2e3e29d39931973",
+  "frozen_candidates": [],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.6,
+      0.84
+    ],
+    "expected_evidence": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "346b4b1832851ce77917193950ddd0ddc4742ce90f62fe8e7460eb58d269db48",
+      "max_tokens": 950,
+      "payload_sha256": "0a0f7176e886d31dac2c5da9ac8b1deb45d9204aa83d0143f26888cc258d900f",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 157,
+        "prompt_tokens": 800,
+        "total_tokens": 957,
+        "prompt_tokens_details": {
+          "cached_tokens": 330
+        }
+      },
+      "timings": {
+        "cache_n": 330,
+        "prompt_n": 470,
+        "prompt_ms": 12529.447,
+        "prompt_per_token_ms": 26.658397872340426,
+        "prompt_per_second": 37.51163159874494,
+        "predicted_n": 157,
+        "predicted_ms": 112077.763,
+        "predicted_per_token_ms": 718.4471987179487,
+        "predicted_per_second": 1.3918907357206978
+      },
+      "content_sha256": "1d53ad87688252e74848dbe6afe597088dea078edd8b76dffc31e8b2cfa69246",
+      "response": {
+        "point_min": 45,
+        "low_min": 35,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The task requires reviewing three saved replay transcripts and explaining a checksum collision, which involves analyzing exit codes and on-disk line logs. Without prior timing data or historical comparisons, the time estimate is based on the user's initial estimate of 40 minutes and the complexity of the analysis required to identify divergent operations and logical differences in exit codes.",
+        "confidence_reason": "The absence of historical timing records or comparable work means the range is wide; additional time could be required if the transcripts are fragmented or if the checksum collision is subtle and requires deeper inspection of line origins or structured logs."
+      },
+      "seconds": 183.87
+    }
+  ],
+  "prediction": {
+    "point_min": 45,
+    "low_min": 35,
+    "high_min": 60,
+    "confidence": "medium",
+    "confidence_reason": "The absence of historical timing records or comparable work means the range is wide; additional time could be required if the transcripts are fragmented or if the checksum collision is subtle and requires deeper inspection of line origins or structured logs.",
+    "model_rationale": "The task requires reviewing three saved replay transcripts and explaining a checksum collision, which involves analyzing exit codes and on-disk line logs. Without prior timing data or historical comparisons, the time estimate is based on the user's initial estimate of 40 minutes and the complexity of the analysis required to identify divergent operations and logical differences in exit codes.",
+    "explanation": "The task requires reviewing three saved replay transcripts and explaining a checksum collision, which involves analyzing exit codes and on-disk line logs. Without prior timing data or historical comparisons, the time estimate is based on the user's initial estimate of 40 minutes and the complexity of the analysis required to identify divergent operations and logical differences in exit codes.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

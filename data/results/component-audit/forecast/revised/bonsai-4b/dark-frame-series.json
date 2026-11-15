@@ -1,0 +1,138 @@
+{
+  "task": "dark-frame-series",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:22:57.213657+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "af2115f4675bd434ecc9e49fce46aed76e6fcb85019ce990c16f48e6e9ee948a",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [
+      "prior-1",
+      "prior-2"
+    ],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "abbed7b20f3322a835d13aae8db58fdfc7d962dc075fea495c33b3fd43df5897",
+      "max_tokens": 950,
+      "payload_sha256": "e5db3f381914f166aaecaba40d200fca46f2a141c959e9cb4a9cf09665bbe51a",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 214,
+        "prompt_tokens": 699,
+        "total_tokens": 913,
+        "prompt_tokens_details": {
+          "cached_tokens": 342
+        }
+      },
+      "timings": {
+        "cache_n": 342,
+        "prompt_n": 357,
+        "prompt_ms": 8414.794,
+        "prompt_per_token_ms": 23.570851540616246,
+        "prompt_per_second": 42.42528099915459,
+        "predicted_n": 214,
+        "predicted_ms": 81309.884,
+        "predicted_per_token_ms": 381.736544600939,
+        "predicted_per_second": 2.619607721983713
+      },
+      "content_sha256": "8f1db2958575cda4bc28b1e255b559dead75087e62e33a5ebffcc35f725233d4",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the USB pairing of the cooling controller before the camera runs to avoid delays."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope as the new task; both involve collecting and exporting 20 dark frames with the same camera and cooling controller."
+          }
+        ],
+        "point_min": 59,
+        "low_min": 50,
+        "high_min": 65,
+        "confidence": "high",
+        "rationale": "The main time-driving step is the cooling controller's USB pairing, which caused delays in previous runs. The strongest relevant comparison is the first task (59.0 minutes), which had the same scope and similar setup, showing that pairing issues can significantly extend time. The range is wide due to variability in controller stability and user response during re-pairing.",
+        "confidence_reason": "The observed delay in pairing suggests that the next attempt will likely be slower unless the controller is properly paired and stabilized beforehand."
+      },
+      "seconds": 140.89
+    }
+  ],
+  "prediction": {
+    "point_min": 59,
+    "low_min": 50,
+    "high_min": 65,
+    "confidence": "high",
+    "confidence_reason": "The observed delay in pairing suggests that the next attempt will likely be slower unless the controller is properly paired and stabilized beforehand.",
+    "model_rationale": "The main time-driving step is the cooling controller's USB pairing, which caused delays in previous runs. The strongest relevant comparison is the first task (59.0 minutes), which had the same scope and similar setup, showing that pairing issues can significantly extend time. The range is wide due to variability in controller stability and user response during re-pairing.",
+    "explanation": "The main time-driving step is the cooling controller's USB pairing, which caused delays in previous runs. The strongest relevant comparison is the first task (59.0 minutes), which had the same scope and similar setup, showing that pairing issues can significantly extend time. The range is wide due to variability in controller stability and user response during re-pairing.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "estimate_min": 40,
+        "actual_min": 59.0,
+        "ratio": 1.475,
+        "reason": "Same scope as the new task; both involve collecting and exporting 20 dark frames with the same camera and cooling controller.",
+        "reason_source": "model",
+        "model_rationale": "Same scope as the new task; both involve collecting and exporting 20 dark frames with the same camera and cooling controller.",
+        "source_quote": "Collect and export 20 dark frames on this camera"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the USB pairing of the cooling controller before the camera runs to avoid delays.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Collect and export 20 dark frames on this camera",
+            "origin": "Completion note",
+            "observation": "Cooling controller lost its USB pairing twice; re-pairing delayed capture."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

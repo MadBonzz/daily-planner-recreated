@@ -25,8 +25,19 @@ Across all 10 histories, [the accounting run](report-accounting.json) checked 79
 | The model cites “finished the proof” inside “I have not yet finished the proof” | The shortened citation could justify lowering the estimate | The citation must retain the nearby negation, or the forecast is rejected and retried. |
 | The model cites the full negated statement and labels it completed | The exact quote passed validation | The model must describe the open work or cite an actual completed step. |
 | The model returns zero remaining minutes after only a partial milestone | The point forecast could drop to the time already recorded | Zero requires a fresh citation explicitly identified as completion of the whole task. |
+| The model supplies a valid integer-valued JSON number such as `1.0` as its citation ID | A correct turn number was rejected | An integral number is normalized before indexing. Booleans and nonintegral numbers still fail validation. |
 
-The seven regression cases fail on the original revision and pass after the changes. They exercise parser and validator failure paths directly. The model accuracy measurements use live calls. The existing report-worker tests also cover correcting an interval, recomputing totals, showing the corrected label as a future example, avoiding excluded examples, and rejecting a stale generation.
+In the live development run, 4B called simultaneous work in a code editor and TikTok on a phone definite work. Its rationale only mentioned the editor. For simultaneous non-idle laptop and phone evidence the model now labels each device separately. The app counts the interval once and shows uncertain if the two assessments differ. An idle laptop does not override the foreground phone.
+
+The eight regression cases above fail on the original revision and pass after the changes. They exercise parser and validator failure paths directly. The model accuracy measurements use live calls. The existing report-worker tests also cover correcting an interval, recomputing totals, showing the corrected label as a future example, avoiding excluded examples, and rejecting a stale generation.
+
+## Follow-up checks
+
+The opaque-dashboard test exposed an error beyond ordinary interval labeling. The 4B model correctly reused both earlier user corrections during another clinic stock task, but it invented work on three dashboards with no correction and carried two prior labels into an unrelated hiking task. For one of those windows the only observed title was “Dashboard,” while the model described football highlights.
+
+The follow-up replays the *saved* classifier replies through a rule for generic browser pages. A specific window title, phone context, explicit override, an identified host in the task or rationale, or a matching past correction on comparable work can retain a definite label. Otherwise the app records uncertainty. This is a targeted diagnostic on the observed failure. The frozen live results in `after/` do not incorporate this rule. It does not remedy every opaque native application or independently verify everything a model says about a named site.
+
+A separate retry experiment addresses a model returning a supported pause decision with an empty citation array. It keeps the initial call unchanged. The second call requires one citation object, and the validator still checks the precise user quote, its role, whether it is fresh and whether the minutes contradict it. It was rerun on the two identified misses; the report keeps those diagnostic results separate from the original held-out counts.
 
 ## Reproduction
 

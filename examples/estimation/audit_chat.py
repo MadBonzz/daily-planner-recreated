@@ -104,6 +104,23 @@ def check(case, data):
     return {"pass": bool(valid), "result": result}
 
 
+def priority_score(result, calls):
+    """The two open tasks are supplied in kernel/receipts order and only receipts fit."""
+    replies = [call.get("response", {}) for call in calls]
+    response = next((r for r in reversed(replies) if "priorities" in r or "order" in r), {})
+    if "priorities" in response:
+        entries = sorted(response["priorities"].items(), key=lambda item: item[1]["rank"])
+        # A tied rank does not express a preference.
+        unique_first = len({r["rank"] for _, r in entries}) == len(entries)
+    else:
+        entries = [(str(r["id"]), r) for r in response.get("order", [])]
+        unique_first = True
+    valid = [(key, row) for key, row in entries if key in {"1", "2"} and row.get("reason", "").strip()]
+    return {"coverage": len({key for key, _ in valid}), "expected": 2,
+            "placed_feasible_first": bool(valid and valid[0][0] == "2" and unique_first),
+            "answer_source": result.get("answer_source")}
+
+
 def score(records):
     """Use set membership for selected tasks/sites and a separate abstention test for PDF QA."""
     totals = {}
@@ -123,6 +140,10 @@ def score(records):
             predicted = {"answer"} if row["predicted_positive"] else set()
             candidates = {"answer"}
         elif kind == "plan":
+            ranking = row.get("ranking") or priority_score(result, row.get("model_calls", []))
+            summary["ranks_with_reasons"] = summary.get("ranks_with_reasons", 0) + ranking["coverage"]
+            summary["ranks_expected"] = summary.get("ranks_expected", 0) + ranking["expected"]
+            summary["feasible_ranked_first"] = summary.get("feasible_ranked_first", 0) + int(ranking["placed_feasible_first"])
             _, gold = expected
             predicted = {r["Task"] for r in result.get("plan_rows", []) if r["Suggestion"].startswith("Fits")}
             candidates = {"Kernel lab", "File receipts"} | predicted
@@ -196,6 +217,8 @@ def main():
                 row = check(case, data)
             except ModelUnavailable as exc:
                 row = {"pass": False, "error": str(exc)}
+        if kind == "plan":
+            row["ranking"] = priority_score(row.get("result", {}), calls)
         records[key] = {**row, "model": model, "model_calls": calls, "endpoint": endpoint, "split": split, "kind": kind,
                         "question": question, "seconds": round(time.monotonic() - start, 2)}
         temporary = args.output.with_suffix(".tmp")

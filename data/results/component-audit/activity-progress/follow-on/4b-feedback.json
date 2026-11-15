@@ -1,0 +1,106 @@
+{
+  "model": "ternary-bonsai-4b",
+  "source": "4b-validation-feedback.json",
+  "model_calls": 0,
+  "changed": 5,
+  "cases": [
+    {
+      "scenario": "no feedback",
+      "domain": "orchid.example",
+      "expected": "uncertain",
+      "model_label": "on_task",
+      "model_reason": "Dashboard for clinic inventory update aligns with reconciling stock sheet from deliveries.",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "no feedback",
+      "domain": "marble.example",
+      "expected": "uncertain",
+      "model_label": "on_task",
+      "model_reason": "Dashboard for clinic inventory update aligns with reconciling stock sheet from deliveries.",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "no feedback",
+      "domain": "birch.example",
+      "expected": "uncertain",
+      "model_label": "on_task",
+      "model_reason": "Dashboard for clinic inventory update aligns with reconciling stock sheet from deliveries.",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "related feedback",
+      "domain": "orchid.example",
+      "expected": "on_task",
+      "model_label": "on_task",
+      "model_reason": "Dashboard for clinic inventory reconciliation in orchid.example",
+      "final_label": "on_task"
+    },
+    {
+      "scenario": "related feedback",
+      "domain": "marble.example",
+      "expected": "off_task",
+      "model_label": "off_task",
+      "model_reason": "Dashboard for unrelated domain marble.example",
+      "final_label": "off_task"
+    },
+    {
+      "scenario": "related feedback",
+      "domain": "birch.example",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_reason": "Dashboard in birch.example with no clear task link",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "different task",
+      "domain": "orchid.example",
+      "expected": "uncertain",
+      "model_label": "on_task",
+      "model_reason": "Map trail and elevation directly supports hiking route planning",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "different task",
+      "domain": "marble.example",
+      "expected": "uncertain",
+      "model_label": "off_task",
+      "model_reason": "Football highlights are unrelated to hiking route mapping",
+      "final_label": "uncertain"
+    },
+    {
+      "scenario": "different task",
+      "domain": "birch.example",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_reason": "No clear clue links dashboard to hiking route planning",
+      "final_label": "uncertain"
+    }
+  ],
+  "by_class": {
+    "on_task": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 0,
+      "TN": 8,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "off_task": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 0,
+      "TN": 8,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "uncertain": {
+      "TP": 7,
+      "FP": 0,
+      "FN": 0,
+      "TN": 2,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  }
+}

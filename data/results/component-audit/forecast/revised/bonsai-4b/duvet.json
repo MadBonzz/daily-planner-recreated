@@ -1,0 +1,125 @@
+{
+  "task": "duvet",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:27:48.456636+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "01d48f1b2809cdb4dad6a277c8b9bad5ad32ebe3395133399ff6072effd7c7a2",
+  "frozen_candidates": [
+    "sheets"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": null,
+    "expected_band": null,
+    "expected_evidence": [],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "366bdf6418fe9dddf6a33cce669f3f8d46088a76be93a3b538fc624c6bda5ba2",
+      "max_tokens": 950,
+      "payload_sha256": "d9b6e47ecec0e1faf1f2c5e559d32a262d946a1d5e2ca3c8c4804be080985973",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 220,
+        "prompt_tokens": 596,
+        "total_tokens": 816,
+        "prompt_tokens_details": {
+          "cached_tokens": 65
+        }
+      },
+      "timings": {
+        "cache_n": 65,
+        "prompt_n": 531,
+        "prompt_ms": 13444.237,
+        "prompt_per_token_ms": 25.31871374764595,
+        "prompt_per_second": 39.496477189445564,
+        "predicted_n": 220,
+        "predicted_ms": 88988.523,
+        "predicted_per_token_ms": 406.3402876712329,
+        "predicted_per_second": 2.460991514602394
+      },
+      "content_sha256": "201af79a38c24c958f187934ff0bcd75d5e83634736b4515656eaef75c08100a",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The machine ran while the user went shopping, indicating a potential delay due to interruptions."
+          }
+        ],
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "low",
+        "rationale": "The task involves washing a spare duvet cover with a machine, which may take longer due to unfamiliarity and lack of prior pairing experience. The observed 23-minute duration for a similar bedding task (with no shopping interruption) suggests a baseline time, but the new task's untested pairing and first-time use introduce variability.",
+        "confidence_reason": "The task is a first-time use with a second-hand cover, and the machine was used during a shopping break in the past, which may affect timing. This could widen the range if the user encounters similar interruptions or if the cover requires multiple attempts to pair correctly."
+      },
+      "seconds": 119.58
+    }
+  ],
+  "prediction": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 35,
+    "confidence": "low",
+    "confidence_reason": "The task is a first-time use with a second-hand cover, and the machine was used during a shopping break in the past, which may affect timing. This could widen the range if the user encounters similar interruptions or if the cover requires multiple attempts to pair correctly.",
+    "model_rationale": "The task involves washing a spare duvet cover with a machine, which may take longer due to unfamiliarity and lack of prior pairing experience. The observed 23-minute duration for a similar bedding task (with no shopping interruption) suggests a baseline time, but the new task's untested pairing and first-time use introduce variability.",
+    "explanation": "The task involves washing a spare duvet cover with a machine, which may take longer due to unfamiliarity and lack of prior pairing experience. The observed 23-minute duration for a similar bedding task (with no shopping interruption) suggests a baseline time, but the new task's untested pairing and first-time use introduce variability.",
+    "evidence": [
+      {
+        "task_id": "sheets",
+        "title": "Wash the guest-room sheets",
+        "estimate_min": 35,
+        "actual_min": 23.0,
+        "ratio": 0.6571428571428571,
+        "reason": "The machine ran while the user went shopping, indicating a potential delay due to interruptions.",
+        "reason_source": "model",
+        "model_rationale": "The machine ran while the user went shopping, indicating a potential delay due to interruptions.",
+        "source_quote": "Start one bedding load. Later make up the guest bed and put the spare covers on the shelf."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "sheets",
+            "title": "Wash the guest-room sheets",
+            "origin": "Completion note",
+            "observation": "The fitted sheet took a few tries. The machine ran while I went shopping."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "1 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "sheets",
+        "title": "Wash the guest-room sheets",
+        "source": "decision model",
+        "score": 0.7157807042292261
+      }
+    ],
+    "used_task_ids": [
+      "sheets"
+    ],
+    "feedback_source_ids": []
+  }
+}

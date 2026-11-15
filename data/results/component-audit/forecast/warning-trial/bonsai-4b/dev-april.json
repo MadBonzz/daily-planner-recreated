@@ -1,0 +1,146 @@
+{
+  "task": "dev-april",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:32:28.030977+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "7f17f5c99974939bbbc19dc40faaf6d510ae40bb358b8eb91e745058bd2e833f",
+  "frozen_candidates": [
+    "dev-stock",
+    "dev-packs",
+    "dev-receipts"
+  ],
+  "budget": 20,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.66,
+      0.86
+    ],
+    "expected_evidence": [
+      "dev-stock",
+      "dev-packs",
+      "dev-receipts"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "7493b55256171cfd84545ef59f432b072e641afaf193678a4403bf0421d2091d",
+      "max_tokens": 950,
+      "payload_sha256": "df173dd339f049e876076db05cc358598ff7e900918a5b25853f9d56bd928822",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 250,
+        "prompt_tokens": 926,
+        "total_tokens": 1176,
+        "prompt_tokens_details": {
+          "cached_tokens": 65
+        }
+      },
+      "timings": {
+        "cache_n": 65,
+        "prompt_n": 861,
+        "prompt_ms": 20851.04,
+        "prompt_per_token_ms": 24.217235772357725,
+        "prompt_per_second": 41.29290433474781,
+        "predicted_n": 250,
+        "predicted_ms": 112397.706,
+        "predicted_per_token_ms": 451.39640963855425,
+        "predicted_per_second": 2.2153477046942576
+      },
+      "content_sha256": "2e72e4a8a156a90b7b00737fb16f75a3dec861340c3b53249d4486900e3e1e4f",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Dev had already filtered the stock sheet, so the meeting can be completed earlier by skipping the initial review step."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The actual time (15.0 minutes) is 75% of the estimated budget (20.0 minutes), indicating a consistent early finish pattern in similar stock calls."
+          }
+        ],
+        "point_min": 15,
+        "low_min": 14,
+        "high_min": 16,
+        "confidence": "high",
+        "rationale": "The time-driving step is reviewing the stock sheet with Dev, and the strongest relevant comparison is the first stock call (15.0 minutes vs. 20.0 minutes), which shows a consistent 75% completion rate. The main assumption is that Dev’s pre-filtered counts will remain unchanged in future calls, which could be widened by observing whether he filters the sheet differently in new scenarios.",
+        "confidence_reason": "The consistency in Dev's pre-filtered counts across past calls supports a reliable early finish, but future variations in filtering behavior or data input could widen the range."
+      },
+      "seconds": 176.38
+    }
+  ],
+  "prediction": {
+    "point_min": 15,
+    "low_min": 14,
+    "high_min": 16,
+    "confidence": "high",
+    "confidence_reason": "The consistency in Dev's pre-filtered counts across past calls supports a reliable early finish, but future variations in filtering behavior or data input could widen the range.",
+    "model_rationale": "The time-driving step is reviewing the stock sheet with Dev, and the strongest relevant comparison is the first stock call (15.0 minutes vs. 20.0 minutes), which shows a consistent 75% completion rate. The main assumption is that Dev’s pre-filtered counts will remain unchanged in future calls, which could be widened by observing whether he filters the sheet differently in new scenarios.",
+    "explanation": "The time-driving step is reviewing the stock sheet with Dev, and the strongest relevant comparison is the first stock call (15.0 minutes vs. 20.0 minutes), which shows a consistent 75% completion rate. The main assumption is that Dev’s pre-filtered counts will remain unchanged in future calls, which could be widened by observing whether he filters the sheet differently in new scenarios.",
+    "evidence": [
+      {
+        "task_id": "dev-stock",
+        "title": "Stock check with Dev",
+        "estimate_min": 20,
+        "actual_min": 15.0,
+        "ratio": 0.75,
+        "reason": "The actual time (15.0 minutes) is 75% of the estimated budget (20.0 minutes), indicating a consistent early finish pattern in similar stock calls.",
+        "reason_source": "model",
+        "model_rationale": "The actual time (15.0 minutes) is 75% of the estimated budget (20.0 minutes), indicating a consistent early finish pattern in similar stock calls.",
+        "source_quote": "Run through the gloves and badge sleeves that need reordering with Dev Patel. He has the counts in his sheet."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Dev had already filtered the stock sheet, so the meeting can be completed earlier by skipping the initial review step.",
+        "sources": [
+          {
+            "task_id": "dev-stock",
+            "title": "Stock check with Dev",
+            "origin": "Completion note",
+            "observation": "Dev had already filtered the stock sheet. We finished before the end of the slot."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "dev-stock",
+        "title": "Stock check with Dev",
+        "source": "decision model",
+        "score": 0.7680068978106029
+      },
+      {
+        "task_id": "dev-packs",
+        "title": "Check replenishment list with Dev",
+        "source": "decision model",
+        "score": 0.7036435876326517
+      },
+      {
+        "task_id": "dev-receipts",
+        "title": "Close the supply list with Dev",
+        "source": "decision model",
+        "score": 0.6805588778472098
+      }
+    ],
+    "used_task_ids": [
+      "dev-stock"
+    ],
+    "feedback_source_ids": []
+  }
+}

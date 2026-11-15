@@ -1,0 +1,34 @@
+{
+  "task": "reserve-theatre-slot",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:42:37.252651+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "167902c2eac8b7a9e82754c6a8d30a7aca9b56adb08d4db874d8d8c58dcf7a92",
+  "frozen_candidates": [],
+  "budget": 50,
+  "fixed": true,
+  "rubric": {
+    "direction": null,
+    "expected_sources": [],
+    "expected_evidence": [],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [],
+  "prediction": {
+    "point_min": 50,
+    "low_min": 50,
+    "high_min": 50,
+    "basis": "Scheduled duration",
+    "confidence": "fixed",
+    "explanation": "The scheduled duration is 50 minutes.",
+    "provenance": {
+      "provider": null,
+      "model": null,
+      "decision": "fixed",
+      "minutes_by": "schedule"
+    },
+    "evidence": [],
+    "cautions": []
+  }
+}

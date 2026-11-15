@@ -41,7 +41,7 @@ def test_planning_window_and_clock_boundaries():
 
 def test_running_and_manual_progress_plan_cannot_overspend_or_treat_overrun_as_finished():
     snap = fixture()
-    decide = Mock(return_value={"order": [{"id": i, "reason": "Continue the task."} for i in [1,2,3,4]]})
+    decide = Mock(return_value={"priorities": {str(i): {"rank": i, "reason": "Continue the task."} for i in [1,2,3,4]}})
     r = answer_plan("What if I only have 40 minutes?",snap,[],[],decide)
     assert r["plan_window"]["available_minutes"] == 40 and r["answer_source"] == "model"
     by_name = {row["Task"]: row for row in r["plan_rows"]}
@@ -61,7 +61,7 @@ def test_follow_up_uses_same_router_and_prior_question_but_only_visible_logs():
     snap=fixture()
     before={"question":"What distracted me?", "answer":"Video highlights.", "tool":"distraction_sources"}
     route={"tool":"plan_remaining","scope":"all","task_ids":[],"sql":""}
-    with patch("planner_analytics.chat_json",side_effect=[route, {"order":[{"id":1,"reason":"A due time is stated."}]}]) as model:
+    with patch("planner_analytics.chat_json",side_effect=[route, {"priorities": {str(i): {"rank": i, "reason": "A due time is stated."} for i in [1,2,3,4]}}]) as model:
         r=ask_analytics("Given that, what should I work on by 11 pm?",[],[],[before],plan=snap)
     assert r["plan_window"]["available_minutes"] == 30
     payload=json.loads(model.call_args_list[-1].args[0][-1]["content"])

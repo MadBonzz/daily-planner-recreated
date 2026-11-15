@@ -1,0 +1,84 @@
+{
+  "task": "bridge-trace",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:23:47.343998+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "c52dcee0431f8e944646d96782acdb193ab8a1e71c47f1262c2dbe182b7d097e",
+  "frozen_candidates": [],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.7,
+      0.93
+    ],
+    "expected_evidence": [
+      "clock-two",
+      "ack-traces"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "7f48e0b970397e31007f6ba7ca4d223d140a93fb83b769c6f2cc7985c643e807",
+      "max_tokens": 950,
+      "payload_sha256": "ef3876700b090a3c5406e5ceaf66c47710d57d3422446b9428214e75e7a99c65",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 138,
+        "prompt_tokens": 845,
+        "total_tokens": 983,
+        "prompt_tokens_details": {
+          "cached_tokens": 329
+        }
+      },
+      "timings": {
+        "cache_n": 329,
+        "prompt_n": 516,
+        "prompt_ms": 14570.34,
+        "prompt_per_token_ms": 28.237093023255813,
+        "prompt_per_second": 35.4144103706571,
+        "predicted_n": 138,
+        "predicted_ms": 80006.483,
+        "predicted_per_token_ms": 583.9889270072993,
+        "predicted_per_second": 1.7123612345264574
+      },
+      "content_sha256": "94910d27f0c16a39e8dff6c9d93220c4cbcf6e99e8ea2b4e6e066b197bc6b0a6",
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "low",
+        "rationale": "The task requires labeling six exchanges and documenting the durable state after each, which is a structured, sequential process with no known shortcuts or prior evidence of efficiency. The user estimate of 30 minutes is based on the task's stated scope and assumed standard execution time for such a labeling and state reconstruction task.",
+        "confidence_reason": "The task lacks prior comparable timing records or observed patterns to justify a tighter or wider range; any deviation would require specific evidence of skipped steps or network behavior changes not present here."
+      },
+      "seconds": 140.12
+    }
+  ],
+  "prediction": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 35,
+    "confidence": "low",
+    "confidence_reason": "The task lacks prior comparable timing records or observed patterns to justify a tighter or wider range; any deviation would require specific evidence of skipped steps or network behavior changes not present here.",
+    "model_rationale": "The task requires labeling six exchanges and documenting the durable state after each, which is a structured, sequential process with no known shortcuts or prior evidence of efficiency. The user estimate of 30 minutes is based on the task's stated scope and assumed standard execution time for such a labeling and state reconstruction task.",
+    "explanation": "The task requires labeling six exchanges and documenting the durable state after each, which is a structured, sequential process with no known shortcuts or prior evidence of efficiency. The user estimate of 30 minutes is based on the task's stated scope and assumed standard execution time for such a labeling and state reconstruction task.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

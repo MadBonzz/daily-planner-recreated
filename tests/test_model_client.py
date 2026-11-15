@@ -7,8 +7,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
-from model_client import API_URL, MODEL_ID, ModelResponseInvalid, ModelResponseTruncated, ModelUnavailable, chat_json
+from model_client import API_URL, MODEL_ID, ModelContextExceeded, ModelResponseInvalid, ModelResponseTruncated, ModelUnavailable, chat_json
 
 
 class ModelClientTests(unittest.TestCase):
@@ -48,6 +49,39 @@ class ModelClientTests(unittest.TestCase):
                 with self.assertRaises(ModelResponseInvalid) as exc:
                     chat_json([], self.schema)
                 self.assertEqual(isinstance(exc.exception, ModelResponseTruncated), reason == "length")
+
+    @patch("model_client.build_opener")
+    def test_schema_integer_slots_are_safe_indices_and_only_typed_integers_are_converted(self, opener):
+        schema = {"type": "object", "properties": {
+            "minutes": {"type": "integer"}, "slots": {"type": "array", "items": {"type": "integer"}},
+            "weight": {"type": "number"}, "flag": {"type": "boolean"}}}
+        opener.return_value.open.return_value = self.reply('{"minutes":20.0,"slots":[1.0],"weight":2.0,"flag":true}')
+        obj = chat_json([], schema)
+        self.assertIs(type(obj["minutes"]), int)
+        self.assertEqual(["a", "b"][obj["slots"][0]], "b")
+        self.assertIs(type(obj["weight"]), float)
+        self.assertIs(obj["flag"], True)
+        for invalid in ["1.2", "true"]:
+            opener.return_value.open.return_value = self.reply('{"slots":[' + invalid + ']}')
+            with self.assertRaises(ModelResponseInvalid):
+                chat_json([], schema)
+
+    @patch("model_client.build_opener")
+    def test_context_rejection_is_identified_without_echoing_provider_content(self, opener):
+        for status, code, typed in [(400, "exceed_context_size_error", True),
+                                    (413, "context_length_exceeded", True), (400, "other", False)]:
+            payload = {"error": {"type": code, "n_prompt_tokens": 25803, "n_ctx": 6144,
+                                 "message": "PRIVATE PROMPT ECHO"}}
+            opener.return_value.open.side_effect = HTTPError(
+                API_URL, status, "bad request", {}, io.BytesIO(json.dumps(payload).encode()))
+            with self.assertRaises(ModelUnavailable) as exc:
+                chat_json([], self.schema)
+            self.assertEqual(isinstance(exc.exception, ModelContextExceeded), typed)
+            self.assertNotIn("PRIVATE PROMPT", str(exc.exception))
+            if typed:
+                self.assertIn("25,803 input tokens, 6,144 available", str(exc.exception))
+            else:
+                self.assertIn("HTTP 400", str(exc.exception))
 
     @patch("model_client.build_opener")
     def test_configured_cohere_request_loads_dotenv_and_keeps_prompt(self, opener):

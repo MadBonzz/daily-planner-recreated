@@ -1,0 +1,157 @@
+{
+  "task": "same-indexing-faster",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T07:38:32.152741+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "1a38bf11c15281fb031a6feed2ad38febc0b6f0a4e6abfda599003e6255676ce",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "f2706516b7cb6f3f2bda655072318c0782baf6d31e7ed2127552c85ee68a2d03",
+      "max_tokens": 950,
+      "payload_sha256": "6568853b84e22ef21c1ad4433585e50bda3ba17a0a224288409119d545afaeca",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 385,
+        "prompt_tokens": 762,
+        "total_tokens": 1147,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "timings": {
+        "cache_n": 3,
+        "prompt_n": 759,
+        "prompt_ms": 20392.084,
+        "prompt_per_token_ms": 26.867040843214756,
+        "prompt_per_second": 37.2203252987777,
+        "predicted_n": 385,
+        "predicted_ms": 165159.585,
+        "predicted_per_token_ms": 430.1030859375,
+        "predicted_per_second": 2.325024006326972
+      },
+      "content_sha256": "a8b764a2bc5492fe3e7679ae3c7a2ab38345a586d6fc6ff5b86dc72724ee4b02",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The Monday task took 22 minutes, which is 55% of the user's estimated 40 minutes, indicating a consistent and efficient execution pattern for the same scope."
+          },
+          {
+            "slot": 2,
+            "reason": "The Tuesday task took 24 minutes, 60% of the estimated 40 minutes, showing a slight increase due to minor delays in the process."
+          },
+          {
+            "slot": 3,
+            "reason": "The Wednesday task took 26 minutes, 65% of the estimated 40 minutes, indicating a gradual increase in time, likely due to incremental complexity or user input adjustments."
+          }
+        ],
+        "point_min": 22,
+        "low_min": 20,
+        "high_min": 28,
+        "confidence": "low",
+        "rationale": "The time-driving step is the checksum comparison, which has historically taken between 20 and 28 minutes. The strongest relevant comparison is the Wednesday task (26 minutes), which shows a steady increase from previous runs, suggesting that without optimization, the new task may take similar or slightly longer time. The main assumption is that the script and workstation remain unchanged, and no new steps are skipped. A wider range could be observed if the user introduces manual verification or external dependencies during the process.",
+        "confidence_reason": "The time-driving step is the checksum comparison, which has historically taken between 20 and 28 minutes. The strongest relevant comparison is the Wednesday task (26 minutes), which shows a steady increase from previous runs, suggesting that without optimization, the new task may take similar or slightly longer time. The main assumption is that the script and workstation remain unchanged, and no new steps are skipped. A wider range could be observed if the user introduces manual verification or external dependencies during the process."
+      },
+      "seconds": 285.82
+    }
+  ],
+  "prediction": {
+    "point_min": 22,
+    "low_min": 20,
+    "high_min": 28,
+    "confidence": "low",
+    "confidence_reason": "The time-driving step is the checksum comparison, which has historically taken between 20 and 28 minutes. The strongest relevant comparison is the Wednesday task (26 minutes), which shows a steady increase from previous runs, suggesting that without optimization, the new task may take similar or slightly longer time. The main assumption is that the script and workstation remain unchanged, and no new steps are skipped. A wider range could be observed if the user introduces manual verification or external dependencies during the process.",
+    "model_rationale": "The time-driving step is the checksum comparison, which has historically taken between 20 and 28 minutes. The strongest relevant comparison is the Wednesday task (26 minutes), which shows a steady increase from previous runs, suggesting that without optimization, the new task may take similar or slightly longer time. The main assumption is that the script and workstation remain unchanged, and no new steps are skipped. A wider range could be observed if the user introduces manual verification or external dependencies during the process.",
+    "explanation": "The time-driving step is the checksum comparison, which has historically taken between 20 and 28 minutes. The strongest relevant comparison is the Wednesday task (26 minutes), which shows a steady increase from previous runs, suggesting that without optimization, the new task may take similar or slightly longer time. The main assumption is that the script and workstation remain unchanged, and no new steps are skipped. A wider range could be observed if the user introduces manual verification or external dependencies during the process.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 22.0,
+        "ratio": 0.55,
+        "reason": "The Monday task took 22 minutes, which is 55% of the user's estimated 40 minutes, indicating a consistent and efficient execution pattern for the same scope.",
+        "reason_source": "model",
+        "model_rationale": "The Monday task took 22 minutes, which is 55% of the user's estimated 40 minutes, indicating a consistent and efficient execution pattern for the same scope.",
+        "source_quote": "Run the Monday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 24.0,
+        "ratio": 0.6,
+        "reason": "The Tuesday task took 24 minutes, 60% of the estimated 40 minutes, showing a slight increase due to minor delays in the process.",
+        "reason_source": "model",
+        "model_rationale": "The Tuesday task took 24 minutes, 60% of the estimated 40 minutes, showing a slight increase due to minor delays in the process.",
+        "source_quote": "Run the Tuesday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 26.0,
+        "ratio": 0.65,
+        "reason": "The Wednesday task took 26 minutes, 65% of the estimated 40 minutes, indicating a gradual increase in time, likely due to incremental complexity or user input adjustments.",
+        "reason_source": "model",
+        "model_rationale": "The Wednesday task took 26 minutes, 65% of the estimated 40 minutes, indicating a gradual increase in time, likely due to incremental complexity or user input adjustments.",
+        "source_quote": "Run the Wednesday indexing and checksum check on 20 images"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "feedback_source_ids": []
+  }
+}
