@@ -341,3 +341,16 @@ def test_unavailable_local_retrieval_preserves_cold_model_forecast(tmp_path, mon
     assert model.called and result["related_tasks"] == [] and result["evidence"] == []
     assert result["point_min"] == 87 and result["provenance"]["decision"] == "direct"
     assert result["retryable"] and "Embedding model" in result["retrieval_error"]
+
+
+def test_overlong_historical_pdf_preserves_other_usable_comparisons(tmp_path, monkeypatch):
+    def embed(task, config):
+        if task["id"] == "long":
+            raise retrieval.DocumentTooLong("The complete uploaded text exceeds the embedding context.")
+        return [1.0, 0.0]
+    monkeypatch.setattr(retrieval, "embed_task", embed)
+    with patch("estimator.chat_json", return_value=forecast()):
+        result = estimator.predict(paper("new"), [paper("long"), paper("fits")], tmp_path)
+    assert [item["task_id"] for item in result["related_tasks"]] == ["fits"]
+    assert result["provenance"]["decision"] == "direct"
+    assert "historical task was skipped" in result["retrieval_error"]

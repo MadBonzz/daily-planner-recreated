@@ -26,7 +26,7 @@ LEGACY_COLLECTION = "planner_tasks_v1"
 INDEX_LOCK = threading.RLock()
 EMBEDDING_MODEL = "qwen3-embedding-0.6b"
 DECISION_MODEL = "kev-4b"
-DEFAULT_THRESHOLD = 0.45
+MINIMUM_THRESHOLD = 0.70
 _FIELDS = (("Title", "title"), ("Description", "description"), ("Details", "details"), ("Documents", "pdf_text"))
 
 
@@ -102,7 +102,7 @@ def _check_embedding_context(url, payload, client, timeout):
                                "Install the planner requirements and check the loaded LM Studio model.") from exc
     if tokens + 1 > capacity:
         raise DocumentTooLong(f"The complete task needs {tokens} text tokens plus the end token. "
-                               f"The loaded embedding model has a {capacity}-token context. "
+                               f"The loaded embedding context holds {capacity} tokens. "
                                "Reload it with a longer context and re-estimate.")
 
 
@@ -296,17 +296,23 @@ def clear_index(index_dir):
                 client.delete_collection(name)
 
 
+def relevance_threshold(config):
+    """Apply the same automatic retrieval floor to new and pre-existing configurations."""
+    try:
+        score = float(config.get("PLANNER_RELEVANCE_THRESHOLD") or MINIMUM_THRESHOLD)
+        if not -1 <= score <= 1:
+            raise ValueError
+    except (TypeError, ValueError):
+        raise ModelUnavailable("PLANNER_RELEVANCE_THRESHOLD must be a cosine score between -1 and 1.") from None
+    return max(MINIMUM_THRESHOLD, score)
+
+
 def search(task, history, index_dir, *, errors=None):
     if not history:
         return []
     config = planner_settings()
     name = _collection(config)
-    try:
-        threshold = float(config.get("PLANNER_RELEVANCE_THRESHOLD") or DEFAULT_THRESHOLD)
-        if not -1 <= threshold <= 1:
-            raise ValueError
-    except ValueError:
-        raise ModelUnavailable("PLANNER_RELEVANCE_THRESHOLD must be a cosine score between -1 and 1.") from None
+    threshold = relevance_threshold(config)
     query = embed_task(task, config)
     with _index(index_dir) as client:
         rows = _upsert_tasks(client, name, history, config, errors)

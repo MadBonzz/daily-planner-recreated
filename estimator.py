@@ -13,10 +13,13 @@ from retrieval import COLLECTION, _index, clear_index, forget_task, index_curren
 from task_forecasts import scheduled_prediction
 
 
-def _prompt_record(task, pdf_limit=900):
-    return {"title": task["title"][:120], "description": task["description"][:280],
-            "details": (task.get("details") or "")[:180], "category": (task.get("category") or "")[:70],
-            "document_excerpt": document_excerpt(task, pdf_limit)}
+def _prompt_record(task, *, target=False):
+    fields = {key: task.get(key) or "" for key in ("title", "description", "details", "category")}
+    if not target:
+        fields["description"] = fields["description"][:400]
+        fields["details"] = fields["details"][:250]
+    fields["document_excerpt"] = document_excerpt(task, 1800 if target else 900)
+    return fields
 
 
 def _observations(row):
@@ -200,7 +203,7 @@ def _model_forecast(task, candidates, observations):
         if reviewed:
             record["reviewed_activity"] = reviewed
         history.append(record)
-    data = {"new_task": {**_prompt_record(task, pdf_limit=1800), "user_estimate_minutes": task["estimate_minutes"]},
+    data = {"new_task": {**_prompt_record(task, target=True), "user_estimate_minutes": task["estimate_minutes"]},
             "history": history}
     if task.get("relevance_examples"):
         data["reviewed_examples"] = retrieval.reviewed_examples(task["relevance_examples"])

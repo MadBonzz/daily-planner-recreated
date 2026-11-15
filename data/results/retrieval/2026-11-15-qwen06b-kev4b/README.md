@@ -1,12 +1,15 @@
 # Local task relevance evaluation
 
-The selected cosine cutoff is **0.45**. Qwen3-Embedding-0.6B retained 23 of 24 labeled matches on the calibration profiles. On five separate validation profiles it retained 21 of 24 matches and passed 13 additional candidates to Kev. At 0.80 or 0.85, just two of the 24 validation matches reached the decision model.
+Plan Smarter enforces a **minimum cosine similarity of 0.70** for automatic retrieval. At that setting Qwen sent eight of the 72 held-out pairs to Kev. Kev accepted all six labeled matches in those eight and rejected both distractors. Across the 24 labeled matches in the held-out set, end-to-end **recall was 25% and precision was 100%**. The other 18 matches fell below the cosine cutoff. Five of the nine flexible validation tasks received no automatic candidates.
+
+The [operating point and eight individual Kev decisions](operating-point.json) were derived from saved model responses. The earlier experiment used a 0.45 cutoff, so it already included every candidate that clears 0.70. Rescoring used the original decisions for exactly those eight pairs.
 
 | Cosine cutoff | Calibration recall | Calibration precision | Calibration F2 | Validation recall | Validation precision | Kev calls on validation |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 0.40 | 95.8% | 46.0% | 0.79 | 95.8% | 59.0% | 39 |
-| **0.45** | **95.8%** | **54.8%** | **0.83** | **87.5%** | **61.8%** | **34** |
+| 0.45 (experimental F2 maximum) | 95.8% | 54.8% | 0.83 | 87.5% | 61.8% | 34 |
 | 0.50 | 87.5% | 55.3% | 0.78 | 79.2% | 76.0% | 25 |
+| **0.70 (app minimum)** | **29.2%** | **70.0%** | **0.33** | **25.0%** | **75.0%** | **8** |
 | 0.80 | 8.3% | 50.0% | 0.10 | 8.3% | 50.0% | 4 |
 | 0.85 | 8.3% | 50.0% | 0.10 | 8.3% | 50.0% | 4 |
 | 0.90 | 8.3% | 66.7% | 0.10 | 4.2% | 100% | 1 |
@@ -17,13 +20,11 @@ Each of 19 flexible-duration holdouts was paired with every completed historical
 
 The five odd-numbered histories formed the calibration split (78 pairs). The five even-numbered histories formed the validation split (72 pairs). We swept cutoffs from 0.40 through 0.95 in steps of 0.05. The selection metric was calibration F2, which weights recall because the pairwise decision model can still reject an extra candidate. Ties favor higher precision and then the higher cutoff. The small synthetic sample and its evidence labels limit how well the scores generalize to individual users. See the individual scores, task text hashes and full grid in [embeddings.json](embeddings.json).
 
-Three authored matches fell below 0.45 on validation. The repeat GPU timing sweep scored 0.444 against the earlier median run. Two practice worksheets scored 0.427 and 0.368 against the triangle-wave worksheet. Manual additions can recover pairs that never reach Kev.
+## Pair decisions
 
-## Pair decisions on the validation profiles
+At 0.70, Qwen retained seven of 24 calibration matches and three additional candidates. On validation it retained six of 24 matches and two distractors. Two GPU tasks shared a handout, so both bug fixing and publishing a timing table scored highly against either new task. Kev correctly distinguished those deliverables. The three clinic meetings with Dev also passed both stages. The earlier clinic planning meetings with Mara scored between 0.60 and 0.65 against the new Mara rota task, leaving them available for manual selection.
 
-Kev accepted **16 of 34 candidates**. Of the 24 authored matches across all 72 pairs, the two stages together recovered **16**. End-to-end precision was **100.0%** and recall was **66.7%**. The cosine filter missed three matches before Kev saw them. Kev rejected 5 more authored matches and accepted 0 unlabeled comparisons. See [all pair decisions](decisions.json).
-
-For the validated GPU timing sweep, Kev kept the earlier timing-table task and rejected a high-similarity bug-fix task that shared the handout. For the write-up of saved replay transcripts, it rejected the previous transcript write-up despite the matching deliverable. A user who recognizes an omitted comparison can add it from the task's relevance editor.
+In the original 0.45 experiment, 34 validation candidates reached Kev. It accepted 16 labeled matches and rejected all 13 distractors, yielding 66.7% recall and 100% precision at that experimental cutoff. The [complete decision log](decisions.json) preserves that original run.
 
 ## Model files and runtime
 
@@ -44,3 +45,9 @@ python -m examples.estimation.calibrate_retrieval data/results/retrieval/my-run 
 ```
 
 The decision stage checkpoints each evaluated pair in `decisions.json`. Re-running it on the same unchanged inputs resumes at the next unfinished pair.
+
+To reproduce the app operating-point summary from the recorded run, use the following command. It reads only the two saved JSON files.
+
+```sh
+python -m examples.estimation.calibrate_retrieval data/results/retrieval/2026-11-15-qwen06b-kev4b --stage operating-point --threshold 0.70
+```

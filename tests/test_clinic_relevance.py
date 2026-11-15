@@ -37,6 +37,25 @@ def test_unknown_decisions_stay_unknown(reply):
         retrieval.decide_related({"title": "Study"}, {"title": "Study"})
 
 
+@pytest.mark.parametrize("configured,expected", [(None, 0.70), ("0.45", 0.70), ("0.69", 0.70),
+                                                ("0.70", 0.70), ("0.85", 0.85), ("1", 1.0)])
+def test_retrieval_floor_including_older_settings(configured, expected):
+    assert retrieval.relevance_threshold({"PLANNER_RELEVANCE_THRESHOLD": configured}) == expected
+
+
+def test_even_an_old_cutoff_cannot_admit_a_candidate_below_seventy_percent(tmp_path, monkeypatch):
+    import math
+
+    target = {"id": "target", "title": "Fill a form", "estimate_minutes": 12}
+    rows = [{**target, "id": "below", "cosine": 0.69}, {**target, "id": "above", "cosine": 0.71}]
+    def embed(task, config):
+        cosine = task.get("cosine", 1)
+        return [cosine, math.sqrt(1 - cosine ** 2)]
+    monkeypatch.setattr(retrieval, "embed_task", embed)
+    monkeypatch.setenv("PLANNER_RELEVANCE_THRESHOLD", "0.45")
+    assert [row["id"] for row, _ in retrieval.search(target, rows, tmp_path)] == ["above"]
+
+
 def test_threshold_is_applied_before_judging_and_cache_repairs_content(tmp_path, monkeypatch):
     def task(i):
         return {"id": i, "title": "Identical title", "description": i, "estimate_minutes": 10, "category": "Office"}

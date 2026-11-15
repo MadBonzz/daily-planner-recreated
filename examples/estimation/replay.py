@@ -115,7 +115,7 @@ def replay(selector, output, *, actions=None, offline=False, anchor=None):
             manifest["forecast_model"] = endpoint
         manifest["embedding_model"] = config.get("PLANNER_EMBEDDING_MODEL") or retrieval.EMBEDDING_MODEL
         manifest["decision_model"] = config.get("PLANNER_DECISION_MODEL") or retrieval.DECISION_MODEL
-        manifest["relevance_threshold"] = float(config.get("PLANNER_RELEVANCE_THRESHOLD") or retrieval.DEFAULT_THRESHOLD)
+        manifest["relevance_threshold"] = retrieval.relevance_threshold(config)
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     with TemporaryDirectory() as working, (output / "events.jsonl").open("x", encoding="utf-8") as log:
         store = PlannerStore(working)

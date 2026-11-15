@@ -121,18 +121,61 @@ def judge_validation(directory, profiles):
                       "threshold": threshold, "end_to_end_validation": scores, "pairs": pairs})
 
 
+def operating_point(directory, threshold):
+    """Score a stricter cutoff using the recorded embedding scores and pair decisions."""
+    embedding_file = directory / "embeddings.json"
+    decision_file = directory / "decisions.json"
+    embeddings = json.loads(embedding_file.read_text(encoding="utf-8"))
+    decisions = json.loads(decision_file.read_text(encoding="utf-8"))
+    if not decisions.get("complete") or not decisions["threshold"] <= threshold <= 1:
+        raise ValueError("Choose a cutoff covered by a complete decision run")
+
+    def key(row):
+        return (row["history"], row["query"], row["candidate"])
+
+    judged = {key(row): row for row in decisions["pairs"]}
+    pairs = embeddings["pairs"]
+    split_scores = {}
+    for split in ("calibration", "validation"):
+        cohort = [p for p in pairs if p["split"] == split]
+        split_scores[split] = metrics(cohort, lambda r: r["cosine"] >= threshold)
+
+    validation = [p for p in pairs if p["split"] == "validation"]
+    selected = []
+    for pair in validation:
+        if pair["cosine"] < threshold:
+            continue
+        decision = judged.get(key(pair))
+        if decision is None or any(decision[k] != v for k, v in pair.items()):
+            raise ValueError(f"Missing or inconsistent decision for {key(pair)}")
+        selected.append(decision)
+    accepted = {key(r) for r in selected if r["related"]}
+    scores = metrics(validation, lambda r: key(r) in accepted)
+    write_json(directory / "operating-point.json", {
+        "threshold": threshold, "input_run_threshold": decisions["threshold"],
+        "embedding_results_sha256": hashlib.sha256(embedding_file.read_bytes()).hexdigest(),
+        "decision_results_sha256": hashlib.sha256(decision_file.read_bytes()).hexdigest(),
+        "embedding_scores": split_scores, "end_to_end_validation": scores,
+        "validation_candidates": selected})
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path, help="A new per-run directory under data/results/")
-    parser.add_argument("--stage", choices=["embeddings", "decisions"], required=True)
+    parser.add_argument("--stage", choices=["embeddings", "decisions", "operating-point"], required=True)
+    parser.add_argument("--threshold", type=float, help="Cosine cutoff to score using a completed run")
     args = parser.parse_args()
+    if (args.stage == "operating-point") != (args.threshold is not None):
+        parser.error("Supply --threshold with the operating-point stage only")
     args.directory.mkdir(parents=True, exist_ok=True)
     if args.stage == "embeddings":
         if (args.directory / "embeddings.json").exists():
             parser.error("Choose a fresh directory to preserve an existing run")
         embed_all(args.directory, histories(None))
-    else:
+    elif args.stage == "decisions":
         judge_validation(args.directory, histories(None))
+    else:
+        operating_point(args.directory, args.threshold)
 
 
 if __name__ == "__main__":

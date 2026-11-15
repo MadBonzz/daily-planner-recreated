@@ -63,7 +63,7 @@ lms load kev-4b --gpu off --context-length 4096 --identifier kev-4b
 lms server start --bind 127.0.0.1 --port 1234
 ```
 
-The planner requests one embedding for the combined title, description, details and extracted document text. The local Qdrant index uses cosine similarity. Candidates at or above the default 0.45 threshold go to Kev individually. Category breaks tied cosine scores. The [threshold evaluation](data/results/retrieval/2026-11-15-qwen06b-kev4b/README.md) records the selection metric and held-out results. Check `.env.example` for local endpoint and threshold overrides.
+The planner requests one embedding for the combined title, description, details and extracted document text. The local Qdrant index uses cosine similarity. Automatic retrieval sends each candidate with a cosine score of at least 0.70 to Kev. You can raise this cutoff in `.env`. Category breaks tied cosine scores. The [threshold evaluation](data/results/retrieval/2026-11-15-qwen06b-kev4b/README.md) records the held-out results at 0.70 and the earlier exploratory cutoff sweep. Check `.env.example` for local endpoint and threshold overrides.
 
 ## ActivityWatch
 
