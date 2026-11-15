@@ -63,7 +63,9 @@ for m in json.load(sys.stdin)["models"]:
 '
 ```
 
-**2. Load Qwen and check one embedding.** If Qwen appears as `embedding` and `unloaded`, run this on the Mac. Substitute its key from step 1 if it differs. This asks Bionic on port 1235 to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
+#### Test the Qwen load on port 1235
+
+**2. Load Qwen and check one embedding.** If `lms ls --embedding` lists Qwen, `lms ls --decision` lists Kev, and `lms runtime ls` shows a selected llama.cpp GGUF runtime, skip the downloads and imports. If Qwen is unloaded, run the command below on the Mac. Substitute its key from step 1 if it differs. This asks Bionic to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
 
 ```sh
 curl -sS -i http://127.0.0.1:1235/api/v1/models/load \
@@ -85,7 +87,7 @@ Expect `returned 1024 dimensions`. The project’s Apple Silicon test loaded the
 | --- | --- |
 | Runtime error or `Exit code: null` | Run `lms runtime ls`. If the Mac has only the MLX runtime, install the GGUF runtime with `lms runtime get llama.cpp --yes`, then retry the HTTP load above. |
 | Unknown model | Run `curl -sS http://127.0.0.1:1235/api/v1/models \| python -m json.tool`. Use the Qwen embedding entry’s `key` in the load request. |
-| The cause is still unclear | In a second Terminal, run `lms log stream --source server`. Repeat the HTTP load in the first Terminal and capture its response body and the corresponding error line. |
+| The runtime is selected but the cause is still unclear | In a second Terminal, run `lms log stream --source runtime`. Repeat the HTTP load in the first Terminal and capture its response body and the first engine error. If your CLI does not recognize the runtime log source, use `lms log stream --source server`. |
 
 **3. Load Kev.** Look for a `decision` entry for Kev in step 1. If present, use its key in the load command below. The `-live` alias makes the demo request fresh relevance decisions through `/v1/systemone`. [Kev decision endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
 
