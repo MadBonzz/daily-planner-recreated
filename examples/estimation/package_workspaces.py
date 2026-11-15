@@ -1,11 +1,10 @@
-"""Build genuine Kev desk decisions for the actionable public sample tasks."""
+"""Build Kev desk decisions for actionable tasks in the original benchmark."""
 
 import argparse
 import json
 from pathlib import Path
 
-from examples.estimation.package_retrieval import save
-from examples.estimation.run import histories
+from examples.estimation.run import histories, write_json
 from model_client import planner_settings
 from retrieval import DECISION_MODEL
 from sample_retrieval import decision_hash
@@ -28,7 +27,7 @@ def build(config, *, check=False, checkpoint=None):
                     raise ValueError(f"Missing workspace verdict for {history['id']}/{row['id']}")
                 known[key] = live(request, config)
                 if checkpoint:
-                    save(checkpoint, {"model": model, "decisions": known})
+                    write_json(checkpoint, {"model": model, "decisions": known}, sort_keys=True)
                 print(history["id"], row["id"], known[key], flush=True)
             active[key] = known[key]
     if check:
@@ -37,7 +36,7 @@ def build(config, *, check=False, checkpoint=None):
     else:
         # Publish one complete set. Existing checkouts can keep serving their prior
         # exact matches while fresh local judgments are collected in the checkpoint.
-        save(PACK, {"model": model, "decisions": active})
+        write_json(PACK, {"model": model, "decisions": active}, sort_keys=True)
     print(f"{len(active)} actionable sample tasks have current workspace decisions.", flush=True)
 
 

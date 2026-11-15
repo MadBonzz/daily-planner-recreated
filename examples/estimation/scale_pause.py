@@ -9,6 +9,8 @@ import json
 import math
 import time
 from pathlib import Path
+import random
+from statistics import quantiles
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 
@@ -142,12 +144,13 @@ def three_way(supported, finished):
     return "finished" if supported and finished else "open" if supported else "keep"
 
 
-def score(short):
+def score(short, run_root=None):
+    run_root = run_root or ROOT
     records = read("conversations.json", CASE_HASH)
     labels = read("reference.json", REFERENCE_HASH)
     rows = []
     for case in records:
-        receipt = read(Path("runs") / short / (case["id"] + ".json"))
+        receipt = json.loads((run_root / "runs" / short / (case["id"] + ".json")).read_text())
         if (receipt["model"], receipt["id"], receipt["prompt_sha256"], receipt["input_sha256"]) != (
                 MODELS[short], case["id"], PROMPT_HASH, CASE_HASH):
             raise ValueError(f"Unexpected receipt identity for {short} / {case['id']}")
@@ -201,8 +204,8 @@ def score(short):
               "by_label": {l: {"n": len(group), "updated": sum(r["adjusted"] for r in group)}
                            for l in sorted({r["gold"] for r in rows}) if (group := [r for r in rows if r["gold"] == l])},
               "cases": rows}
-    save(ROOT / (short + "-scores.json"), output)
-    render_report()
+    save(run_root / (short + "-scores.json"), output)
+    render_report(run_root)
     print(model_summary(output))
 
 
@@ -210,10 +213,41 @@ def pct(number, denominator):
     return f"{100 * number / denominator:.1f}%" if denominator else "—"
 
 
-def render_report():
-    if not all((ROOT / f"{m}-scores.json").exists() for m in MODELS):
+def cluster_uncertainty(scores, draws=10000):
+    """Resample entire synthetic task families together, including paired results for both models."""
+    families = sorted(scores["4b"]["by_family"])
+    grouped = {model: score["by_family"] for model, score in scores.items()}
+    samples = {key: {metric: [] for metric in ("precision", "recall", "specificity")}
+               for key in (*MODELS, "9b_minus_4b")}
+    randomizer = random.Random(193704)
+    for _ in range(draws):
+        selected = randomizer.choices(families, k=len(families))
+        rates = {}
+        for model, by_family in grouped.items():
+            tp, fp, fn, tn = [sum(by_family[f][key] for f in selected) for key in ("TP", "FP", "FN", "TN")]
+            rates[model] = {"precision": tp/(tp+fp) if tp+fp else None, "recall": tp/(tp+fn),
+                            "specificity": tn/(tn+fp)}
+        for metric in rates["4b"]:
+            for model in MODELS:
+                if rates[model][metric] is not None:
+                    samples[model][metric].append(rates[model][metric])
+            if all(rates[model][metric] is not None for model in MODELS):
+                samples["9b_minus_4b"][metric].append(rates["9b"][metric]-rates["4b"][metric])
+    intervals = {}
+    for model, metrics in samples.items():
+        intervals[model] = {}
+        for metric, values in metrics.items():
+            quant = quantiles(values, n=40, method="inclusive") if len(values) >= 2 else None
+            intervals[model][metric] = {"low": quant[0] if quant else None, "high": quant[-1] if quant else None,
+                                        "defined_draws": len(values)}
+    return {"method": "Paired family-cluster percentile bootstrap", "draws": draws, "seed": 193704,
+            "families": len(families), "cases_per_family": 6, "intervals": intervals}
+
+
+def render_report(run_root):
+    if not all((run_root / f"{m}-scores.json").exists() for m in MODELS):
         return
-    scores = {m: read(f"{m}-scores.json") for m in MODELS}
+    scores = {m: json.loads((run_root / f"{m}-scores.json").read_text()) for m in MODELS}
     lines = ["# Paired workspace-pause results", "", "Each checkpoint received the same 48 frozen conversations. "
              "The positive class is a supported forecast revision. TP, FP, FN and TN refer to decisions "
              "returned to the application.", "",
@@ -232,6 +266,21 @@ def render_report():
     lines.extend(["", f"On the three-way decision, both models were correct on {paired[True, True]} cases. "
                   f"Only 4B was correct on {paired[True, False]}, only 9B on {paired[False, True]}, and both "
                   f"missed {paired[False, False]}."])
+    bootstrap = cluster_uncertainty(scores)
+    save(run_root / "family-uncertainty.json", bootstrap)
+    lines += ["", "## How much the rates vary across families", "",
+              "These 95% percentile intervals resample the eight synthetic task families 10,000 times, keeping "
+              "each family's six snapshots together. Both models see the same families in each draw. The "
+              "difference row is 9B minus 4B in percentage points. With only eight hand-authored tasks, the "
+              "intervals describe sensitivity to the family mix; they cannot establish performance across people.",
+              "", "| Model or paired difference | Precision | Recall | Specificity |", "| --- | ---: | ---: | ---: |"]
+    for key, label in (("4b", "4B"), ("9b", "9B"), ("9b_minus_4b", "Paired difference")):
+        cells = []
+        for metric in ("precision", "recall", "specificity"):
+            limits = bootstrap["intervals"][key][metric]
+            unit = " pp" if key == "9b_minus_4b" else "%"
+            cells.append("—" if limits["low"] is None else f"{100*limits['low']:.0f} to {100*limits['high']:.0f}{unit}")
+        lines.append("| " + " | ".join([label, *cells]) + " |")
     lines += ["", "## Model decisions and validation", "",
               "| Model | First-reply TP/FP/FN/TN | First replies without valid JSON | Cases retried | "
               "Direct abstentions | Unavailable final assessments | Transport failures |",
@@ -297,7 +346,7 @@ def render_report():
         lines.append("| All cases passed these checks | Both | — | — | — |")
     lines += ["", "The [protocol](README.md) describes the frozen inputs, the blind review, thresholds "
               "and limitations. Both the per-case receipts and machine-readable score sheets are in this directory.", ""]
-    (ROOT / "REPORT.md").write_text("\n".join(lines))
+    (run_root / "REPORT.md").write_text("\n".join(lines))
 
 
 def model_summary(output):
@@ -310,8 +359,11 @@ if __name__ == "__main__":
     parser.add_argument("model", choices=MODELS)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--retry-transport", action="store_true")
+    parser.add_argument("--score-directory", type=Path, help="Score runs/ in a separate replication directory.")
     args = parser.parse_args()
     if args.action == "run":
+        if args.score_directory:
+            parser.error("--score-directory is only for scoring a saved run")
         run(args.model, args.workers, args.retry_transport)
     else:
-        score(args.model)
+        score(args.model, args.score_directory)

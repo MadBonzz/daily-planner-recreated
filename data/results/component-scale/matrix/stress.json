@@ -1725,5 +1725,15 @@
     "time_corrections": 96,
     "correction_targets_checked": 521
   },
-  "failed_seeds": []
+  "failed_seeds": [],
+  "crowded_burst": {
+    "simultaneous_initial_estimates": 36,
+    "distinct_pair_jobs": 630,
+    "positive_cells": 75,
+    "negative_cells": 555,
+    "completions_in_one_wave": 6,
+    "affected_survivors": 13,
+    "untouched_survivors": 17,
+    "saved_refreshes": 13
+  }
 }

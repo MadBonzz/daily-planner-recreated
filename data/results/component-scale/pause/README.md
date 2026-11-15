@@ -20,7 +20,7 @@ Conditional checks require a nonnegative ordered interval, a fresh verbatim user
 
 ## Run it
 
-From revision `44fd707` with this runner and cohort, use the production forecaster and the specified checkpoint on a local OpenAI-compatible server. The full system prompt has SHA-256 `756d8805e6fdd2763a54f9addfbec5943b4e7d1ef86f70f02a3e5c127d9da979`. The conversation digest is `65affbaf966b52f81cf462c8934798a51fc39fd8347ce2b24ff106243af0b633` and the reference digest is `1cb4428ec37d755d27157f081109d5527e53770559317f283a5f5eddb70b6187`.
+Check out `8dbcfb0` for the frozen cohort and runnable benchmark. It uses the production pause forecaster published in `44fd707`. Serve the specified checkpoint on a local OpenAI-compatible server. The full system prompt has SHA-256 `756d8805e6fdd2763a54f9addfbec5943b4e7d1ef86f70f02a3e5c127d9da979`. The conversation digest is `65affbaf966b52f81cf462c8934798a51fc39fd8347ce2b24ff106243af0b633` and the reference digest is `1cb4428ec37d755d27157f081109d5527e53770559317f283a5f5eddb70b6187`.
 
 ```sh
 export PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1243/v1/chat/completions

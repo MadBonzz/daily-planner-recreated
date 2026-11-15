@@ -57,14 +57,16 @@ def availability(store, task, *, retry=False):
     with _LOCK:
         if key in _PENDING:
             return None
-    if row and (row["eligible"] is not None or not retry):
+    if row and row["eligible"] is not None:
         return dict(row)
-    packaged = eligibility.package().get(fingerprint)
+    packaged = eligibility.packaged(fingerprint)
     if packaged is not None:
         _record(store, task["id"], fingerprint, packaged, "Packaged " + request["model"])
         with store._db() as db:
             row = db.execute("SELECT * FROM task_workspaces WHERE task_id=?", (task["id"],)).fetchone()
             return dict(row) if row else {"eligible": False}
+    if row and not retry:
+        return dict(row)
 
     with _LOCK:
         if key not in _PENDING:

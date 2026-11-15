@@ -37,17 +37,21 @@ The embedding run used LM Studio's bundled llama.cpp CPU runtime 2.66.0 (b11966)
 
 ## Reproduce
 
-Load both models with the identifiers in the [planner setup](../../../../README.md#local-relevance-models). From the repository root, choose a fresh result directory and run both stages.
+Load both models with the identifiers in the [planner setup](../../../../README.md#local-relevance-models). The original cutoff sweep predates the instruction-prefixed Qwen query. Create the historical checkout once from the repository root, then run its two stages in a fresh directory.
 
 ```sh
+git worktree add --detach ../plan-calibration 791814ca57087b5624894e8b7acad0a212dd46c1
+cd ../plan-calibration
 python -m examples.estimation.calibrate_retrieval data/results/retrieval/my-run --stage embeddings
 python -m examples.estimation.calibrate_retrieval data/results/retrieval/my-run --stage decisions
 ```
 
 The decision stage checkpoints each evaluated pair in `decisions.json`. Re-running it on the same unchanged inputs resumes at the next unfinished pair.
 
-To reproduce the app operating-point summary from the recorded run, use the following command. It reads only the two saved JSON files.
+The later 0.70 report reads the saved embeddings and Kev decisions. From the current repository root, create a checkout that contains its scorer and the original inputs.
 
 ```sh
+git worktree add --detach ../plan-cutoff-070 e0e0fd3a5392f5a10dbc6d86e19398b367f07702
+cd ../plan-cutoff-070
 python -m examples.estimation.calibrate_retrieval data/results/retrieval/2026-11-15-qwen06b-kev4b --stage operating-point --threshold 0.70
 ```

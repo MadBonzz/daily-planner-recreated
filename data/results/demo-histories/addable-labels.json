@@ -1,0 +1,27 @@
+{
+  "rubric": "For a prospective task, could the completed task's duration help estimate the same operations, method and scope? Start with its archived evidence IDs and apply the decisions below for newly available work. Other eligible completed tasks are negatives. Preregistered before examining retrieval scores. A neutral pair is excluded from both error and credit.",
+  "additions": {
+    "patch-note": {
+      "incident-card": "Both turn a small set of existing logs into a short, annotated analysis without implementing or running a tool.",
+      "ack-traces": "Both label and compare existing protocol trace records without a new capture or repair."
+    },
+    "appendix-proof": {
+      "variance-email": "Checking a conditioning argument for the same variance estimator and producing a boundary example uses the same derivation work."
+    },
+    "bump-crossing": {
+      "caster-pass": "Both collect two physical threshold crossings with the original rover and USB logger."
+    },
+    "duvet": {
+      "sheets": "Changing bed linen plus an active-time laundry cycle is a useful ordinary-effort comparison.",
+      "towels-one": "Active washing and folding gives partial evidence for ordinary laundry effort even though the materials and making up the bed differ."
+    }
+  },
+  "neutral": {
+    "patch-note": {
+      "clock-two": "Both read existing traces, but reconstructing missing journal entries can differ materially from summarizing a checksum comparison."
+    },
+    "mara-rooms": {
+      "rota-text": "Assigning clinic shifts overlaps, but waiting for two asynchronous responses differs from this standing synchronous call with Mara."
+    }
+  }
+}

@@ -69,7 +69,7 @@ def payload(target, domain, source, titles, config=None):
                           "needed": {"type": "noul", "instructions": _NEEDED}}}
 
 
-@lru_cache(maxsize=1)
+@lru_cache(maxsize=2)
 def _decisions(path):
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -82,7 +82,10 @@ def _decisions(path):
 
 def packaged(request):
     """An exact packaged verdict or None. Safe to call in the bridge's read-only path."""
-    value = _decisions(CACHE_PATH).get(key(request))
+    digest = key(request)
+    value = _decisions(CACHE_PATH).get(digest)
+    if value is None:
+        value = _decisions(CACHE_PATH.parent / "demo" / "models" / "sites.json").get(digest)
     return value if type(value) is bool else None
 
 

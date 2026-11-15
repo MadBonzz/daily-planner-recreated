@@ -94,3 +94,16 @@ python data/results/holdouts/2026-11-15-bonsai-direct-050/score.py
 ```
 
 [4B case records](bonsai-4b/cases/) · [9B case records](bonsai-9b/cases/) · [Cohere case records](../2026-11-15-qwen-query-instruction/instructed/) · [Cohere HTTP receipts](../2026-11-15-qwen-query-instruction/requests.json) · [Complete metrics](summary.json)
+
+## Repeating the historical inference
+
+The two runs used different HTTP timeout settings. These checkouts match the estimator, retrieval, client and runner hashes in their respective published manifests. Start each model separately with the weights and server flags recorded in its runtime file. The examples read the absolute GGUF paths from `BONSAI4_GGUF` and `BONSAI9_GGUF`. Run the following from the current repository root. [4B runtime](bonsai-4b/runtime.json) · [9B runtime](bonsai-9b/runtime.json)
+
+```sh
+git worktree add --detach ../plan-heldout-4b f95f54e9abfbe45329fd1f604470445937965e92
+git worktree add --detach ../plan-heldout-9b b6b77df1d98ac9311056e34da00f093fb7a90caa
+(cd ../plan-heldout-4b && python -m examples.estimation.bonsai_holdouts data/results/local/repeat-4b --model ternary-bonsai-4b --weights "$BONSAI4_GGUF" --endpoint http://127.0.0.1:1243/v1/chat/completions)
+(cd ../plan-heldout-9b && python -m examples.estimation.bonsai_holdouts data/results/local/repeat-9b --model ternary-bonsai-2-9b --weights "$BONSAI9_GGUF" --endpoint http://127.0.0.1:1243/v1/chat/completions)
+```
+
+Add `--preflight` to verify all 20 fixtures, Qwen/Kev selections and initial forecast requests before making model calls.

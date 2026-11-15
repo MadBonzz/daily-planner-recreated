@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import socket
 import sqlite3
+import sys
 from urllib.parse import unquote
 
 from model_client import planner_settings
@@ -107,7 +108,13 @@ def configured_desktop_source(config=None):
     path = config.get("PLANNER_ACTIVITYWATCH_DB")
     host = config.get("PLANNER_ACTIVITYWATCH_HOSTNAME")
     preferred = host or socket.gethostname()
-    candidates = (path,) if path else windows_database_candidates(config)
+    if path:
+        candidates = (path,)
+    elif sys.platform == "darwin":
+        native = Path.home() / "Library/Application Support/activitywatch/aw-server-rust/sqlite.db"
+        candidates = (native,) if native.is_file() else ()
+    else:
+        candidates = windows_database_candidates(config)
     for candidate in candidates:
         source = SQLiteActivitySource(candidate, hostname=preferred)
         try:

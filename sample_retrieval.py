@@ -84,7 +84,11 @@ def read_vectors(index_path, task_id):
 @lru_cache(maxsize=1)
 def _indexes():
     vectors, decisions = {}, {}
-    for path in sorted(DIRECTORY.glob("*.json")):
+    paths = sorted(DIRECTORY.glob("*.json"))
+    demo = DIRECTORY.parent / "demo" / "models" / "retrieval.json"
+    if demo.exists():
+        paths.append(demo)
+    for path in paths:
         bundle = json.loads(path.read_text(encoding="utf-8"))
         if bundle["format"] != FORMAT:
             continue

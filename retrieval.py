@@ -218,7 +218,7 @@ def decide_related(left, right, examples=()):
     return _live_decision(payload, config)
 
 
-def active_decision_order(left, right, examples=()):
+def active_decision_order(left, right, examples=(), *, model=None):
     """Choose one repeatable input order for an undirected active-task cell.
 
     Legacy public schedules can ship only the opposite call. Its exact recorded Kev
@@ -228,7 +228,7 @@ def active_decision_order(left, right, examples=()):
     def content_key(task):
         return tuple(task.get(field) or "" for _, field in _FIELDS)
     first, second = sorted((left, right), key=content_key)
-    model = planner_settings().get("PLANNER_DECISION_MODEL") or DECISION_MODEL
+    model = model or planner_settings().get("PLANNER_DECISION_MODEL") or DECISION_MODEL
     if sample_retrieval.decision_for(decision_payload(first, second, examples, model)) is None:
         if sample_retrieval.decision_for(decision_payload(second, first, examples, model)) is not None:
             return second, first

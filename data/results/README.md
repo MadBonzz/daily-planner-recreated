@@ -4,6 +4,9 @@ Each suite has a report comparing the same held-out tasks across runs. Each run 
 
 | Suite | Cases | Reports and records |
 | --- | ---: | --- |
+| Five editable demo histories | 89 completed tasks, 448 calendar actions and 15 prospective additions | [Watcher coverage, chronological checks and sample-task evidence](demo-histories/) |
+| Expanded workspace-pause and selective re-estimation tests | 48 workspace conversations, 209 labeled active pairs and 96 ten-task timelines | [Scenarios, false positives and false negatives by component](component-scale/) |
+| Component-by-component evaluation · Qwen, Kev and both Bonsai models | Retrieval, task relationships, forecasts, focus, activity, workspace and chat | [Component reports and per-run evidence](component-audit/) |
 | Direct time forecasts with Ternary-Bonsai 4B, Ternary-Bonsai-2 9B and Command R7B | 20 paired tasks in 10 histories | [Accuracy, interval coverage, fallbacks and per-task responses](holdouts/2026-11-15-bonsai-direct-050/) |
 | Qwen query instruction vs. bare query at 0.50 · Command R7B | 143 eligible pairs, 20 paired forecasts | [Retrieval, time accuracy and individual forecast changes](holdouts/2026-11-15-qwen-query-instruction/) |
 | Analytics chat · live Command R7B | GPU distraction, filtered empty result, underestimation and longest-task queries | [Questions, SQL and supporting rows](analytics/2026-11-15-command-r7b-gpu/questions.json) · [Three-turn planning and analytics conversation](analytics/2026-11-15-command-r7b-gpu/shared-conversation.json) |

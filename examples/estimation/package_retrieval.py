@@ -1,4 +1,4 @@
-"""Build the portable Qwen and Kev results for the ten public Dev histories."""
+"""Build portable Qwen and Kev results for the ten original benchmark histories."""
 
 import argparse
 import hashlib
@@ -6,8 +6,8 @@ import json
 import subprocess
 from pathlib import Path
 
-from examples.estimation.calibrate_retrieval import cosine
-from examples.estimation.run import DATASET, REPO, histories, task_inputs, valid_id
+from examples.estimation.scoring import cosine
+from examples.estimation.run import DATASET, REPO, histories, task_inputs, valid_id, write_json
 import retrieval
 import sample_retrieval as cache
 
@@ -106,12 +106,6 @@ def empty_bundle(history, sources):
             "cosine_floor": retrieval.MINIMUM_THRESHOLD, "public_sources": sources, "vectors": {}, "decisions": {}}
 
 
-def save(path, bundle):
-    temp = path.with_suffix(".tmp")
-    temp.write_text(json.dumps(bundle, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
-    temp.replace(path)
-
-
 def build_vectors(tasks, bundle, path):
     for task_id, task in tasks.items():
         vectors, hashes = {}, {}
@@ -135,7 +129,7 @@ def build_decisions(history, tasks, bundle, path):
             continue
         related = retrieval._live_decision(payload, retrieval.planner_settings())
         bundle["decisions"][key] = {"target": target, "candidate": candidate, "related": related}
-        save(path, bundle)
+        write_json(path, bundle, sort_keys=True)
         print(f"{history['id']} {position}/{len(pairs)} task pairs", flush=True)
 
 
@@ -189,7 +183,7 @@ def main():
         if args.stage == "vectors":
             bundle = empty_bundle(history, sources)
             build_vectors(tasks, bundle, path)
-            save(path, bundle)
+            write_json(path, bundle, sort_keys=True)
         else:
             bundle = json.loads(path.read_text(encoding="utf-8"))
             verify_index(path, history, tasks, bundle, sources, complete=args.stage == "verify")

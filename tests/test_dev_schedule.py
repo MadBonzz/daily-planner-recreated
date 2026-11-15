@@ -16,7 +16,7 @@ import retrieval
 
 
 def load(directory, kind, profile):
-    return json.loads((Path(directory) / kind / (profile + ".json")).read_text(encoding="utf-8"))
+    return json.loads((dev.sample_root(profile, directory) / kind / (profile + ".json")).read_text(encoding="utf-8"))
 
 
 def assert_timers(store, history):
@@ -41,7 +41,7 @@ def open_snapshot_at(directory, profile, opened_at, monkeypatch):
     return store
 
 
-@pytest.mark.parametrize("profile", list(dev.history_choices()))
+@pytest.mark.parametrize("profile", [p.stem for p in sorted((dev.DATASET / "histories").glob("*.json"))])
 def test_snapshots_anchor_packaged_schedules_and_preserve_all_timers(tmp_path, profile, monkeypatch):
     monkeypatch.setattr(activity, "_get", lambda *_a, **_k: pytest.fail("Dev contacted a personal watcher"))
     history = load(dev.DATASET, "histories", profile)
@@ -168,6 +168,8 @@ def test_dashboard_opens_replay_steps_and_shows_history_logs(tmp_path, monkeypat
     import estimate_worker
     import report_worker
 
+    # Exercise the original clinic timeline through the dashboard with its archived catalog.
+    monkeypatch.setattr(dev, "DEMO_DATASET", dev.DATASET)
     monkeypatch.setenv("PLANNER_DATA_DIR", str(tmp_path))
     monkeypatch.setattr(estimate_worker, "schedule_pending", lambda *_: None)
     monkeypatch.setattr(report_worker, "schedule_reports", lambda *_: None)
@@ -224,7 +226,7 @@ def test_replay_reclaims_abandoned_forecast_at_original_event_time(tmp_path, mod
     assert entry["initial"] and entry["at"] == created
 
 
-@pytest.mark.parametrize("profile", list(dev.history_choices()))
+@pytest.mark.parametrize("profile", [p.stem for p in sorted((dev.DATASET / "histories").glob("*.json"))])
 def test_replay_judges_all_overlaps_and_preserves_initial_history(tmp_path, profile, model_stubs, monkeypatch):
     monkeypatch.setattr(retrieval, "decide_related", lambda a,b,**kw: a["category"] == b["category"])
     store = dev.open_dev_workspace(tmp_path, profile, replay=True)

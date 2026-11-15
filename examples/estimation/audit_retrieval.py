@@ -7,9 +7,9 @@ from tempfile import TemporaryDirectory
 
 import retrieval
 import sample_retrieval
-from examples.estimation.calibrate_retrieval import cosine, metrics, write_json
 from examples.estimation.package_retrieval import inputs
-from examples.estimation.run import REPO, histories
+from examples.estimation.run import REPO, histories, write_json
+from examples.estimation.scoring import cosine, pair_metrics
 
 
 FROZEN = REPO / 'data/results/component-audit/retrieval/judge-inputs.json'
@@ -152,11 +152,11 @@ def score(directory, rows, tasks):
                    'instructed_then_kev': lambda r: r['instructed'] >= .50 and r['baseline_kev'],
                    'dual_query_then_kev': lambda r: dual_score(r) >= .50 and r['baseline_kev'],
                    'dual_query_then_scoped_kev': lambda r: dual_score(r) >= .50 and r['production_kev']}
-        report[split] = {name: metrics(group, pred) for name, pred in methods.items()}
+        report[split] = {name: pair_metrics(group, pred) for name, pred in methods.items()}
         report[split]['ranking'] = {'instructed': rank_metrics(group, lambda r: r['instructed']),
                                    'dual_query': rank_metrics(group, dual_score)}
-        report[split]['kev_on_dual_candidates'] = metrics(candidates, lambda r: r['baseline_kev'])
-        report[split]['scoped_kev_on_dual_candidates'] = metrics(candidates, lambda r: r['production_kev'])
+        report[split]['kev_on_dual_candidates'] = pair_metrics(candidates, lambda r: r['baseline_kev'])
+        report[split]['scoped_kev_on_dual_candidates'] = pair_metrics(candidates, lambda r: r['production_kev'])
         received = []
         for row in candidates:
             request = frozen_request(fixture, row['history'], row['target'], row['candidate'], True)
@@ -167,10 +167,10 @@ def score(directory, rows, tasks):
                 received.append({**row, 'p': hit['probability']})
         report[split]['method_probe'] = {
             'attempts_with_response': len(received), 'eligible': len(candidates),
-            'production_same_pairs': metrics(received, lambda r: r['baseline_kev']) if received else None,
-            'method_same_pairs': metrics(received, lambda r: r['p'] >= .50) if received else None,
+            'production_same_pairs': pair_metrics(received, lambda r: r['baseline_kev']) if received else None,
+            'method_same_pairs': pair_metrics(received, lambda r: r['p'] >= .50) if received else None,
             'decision_threshold_sensitivity': {
-                str(cutoff): metrics(received, lambda r: r['p'] >= cutoff) for cutoff in (.25, .35, .5, .65)
+                str(cutoff): pair_metrics(received, lambda r: r['p'] >= cutoff) for cutoff in (.25, .35, .5, .65)
             } if received else None,
         }
     report['development_selection'] = choose_challenger(report['development'])

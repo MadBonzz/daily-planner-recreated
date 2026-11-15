@@ -1,6 +1,31 @@
 # Synthetic histories for Plan Smarter
 
-Ten fictional people have **79 completed tasks**, **20 editable open tasks**, and **20 later tasks held back for scoring**. Sixteen original PDFs are used by 34 records, and 55 completed tasks have a written completion note. The benchmark includes 17 declared patterns, one of which is a fixed 75-minute show. Three controls test a stable budget or an outcome that a user could not reasonably predict.
+The Dev picker opens the five editable schedules in [demo/](demo/). Their task rows link to shared PDFs and include historical, in-progress and addable work. [demo/sources.json](demo/sources.json) records where a task also appears in the original benchmark. The picker and the benchmark have separate calendars, ActivityWatch stores and runtime workspaces.
+
+## Try a history in the app
+
+| Picker entry | Completed | Open | Try adding |
+| --- | ---: | ---: | --- |
+| Nora · distributed systems lab | 16 | 6 | A recovery proof or a short report from existing traces |
+| Ishan · paper reading and GPU research | 16 | 6 | An appendix derivation or another working GPU timing sweep |
+| Mae · clinic and community theater | 19 | 6 | An intake handover meeting with Mara or an inventory meeting with Dev |
+| Leila · interviews and signals evening class | 19 | 6 | A sliding-window problem or an online Fourier lecture |
+| Xavier · robotics lab and shared home | 19 | 6 | A physical rover run or tray-bake cleanup |
+
+Start the planner normally. Select **Dev** and choose a **Sample history**. Its completed tasks include the original time budget, recorded sessions, attached PDFs when supplied and any notes left at completion. Open **History details** to jump to the date of an earlier task, or work on today's open tasks. Edits persist separately for each sample. **Reset sample history** restores that sample. **Demo** opens the personal planner.
+
+Open an earlier date to revisit the task description, note and report; the Analytics page also shows dated laptop and phone intervals. The editable calendars and their ActivityWatch databases are in [demo/](demo/). Each calendar dates creation, start, pause, resume and completion relative to the day the profile is opened. Prospective sample tasks are available to add after loading. [Trace counts and timing patterns](../results/demo-histories/README.md)
+
+In **Dev → Editable history → History details**, choose **Try a sample task** and click **Add sample task** to queue a new forecast on the selected plan date. The attached sample handout and bundled relevance results travel with its input. The following CLI commands open the original benchmark’s temporary profiles. The second command stages its held-out tasks on today's plan. Stopping it discards that trial.
+
+```sh
+python -m examples.estimation.run list
+python -m examples.estimation.run open 02
+```
+
+## Original benchmark
+
+The ten benchmark histories have **79 completed tasks**, **20 editable open tasks**, and **20 later tasks held back for scoring**. Sixteen original PDFs are used by 34 records, and 55 completed tasks have a written completion note. The benchmark includes 17 declared patterns, one of which is a fixed 75-minute show. Three controls test a stable budget or an outcome that a user could not reasonably predict.
 
 | History | Completed | What changes the budget |
 | --- | ---: | --- |
@@ -15,26 +40,33 @@ Ten fictional people have **79 completed tasks**, **20 editable open tasks**, an
 | 09 · Robotics night school | 9 | Runs through a flaky USB bridge versus replaying saved traces |
 | 10 · Evening signal-processing student | 9 | An online lecture with recurring distractions versus an offline problem sheet |
 
-## Try a history in the app
+The [benchmark retrieval data](retrieval/) includes a CSV for each of the 119 original sample tasks. Its 1,024 rows hold the document and query embeddings. The profile JSON records the two model-input hashes, the public source files and Kev’s pair decisions. Final forecasts are generated using the endpoint you configure.
 
-Start the planner normally. Select **Dev** and choose a **Sample history**. Its completed tasks include the original time budget, recorded sessions, attached PDFs when supplied and any notes left at completion. Open **History details** to jump to the date of an earlier task, or work on today's open tasks. Edits persist separately for each sample. **Reset sample history** restores that sample. **Demo** opens the personal planner.
+## Verify the five Dev profiles
 
-The ten event calendars in `schedules/` contain 410 task creations and timer actions. Each event identifies a task in the matching `histories/` file, its local minute after midnight, and a day offset ending on day zero. The task ID connects it to the existing attachment and synthetic ActivityWatch database. Each task's timer periods keep the original durations and breaks, so a window or phone event stays aligned after the calendar moves. For example, the apartment resident renews a filter subscription while the washer is running, and the interview student does the dishes during a break between two attempts at a problem. The calendars omit the held-out tasks.
+The demo combines exact cached Qwen and Kev outputs from the benchmark with [new model outputs](demo/models/). The content, model, query role and decision prompt determine whether a cached result applies. The final forecast and activity classification go to your configured forecast endpoint. Editing task text, attaching another document, reviewing relevance, or changing activity labels can produce a new local-model request.
 
-In **Dev → Editable history → History details**, choose **Try a sample task** and click **Add sample task** to queue a new forecast on the selected plan date. The attached sample handout and bundled relevance results travel with its input. You can also use the CLI’s temporary profile. It recreates the chosen history and stages its held-out tasks on today's plan. Stopping the command discards that trial.
+Run the following command to reconstruct the authored requests and check their coverage without calling a model:
 
 ```sh
-python -m examples.estimation.run list
-python -m examples.estimation.run open 02
+python -m examples.estimation.package_demo --stage verify
 ```
 
-The [packaged retrieval data](retrieval/) includes a CSV for each of the 119 public sample tasks. Its 1,024 rows hold the document and query embeddings. The profile JSON records the two model-input hashes, the public source files and Kev’s pair decisions. Final forecasts are generated using the endpoint you configure.
+To rebuild after changing fixtures, run the stages below from the repository root with the local Qwen and Kev endpoints configured. Each stage skips existing exact matches and writes new results atomically. The site stage requires the completed vector and pair stages. Use `--count-only` to preview missing inputs or `--history d1-systems-student` to build one profile.
+
+```sh
+python -m examples.estimation.package_demo --stage vectors
+python -m examples.estimation.package_demo --stage pairs
+python -m examples.estimation.package_demo --stage workspaces
+python -m examples.estimation.package_demo --stage sites
+```
 
 ## Score a chronological replay
 
 Run a single profile from its first creation through its last timer event. Choose a new output directory for each run. You can stop at an event count or pass a specific local date for day zero.
 
 ```sh
+python -m examples.estimation.replay d1 --demo --output data/results/local/student-replay-01
 python -m examples.estimation.replay 06 --output data/results/local/clinic-live-01
 python -m examples.estimation.replay 01 --actions 12 --offline --anchor-day 2026-11-15 --output data/results/local/replica-offline-01
 ```
@@ -70,25 +102,25 @@ The result JSON records the selected historical tasks, forecast range, calibrati
 
 ## Inspect the inputs
 
-The JSON files in `histories/` contain the independent profiles. `tasks` holds completed work, `open_tasks` gives Dev its editable starting state, and `holdouts` contains the prospective tasks and their private grading data. Attached handouts live in `pdfs/`. Several tasks may refer to different sections of the same handout. To regenerate the PDFs, install `reportlab` and run `python data/tasks/render_pdfs.py`.
+The JSON files in `histories/` contain the original benchmark profiles. `tasks` holds completed work, `open_tasks` gives Dev its editable starting state, and `holdouts` contains the prospective tasks and their private grading data. Attached handouts live in `pdfs/`. Several tasks may refer to different sections of the same handout. To regenerate the PDFs, install `reportlab` and run `python data/tasks/render_pdfs.py`.
 
 Each history points to its own read-only ActivityWatch SQLite database in `activitywatch/`. The ten databases contain 625 fictional events. Their schema matches the v6 Rust store, including bucket metadata, a global event ID, the bucket foreign key, start and end times in Unix nanoseconds, JSON event payloads and the original time indexes. The databases contain only sensor observations. Timer sessions, pause boundaries and interval annotations stay in the history JSON. Past user budgets and actuals are part of the fixture. Model forecasts and run logs live under `data/results/`.
 
-All ten histories contain reviewed distractions on previous tasks from both laptop and phone. In GPU lab, for example, two YouTube hockey clips during debugging total 11 minutes, and two visits to the FotMob phone app total 8 minutes. The Device column identifies foreground observations from the laptop, phone or both. When only a laptop idle heartbeat is available it shows Laptop; a gap or a private interval shows Unknown. Device attribution describes watcher evidence, not certainty about the user’s attention.
+All ten original benchmark histories contain reviewed distractions on previous tasks from both laptop and phone. In GPU lab, for example, two YouTube hockey clips during debugging total 11 minutes, and two visits to the FotMob phone app total 8 minutes. The Device column identifies foreground observations from the laptop, phone or both. When only a laptop idle heartbeat is available it shows Laptop; a gap or a private interval shows Unknown. Device attribution describes watcher evidence, not certainty about the user’s attention.
 
-The clinic’s open flyer task includes Android activity overlapping a desktop editor. The apartment’s open laundry task has phone activity while the desktop is idle. Dev maps those events from the sample’s clock onto the running timer when a sample is loaded. On task review, the app queries the recorded windows, clips pauses and overlaps, applies exclusions, and sends only the sanitized intervals to the classifier. Time added after loading the sample has no synthetic observations.
+In the original benchmark, the clinic flyer has Android activity overlapping a desktop editor. The apartment laundry has phone activity while the desktop is idle. Dev maps those events from the sample’s clock onto the running timer when a sample is loaded. On task review, the app queries the recorded windows, clips pauses and overlaps, applies exclusions, and sends only the sanitized intervals to the classifier. Time added after loading the sample has no synthetic observations.
 
 [Benchmark runs and reports](../results/README.md) · [Original fixtures and report](https://github.com/MadBonzz/daily-planner-recreated/tree/1d1eea60ffacef970206b2120ae3808191941344/data)
 
 Inspect a fixture with the SQLite CLI. The following query lists watcher types and event counts without displaying window titles.
 
 ```sh
-sqlite3 -readonly data/tasks/activitywatch/06-neighborhood-clinic.db "SELECT b.type, b.client, count(e.id) FROM buckets b LEFT JOIN events e ON e.bucketrow=b.id GROUP BY b.id;"
+sqlite3 -readonly data/tasks/demo/activitywatch/d3-clinic-coordinator.db "SELECT b.type, b.client, count(e.id) FROM buckets b LEFT JOIN events e ON e.bucketrow=b.id GROUP BY b.id;"
 ```
 
 ## Website blocking suggestions
 
-`focus-decisions.json` contains Kev’s decisions for websites labeled as distractions in a single completed comparison task. The index includes the dated schedule, the 40 open and addable tasks across the ten histories, and the choice to manually select any completed task in the same history. A decision is keyed by the exact model request, including the task scope and observed tab titles.
+`focus-decisions.json` contains Kev’s decisions for websites labeled as distractions in a single completed comparison task. This original benchmark index includes the dated schedule, the 40 open and addable tasks across the ten archived histories, and the choice to manually select any completed task in the same history. A decision is keyed by the exact model request, including the task scope and observed tab titles.
 
 This command verifies the keys and coverage using only the published samples.
 

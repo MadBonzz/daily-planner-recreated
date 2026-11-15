@@ -14,14 +14,14 @@ import portalocker
 
 import activity
 from examples.estimation.activity_fixture import replay_history, replay_task_at, task_layout
-from examples.estimation.run import DATASET, task_inputs, valid_id
+from examples.estimation.run import DATASET, DEMO_DATASET, sample_root, task_inputs, valid_id
 from planner_store import PlannerStore
 
 
 def history_choices():
     """Return stable IDs and human-readable names for the packaged histories."""
     choices = {}
-    for path in sorted((DATASET / "histories").glob("*.json")):
+    for path in sorted((DEMO_DATASET / "histories").glob("*.json")):
         history = json.loads(path.read_text(encoding="utf-8"))
         if history["id"] != path.stem or not valid_id(path.stem):
             raise ValueError(f"Invalid history ID in {path.name}")
@@ -30,15 +30,14 @@ def history_choices():
 
 
 def sample_task_choices(history_id):
-    if not valid_id(history_id):
-        raise ValueError("Invalid history ID")
-    history = json.loads((DATASET / "histories" / f"{history_id}.json").read_text(encoding="utf-8"))
+    directory = sample_root(history_id, DATASET)
+    history = json.loads((directory / "histories" / f"{history_id}.json").read_text(encoding="utf-8"))
     return {row["id"]: row for row in history["holdouts"]}
 
 
 def add_sample_task(store, history_id, sample_id, day):
     sample = sample_task_choices(history_id)[sample_id]
-    fields, attachments = task_inputs(sample, history_id, DATASET)
+    fields, attachments = task_inputs(sample, history_id, sample_root(history_id, DATASET))
     fields["day"] = day
     return store.create_task(**fields, attachments=attachments)
 
@@ -122,18 +121,19 @@ def dev_activity_report(store, task, *, examples=(), overrides=None):
     periods = store.periods(task["id"])
     ref = store.get_setting(f"dev_activity_{task['id']}")
     if ref:
-        source = DATASET / "histories" / (ref["history"] + ".json")
+        directory = sample_root(ref["history"], DATASET)
+        source = directory / "histories" / (ref["history"] + ".json")
         history = json.loads(source.read_text(encoding="utf-8"))
         for row in [*history["tasks"], *history.get("open_tasks", [])]:
             if row["id"] == ref["task"]:
-                return replay_task_at(history, row, ref["sessions"], periods, directory=DATASET,
+                return replay_task_at(history, row, ref["sessions"], periods, directory=directory,
                                       exclusions=store.get_setting("exclusions", []), task_context=task,
                                       use_model=bool(history.get("activitywatch_sha256")),
                                       examples=examples, overrides=overrides)
     return activity.build_report(task, periods, capture=False)
 
 
-def _seed_open(store, history, now):
+def _seed_open(store, history, now, directory):
     rows = history.get("open_tasks", [])
     if sum(row["status"] == "running" for row in rows) > 1:
         raise ValueError("A profile can contain only one running task.")
@@ -158,7 +158,7 @@ def _seed_open(store, history, now):
         if sessions:
             end = sessions[0][0][0] - 900
     for row, sessions in reversed(blocks):
-        _import_task(store, history["id"], DATASET, row, sessions, status=row["status"], now=now)
+        _import_task(store, history["id"], directory, row, sessions, status=row["status"], now=now)
 
 
 def _read_generation(directory):
@@ -194,9 +194,8 @@ def _reap_retired(profile, selected):
 
 def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
     """Atomically select one editable generation of this scenario for new sessions."""
-    if not valid_id(history_id):
-        raise ValueError("Invalid history ID")
-    source = DATASET / "histories" / f"{history_id}.json"
+    directory = sample_root(history_id, DATASET)
+    source = directory / "histories" / f"{history_id}.json"
     if not source.is_file():
         raise ValueError(f"Unknown example history {history_id}")
     dev_root = Path(data_root) / "dev"
@@ -220,13 +219,13 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
             try:
                 fresh = PlannerStore(current)
                 import dev_schedule
-                if dev_schedule.schedule_exists(history_id, DATASET):
-                    dev_schedule.initialize(fresh, history_id, DATASET, replay=replay, now=time.time())
+                if dev_schedule.schedule_exists(history_id, directory):
+                    dev_schedule.initialize(fresh, history_id, directory, replay=replay, now=time.time())
                 elif replay:
                     raise ValueError("No chronological schedule is available for this sample.")
                 else:
-                    seed_completed(fresh, history, DATASET)
-                    _seed_open(fresh, history, time.time())
+                    seed_completed(fresh, history, directory)
+                    _seed_open(fresh, history, time.time(), directory)
                 fresh.set_setting("dev_sample_activity_sha256", history.get("activitywatch_sha256"))
             except BaseException:
                 rmtree(current, ignore_errors=True)
@@ -238,7 +237,7 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
         # paths forever. A late model reply from the previous generation can
         # finish only in its original workspace, even in another process.
         store = _read_generation(current)
-        _refresh_sample_activity(store, history, DATASET)
+        _refresh_sample_activity(store, history, directory)
         if replay:
             # Use a fresh read on every tick. Workers and other tabs share the same virtual clock.
             path = store.path

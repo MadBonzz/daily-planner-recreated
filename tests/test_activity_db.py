@@ -106,7 +106,8 @@ def test_read_sees_committed_wal_updates(tmp_path):
         assert result[0]["duration"] == 4
 
 
-def test_windows_discovery_prefers_authoritative_db_then_synced_desktop(tmp_path):
+def test_windows_discovery_prefers_authoritative_db_then_synced_desktop(tmp_path, monkeypatch):
+    monkeypatch.setattr(activity_db.sys, "platform", "win32")
     profile = tmp_path / "User"
     local = tmp_path / "AppData" / "Local"
     sync = profile / "Downloads" / "syncthing-windows-amd64-v2.1.7" / "syncthing-windows-amd64-v2.1.7" / "activity-watch-one-plus"
@@ -121,6 +122,20 @@ def test_windows_discovery_prefers_authoritative_db_then_synced_desktop(tmp_path
     assert source.path == mirror and source.hostname == "fixture-host"
     # The explicitly configured live path is used even when path validation fails.
     assert activity_db.configured_desktop_source({**config, "PLANNER_ACTIVITYWATCH_DB": str(primary)}).path == primary
+
+
+def test_macos_discovers_rust_database_and_honors_explicit_override(tmp_path, monkeypatch):
+    monkeypatch.setattr(activity_db.sys, "platform", "darwin")
+    monkeypatch.setattr(activity_db.Path, "home", classmethod(lambda cls: tmp_path))
+    native = tmp_path / "Library/Application Support/activitywatch/aw-server-rust/sqlite.db"
+    assert activity_db.configured_desktop_source({}) is None
+    assert not native.parent.exists()
+    make_db(native, desktop="test-mac.local")
+    source = activity_db.configured_desktop_source({})
+    assert source.path == native and source.hostname == "test-mac.local"
+    assert source.get(f"buckets/{BUCKET}/events", start=BASE, end=BASE + 1)
+    other = make_db(tmp_path / "elsewhere.sqlite", desktop="other")
+    assert activity_db.configured_desktop_source({"PLANNER_ACTIVITYWATCH_DB": str(other)}).path == other
 
 
 def test_capture_off_skips_db_discovery_and_filesystem_reads(monkeypatch):

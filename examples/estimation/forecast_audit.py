@@ -6,8 +6,10 @@ The two input sets use the app's predictor and HTTP client. Only retrieval is fr
 """
 import argparse
 import hashlib
+import io
 import json
 import os
+import re
 import time
 from contextlib import ExitStack
 from datetime import datetime, timezone
@@ -21,7 +23,6 @@ from urllib.request import ProxyHandler, build_opener
 import estimator
 import model_client
 from examples.estimation import run as fixtures
-from examples.estimation.bonsai_holdouts import ObservedClient
 
 OUT = fixtures.REPO / "data/results/component-audit/forecast"
 REFERENCE = fixtures.REPO / "data/results/holdouts/2026-11-15-bonsai-direct-050"
@@ -141,6 +142,30 @@ def idle_slots(endpoint):
     if not slots or idle != len(slots):
         raise RuntimeError("The no-queue check requires the shared server to be idle.")
     return {"idle": idle, "total": len(slots)}
+
+
+class ObservedClient:
+    def __init__(self, client, receipt, target):
+        self.client, self.receipt, self.target = client, receipt, target
+
+    def open(self, request, **kwargs):
+        if request.full_url != self.target:
+            raise RuntimeError('Unexpected inference endpoint')
+        sent = json.loads(request.data)
+        self.receipt['payload_sha256'] = hashlib.sha256(
+            json.dumps(sent, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        with self.client.open(request, **kwargs) as result:
+            self.receipt['http_status'] = result.status
+            raw = result.read()
+        wire = json.loads(raw)
+        choice = wire['choices'][0]
+        self.receipt.update(response_model=wire['model'], finish_reason=choice['finish_reason'],
+                            usage=wire.get('usage'), timings=wire.get('timings'),
+                            content_sha256=hashlib.sha256(choice['message']['content'].encode()).hexdigest())
+        # Preserve unparseable/generated JSON for diagnosis. No hidden reasoning channel is exported.
+        self.receipt['content'] = re.sub(r'<think>.*?(?:</think>|$)', '', choice['message']['content'], flags=re.S)
+        return io.BytesIO(raw)
 
 
 def evaluate(case, destination, model, *, integrated=False, solo=False):

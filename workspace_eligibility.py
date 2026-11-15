@@ -57,10 +57,10 @@ def payload(task, config):
             "questions": questions}
 
 
-@lru_cache(maxsize=1)
-def package():
+@lru_cache(maxsize=2)
+def _decisions(path):
     try:
-        bundle = json.loads(PACK.read_text(encoding="utf-8"))
+        bundle = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
     records = bundle.get("decisions") if isinstance(bundle, dict) else None
@@ -68,6 +68,17 @@ def package():
         return {}
     return {key: allowed for key, allowed in records.items() if type(allowed) is bool}
 
+
+@lru_cache(maxsize=1)
+def package():
+    return _decisions(PACK)
+
+
+def packaged(digest):
+    cached = package().get(digest)
+    if cached is None:
+        cached = _decisions(PACK.parent / "demo" / "models" / "workspaces.json").get(digest)
+    return cached
 
 def live(request, config):
     endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
@@ -82,7 +93,7 @@ def live(request, config):
 
 
 def decide(request, config):
-    cached = package().get(decision_hash(request))
+    cached = packaged(decision_hash(request))
     if cached is not None:
         return cached, f"Packaged {request['model']} decision"
     try:

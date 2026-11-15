@@ -27,18 +27,51 @@ from planner_store import PlannerStore
 
 REPO = Path(__file__).resolve().parents[2]
 DATASET = REPO / "data" / "tasks"
+DEMO_DATASET = DATASET / "demo"
 INPUT_KEYS = ("day", "title", "description", "category", "details", "estimate_minutes")
+
+
+def write_json(path, data, *, sort_keys=False):
+    """Atomically replace one evaluation checkpoint after successful serialization."""
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, indent=2, allow_nan=False, sort_keys=sort_keys) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def sample_root(history_id, directory=DATASET):
+    """Locate a live or archived fixture without changing benchmark defaults."""
+    if not valid_id(history_id):
+        raise ValueError("Invalid history ID")
+    root = Path(directory)
+    if (root / "demo" / "histories" / f"{history_id}.json").is_file():
+        return root / "demo"
+    return root
+
+
+def pdf_file(task, history_id, directory):
+    """Resolve an authored attachment or an explicit reference to a shared sample PDF."""
+    if not valid_id(history_id):
+        raise ValueError("Invalid fixture history ID")
+    if "pdf_path" in task:
+        if Path(directory).resolve() != DEMO_DATASET.resolve():
+            raise ValueError("Shared PDF references belong to the demo catalog.")
+        reference = task["pdf_path"]
+        if not isinstance(reference, str) or not re.fullmatch(r"pdfs/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+\.pdf", reference):
+            raise ValueError("Invalid shared sample PDF reference")
+        path = DATASET / reference
+        if not path.resolve().is_relative_to((DATASET / "pdfs").resolve()):
+            raise ValueError("Shared sample PDF is outside the fixture directory.")
+        return path
+    stem = task["pdf"] if isinstance(task["pdf"], str) else task["id"]
+    if not valid_id(stem):
+        raise ValueError("Invalid fixture PDF reference")
+    return Path(directory) / "pdfs" / history_id / f"{stem}.pdf"
 
 
 def documents(task, history_id, directory):
     if not task.get("pdf"):
         return []
-    if not valid_id(history_id):
-        raise ValueError("Invalid fixture history ID")
-    stem = task["pdf"] if isinstance(task["pdf"], str) else task["id"]
-    if not valid_id(stem):
-        raise ValueError("Invalid fixture PDF reference")
-    path = directory / "pdfs" / history_id / f"{stem}.pdf"
+    path = pdf_file(task, history_id, directory)
     return [(path.name, path.read_bytes())]
 
 
@@ -65,8 +98,12 @@ def validate(history, directory, *, check_pdfs=True):
     if not valid_id(history_id) or not history["name"] or not history["scenario"]:
         raise ValueError("Each history needs an ID, name, and scenario")
     tasks, holdouts = history["tasks"], history["holdouts"]
-    if not 5 <= len(tasks) <= 10 or not holdouts:
-        raise ValueError(f"{history_id}: expected 5–10 historical tasks and at least one holdout")
+    demo = Path(directory).resolve() == DEMO_DATASET.resolve()
+    prospective = {row["id"] for row in holdouts} if demo else set()
+    if len(tasks) < 5 or not holdouts:
+        raise ValueError(f"{history_id}: expected at least five historical tasks and one holdout")
+    if not demo and len(tasks) > 10:
+        raise ValueError(f"{history_id}: historical benchmark profiles contain 5–10 completed tasks")
     seen = set()
     for task in tasks + holdouts:
         task_id = task["id"]
@@ -84,11 +121,17 @@ def validate(history, directory, *, check_pdfs=True):
             raise ValueError(f"{task_id}: completion_note must be text")
         if "fixed_duration" in task and type(task["fixed_duration"]) is not bool:
             raise ValueError(f"{task_id}: fixed_duration must be a boolean")
-        sessions = task["sessions_minutes"]
-        if not isinstance(sessions, list) or not sessions or any(
-            type(n) is not int or n <= 0 for n in [*sessions, task["actual_minutes"], task["estimate_minutes"]]
-        ) or sum(sessions) != task["actual_minutes"]:
-            raise ValueError(f"{task_id}: invalid timings or sessions that do not sum to actual_minutes")
+        if task_id in prospective:
+            if not positive_minutes(task["estimate_minutes"]):
+                raise ValueError(f"{task_id}: invalid sample task budget")
+            if {"actual_minutes", "sessions_minutes", "completion_note", "activity", "evaluation", "check"} & task.keys():
+                raise ValueError(f"{task_id}: an addable demo task must contain only pre-task inputs")
+        else:
+            sessions = task["sessions_minutes"]
+            if not isinstance(sessions, list) or not sessions or any(
+                type(n) is not int or n <= 0 for n in [*sessions, task["actual_minutes"], task["estimate_minutes"]]
+            ) or sum(sessions) != task["actual_minutes"]:
+                raise ValueError(f"{task_id}: invalid timings or sessions that do not sum to actual_minutes")
         if task.get("pdf") and check_pdfs:
             fields, _ = task_inputs(task, history_id, directory)
             if not fields["pdf_text"].strip():
@@ -128,7 +171,7 @@ def validate(history, directory, *, check_pdfs=True):
             raise ValueError(f"{history_id}: every holdout needs its declared evaluation")
         if "evaluation" in row:
             validate_rubric(row["evaluation"], {past["id"] for past in tasks})
-    if any(not row.get("check") and not row.get("evaluation") for row in holdouts):
+    if not demo and any(not row.get("check") and not row.get("evaluation") for row in holdouts):
         raise ValueError(f"{history_id}: each holdout needs a check describing its intended test")
     if min(row["day"] for row in holdouts) <= max(row["day"] for row in tasks):
         raise ValueError(f"{history_id}: every holdout must be later than all historical tasks")

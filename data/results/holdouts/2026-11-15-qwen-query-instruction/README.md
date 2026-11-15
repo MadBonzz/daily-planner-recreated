@@ -53,8 +53,14 @@ Both arms use the updated forecast explanations and enriched histories in this r
 
 [All pair scores and decisions](pairs.json) · [Bare forecasts](bare/) · [Instructed forecasts](instructed/) · [Cohere receipts](requests.json) · [Full metrics](summary.json) · [Input fingerprints](manifest.json)
 
-From the repository root, configure Cohere Command R7B, set `PLANNER_RELEVANCE_THRESHOLD=0.50`, and run the following command. The packaged Qwen vectors and Kev decisions cover both arms.
+The manifest identifies the generating implementation at `2a0eda8`. Its portable Qwen vectors and Kev decisions were first published at `4a390ad`, using a CSV reader for the same float32 vectors. The following replay uses that checkout and the original Cohere responses. The estimator, task fixtures, primary request IDs, selected comparisons and behavioral results are the same. Replayed wall times reflect local execution. From the current repository root, run
 
 ```sh
-python -m examples.estimation.compare_instruction data/results/local/query-instruction-repeat
+git worktree add --detach ../plan-query-ab 4a390add363af081cb805a311d2feeab4d878fb2
+cd ../plan-query-ab
+mkdir -p data/results/local/query-instruction-repeat
+cp data/results/holdouts/2026-11-15-qwen-query-instruction/requests.json data/results/local/query-instruction-repeat/
+PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions PLANNER_MODEL=command-r7b-12-2024 PLANNER_RELEVANCE_THRESHOLD=0.50 python -m examples.estimation.compare_instruction data/results/local/query-instruction-repeat
 ```
+
+For fresh provider responses, configure your Cohere key and use a new output directory with no copied receipt file.

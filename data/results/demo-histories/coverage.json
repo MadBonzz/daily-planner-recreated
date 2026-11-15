@@ -1,0 +1,2758 @@
+{
+  "benchmark": {
+    "totals": {
+      "calendars": 10,
+      "completed": 79,
+      "open": 20,
+      "addable": 20,
+      "completed_with_note": 55,
+      "calendar_events": 410,
+      "native_watcher_events": 625,
+      "tasks_with_off_task_activity": 31,
+      "off_task_intervals": 38,
+      "off_task_minutes": 146.0,
+      "off_task_domains": [
+        "chess.com",
+        "ebay.com",
+        "geoguessr.com",
+        "nba.com",
+        "nytimes.com",
+        "rei.com",
+        "sports.example",
+        "ticketmaster.com",
+        "youtube.com"
+      ],
+      "off_task_phone_apps": [
+        "Candy Crush Saga",
+        "Chess.com",
+        "FotMob",
+        "GeoGuessr",
+        "NBA",
+        "Steam",
+        "Ticketmaster"
+      ],
+      "per_completed_task": {
+        "timer_periods": {
+          "min": 1,
+          "median": 1,
+          "max": 2
+        },
+        "raw_watcher_records": {
+          "min": 0,
+          "median": 5,
+          "max": 17
+        },
+        "intervals": {
+          "min": 1,
+          "median": 4,
+          "max": 11
+        },
+        "distinct_foreground_contexts": {
+          "min": 0,
+          "median": 3,
+          "max": 10
+        }
+      },
+      "without_visible_foreground": 12,
+      "timed_minutes": 3639,
+      "visible_foreground_minutes": 2992.0,
+      "percentage_with_visible_foreground": 82.2
+    },
+    "profiles": [
+      {
+        "id": "01-replica-proofs",
+        "name": "Problem sets between lab and home",
+        "completed": 7,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 38,
+          "activity_days": 6,
+          "calendar_span_days": 8,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 1560,
+            "max": 3774
+          },
+          "completed_created_on_an_earlier_day": 5,
+          "created_while_other_task_unfinished": 8
+        },
+        "completed_with_note": 3,
+        "with_pdf": 7,
+        "unique_pdfs": 2,
+        "words_per_pdf": {
+          "min": 382,
+          "median": 505.0,
+          "max": 628
+        },
+        "watcher_event_count": 65,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-01-replica-proofs": 25,
+          "aw-watcher-web-firefox_demo-01-replica-proofs": 4,
+          "aw-watcher-window_demo-01-replica-proofs": 33,
+          "aw-watcher-android_01-replica-proofs-phone": 3
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "chess.com": 5.0
+        },
+        "off_task_phone_app_minutes": {
+          "Chess.com": 7.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 12.0,
+          "on_task": 289.0,
+          "uncertain": 37.0
+        },
+        "all_device_minutes": {
+          "Laptop": 315.0,
+          "Phone": 9.0,
+          "Unknown": 14.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 0,
+            "median": 11,
+            "max": 14
+          },
+          "intervals": {
+            "min": 1,
+            "median": 5,
+            "max": 10
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 3,
+            "max": 7
+          }
+        }
+      },
+      {
+        "id": "02-migration-lab",
+        "name": "Shipping a trace tool",
+        "completed": 7,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 38,
+          "activity_days": 6,
+          "calendar_span_days": 9,
+          "completed_create_to_first_start_minutes": {
+            "min": 16,
+            "median": 1835,
+            "max": 3877
+          },
+          "completed_created_on_an_earlier_day": 5,
+          "created_while_other_task_unfinished": 7
+        },
+        "completed_with_note": 3,
+        "with_pdf": 5,
+        "unique_pdfs": 2,
+        "words_per_pdf": {
+          "min": 405,
+          "median": 817.5,
+          "max": 1230
+        },
+        "watcher_event_count": 71,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-02-migration-lab": 24,
+          "aw-watcher-web-firefox_demo-02-migration-lab": 3,
+          "aw-watcher-window_demo-02-migration-lab": 41,
+          "aw-watcher-android_02-migration-lab-phone": 3
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "ebay.com": 4.0
+        },
+        "off_task_phone_app_minutes": {
+          "Steam": 7.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 11.0,
+          "on_task": 461.0,
+          "uncertain": 23.0
+        },
+        "all_device_minutes": {
+          "Laptop": 486.0,
+          "Phone": 9.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 9,
+            "max": 17
+          },
+          "intervals": {
+            "min": 1,
+            "median": 6,
+            "max": 11
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 4,
+            "max": 10
+          }
+        }
+      },
+      {
+        "id": "03-reading-depth",
+        "name": "Reading to present or reading to derive",
+        "completed": 7,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 38,
+          "activity_days": 5,
+          "calendar_span_days": 10,
+          "completed_create_to_first_start_minutes": {
+            "min": 24,
+            "median": 2830,
+            "max": 4210
+          },
+          "completed_created_on_an_earlier_day": 6,
+          "created_while_other_task_unfinished": 7
+        },
+        "completed_with_note": 2,
+        "with_pdf": 5,
+        "unique_pdfs": 1,
+        "words_per_pdf": {
+          "min": 788,
+          "median": 788,
+          "max": 788
+        },
+        "watcher_event_count": 60,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-03-reading-depth": 21,
+          "aw-watcher-web-firefox_demo-03-reading-depth": 2,
+          "aw-watcher-window_demo-03-reading-depth": 35,
+          "aw-watcher-android_03-reading-depth-phone": 2
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "nba.com": 4.0,
+          "sports.example": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "NBA": 6.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 13.0,
+          "on_task": 330.0,
+          "uncertain": 55.0
+        },
+        "all_device_minutes": {
+          "Laptop": 371.0,
+          "Laptop + phone": 3.0,
+          "Phone": 6.0,
+          "Unknown": 18.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 0,
+            "median": 6,
+            "max": 13
+          },
+          "intervals": {
+            "min": 1,
+            "median": 6,
+            "max": 9
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 4,
+            "max": 7
+          }
+        }
+      },
+      {
+        "id": "04-kernel-workbench",
+        "name": "GPU lab and errands",
+        "completed": 7,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 41,
+          "activity_days": 5,
+          "calendar_span_days": 8,
+          "completed_create_to_first_start_minutes": {
+            "min": 30,
+            "median": 1680,
+            "max": 2925
+          },
+          "completed_created_on_an_earlier_day": 6,
+          "created_while_other_task_unfinished": 7
+        },
+        "completed_with_note": 2,
+        "with_pdf": 5,
+        "unique_pdfs": 1,
+        "words_per_pdf": {
+          "min": 621,
+          "median": 621,
+          "max": 621
+        },
+        "watcher_event_count": 78,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-04-kernel-workbench": 32,
+          "aw-watcher-window_demo-04-kernel-workbench": 41,
+          "aw-watcher-web-firefox_demo-04-kernel-workbench": 2,
+          "aw-watcher-android_04-kernel-workbench-phone": 3
+        },
+        "tasks_with_off_task_activity": 4,
+        "off_task_intervals": 4,
+        "off_task_domain_minutes": {
+          "youtube.com": 11.0
+        },
+        "off_task_phone_app_minutes": {
+          "FotMob": 8.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 19.0,
+          "on_task": 446.0,
+          "uncertain": 53.0
+        },
+        "all_device_minutes": {
+          "Laptop": 508.0,
+          "Phone": 10.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 10,
+            "max": 16
+          },
+          "intervals": {
+            "min": 1,
+            "median": 7,
+            "max": 11
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 5,
+            "max": 9
+          }
+        }
+      },
+      {
+        "id": "05-interview-practice",
+        "name": "Interview problems around class",
+        "completed": 8,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 42,
+          "activity_days": 6,
+          "calendar_span_days": 9,
+          "completed_create_to_first_start_minutes": {
+            "min": 28,
+            "median": 1468.5,
+            "max": 8160
+          },
+          "completed_created_on_an_earlier_day": 6,
+          "created_while_other_task_unfinished": 9
+        },
+        "completed_with_note": 2,
+        "with_pdf": 3,
+        "unique_pdfs": 1,
+        "words_per_pdf": {
+          "min": 498,
+          "median": 498,
+          "max": 498
+        },
+        "watcher_event_count": 68,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-05-interview-practice": 20,
+          "aw-watcher-web-firefox_demo-05-interview-practice": 10,
+          "aw-watcher-window_demo-05-interview-practice": 36,
+          "aw-watcher-android_05-interview-practice-phone": 2
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "youtube.com": 8.0
+        },
+        "off_task_phone_app_minutes": {
+          "NBA": 3.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 11.0,
+          "on_task": 316.0,
+          "uncertain": 26.0
+        },
+        "all_device_minutes": {
+          "Laptop": 335.0,
+          "Phone": 5.0,
+          "Unknown": 13.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1.0,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 0,
+            "median": 7.0,
+            "max": 13
+          },
+          "intervals": {
+            "min": 1,
+            "median": 4.0,
+            "max": 9
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 4.0,
+            "max": 8
+          }
+        }
+      },
+      {
+        "id": "06-neighborhood-clinic",
+        "name": "Neighborhood clinic volunteer coordinator",
+        "completed": 9,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 40,
+          "activity_days": 9,
+          "calendar_span_days": 30,
+          "completed_create_to_first_start_minutes": {
+            "min": 790,
+            "median": 4090,
+            "max": 20210
+          },
+          "completed_created_on_an_earlier_day": 9,
+          "created_while_other_task_unfinished": 10
+        },
+        "completed_with_note": 9,
+        "with_pdf": 1,
+        "unique_pdfs": 1,
+        "words_per_pdf": {
+          "min": 299,
+          "median": 299,
+          "max": 299
+        },
+        "watcher_event_count": 61,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-06-neighborhood-clinic": 19,
+          "aw-watcher-android_06-neighborhood-clinic-phone": 5,
+          "aw-watcher-web-firefox_demo-06-neighborhood-clinic": 14,
+          "aw-watcher-window_demo-06-neighborhood-clinic": 23
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "nytimes.com": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "Candy Crush Saga": 5.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 8.0,
+          "on_task": 180.0,
+          "uncertain": 28.0
+        },
+        "all_device_minutes": {
+          "Laptop": 208.0,
+          "Phone": 8.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 1
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 4,
+            "max": 12
+          },
+          "intervals": {
+            "min": 1,
+            "median": 2,
+            "max": 5
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 2,
+            "max": 4
+          }
+        }
+      },
+      {
+        "id": "07-shared-apartment",
+        "name": "Shared-apartment household and errands",
+        "completed": 8,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 41,
+          "activity_days": 7,
+          "calendar_span_days": 9,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 112.5,
+            "max": 1395
+          },
+          "completed_created_on_an_earlier_day": 2,
+          "created_while_other_task_unfinished": 4
+        },
+        "completed_with_note": 8,
+        "with_pdf": 0,
+        "unique_pdfs": 0,
+        "words_per_pdf": null,
+        "watcher_event_count": 36,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-07-shared-apartment": 22,
+          "aw-watcher-android_07-shared-apartment-phone": 6,
+          "aw-watcher-web-firefox_demo-07-shared-apartment": 3,
+          "aw-watcher-window_demo-07-shared-apartment": 5
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "rei.com": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "Candy Crush Saga": 8.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 11.0,
+          "on_task": 16.0,
+          "uncertain": 168.0
+        },
+        "all_device_minutes": {
+          "Laptop": 166.0,
+          "Phone": 12.0,
+          "Unknown": 17.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1.0,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 3.0,
+            "max": 10
+          },
+          "intervals": {
+            "min": 1,
+            "median": 3.0,
+            "max": 4
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 1.0,
+            "max": 3
+          }
+        }
+      },
+      {
+        "id": "08-community-playhouse",
+        "name": "Community playhouse operator and box-office volunteer",
+        "completed": 8,
+        "open_by_status": {
+          "ready": 1,
+          "running": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 35,
+          "activity_days": 4,
+          "calendar_span_days": 17,
+          "completed_create_to_first_start_minutes": {
+            "min": 125,
+            "median": 3011.0,
+            "max": 4610
+          },
+          "completed_created_on_an_earlier_day": 6,
+          "created_while_other_task_unfinished": 6
+        },
+        "completed_with_note": 8,
+        "with_pdf": 2,
+        "unique_pdfs": 2,
+        "words_per_pdf": {
+          "min": 284,
+          "median": 373.5,
+          "max": 463
+        },
+        "watcher_event_count": 36,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-08-community-playhouse": 20,
+          "aw-watcher-window_demo-08-community-playhouse": 12,
+          "aw-watcher-android_08-community-playhouse-phone": 3,
+          "aw-watcher-web-firefox_demo-08-community-playhouse": 1
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "ticketmaster.com": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "Ticketmaster": 8.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 11.0,
+          "on_task": 239.0,
+          "uncertain": 59.0
+        },
+        "all_device_minutes": {
+          "Laptop": 275.0,
+          "Phone": 10.0,
+          "Unknown": 24.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1.0,
+            "max": 1
+          },
+          "raw_watcher_records": {
+            "min": 0,
+            "median": 3.0,
+            "max": 8
+          },
+          "intervals": {
+            "min": 1,
+            "median": 2.0,
+            "max": 5
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 1.0,
+            "max": 3
+          }
+        }
+      },
+      {
+        "id": "09-rover-night",
+        "name": "Robotics night-school student and repair volunteer",
+        "completed": 9,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 49,
+          "activity_days": 9,
+          "calendar_span_days": 14,
+          "completed_create_to_first_start_minutes": {
+            "min": 840,
+            "median": 2790,
+            "max": 7290
+          },
+          "completed_created_on_an_earlier_day": 9,
+          "created_while_other_task_unfinished": 10
+        },
+        "completed_with_note": 9,
+        "with_pdf": 4,
+        "unique_pdfs": 4,
+        "words_per_pdf": {
+          "min": 279,
+          "median": 321.0,
+          "max": 499
+        },
+        "watcher_event_count": 70,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-09-rover-night": 38,
+          "aw-watcher-web-firefox_demo-09-rover-night": 2,
+          "aw-watcher-window_demo-09-rover-night": 27,
+          "aw-watcher-android_09-rover-night-phone": 3
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 3,
+        "off_task_domain_minutes": {
+          "geoguessr.com": 5.0
+        },
+        "off_task_phone_app_minutes": {
+          "GeoGuessr": 7.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 12.0,
+          "on_task": 281.0,
+          "uncertain": 149.0
+        },
+        "all_device_minutes": {
+          "Laptop": 432.0,
+          "Phone": 10.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 4,
+            "max": 14
+          },
+          "intervals": {
+            "min": 1,
+            "median": 3,
+            "max": 8
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 3,
+            "max": 5
+          }
+        }
+      },
+      {
+        "id": "10-signal-study",
+        "name": "Evening signal-processing student and audio volunteer",
+        "completed": 9,
+        "open_by_status": {
+          "ready": 1,
+          "running": 1
+        },
+        "addable": 2,
+        "schedule": {
+          "event_count": 48,
+          "activity_days": 7,
+          "calendar_span_days": 11,
+          "completed_create_to_first_start_minutes": {
+            "min": 205,
+            "median": 3130,
+            "max": 7430
+          },
+          "completed_created_on_an_earlier_day": 8,
+          "created_while_other_task_unfinished": 9
+        },
+        "completed_with_note": 9,
+        "with_pdf": 2,
+        "unique_pdfs": 2,
+        "words_per_pdf": {
+          "min": 238,
+          "median": 376.0,
+          "max": 514
+        },
+        "watcher_event_count": 80,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-10-signal-study": 28,
+          "aw-watcher-web-firefox_demo-10-signal-study": 15,
+          "aw-watcher-window_demo-10-signal-study": 33,
+          "aw-watcher-android_10-signal-study-phone": 4
+        },
+        "tasks_with_off_task_activity": 3,
+        "off_task_intervals": 10,
+        "off_task_domain_minutes": {
+          "youtube.com": 32.0
+        },
+        "off_task_phone_app_minutes": {
+          "FotMob": 3.0,
+          "NBA": 3.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 38.0,
+          "on_task": 261.0,
+          "uncertain": 76.0
+        },
+        "all_device_minutes": {
+          "Laptop": 364.0,
+          "Phone": 11.0
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 8,
+            "max": 17
+          },
+          "intervals": {
+            "min": 1,
+            "median": 5,
+            "max": 8
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 3,
+            "max": 5
+          }
+        }
+      }
+    ]
+  },
+  "demo": {
+    "totals": {
+      "calendars": 5,
+      "completed": 89,
+      "open": 30,
+      "addable": 15,
+      "completed_with_note": 71,
+      "calendar_events": 448,
+      "native_watcher_events": 1911,
+      "tasks_with_off_task_activity": 34,
+      "off_task_intervals": 41,
+      "off_task_minutes": 156.18,
+      "off_task_domains": [
+        "chess.com",
+        "ebay.com",
+        "espncricinfo.com",
+        "geoguessr.com",
+        "nba.com",
+        "nytimes.com",
+        "rei.com",
+        "sports.example",
+        "ticketmaster.com",
+        "youtube.com"
+      ],
+      "off_task_phone_apps": [
+        "Candy Crush Saga",
+        "Chess.com",
+        "FotMob",
+        "GeoGuessr",
+        "NBA",
+        "Steam",
+        "Ticketmaster"
+      ],
+      "per_completed_task": {
+        "timer_periods": {
+          "min": 1,
+          "median": 1,
+          "max": 2
+        },
+        "raw_watcher_records": {
+          "min": 1,
+          "median": 12,
+          "max": 65
+        },
+        "intervals": {
+          "min": 1,
+          "median": 11,
+          "max": 62
+        },
+        "distinct_foreground_contexts": {
+          "min": 0,
+          "median": 6,
+          "max": 14
+        }
+      },
+      "without_visible_foreground": 1,
+      "timed_minutes": 3976,
+      "visible_foreground_minutes": 3303.33,
+      "percentage_with_visible_foreground": 83.1
+    },
+    "profiles": [
+      {
+        "id": "d1-systems-student",
+        "name": "Nora \u00b7 distributed systems lab",
+        "completed": 16,
+        "open_by_status": {
+          "paused": 2,
+          "ready": 4
+        },
+        "addable": 3,
+        "schedule": {
+          "event_count": 84,
+          "activity_days": 18,
+          "calendar_span_days": 22,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 160.0,
+            "max": 3939
+          },
+          "completed_created_on_an_earlier_day": 7,
+          "created_while_other_task_unfinished": 16
+        },
+        "completed_with_note": 10,
+        "with_pdf": 12,
+        "unique_pdfs": 4,
+        "words_per_pdf": {
+          "min": 382,
+          "median": 516.5,
+          "max": 1230
+        },
+        "watcher_event_count": 444,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-d1-systems-student": 39,
+          "aw-watcher-android_nora-pixel7a": 31,
+          "aw-watcher-web-firefox_demo-d1-systems-student": 28,
+          "aw-watcher-window_demo-d1-systems-student": 346
+        },
+        "tasks_with_off_task_activity": 6,
+        "off_task_intervals": 6,
+        "off_task_domain_minutes": {
+          "chess.com": 5.0,
+          "ebay.com": 4.0
+        },
+        "off_task_phone_app_minutes": {
+          "Chess.com": 7.0,
+          "Steam": 7.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 23.0,
+          "on_task": 797.58,
+          "uncertain": 65.42
+        },
+        "all_device_minutes": {
+          "Laptop": 845.22,
+          "Laptop + phone": 2.15,
+          "Phone": 25.2,
+          "Unknown": 13.43
+        },
+        "tasks": {
+          "clock-two": {
+            "timer_periods": 1,
+            "raw_watcher_records": 10,
+            "intervals": 9,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 26,
+            "visible_foreground_minutes": 26.0
+          },
+          "ring-port": {
+            "timer_periods": 2,
+            "raw_watcher_records": 65,
+            "intervals": 62,
+            "distinct_foreground_contexts": 14,
+            "off_task_intervals": 1,
+            "timed_minutes": 137,
+            "visible_foreground_minutes": 137.0
+          },
+          "lease-restart": {
+            "timer_periods": 1,
+            "raw_watcher_records": 28,
+            "intervals": 28,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 72,
+            "visible_foreground_minutes": 65.0
+          },
+          "trace-tool": {
+            "timer_periods": 2,
+            "raw_watcher_records": 53,
+            "intervals": 49,
+            "distinct_foreground_contexts": 11,
+            "off_task_intervals": 1,
+            "timed_minutes": 118,
+            "visible_foreground_minutes": 118.0
+          },
+          "dish-rack": {
+            "timer_periods": 1,
+            "raw_watcher_records": 1,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 10,
+            "visible_foreground_minutes": 0.57
+          },
+          "suite-report": {
+            "timer_periods": 1,
+            "raw_watcher_records": 14,
+            "intervals": 14,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 29,
+            "visible_foreground_minutes": 29.0
+          },
+          "epoch-proof": {
+            "timer_periods": 2,
+            "raw_watcher_records": 42,
+            "intervals": 37,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 100,
+            "visible_foreground_minutes": 95.0
+          },
+          "bins": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 14,
+            "visible_foreground_minutes": 1.1
+          },
+          "ack-traces": {
+            "timer_periods": 1,
+            "raw_watcher_records": 8,
+            "intervals": 7,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 24,
+            "visible_foreground_minutes": 24.0
+          },
+          "boundary-debug": {
+            "timer_periods": 2,
+            "raw_watcher_records": 51,
+            "intervals": 48,
+            "distinct_foreground_contexts": 12,
+            "off_task_intervals": 1,
+            "timed_minutes": 132,
+            "visible_foreground_minutes": 130.0
+          },
+          "barrier-proof": {
+            "timer_periods": 2,
+            "raw_watcher_records": 34,
+            "intervals": 32,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 90,
+            "visible_foreground_minutes": 84.0
+          },
+          "codec-caption": {
+            "timer_periods": 1,
+            "raw_watcher_records": 15,
+            "intervals": 14,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 0,
+            "timed_minutes": 27,
+            "visible_foreground_minutes": 27.0
+          },
+          "incident-card": {
+            "timer_periods": 1,
+            "raw_watcher_records": 10,
+            "intervals": 9,
+            "distinct_foreground_contexts": 9,
+            "off_task_intervals": 0,
+            "timed_minutes": 32,
+            "visible_foreground_minutes": 32.0
+          },
+          "alias-window": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 7,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 21,
+            "visible_foreground_minutes": 21.0
+          },
+          "bus-pass": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 5,
+            "distinct_foreground_contexts": 3,
+            "off_task_intervals": 0,
+            "timed_minutes": 16,
+            "visible_foreground_minutes": 12.0
+          },
+          "replay-cases": {
+            "timer_periods": 1,
+            "raw_watcher_records": 17,
+            "intervals": 16,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 38,
+            "visible_foreground_minutes": 34.0
+          }
+        },
+        "sample_add_evidence": {
+          "bridge-proof": {
+            "title": "Solve part B of the bridge handout",
+            "budget": 75,
+            "fixed": false,
+            "expected_band": [
+              1.14,
+              1.3
+            ],
+            "historical_evidence": [
+              "lease-restart",
+              "epoch-proof",
+              "barrier-proof"
+            ],
+            "past_actual_to_budget_median": 1.2
+          },
+          "patch-tool": {
+            "title": "Implement first divergence for C and Rust traces",
+            "budget": 85,
+            "fixed": false,
+            "expected_band": [
+              1.34,
+              1.65
+            ],
+            "historical_evidence": [
+              "ring-port",
+              "trace-tool",
+              "boundary-debug"
+            ],
+            "past_actual_to_budget_median": 1.522
+          },
+          "patch-note": {
+            "title": "Explain the three saved replay transcripts",
+            "budget": 40,
+            "fixed": false,
+            "expected_band": [
+              0.6,
+              0.84
+            ],
+            "historical_evidence": [
+              "suite-report",
+              "codec-caption"
+            ],
+            "past_actual_to_budget_median": 0.66
+          }
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1.0,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 14.5,
+            "max": 65
+          },
+          "intervals": {
+            "min": 3,
+            "median": 14.0,
+            "max": 62
+          },
+          "distinct_foreground_contexts": {
+            "min": 1,
+            "median": 7.0,
+            "max": 14
+          }
+        },
+        "offline_chronological_check": {
+          "actions": 84,
+          "completed": 16,
+          "forecast_jobs": {
+            "fallback": 22
+          },
+          "anchor": "2026-11-15"
+        }
+      },
+      {
+        "id": "d2-lab-researcher",
+        "name": "Ishan \u00b7 paper reading and GPU research",
+        "completed": 16,
+        "open_by_status": {
+          "paused": 2,
+          "ready": 4
+        },
+        "addable": 3,
+        "schedule": {
+          "event_count": 86,
+          "activity_days": 17,
+          "calendar_span_days": 23,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 2381.5,
+            "max": 3996
+          },
+          "completed_created_on_an_earlier_day": 11,
+          "created_while_other_task_unfinished": 18
+        },
+        "completed_with_note": 8,
+        "with_pdf": 10,
+        "unique_pdfs": 2,
+        "words_per_pdf": {
+          "min": 621,
+          "median": 704.5,
+          "max": 788
+        },
+        "watcher_event_count": 471,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-d2-lab-researcher": 44,
+          "aw-watcher-android_ishan-fairphone": 28,
+          "aw-watcher-web-firefox_demo-d2-lab-researcher": 24,
+          "aw-watcher-window_demo-d2-lab-researcher": 375
+        },
+        "tasks_with_off_task_activity": 8,
+        "off_task_intervals": 8,
+        "off_task_domain_minutes": {
+          "espncricinfo.com": 3.18,
+          "nba.com": 4.0,
+          "sports.example": 3.0,
+          "youtube.com": 11.0
+        },
+        "off_task_phone_app_minutes": {
+          "FotMob": 8.0,
+          "NBA": 6.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 35.18,
+          "on_task": 852.13,
+          "uncertain": 110.68
+        },
+        "all_device_minutes": {
+          "Laptop": 957.52,
+          "Laptop + phone": 4.78,
+          "Phone": 18.18,
+          "Unknown": 17.52
+        },
+        "tasks": {
+          "derive-noise": {
+            "timer_periods": 2,
+            "raw_watcher_records": 37,
+            "intervals": 35,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 104,
+            "visible_foreground_minutes": 90.0
+          },
+          "warp-tail": {
+            "timer_periods": 2,
+            "raw_watcher_records": 60,
+            "intervals": 56,
+            "distinct_foreground_contexts": 13,
+            "off_task_intervals": 1,
+            "timed_minutes": 122,
+            "visible_foreground_minutes": 118.0
+          },
+          "read-cache": {
+            "timer_periods": 1,
+            "raw_watcher_records": 14,
+            "intervals": 14,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 32,
+            "visible_foreground_minutes": 32.0
+          },
+          "throughput-table": {
+            "timer_periods": 1,
+            "raw_watcher_records": 28,
+            "intervals": 27,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 59,
+            "visible_foreground_minutes": 50.0
+          },
+          "dishes": {
+            "timer_periods": 1,
+            "raw_watcher_records": 1,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 18,
+            "visible_foreground_minutes": 0.48
+          },
+          "stride-kernel": {
+            "timer_periods": 2,
+            "raw_watcher_records": 49,
+            "intervals": 45,
+            "distinct_foreground_contexts": 13,
+            "off_task_intervals": 1,
+            "timed_minutes": 109,
+            "visible_foreground_minutes": 105.0
+          },
+          "bound-floor": {
+            "timer_periods": 1,
+            "raw_watcher_records": 35,
+            "intervals": 31,
+            "distinct_foreground_contexts": 9,
+            "off_task_intervals": 1,
+            "timed_minutes": 86,
+            "visible_foreground_minutes": 78.0
+          },
+          "clothes": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 15,
+            "visible_foreground_minutes": 0.6
+          },
+          "read-queues": {
+            "timer_periods": 1,
+            "raw_watcher_records": 12,
+            "intervals": 12,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 0,
+            "timed_minutes": 30,
+            "visible_foreground_minutes": 30.0
+          },
+          "race-repro": {
+            "timer_periods": 2,
+            "raw_watcher_records": 58,
+            "intervals": 57,
+            "distinct_foreground_contexts": 11,
+            "off_task_intervals": 1,
+            "timed_minutes": 138,
+            "visible_foreground_minutes": 133.0
+          },
+          "check-jensen": {
+            "timer_periods": 2,
+            "raw_watcher_records": 36,
+            "intervals": 33,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 97,
+            "visible_foreground_minutes": 85.0
+          },
+          "median-runs": {
+            "timer_periods": 1,
+            "raw_watcher_records": 29,
+            "intervals": 28,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 0,
+            "timed_minutes": 51,
+            "visible_foreground_minutes": 44.0
+          },
+          "variance-email": {
+            "timer_periods": 2,
+            "raw_watcher_records": 18,
+            "intervals": 15,
+            "distinct_foreground_contexts": 14,
+            "off_task_intervals": 1,
+            "timed_minutes": 71,
+            "visible_foreground_minutes": 71.0
+          },
+          "allocation-desk": {
+            "timer_periods": 1,
+            "raw_watcher_records": 8,
+            "intervals": 5,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 11,
+            "visible_foreground_minutes": 11.0
+          },
+          "replica-figs": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 10,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 0,
+            "timed_minutes": 31,
+            "visible_foreground_minutes": 31.0
+          },
+          "masked-add": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 10,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 24,
+            "visible_foreground_minutes": 24.0
+          }
+        },
+        "sample_add_evidence": {
+          "appendix-proof": {
+            "title": "Prepare the appendix board derivation",
+            "budget": 60,
+            "fixed": false,
+            "expected_band": [
+              1.48,
+              1.86
+            ],
+            "historical_evidence": [
+              "derive-noise",
+              "bound-floor",
+              "check-jensen"
+            ],
+            "past_actual_to_budget_median": 1.733
+          },
+          "async-flicker": {
+            "title": "Fix nondeterministic segmented sums",
+            "budget": 85,
+            "fixed": false,
+            "expected_band": [
+              1.38,
+              1.68
+            ],
+            "historical_evidence": [
+              "warp-tail",
+              "stride-kernel",
+              "race-repro"
+            ],
+            "past_actual_to_budget_median": 1.533
+          },
+          "sweep-again": {
+            "title": "Rerun the validated reference sweep",
+            "budget": 60,
+            "fixed": false,
+            "expected_band": [
+              0.9,
+              1.11
+            ],
+            "historical_evidence": [
+              "throughput-table",
+              "median-runs"
+            ],
+            "past_actual_to_budget_median": 1.002
+          }
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1.0,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 23.0,
+            "max": 60
+          },
+          "intervals": {
+            "min": 3,
+            "median": 21.0,
+            "max": 57
+          },
+          "distinct_foreground_contexts": {
+            "min": 1,
+            "median": 8.0,
+            "max": 14
+          }
+        },
+        "offline_chronological_check": {
+          "actions": 86,
+          "completed": 16,
+          "forecast_jobs": {
+            "fallback": 22
+          },
+          "anchor": "2026-11-15"
+        }
+      },
+      {
+        "id": "d3-clinic-coordinator",
+        "name": "Mae \u00b7 clinic and community theater",
+        "completed": 19,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 4,
+          "running": 1
+        },
+        "addable": 3,
+        "schedule": {
+          "event_count": 85,
+          "activity_days": 15,
+          "calendar_span_days": 26,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 160,
+            "max": 4244
+          },
+          "completed_created_on_an_earlier_day": 6,
+          "created_while_other_task_unfinished": 13
+        },
+        "completed_with_note": 19,
+        "with_pdf": 3,
+        "unique_pdfs": 3,
+        "words_per_pdf": {
+          "min": 284,
+          "median": 299,
+          "max": 463
+        },
+        "watcher_event_count": 262,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-d3-clinic-coordinator": 35,
+          "aw-watcher-android_mae-pixel8": 39,
+          "aw-watcher-web-firefox_demo-d3-clinic-coordinator": 44,
+          "aw-watcher-window_demo-d3-clinic-coordinator": 144
+        },
+        "tasks_with_off_task_activity": 7,
+        "off_task_intervals": 7,
+        "off_task_domain_minutes": {
+          "nytimes.com": 6.4,
+          "ticketmaster.com": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "Candy Crush Saga": 5.0,
+          "Ticketmaster": 8.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 22.4,
+          "on_task": 454.45,
+          "uncertain": 106.15
+        },
+        "all_device_minutes": {
+          "Laptop": 505.82,
+          "Laptop + phone": 1.93,
+          "Phone": 36.8,
+          "Unknown": 38.45
+        },
+        "tasks": {
+          "mara-evening": {
+            "timer_periods": 1,
+            "raw_watcher_records": 27,
+            "intervals": 20,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 40,
+            "visible_foreground_minutes": 40.0
+          },
+          "radio-cabaret": {
+            "timer_periods": 1,
+            "raw_watcher_records": 2,
+            "intervals": 1,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 60,
+            "visible_foreground_minutes": 60.0
+          },
+          "dev-stock": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 9,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 15,
+            "visible_foreground_minutes": 15.0
+          },
+          "cabaret-load": {
+            "timer_periods": 1,
+            "raw_watcher_records": 12,
+            "intervals": 12,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 1,
+            "timed_minutes": 33,
+            "visible_foreground_minutes": 27.0
+          },
+          "campus-posters": {
+            "timer_periods": 1,
+            "raw_watcher_records": 7,
+            "intervals": 7,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 34,
+            "visible_foreground_minutes": 11.0
+          },
+          "usher-handback": {
+            "timer_periods": 1,
+            "raw_watcher_records": 6,
+            "intervals": 7,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 0,
+            "timed_minutes": 16,
+            "visible_foreground_minutes": 3.73
+          },
+          "mara-capacity": {
+            "timer_periods": 1,
+            "raw_watcher_records": 27,
+            "intervals": 18,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 1,
+            "timed_minutes": 41,
+            "visible_foreground_minutes": 41.0
+          },
+          "short-on-air": {
+            "timer_periods": 1,
+            "raw_watcher_records": 2,
+            "intervals": 1,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 45,
+            "visible_foreground_minutes": 45.0
+          },
+          "dev-packs": {
+            "timer_periods": 1,
+            "raw_watcher_records": 8,
+            "intervals": 5,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 14,
+            "visible_foreground_minutes": 14.0
+          },
+          "audio-preflight": {
+            "timer_periods": 1,
+            "raw_watcher_records": 18,
+            "intervals": 15,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 1,
+            "timed_minutes": 38,
+            "visible_foreground_minutes": 33.0
+          },
+          "bus-pass": {
+            "timer_periods": 1,
+            "raw_watcher_records": 4,
+            "intervals": 2,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 0,
+            "timed_minutes": 12,
+            "visible_foreground_minutes": 12.0
+          },
+          "quiet-show": {
+            "timer_periods": 1,
+            "raw_watcher_records": 2,
+            "intervals": 1,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 50,
+            "visible_foreground_minutes": 50.0
+          },
+          "mara-late-room": {
+            "timer_periods": 1,
+            "raw_watcher_records": 27,
+            "intervals": 19,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 39,
+            "visible_foreground_minutes": 39.0
+          },
+          "grain-pickup": {
+            "timer_periods": 1,
+            "raw_watcher_records": 1,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 24,
+            "visible_foreground_minutes": 0.4
+          },
+          "dev-receipts": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 8,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 16,
+            "visible_foreground_minutes": 16.0
+          },
+          "rota-text": {
+            "timer_periods": 1,
+            "raw_watcher_records": 18,
+            "intervals": 12,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 1,
+            "timed_minutes": 34,
+            "visible_foreground_minutes": 34.0
+          },
+          "hearing-return": {
+            "timer_periods": 1,
+            "raw_watcher_records": 5,
+            "intervals": 8,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 24,
+            "visible_foreground_minutes": 9.15
+          },
+          "blue-relay": {
+            "timer_periods": 1,
+            "raw_watcher_records": 17,
+            "intervals": 18,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 1,
+            "timed_minutes": 43,
+            "visible_foreground_minutes": 33.0
+          },
+          "mara-dropoff": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 5,
+            "visible_foreground_minutes": 0.72
+          }
+        },
+        "sample_add_evidence": {
+          "mara-rooms": {
+            "title": "Set the handover rota with Mara",
+            "budget": 30,
+            "fixed": false,
+            "expected_band": [
+              1.23,
+              1.44
+            ],
+            "historical_evidence": [
+              "mara-evening",
+              "mara-capacity",
+              "mara-late-room"
+            ],
+            "past_actual_to_budget_median": 1.333
+          },
+          "dev-april": {
+            "title": "Run the supply check with Dev",
+            "budget": 20,
+            "fixed": false,
+            "expected_band": [
+              0.66,
+              0.86
+            ],
+            "historical_evidence": [
+              "dev-stock",
+              "dev-packs",
+              "dev-receipts"
+            ],
+            "past_actual_to_budget_median": 0.75
+          },
+          "sea-preflight": {
+            "title": "Do the Sea Glass booth preflight",
+            "budget": 30,
+            "fixed": false,
+            "expected_band": [
+              1.16,
+              1.42
+            ],
+            "historical_evidence": [
+              "cabaret-load",
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "past_actual_to_budget_median": 1.267
+          }
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 1
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 8,
+            "max": 27
+          },
+          "intervals": {
+            "min": 1,
+            "median": 8,
+            "max": 20
+          },
+          "distinct_foreground_contexts": {
+            "min": 1,
+            "median": 4,
+            "max": 10
+          }
+        },
+        "offline_chronological_check": {
+          "actions": 85,
+          "completed": 19,
+          "forecast_jobs": {
+            "fallback": 21
+          },
+          "anchor": "2026-11-15"
+        }
+      },
+      {
+        "id": "d4-signal-student",
+        "name": "Leila \u00b7 interviews and signals evening class",
+        "completed": 19,
+        "open_by_status": {
+          "paused": 1,
+          "ready": 4,
+          "running": 1
+        },
+        "addable": 3,
+        "schedule": {
+          "event_count": 95,
+          "activity_days": 20,
+          "calendar_span_days": 24,
+          "completed_create_to_first_start_minutes": {
+            "min": 10,
+            "median": 73,
+            "max": 4184
+          },
+          "completed_created_on_an_earlier_day": 7,
+          "created_while_other_task_unfinished": 18
+        },
+        "completed_with_note": 15,
+        "with_pdf": 5,
+        "unique_pdfs": 3,
+        "words_per_pdf": {
+          "min": 238,
+          "median": 498,
+          "max": 514
+        },
+        "watcher_event_count": 439,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-d4-signal-student": 37,
+          "aw-watcher-android_leila-galaxy": 33,
+          "aw-watcher-web-firefox_demo-d4-signal-student": 73,
+          "aw-watcher-window_demo-d4-signal-student": 296
+        },
+        "tasks_with_off_task_activity": 6,
+        "off_task_intervals": 13,
+        "off_task_domain_minutes": {
+          "youtube.com": 40.0
+        },
+        "off_task_phone_app_minutes": {
+          "FotMob": 3.0,
+          "NBA": 6.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 49.0,
+          "on_task": 622.67,
+          "uncertain": 105.33
+        },
+        "all_device_minutes": {
+          "Laptop": 740.67,
+          "Laptop + phone": 2.33,
+          "Phone": 22.08,
+          "Unknown": 11.92
+        },
+        "tasks": {
+          "subarray-target": {
+            "timer_periods": 1,
+            "raw_watcher_records": 30,
+            "intervals": 26,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 54,
+            "visible_foreground_minutes": 54.0
+          },
+          "pulse-video": {
+            "timer_periods": 2,
+            "raw_watcher_records": 39,
+            "intervals": 27,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 4,
+            "timed_minutes": 55,
+            "visible_foreground_minutes": 55.0
+          },
+          "window-cost": {
+            "timer_periods": 1,
+            "raw_watcher_records": 27,
+            "intervals": 21,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 50,
+            "visible_foreground_minutes": 50.0
+          },
+          "venue-mic": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 19,
+            "visible_foreground_minutes": 0.6
+          },
+          "cfg-paper": {
+            "timer_periods": 2,
+            "raw_watcher_records": 33,
+            "intervals": 32,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 0,
+            "timed_minutes": 98,
+            "visible_foreground_minutes": 87.0
+          },
+          "phasor-paper": {
+            "timer_periods": 1,
+            "raw_watcher_records": 9,
+            "intervals": 8,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 47,
+            "visible_foreground_minutes": 16.0
+          },
+          "two-targets": {
+            "timer_periods": 2,
+            "raw_watcher_records": 37,
+            "intervals": 32,
+            "distinct_foreground_contexts": 12,
+            "off_task_intervals": 1,
+            "timed_minutes": 72,
+            "visible_foreground_minutes": 72.0
+          },
+          "window-video": {
+            "timer_periods": 2,
+            "raw_watcher_records": 39,
+            "intervals": 28,
+            "distinct_foreground_contexts": 9,
+            "off_task_intervals": 4,
+            "timed_minutes": 61,
+            "visible_foreground_minutes": 61.0
+          },
+          "retype-merge": {
+            "timer_periods": 1,
+            "raw_watcher_records": 12,
+            "intervals": 8,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 17,
+            "visible_foreground_minutes": 17.0
+          },
+          "voice-repair": {
+            "timer_periods": 1,
+            "raw_watcher_records": 13,
+            "intervals": 13,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 0,
+            "timed_minutes": 28,
+            "visible_foreground_minutes": 28.0
+          },
+          "cutlery": {
+            "timer_periods": 1,
+            "raw_watcher_records": 1,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 13,
+            "visible_foreground_minutes": 1.08
+          },
+          "symmetry-video": {
+            "timer_periods": 2,
+            "raw_watcher_records": 30,
+            "intervals": 21,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 2,
+            "timed_minutes": 47,
+            "visible_foreground_minutes": 47.0
+          },
+          "retype-stack": {
+            "timer_periods": 1,
+            "raw_watcher_records": 17,
+            "intervals": 12,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 21,
+            "visible_foreground_minutes": 21.0
+          },
+          "stream-shift": {
+            "timer_periods": 1,
+            "raw_watcher_records": 24,
+            "intervals": 14,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 45,
+            "visible_foreground_minutes": 45.0
+          },
+          "rubric": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 10,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 28,
+            "visible_foreground_minutes": 28.0
+          },
+          "cue-roundtrip": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 10,
+            "distinct_foreground_contexts": 10,
+            "off_task_intervals": 0,
+            "timed_minutes": 27,
+            "visible_foreground_minutes": 27.0
+          },
+          "placement-form": {
+            "timer_periods": 1,
+            "raw_watcher_records": 13,
+            "intervals": 8,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 22,
+            "visible_foreground_minutes": 22.0
+          },
+          "filter-exercise": {
+            "timer_periods": 1,
+            "raw_watcher_records": 11,
+            "intervals": 10,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 43,
+            "visible_foreground_minutes": 17.0
+          },
+          "quiet-news": {
+            "timer_periods": 1,
+            "raw_watcher_records": 12,
+            "intervals": 11,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 30,
+            "visible_foreground_minutes": 30.0
+          }
+        },
+        "sample_add_evidence": {
+          "shortest-window": {
+            "title": "Solve a new shortest-window problem",
+            "budget": 50,
+            "fixed": false,
+            "expected_band": [
+              1.13,
+              1.31
+            ],
+            "historical_evidence": [
+              "subarray-target",
+              "window-cost",
+              "two-targets"
+            ],
+            "past_actual_to_budget_median": 1.2
+          },
+          "triangle-video": {
+            "title": "Watch the triangular-wave Fourier lecture",
+            "budget": 40,
+            "fixed": false,
+            "expected_band": [
+              1.25,
+              1.46
+            ],
+            "historical_evidence": [
+              "pulse-video",
+              "window-video",
+              "symmetry-video"
+            ],
+            "past_actual_to_budget_median": 1.356
+          },
+          "triangle-sheet": {
+            "title": "Complete the triangle-wave practice problems",
+            "budget": 45,
+            "fixed": false,
+            "expected_band": [
+              0.86,
+              1.13
+            ],
+            "historical_evidence": [
+              "phasor-paper",
+              "filter-exercise"
+            ],
+            "past_actual_to_budget_median": 1.007
+          }
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 13,
+            "max": 39
+          },
+          "intervals": {
+            "min": 3,
+            "median": 12,
+            "max": 32
+          },
+          "distinct_foreground_contexts": {
+            "min": 1,
+            "median": 6,
+            "max": 12
+          }
+        },
+        "offline_chronological_check": {
+          "actions": 95,
+          "completed": 19,
+          "forecast_jobs": {
+            "fallback": 24
+          },
+          "anchor": "2026-11-15"
+        }
+      },
+      {
+        "id": "d5-field-engineer",
+        "name": "Xavier \u00b7 robotics lab and shared home",
+        "completed": 19,
+        "open_by_status": {
+          "paused": 2,
+          "ready": 4
+        },
+        "addable": 3,
+        "schedule": {
+          "event_count": 98,
+          "activity_days": 20,
+          "calendar_span_days": 24,
+          "completed_create_to_first_start_minutes": {
+            "min": 23,
+            "median": 2325,
+            "max": 4104
+          },
+          "completed_created_on_an_earlier_day": 11,
+          "created_while_other_task_unfinished": 19
+        },
+        "completed_with_note": 19,
+        "with_pdf": 4,
+        "unique_pdfs": 4,
+        "words_per_pdf": {
+          "min": 279,
+          "median": 321.0,
+          "max": 499
+        },
+        "watcher_event_count": 295,
+        "watcher_buckets": {
+          "aw-watcher-afk_demo-d5-field-engineer": 56,
+          "aw-watcher-android_xavier-oneplus": 55,
+          "aw-watcher-web-firefox_demo-d5-field-engineer": 26,
+          "aw-watcher-window_demo-d5-field-engineer": 158
+        },
+        "tasks_with_off_task_activity": 7,
+        "off_task_intervals": 7,
+        "off_task_domain_minutes": {
+          "geoguessr.com": 8.6,
+          "rei.com": 3.0
+        },
+        "off_task_phone_app_minutes": {
+          "Candy Crush Saga": 8.0,
+          "GeoGuessr": 7.0
+        },
+        "all_labeled_minutes": {
+          "off_task": 26.6,
+          "on_task": 359.32,
+          "uncertain": 346.08
+        },
+        "all_device_minutes": {
+          "Laptop": 634.35,
+          "Laptop + phone": 1.6,
+          "Phone": 52.1,
+          "Unknown": 43.95
+        },
+        "tasks": {
+          "chili-dishes": {
+            "timer_periods": 1,
+            "raw_watcher_records": 6,
+            "intervals": 7,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 1,
+            "timed_minutes": 36,
+            "visible_foreground_minutes": 6.67
+          },
+          "hall-encoder": {
+            "timer_periods": 2,
+            "raw_watcher_records": 23,
+            "intervals": 22,
+            "distinct_foreground_contexts": 9,
+            "off_task_intervals": 1,
+            "timed_minutes": 63,
+            "visible_foreground_minutes": 49.0
+          },
+          "towels-one": {
+            "timer_periods": 2,
+            "raw_watcher_records": 6,
+            "intervals": 6,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 0,
+            "timed_minutes": 21,
+            "visible_foreground_minutes": 1.63
+          },
+          "junction-replay": {
+            "timer_periods": 1,
+            "raw_watcher_records": 18,
+            "intervals": 18,
+            "distinct_foreground_contexts": 7,
+            "off_task_intervals": 0,
+            "timed_minutes": 42,
+            "visible_foreground_minutes": 42.0
+          },
+          "pasta-dishes": {
+            "timer_periods": 1,
+            "raw_watcher_records": 6,
+            "intervals": 7,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 1,
+            "timed_minutes": 31,
+            "visible_foreground_minutes": 4.07
+          },
+          "bicycle": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 24,
+            "visible_foreground_minutes": 0.63
+          },
+          "filter-renewal": {
+            "timer_periods": 1,
+            "raw_watcher_records": 9,
+            "intervals": 4,
+            "distinct_foreground_contexts": 3,
+            "off_task_intervals": 1,
+            "timed_minutes": 18,
+            "visible_foreground_minutes": 17.0
+          },
+          "turntable": {
+            "timer_periods": 2,
+            "raw_watcher_records": 37,
+            "intervals": 31,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 77,
+            "visible_foreground_minutes": 64.0
+          },
+          "sheets": {
+            "timer_periods": 2,
+            "raw_watcher_records": 7,
+            "intervals": 8,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 23,
+            "visible_foreground_minutes": 3.3
+          },
+          "frame-drawing": {
+            "timer_periods": 1,
+            "raw_watcher_records": 12,
+            "intervals": 11,
+            "distinct_foreground_contexts": 4,
+            "off_task_intervals": 0,
+            "timed_minutes": 52,
+            "visible_foreground_minutes": 19.42
+          },
+          "stew-dishes": {
+            "timer_periods": 1,
+            "raw_watcher_records": 3,
+            "intervals": 3,
+            "distinct_foreground_contexts": 1,
+            "off_task_intervals": 0,
+            "timed_minutes": 42,
+            "visible_foreground_minutes": 0.48
+          },
+          "club-shift": {
+            "timer_periods": 1,
+            "raw_watcher_records": 8,
+            "intervals": 8,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 0,
+            "timed_minutes": 60,
+            "visible_foreground_minutes": 16.65
+          },
+          "mugs": {
+            "timer_periods": 1,
+            "raw_watcher_records": 1,
+            "intervals": 1,
+            "distinct_foreground_contexts": 0,
+            "off_task_intervals": 0,
+            "timed_minutes": 5,
+            "visible_foreground_minutes": 0.0
+          },
+          "dock-trace": {
+            "timer_periods": 2,
+            "raw_watcher_records": 36,
+            "intervals": 33,
+            "distinct_foreground_contexts": 8,
+            "off_task_intervals": 1,
+            "timed_minutes": 70,
+            "visible_foreground_minutes": 53.0
+          },
+          "bike-box": {
+            "timer_periods": 1,
+            "raw_watcher_records": 4,
+            "intervals": 7,
+            "distinct_foreground_contexts": 2,
+            "off_task_intervals": 0,
+            "timed_minutes": 19,
+            "visible_foreground_minutes": 3.57
+          },
+          "caster-pass": {
+            "timer_periods": 1,
+            "raw_watcher_records": 16,
+            "intervals": 15,
+            "distinct_foreground_contexts": 12,
+            "off_task_intervals": 1,
+            "timed_minutes": 66,
+            "visible_foreground_minutes": 56.4
+          },
+          "tenant-tap": {
+            "timer_periods": 2,
+            "raw_watcher_records": 5,
+            "intervals": 9,
+            "distinct_foreground_contexts": 3,
+            "off_task_intervals": 0,
+            "timed_minutes": 29,
+            "visible_foreground_minutes": 10.08
+          },
+          "wheel-ticks": {
+            "timer_periods": 1,
+            "raw_watcher_records": 19,
+            "intervals": 18,
+            "distinct_foreground_contexts": 6,
+            "off_task_intervals": 0,
+            "timed_minutes": 36,
+            "visible_foreground_minutes": 36.0
+          },
+          "grant-email": {
+            "timer_periods": 1,
+            "raw_watcher_records": 9,
+            "intervals": 8,
+            "distinct_foreground_contexts": 5,
+            "off_task_intervals": 0,
+            "timed_minutes": 18,
+            "visible_foreground_minutes": 18.0
+          }
+        },
+        "sample_add_evidence": {
+          "bake-dishes": {
+            "title": "Do the dishes after the tray bake",
+            "budget": 30,
+            "fixed": false,
+            "expected_band": [
+              1.15,
+              1.28
+            ],
+            "historical_evidence": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "past_actual_to_budget_median": 1.2
+          },
+          "bump-crossing": {
+            "title": "Record the cable-cover crossing on rover C",
+            "budget": 45,
+            "fixed": false,
+            "expected_band": [
+              1.43,
+              1.68
+            ],
+            "historical_evidence": [
+              "hall-encoder",
+              "turntable",
+              "dock-trace"
+            ],
+            "past_actual_to_budget_median": 1.556
+          },
+          "duvet": {
+            "title": "Wash the spare duvet cover",
+            "budget": 30,
+            "fixed": false,
+            "expected_band": null,
+            "historical_evidence": [],
+            "past_actual_to_budget_median": null
+          }
+        },
+        "per_completed_task": {
+          "timer_periods": {
+            "min": 1,
+            "median": 1,
+            "max": 2
+          },
+          "raw_watcher_records": {
+            "min": 1,
+            "median": 8,
+            "max": 37
+          },
+          "intervals": {
+            "min": 1,
+            "median": 8,
+            "max": 33
+          },
+          "distinct_foreground_contexts": {
+            "min": 0,
+            "median": 3,
+            "max": 12
+          }
+        },
+        "offline_chronological_check": {
+          "actions": 98,
+          "completed": 19,
+          "forecast_jobs": {
+            "fallback": 24
+          },
+          "anchor": "2026-11-15"
+        }
+      }
+    ]
+  },
+  "addable_retrieval": {
+    "settings": {
+      "PLANNER_RELEVANCE_THRESHOLD": "0.50",
+      "PLANNER_EMBEDDING_MODEL": "qwen3-embedding-0.6b",
+      "PLANNER_DECISION_MODEL": "kev-4b"
+    },
+    "graded_pairs": 250,
+    "qwen": {
+      "tp": 39,
+      "fp": 19,
+      "fn": 6,
+      "tn": 186,
+      "precision": 0.6724137931034483,
+      "recall": 0.8666666666666667,
+      "f2": 0.819327731092437
+    },
+    "qwen_and_kev": {
+      "tp": 30,
+      "fp": 0,
+      "fn": 15,
+      "tn": 205,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f2": 0.7142857142857143
+    },
+    "kev_given_retrieved": {
+      "tp": 30,
+      "fp": 0,
+      "fn": 9,
+      "tn": 19,
+      "precision": 1.0,
+      "recall": 0.7692307692307693,
+      "f2": 0.8064516129032258
+    },
+    "cases": {
+      "d1-systems-student": {
+        "bridge-proof": {
+          "eligible": 16,
+          "expected": [
+            "barrier-proof",
+            "epoch-proof",
+            "lease-restart"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "barrier-proof": 0.64383,
+            "lease-restart": 0.59621,
+            "epoch-proof": 0.53869,
+            "clock-two": 0.51995,
+            "ack-traces": 0.50772
+          },
+          "kev_selected": [
+            "barrier-proof"
+          ],
+          "missed": [
+            "epoch-proof",
+            "lease-restart"
+          ],
+          "extra": []
+        },
+        "patch-tool": {
+          "eligible": 16,
+          "expected": [
+            "boundary-debug",
+            "ring-port",
+            "trace-tool"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "trace-tool": 0.62851,
+            "suite-report": 0.575,
+            "barrier-proof": 0.5614,
+            "boundary-debug": 0.51736,
+            "ring-port": 0.50668
+          },
+          "kev_selected": [
+            "boundary-debug",
+            "trace-tool"
+          ],
+          "missed": [
+            "ring-port"
+          ],
+          "extra": []
+        },
+        "patch-note": {
+          "eligible": 16,
+          "expected": [
+            "ack-traces",
+            "codec-caption",
+            "incident-card",
+            "suite-report"
+          ],
+          "neutral": [
+            "clock-two"
+          ],
+          "qwen_cosine": {
+            "trace-tool": 0.59709,
+            "codec-caption": 0.58265,
+            "suite-report": 0.57255,
+            "barrier-proof": 0.55086
+          },
+          "kev_selected": [
+            "suite-report"
+          ],
+          "missed": [
+            "ack-traces",
+            "codec-caption",
+            "incident-card"
+          ],
+          "extra": []
+        }
+      },
+      "d2-lab-researcher": {
+        "appendix-proof": {
+          "eligible": 16,
+          "expected": [
+            "bound-floor",
+            "check-jensen",
+            "derive-noise",
+            "variance-email"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "derive-noise": 0.92956,
+            "read-cache": 0.88794,
+            "bound-floor": 0.55771,
+            "read-queues": 0.5131,
+            "variance-email": 0.50311,
+            "check-jensen": 0.50267
+          },
+          "kev_selected": [
+            "bound-floor",
+            "check-jensen",
+            "derive-noise",
+            "variance-email"
+          ],
+          "missed": [],
+          "extra": []
+        },
+        "async-flicker": {
+          "eligible": 16,
+          "expected": [
+            "race-repro",
+            "stride-kernel",
+            "warp-tail"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "warp-tail": 0.89175,
+            "throughput-table": 0.87577,
+            "stride-kernel": 0.59858
+          },
+          "kev_selected": [
+            "stride-kernel",
+            "warp-tail"
+          ],
+          "missed": [
+            "race-repro"
+          ],
+          "extra": []
+        },
+        "sweep-again": {
+          "eligible": 16,
+          "expected": [
+            "median-runs",
+            "throughput-table"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "throughput-table": 0.96421,
+            "warp-tail": 0.89963,
+            "stride-kernel": 0.6123,
+            "median-runs": 0.52231
+          },
+          "kev_selected": [
+            "median-runs",
+            "throughput-table"
+          ],
+          "missed": [],
+          "extra": []
+        }
+      },
+      "d3-clinic-coordinator": {
+        "mara-rooms": {
+          "eligible": 16,
+          "expected": [
+            "mara-capacity",
+            "mara-evening",
+            "mara-late-room"
+          ],
+          "neutral": [
+            "rota-text"
+          ],
+          "qwen_cosine": {
+            "mara-capacity": 0.64668,
+            "mara-late-room": 0.63962,
+            "usher-handback": 0.62688,
+            "mara-evening": 0.62534,
+            "rota-text": 0.60164,
+            "dev-receipts": 0.50423
+          },
+          "kev_selected": [
+            "mara-capacity",
+            "mara-evening",
+            "mara-late-room"
+          ],
+          "missed": [],
+          "extra": []
+        },
+        "dev-april": {
+          "eligible": 16,
+          "expected": [
+            "dev-packs",
+            "dev-receipts",
+            "dev-stock"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "dev-stock": 0.79805,
+            "dev-packs": 0.78165,
+            "dev-receipts": 0.72287,
+            "rota-text": 0.54982,
+            "mara-evening": 0.50401
+          },
+          "kev_selected": [
+            "dev-packs",
+            "dev-receipts",
+            "dev-stock"
+          ],
+          "missed": [],
+          "extra": []
+        },
+        "sea-preflight": {
+          "eligible": 16,
+          "expected": [
+            "audio-preflight",
+            "blue-relay",
+            "cabaret-load"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "audio-preflight": 0.64782,
+            "blue-relay": 0.63649
+          },
+          "kev_selected": [
+            "audio-preflight",
+            "blue-relay"
+          ],
+          "missed": [
+            "cabaret-load"
+          ],
+          "extra": []
+        }
+      },
+      "d4-signal-student": {
+        "shortest-window": {
+          "eligible": 18,
+          "expected": [
+            "subarray-target",
+            "two-targets",
+            "window-cost"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "subarray-target": 0.74761,
+            "window-cost": 0.54782,
+            "two-targets": 0.5094
+          },
+          "kev_selected": [
+            "subarray-target",
+            "two-targets"
+          ],
+          "missed": [
+            "window-cost"
+          ],
+          "extra": []
+        },
+        "triangle-video": {
+          "eligible": 18,
+          "expected": [
+            "pulse-video",
+            "symmetry-video",
+            "window-video"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "pulse-video": 0.75437,
+            "symmetry-video": 0.63331,
+            "window-video": 0.54072
+          },
+          "kev_selected": [
+            "pulse-video",
+            "symmetry-video",
+            "window-video"
+          ],
+          "missed": [],
+          "extra": []
+        },
+        "triangle-sheet": {
+          "eligible": 18,
+          "expected": [
+            "filter-exercise",
+            "phasor-paper"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "pulse-video": 0.54762
+          },
+          "kev_selected": [],
+          "missed": [
+            "filter-exercise",
+            "phasor-paper"
+          ],
+          "extra": []
+        }
+      },
+      "d5-field-engineer": {
+        "bake-dishes": {
+          "eligible": 18,
+          "expected": [
+            "chili-dishes",
+            "pasta-dishes",
+            "stew-dishes"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "stew-dishes": 0.78129,
+            "pasta-dishes": 0.75031,
+            "chili-dishes": 0.74582,
+            "mugs": 0.55909
+          },
+          "kev_selected": [
+            "chili-dishes",
+            "pasta-dishes",
+            "stew-dishes"
+          ],
+          "missed": [],
+          "extra": []
+        },
+        "bump-crossing": {
+          "eligible": 18,
+          "expected": [
+            "caster-pass",
+            "dock-trace",
+            "hall-encoder",
+            "turntable"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "turntable": 0.62597,
+            "dock-trace": 0.59519,
+            "caster-pass": 0.58993,
+            "hall-encoder": 0.54899,
+            "wheel-ticks": 0.51705
+          },
+          "kev_selected": [
+            "caster-pass"
+          ],
+          "missed": [
+            "dock-trace",
+            "hall-encoder",
+            "turntable"
+          ],
+          "extra": []
+        },
+        "duvet": {
+          "eligible": 18,
+          "expected": [
+            "sheets",
+            "towels-one"
+          ],
+          "neutral": [],
+          "qwen_cosine": {
+            "sheets": 0.743,
+            "towels-one": 0.51777,
+            "mugs": 0.50611
+          },
+          "kev_selected": [
+            "sheets"
+          ],
+          "missed": [
+            "towels-one"
+          ],
+          "extra": []
+        }
+      }
+    }
+  }
+}

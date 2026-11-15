@@ -1,0 +1,1533 @@
+{
+  "reference_sha256": "89d6b6fe78cf28d7205fd670c01655fd35ea0e3a83624c226bdf17be42f0b00c",
+  "independent_review": {
+    "tp": 41,
+    "fp": 0,
+    "fn": 0,
+    "tn": 119,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "matrix_by_board": {
+    "oral-history": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "ceramics": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "field-lab": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "campus-day": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 10,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "records-office": {
+      "tp": 10,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "robot-team": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "textile-mending": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 2,
+      "tn": 6,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6667
+    },
+    "library-evening": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "instrument-room": {
+      "tp": 2,
+      "fp": 1,
+      "fn": 0,
+      "tn": 7,
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1": 0.8
+    },
+    "museum-labels": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "home-weekend": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 10,
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "trail-survey": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "video-edit": {
+      "tp": 5,
+      "fp": 1,
+      "fn": 1,
+      "tn": 3,
+      "precision": 0.8333,
+      "recall": 0.8333,
+      "f1": 0.8333
+    },
+    "public-garden": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "amateur-radio": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "cafeteria": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "matrix": {
+    "tp": 38,
+    "fp": 2,
+    "fn": 3,
+    "tn": 117,
+    "precision": 0.95,
+    "recall": 0.9268,
+    "f1": 0.9383
+  },
+  "matrix_disagreements": [
+    {
+      "board": "textile-mending",
+      "pair": "AD",
+      "reference": true,
+      "score": 0.21806858020315126
+    },
+    {
+      "board": "textile-mending",
+      "pair": "BD",
+      "reference": true,
+      "score": 0.4578585771332121
+    },
+    {
+      "board": "instrument-room",
+      "pair": "AD",
+      "reference": false,
+      "score": 0.5579641743212407
+    },
+    {
+      "board": "video-edit",
+      "pair": "AD",
+      "reference": false,
+      "score": 0.5553461231837546
+    },
+    {
+      "board": "video-edit",
+      "pair": "DE",
+      "reference": true,
+      "score": 0.4426108560996335
+    }
+  ],
+  "positives_per_board": {
+    "oral-history": 3,
+    "ceramics": 2,
+    "field-lab": 1,
+    "campus-day": 0,
+    "records-office": 10,
+    "robot-team": 1,
+    "textile-mending": 4,
+    "library-evening": 1,
+    "instrument-room": 2,
+    "museum-labels": 3,
+    "home-weekend": 0,
+    "trail-survey": 2,
+    "video-edit": 6,
+    "public-garden": 3,
+    "amateur-radio": 1,
+    "cafeteria": 2
+  },
+  "qwen_only_active_pairs": {
+    "description": "Diagnostic using the production dual-query Qwen screen on the same canonical active pairs. The actual active matrix uses Kev for every pair.",
+    "threshold": 0.5,
+    "metrics": {
+      "tp": 41,
+      "fp": 23,
+      "fn": 0,
+      "tn": 96,
+      "precision": 0.6406,
+      "recall": 1.0,
+      "f1": 0.781
+    },
+    "pairs": [
+      {
+        "board": "oral-history",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6061201095581055,
+        "bare": 0.5987092852592468
+      },
+      {
+        "board": "oral-history",
+        "pair": "AC",
+        "reference": true,
+        "instructed": 0.6462497711181641,
+        "bare": 0.5604125261306763
+      },
+      {
+        "board": "oral-history",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.4196264445781708,
+        "bare": 0.32346051931381226
+      },
+      {
+        "board": "oral-history",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.48701730370521545,
+        "bare": 0.4997328817844391
+      },
+      {
+        "board": "oral-history",
+        "pair": "BC",
+        "reference": true,
+        "instructed": 0.6764278411865234,
+        "bare": 0.668600857257843
+      },
+      {
+        "board": "oral-history",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.40939706563949585,
+        "bare": 0.38605567812919617
+      },
+      {
+        "board": "oral-history",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.4406970739364624,
+        "bare": 0.4491216540336609
+      },
+      {
+        "board": "oral-history",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.4369904398918152,
+        "bare": 0.4932793080806732
+      },
+      {
+        "board": "oral-history",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.4288397431373596,
+        "bare": 0.49382591247558594
+      },
+      {
+        "board": "oral-history",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.32741686701774597,
+        "bare": 0.3679114878177643
+      },
+      {
+        "board": "ceramics",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6747658252716064,
+        "bare": 0.7278605699539185
+      },
+      {
+        "board": "ceramics",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.3781968355178833,
+        "bare": 0.4211783707141876
+      },
+      {
+        "board": "ceramics",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.40952152013778687,
+        "bare": 0.4820772409439087
+      },
+      {
+        "board": "ceramics",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.25744736194610596,
+        "bare": 0.2933846116065979
+      },
+      {
+        "board": "ceramics",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.43560177087783813,
+        "bare": 0.4538774788379669
+      },
+      {
+        "board": "ceramics",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.45952725410461426,
+        "bare": 0.5378018617630005
+      },
+      {
+        "board": "ceramics",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.33718717098236084,
+        "bare": 0.39303866028785706
+      },
+      {
+        "board": "ceramics",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.521869957447052,
+        "bare": 0.5737748742103577
+      },
+      {
+        "board": "ceramics",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.3582805395126343,
+        "bare": 0.41601240634918213
+      },
+      {
+        "board": "ceramics",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.3324393033981323,
+        "bare": 0.3487156331539154
+      },
+      {
+        "board": "field-lab",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7069911956787109,
+        "bare": 0.7896865606307983
+      },
+      {
+        "board": "field-lab",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.3145836293697357,
+        "bare": 0.3399256467819214
+      },
+      {
+        "board": "field-lab",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.33635881543159485,
+        "bare": 0.3617371618747711
+      },
+      {
+        "board": "field-lab",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.17870314419269562,
+        "bare": 0.20758216083049774
+      },
+      {
+        "board": "field-lab",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.39255979657173157,
+        "bare": 0.40170174837112427
+      },
+      {
+        "board": "field-lab",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.3486817479133606,
+        "bare": 0.4081258475780487
+      },
+      {
+        "board": "field-lab",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.17475636303424835,
+        "bare": 0.22700674831867218
+      },
+      {
+        "board": "field-lab",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.21381999552249908,
+        "bare": 0.2035377472639084
+      },
+      {
+        "board": "field-lab",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.5204378962516785,
+        "bare": 0.5060718059539795
+      },
+      {
+        "board": "field-lab",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.12698830664157867,
+        "bare": 0.17460568249225616
+      },
+      {
+        "board": "campus-day",
+        "pair": "AB",
+        "reference": false,
+        "instructed": 0.32221490144729614,
+        "bare": 0.3161706328392029
+      },
+      {
+        "board": "campus-day",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.3203854262828827,
+        "bare": 0.3438422977924347
+      },
+      {
+        "board": "campus-day",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.3211131691932678,
+        "bare": 0.4509095549583435
+      },
+      {
+        "board": "campus-day",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.35374191403388977,
+        "bare": 0.34043246507644653
+      },
+      {
+        "board": "campus-day",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.2697504758834839,
+        "bare": 0.24342651665210724
+      },
+      {
+        "board": "campus-day",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.35038113594055176,
+        "bare": 0.37187865376472473
+      },
+      {
+        "board": "campus-day",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.2574637532234192,
+        "bare": 0.30747953057289124
+      },
+      {
+        "board": "campus-day",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.23675023019313812,
+        "bare": 0.2584530711174011
+      },
+      {
+        "board": "campus-day",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.30979469418525696,
+        "bare": 0.2785765528678894
+      },
+      {
+        "board": "campus-day",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.2763217091560364,
+        "bare": 0.3032729923725128
+      },
+      {
+        "board": "records-office",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7083542943000793,
+        "bare": 0.7388907670974731
+      },
+      {
+        "board": "records-office",
+        "pair": "AC",
+        "reference": true,
+        "instructed": 0.6930261254310608,
+        "bare": 0.7374480962753296
+      },
+      {
+        "board": "records-office",
+        "pair": "AD",
+        "reference": true,
+        "instructed": 0.709665834903717,
+        "bare": 0.756089985370636
+      },
+      {
+        "board": "records-office",
+        "pair": "AE",
+        "reference": true,
+        "instructed": 0.6818873882293701,
+        "bare": 0.7698840498924255
+      },
+      {
+        "board": "records-office",
+        "pair": "BC",
+        "reference": true,
+        "instructed": 0.6521375775337219,
+        "bare": 0.7407907843589783
+      },
+      {
+        "board": "records-office",
+        "pair": "BD",
+        "reference": true,
+        "instructed": 0.7535214424133301,
+        "bare": 0.8331024646759033
+      },
+      {
+        "board": "records-office",
+        "pair": "BE",
+        "reference": true,
+        "instructed": 0.6706696152687073,
+        "bare": 0.7805228233337402
+      },
+      {
+        "board": "records-office",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.693392276763916,
+        "bare": 0.7363160848617554
+      },
+      {
+        "board": "records-office",
+        "pair": "CE",
+        "reference": true,
+        "instructed": 0.7179471850395203,
+        "bare": 0.7858425378799438
+      },
+      {
+        "board": "records-office",
+        "pair": "DE",
+        "reference": true,
+        "instructed": 0.6824170351028442,
+        "bare": 0.7451318502426147
+      },
+      {
+        "board": "robot-team",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7317990660667419,
+        "bare": 0.79689621925354
+      },
+      {
+        "board": "robot-team",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.2386537492275238,
+        "bare": 0.3045930862426758
+      },
+      {
+        "board": "robot-team",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.3276141881942749,
+        "bare": 0.4011002779006958
+      },
+      {
+        "board": "robot-team",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.3457382321357727,
+        "bare": 0.4175516366958618
+      },
+      {
+        "board": "robot-team",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.2531980872154236,
+        "bare": 0.24639376997947693
+      },
+      {
+        "board": "robot-team",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.28681647777557373,
+        "bare": 0.38918808102607727
+      },
+      {
+        "board": "robot-team",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.39379408955574036,
+        "bare": 0.4498439133167267
+      },
+      {
+        "board": "robot-team",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.35460013151168823,
+        "bare": 0.38967686891555786
+      },
+      {
+        "board": "robot-team",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.25484299659729004,
+        "bare": 0.27674704790115356
+      },
+      {
+        "board": "robot-team",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.2693280279636383,
+        "bare": 0.3750723600387573
+      },
+      {
+        "board": "textile-mending",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7091120481491089,
+        "bare": 0.7532251477241516
+      },
+      {
+        "board": "textile-mending",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.5312691330909729,
+        "bare": 0.5867962837219238
+      },
+      {
+        "board": "textile-mending",
+        "pair": "AD",
+        "reference": true,
+        "instructed": 0.5558791160583496,
+        "bare": 0.6354201436042786
+      },
+      {
+        "board": "textile-mending",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.29668179154396057,
+        "bare": 0.33076053857803345
+      },
+      {
+        "board": "textile-mending",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.5658639073371887,
+        "bare": 0.6095503568649292
+      },
+      {
+        "board": "textile-mending",
+        "pair": "BD",
+        "reference": true,
+        "instructed": 0.5265001058578491,
+        "bare": 0.5953213572502136
+      },
+      {
+        "board": "textile-mending",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.3545221984386444,
+        "bare": 0.3973306119441986
+      },
+      {
+        "board": "textile-mending",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.60127192735672,
+        "bare": 0.6902160048484802
+      },
+      {
+        "board": "textile-mending",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.2838626801967621,
+        "bare": 0.36055275797843933
+      },
+      {
+        "board": "textile-mending",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.3282580077648163,
+        "bare": 0.3737352192401886
+      },
+      {
+        "board": "library-evening",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7193347215652466,
+        "bare": 0.7819014191627502
+      },
+      {
+        "board": "library-evening",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.5756783485412598,
+        "bare": 0.621669352054596
+      },
+      {
+        "board": "library-evening",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.2730083763599396,
+        "bare": 0.2884024679660797
+      },
+      {
+        "board": "library-evening",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.2371293306350708,
+        "bare": 0.22420893609523773
+      },
+      {
+        "board": "library-evening",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.5256830453872681,
+        "bare": 0.5764881372451782
+      },
+      {
+        "board": "library-evening",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.2445605993270874,
+        "bare": 0.24042834341526031
+      },
+      {
+        "board": "library-evening",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.289124459028244,
+        "bare": 0.29939115047454834
+      },
+      {
+        "board": "library-evening",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.2597276568412781,
+        "bare": 0.2594553530216217
+      },
+      {
+        "board": "library-evening",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.24549764394760132,
+        "bare": 0.2735748887062073
+      },
+      {
+        "board": "library-evening",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.4638603627681732,
+        "bare": 0.43953937292099
+      },
+      {
+        "board": "instrument-room",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6798816919326782,
+        "bare": 0.7924674153327942
+      },
+      {
+        "board": "instrument-room",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.4216024875640869,
+        "bare": 0.4924156367778778
+      },
+      {
+        "board": "instrument-room",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.4600125551223755,
+        "bare": 0.5478671193122864
+      },
+      {
+        "board": "instrument-room",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.4562312960624695,
+        "bare": 0.5293757915496826
+      },
+      {
+        "board": "instrument-room",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.4534778892993927,
+        "bare": 0.5147311091423035
+      },
+      {
+        "board": "instrument-room",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.45615696907043457,
+        "bare": 0.4856635332107544
+      },
+      {
+        "board": "instrument-room",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.4566420912742615,
+        "bare": 0.529390811920166
+      },
+      {
+        "board": "instrument-room",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.6093597412109375,
+        "bare": 0.6653326749801636
+      },
+      {
+        "board": "instrument-room",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.5374765992164612,
+        "bare": 0.5992297530174255
+      },
+      {
+        "board": "instrument-room",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.4070078432559967,
+        "bare": 0.44799673557281494
+      },
+      {
+        "board": "museum-labels",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6114018559455872,
+        "bare": 0.7281732559204102
+      },
+      {
+        "board": "museum-labels",
+        "pair": "AC",
+        "reference": true,
+        "instructed": 0.6168330907821655,
+        "bare": 0.6751246452331543
+      },
+      {
+        "board": "museum-labels",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.4053436517715454,
+        "bare": 0.5103237628936768
+      },
+      {
+        "board": "museum-labels",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.3357045650482178,
+        "bare": 0.41404587030410767
+      },
+      {
+        "board": "museum-labels",
+        "pair": "BC",
+        "reference": true,
+        "instructed": 0.5563459396362305,
+        "bare": 0.6650075912475586
+      },
+      {
+        "board": "museum-labels",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.42430204153060913,
+        "bare": 0.5215230584144592
+      },
+      {
+        "board": "museum-labels",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.3350619375705719,
+        "bare": 0.3794785737991333
+      },
+      {
+        "board": "museum-labels",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.41720470786094666,
+        "bare": 0.46977880597114563
+      },
+      {
+        "board": "museum-labels",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.3127519190311432,
+        "bare": 0.36449506878852844
+      },
+      {
+        "board": "museum-labels",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.4132795035839081,
+        "bare": 0.5143519043922424
+      },
+      {
+        "board": "home-weekend",
+        "pair": "AB",
+        "reference": false,
+        "instructed": 0.2286175936460495,
+        "bare": 0.331030935049057
+      },
+      {
+        "board": "home-weekend",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.2719857096672058,
+        "bare": 0.2887447774410248
+      },
+      {
+        "board": "home-weekend",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.35997629165649414,
+        "bare": 0.40931692719459534
+      },
+      {
+        "board": "home-weekend",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.21974337100982666,
+        "bare": 0.1803758442401886
+      },
+      {
+        "board": "home-weekend",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.17252002656459808,
+        "bare": 0.22421666979789734
+      },
+      {
+        "board": "home-weekend",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.2933560907840729,
+        "bare": 0.3200138211250305
+      },
+      {
+        "board": "home-weekend",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.21697957813739777,
+        "bare": 0.1598970592021942
+      },
+      {
+        "board": "home-weekend",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.2332584708929062,
+        "bare": 0.2513543963432312
+      },
+      {
+        "board": "home-weekend",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.3494815230369568,
+        "bare": 0.37975847721099854
+      },
+      {
+        "board": "home-weekend",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.2544371485710144,
+        "bare": 0.2622816860675812
+      },
+      {
+        "board": "trail-survey",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6623812317848206,
+        "bare": 0.7061762809753418
+      },
+      {
+        "board": "trail-survey",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.5028582215309143,
+        "bare": 0.5264794826507568
+      },
+      {
+        "board": "trail-survey",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.4624803960323334,
+        "bare": 0.4622615575790405
+      },
+      {
+        "board": "trail-survey",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.38786956667900085,
+        "bare": 0.40078529715538025
+      },
+      {
+        "board": "trail-survey",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.5423320531845093,
+        "bare": 0.6105450391769409
+      },
+      {
+        "board": "trail-survey",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.45902442932128906,
+        "bare": 0.5065463781356812
+      },
+      {
+        "board": "trail-survey",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.39557865262031555,
+        "bare": 0.44881314039230347
+      },
+      {
+        "board": "trail-survey",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.6741899847984314,
+        "bare": 0.7541731595993042
+      },
+      {
+        "board": "trail-survey",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.2932363450527191,
+        "bare": 0.3254860043525696
+      },
+      {
+        "board": "trail-survey",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.28418487310409546,
+        "bare": 0.3403967618942261
+      },
+      {
+        "board": "video-edit",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.8112812042236328,
+        "bare": 0.8638372421264648
+      },
+      {
+        "board": "video-edit",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.5816613435745239,
+        "bare": 0.5783656239509583
+      },
+      {
+        "board": "video-edit",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.5816816091537476,
+        "bare": 0.6238867044448853
+      },
+      {
+        "board": "video-edit",
+        "pair": "AE",
+        "reference": true,
+        "instructed": 0.6848768591880798,
+        "bare": 0.7336634993553162
+      },
+      {
+        "board": "video-edit",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.4929159879684448,
+        "bare": 0.49657630920410156
+      },
+      {
+        "board": "video-edit",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.5577337741851807,
+        "bare": 0.6300705671310425
+      },
+      {
+        "board": "video-edit",
+        "pair": "BE",
+        "reference": true,
+        "instructed": 0.6611212491989136,
+        "bare": 0.6794344782829285
+      },
+      {
+        "board": "video-edit",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.755839467048645,
+        "bare": 0.8333802223205566
+      },
+      {
+        "board": "video-edit",
+        "pair": "CE",
+        "reference": true,
+        "instructed": 0.7198625802993774,
+        "bare": 0.7345230579376221
+      },
+      {
+        "board": "video-edit",
+        "pair": "DE",
+        "reference": true,
+        "instructed": 0.7288023829460144,
+        "bare": 0.8065571188926697
+      },
+      {
+        "board": "public-garden",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.6682557463645935,
+        "bare": 0.7131898403167725
+      },
+      {
+        "board": "public-garden",
+        "pair": "AC",
+        "reference": true,
+        "instructed": 0.6587091088294983,
+        "bare": 0.7238214015960693
+      },
+      {
+        "board": "public-garden",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.512725830078125,
+        "bare": 0.6300092935562134
+      },
+      {
+        "board": "public-garden",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.2508006989955902,
+        "bare": 0.2719034254550934
+      },
+      {
+        "board": "public-garden",
+        "pair": "BC",
+        "reference": true,
+        "instructed": 0.6090658903121948,
+        "bare": 0.6935893297195435
+      },
+      {
+        "board": "public-garden",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.43329277634620667,
+        "bare": 0.512429416179657
+      },
+      {
+        "board": "public-garden",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.2524670362472534,
+        "bare": 0.30743202567100525
+      },
+      {
+        "board": "public-garden",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.4135391116142273,
+        "bare": 0.480104923248291
+      },
+      {
+        "board": "public-garden",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.2485300749540329,
+        "bare": 0.2903890311717987
+      },
+      {
+        "board": "public-garden",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.20835086703300476,
+        "bare": 0.24879580736160278
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.7328111529350281,
+        "bare": 0.7947356104850769
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.26662707328796387,
+        "bare": 0.2588460445404053
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.42879560589790344,
+        "bare": 0.41954272985458374
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.24895551800727844,
+        "bare": 0.23201456665992737
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.23450516164302826,
+        "bare": 0.2081049680709839
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.3878859579563141,
+        "bare": 0.35629788041114807
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.21096543967723846,
+        "bare": 0.19417326152324677
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "CD",
+        "reference": false,
+        "instructed": 0.4058704376220703,
+        "bare": 0.4416172206401825
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.5087254643440247,
+        "bare": 0.5497419834136963
+      },
+      {
+        "board": "amateur-radio",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.3641209900379181,
+        "bare": 0.36537620425224304
+      },
+      {
+        "board": "cafeteria",
+        "pair": "AB",
+        "reference": true,
+        "instructed": 0.746867299079895,
+        "bare": 0.8200997114181519
+      },
+      {
+        "board": "cafeteria",
+        "pair": "AC",
+        "reference": false,
+        "instructed": 0.3141433596611023,
+        "bare": 0.2813858687877655
+      },
+      {
+        "board": "cafeteria",
+        "pair": "AD",
+        "reference": false,
+        "instructed": 0.26778316497802734,
+        "bare": 0.2706833481788635
+      },
+      {
+        "board": "cafeteria",
+        "pair": "AE",
+        "reference": false,
+        "instructed": 0.3022820055484772,
+        "bare": 0.33572736382484436
+      },
+      {
+        "board": "cafeteria",
+        "pair": "BC",
+        "reference": false,
+        "instructed": 0.2611995339393616,
+        "bare": 0.24380873143672943
+      },
+      {
+        "board": "cafeteria",
+        "pair": "BD",
+        "reference": false,
+        "instructed": 0.24373945593833923,
+        "bare": 0.2437533438205719
+      },
+      {
+        "board": "cafeteria",
+        "pair": "BE",
+        "reference": false,
+        "instructed": 0.3262431025505066,
+        "bare": 0.3182555139064789
+      },
+      {
+        "board": "cafeteria",
+        "pair": "CD",
+        "reference": true,
+        "instructed": 0.7649673223495483,
+        "bare": 0.8426341414451599
+      },
+      {
+        "board": "cafeteria",
+        "pair": "CE",
+        "reference": false,
+        "instructed": 0.24095480144023895,
+        "bare": 0.2683470845222473
+      },
+      {
+        "board": "cafeteria",
+        "pair": "DE",
+        "reference": false,
+        "instructed": 0.2683493196964264,
+        "bare": 0.32848337292671204
+      }
+    ]
+  },
+  "qwen_calls": 161,
+  "prior_screen_passes": 0,
+  "prior_kev_acceptances": 0,
+  "queue": {
+    "counts": {
+      "boards": 16,
+      "addition_snapshots_checked": 80,
+      "waves": 48,
+      "individual_completions": 56,
+      "multi_completion_waves": 8,
+      "waves_without_refresh": 28,
+      "jobs": 35,
+      "target_transitions": 128,
+      "reference_no_change_controls": 91,
+      "boards_with_reference_no_change_control": 15
+    },
+    "persisted_vs_reference": {
+      "tp": 34,
+      "fp": 1,
+      "fn": 2,
+      "tn": 91,
+      "precision": 0.9714,
+      "recall": 0.9444,
+      "f1": 0.9577
+    },
+    "queued_vs_reference": {
+      "tp": 34,
+      "fp": 1,
+      "fn": 2,
+      "tn": 91,
+      "precision": 0.9714,
+      "recall": 0.9444,
+      "f1": 0.9577
+    },
+    "persisted_vs_kev": {
+      "tp": 35,
+      "fp": 0,
+      "fn": 0,
+      "tn": 93,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "queued_vs_kev": {
+      "tp": 35,
+      "fp": 0,
+      "fn": 0,
+      "tn": 93,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "state_errors": [],
+    "source_errors": [],
+    "citations": {},
+    "directions": [],
+    "routing_errors": [
+      {
+        "board": "textile-mending",
+        "wave": 3,
+        "finished": {
+          "B": 58
+        },
+        "surviving_task": "D",
+        "expected_refresh": true
+      },
+      {
+        "board": "video-edit",
+        "wave": 1,
+        "finished": {
+          "A": 51
+        },
+        "surviving_task": "D",
+        "expected_refresh": false
+      },
+      {
+        "board": "video-edit",
+        "wave": 3,
+        "finished": {
+          "D": 77
+        },
+        "surviving_task": "E",
+        "expected_refresh": true
+      }
+    ],
+    "new_source_selection_vs_reference": {
+      "tp": 36,
+      "fp": 2,
+      "fn": 3,
+      "tn": 103,
+      "precision": 0.9474,
+      "recall": 0.9231,
+      "f1": 0.9351
+    },
+    "all_source_slots_on_refreshed_tasks_vs_reference": {
+      "tp": 45,
+      "fp": 3,
+      "fn": 1,
+      "tn": 31,
+      "precision": 0.9375,
+      "recall": 0.9783,
+      "f1": 0.9574
+    },
+    "new_source_selection_disagreements": [
+      {
+        "board": "textile-mending",
+        "wave": 2,
+        "target": "D",
+        "source": "A",
+        "expected": true,
+        "selected": false,
+        "target_refreshed": true
+      },
+      {
+        "board": "textile-mending",
+        "wave": 3,
+        "target": "D",
+        "source": "B",
+        "expected": true,
+        "selected": false,
+        "target_refreshed": false
+      },
+      {
+        "board": "instrument-room",
+        "wave": 2,
+        "target": "D",
+        "source": "A",
+        "expected": false,
+        "selected": true,
+        "target_refreshed": true
+      },
+      {
+        "board": "video-edit",
+        "wave": 1,
+        "target": "D",
+        "source": "A",
+        "expected": false,
+        "selected": true,
+        "target_refreshed": true
+      },
+      {
+        "board": "video-edit",
+        "wave": 3,
+        "target": "E",
+        "source": "D",
+        "expected": true,
+        "selected": false,
+        "target_refreshed": false
+      }
+    ]
+  },
+  "stress": {
+    "seed_count": 96,
+    "totals": {
+      "created": 960,
+      "starts": 445,
+      "pauses": 189,
+      "four_task_bursts": 96,
+      "completions": 439,
+      "initial_estimates": 960,
+      "pair_jobs": 2726,
+      "matrix_verdicts_checked": 5930,
+      "initial_snapshots_checked": 2496,
+      "current_snapshots_checked": 1476,
+      "drain_checkpoints": 288,
+      "refresh_estimates": 209,
+      "time_corrections": 96,
+      "correction_targets_checked": 521
+    },
+    "failed_seeds": [],
+    "crowded_burst": {
+      "simultaneous_initial_estimates": 36,
+      "distinct_pair_jobs": 630,
+      "positive_cells": 75,
+      "negative_cells": 555,
+      "completions_in_one_wave": 6,
+      "affected_survivors": 13,
+      "untouched_survivors": 17,
+      "saved_refreshes": 13
+    }
+  }
+}

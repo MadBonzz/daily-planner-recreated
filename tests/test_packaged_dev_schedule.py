@@ -10,8 +10,11 @@ import pytest
 import dev_schedule
 import dev_workspace
 import estimate_worker
+import focus_domains
 import model_client
 import retrieval
+import task_workspace
+from relevance_feedback import related_ids
 
 
 def exercise_packaged_history(tmp_path, monkeypatch, history_id):
@@ -67,21 +70,49 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
     dev_schedule.advance(replay, history_id, through_end=True)
     progress = dev_schedule.progress(replay, history_id)
     assert progress["done"] == progress["total"]
+    calls["calendar events"] = progress["done"]
     assert calls["activity"] and calls["forecast"]
 
-    # The editable workspace allocates new database IDs. Submit both dashboard
-    # samples before draining, so even their pair with one another must be available.
+    # Each submission receives a distinct runtime ID, including a second copy of a sample.
     editable = dev_workspace.open_dev_workspace(tmp_path, history_id)
     samples = dev_workspace.sample_task_choices(history_id)
-    assert len(samples) == 2
+    assert samples
     submissions = [*samples, next(iter(samples))]
     added = [dev_workspace.add_sample_task(editable, history_id, sample, "2026-11-15")["id"]
              for sample in submissions]
-    assert len(set(added)) == 3
+    assert len(set(added)) == len(submissions)
+    calls["sample submissions including duplicate"] = len(added)
+    for task in editable.list_tasks():
+        if task["status"] != "completed":
+            desk = task_workspace.availability(editable, task)
+            assert desk and desk["source"] == "Packaged " + retrieval.DECISION_MODEL
+            calls["immediate workspace checks"] += 1
+            calls["desk eligible"] += bool(desk["eligible"])
     while estimate_worker.run_one_job(editable, editable.data_dir / "vectors"):
         pass
+    for task in editable.list_tasks():
+        if task["status"] != "completed":
+            policy = focus_domains.policy(editable, task["id"])
+            assert not policy["pending"], (task["title"], list(policy["pending"]))
+            calls["cards with a suggested website"] += bool(policy["suggestions"])
+            calls["suggested website entries"] += len(policy["suggestions"])
+
+    added_tasks = (editable.get_task(task_id) for task_id in added)
+    target = next(task for task in added_tasks if not task["fixed_duration"])
+    reviewed = [row["id"] for row in editable.comparison_options(target["id"])]
+    selected = [row["id"] for row in editable.completed_tasks()
+                if any(e.get("label") == "off_task" and e.get("domain")
+                       for e in (row.get("report") or {}).get("intervals", []))]
+    editable.revise_related_tasks(target["id"], selected, previous_ids=related_ids(target["prediction"]),
+                                  reviewed_ids=reviewed)
+    while estimate_worker.run_one_job(editable, editable.data_dir / "vectors"):
+        pass
+    assert set(related_ids(editable.get_task(target["id"])["prediction"])) == set(selected)
+    assert not focus_domains.policy(editable, target["id"])["pending"]
+    calls["manual comparisons selected"] = len(selected)
 
     assert not missing, f"{history_id}: {len(missing)} local model requests, first misses: {missing[:5]}"
+    calls["local inference requests"] = len(missing)
     assert calls["screened forecast"]
     for store in (replay, editable):
         assert not store.has_estimation_work()
@@ -90,6 +121,7 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
             assert not db.execute("SELECT 1 FROM report_jobs").fetchone()
             cells = [row[0] for row in db.execute("SELECT related FROM task_relations")]
             assert cells and set(cells) <= {0, 1}
+            calls["editable matrix cells" if store is editable else "replay matrix cells"] = len(cells)
             if store is editable:
                 pair = sorted((added[0], added[-1]))
                 duplicate = db.execute("SELECT related FROM task_relations WHERE left_id=? AND right_id=?", pair).fetchone()
@@ -111,6 +143,9 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
     return calls
 
 
-@pytest.mark.parametrize("history_id", sorted(dev_workspace.history_choices()))
-def test_packaged_replay_and_editable_samples_need_only_the_forecast_provider(tmp_path, monkeypatch, history_id):
-    exercise_packaged_history(tmp_path, monkeypatch, history_id)
+@pytest.mark.parametrize("history_id", sorted(set(dev_workspace.history_choices()).union(
+    path.stem for path in (dev_workspace.DATASET / "histories").glob("*.json"))))
+def test_packaged_replay_and_editable_samples_need_only_the_forecast_provider(tmp_path, monkeypatch, history_id,
+                                                                             record_property):
+    for label, value in exercise_packaged_history(tmp_path, monkeypatch, history_id).items():
+        record_property(label, value)

@@ -21,6 +21,16 @@ def approve(store, task, monkeypatch):
     return desk.availability(store, task)["token"]
 
 
+def test_new_packaged_workspace_verdict_recovers_previous_outage(tmp_path, monkeypatch):
+    store = PlannerStore(tmp_path)
+    task = save_task(store, "Read the new sample")
+    key = desk.decision_hash(gate.payload(task, desk.planner_settings()))
+    desk._record(store, task["id"], key, None, "Local model was unavailable")
+    monkeypatch.setattr(gate, "packaged", lambda fingerprint: True if fingerprint == key else None)
+    row = desk.availability(store, task)
+    assert row["eligible"] and row["source"].startswith("Packaged ")
+
+
 def test_workspace_access_and_start_share_timer_but_page_visits_never_resume(tmp_path, monkeypatch):
     now = [1000.]
     store = PlannerStore(tmp_path / "a", clock=lambda: now[0])

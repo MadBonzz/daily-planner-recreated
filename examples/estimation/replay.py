@@ -13,7 +13,7 @@ from unittest.mock import patch
 import activity
 import dev_schedule
 import estimator
-from examples.estimation.run import DATASET, histories
+from examples.estimation.run import DATASET, DEMO_DATASET, histories
 from model_client import forecast_endpoint, ModelUnavailable, planner_settings
 from planner_store import PlannerStore
 import retrieval
@@ -90,10 +90,10 @@ def _capture(tasks, ids, previous):
     return changes
 
 
-def replay(selector, output, *, actions=None, offline=False, anchor=None):
-    history = histories(selector)[0]
+def replay(selector, output, *, actions=None, offline=False, anchor=None, directory=DATASET):
+    history = histories(selector, directory)[0]
     profile = history["id"]
-    schedule_file = DATASET / "schedules" / (profile + ".json")
+    schedule_file = directory / "schedules" / (profile + ".json")
     schedule = json.loads(schedule_file.read_text(encoding="utf-8"))
     if actions is None:
         actions = len(schedule)
@@ -107,7 +107,7 @@ def replay(selector, output, *, actions=None, offline=False, anchor=None):
     manifest = {"history": profile, "anchor_day": anchor.isoformat(), "mode": "offline" if offline else "configured",
                 "requested_actions": actions, "total_actions": len(schedule),
                 "schedule_sha256": hashlib.sha256(schedule_file.read_bytes()).hexdigest(),
-                "fixture_sha256": hashlib.sha256((DATASET / "histories" / (profile + ".json")).read_bytes()).hexdigest(),
+                "fixture_sha256": hashlib.sha256((directory / "histories" / (profile + ".json")).read_bytes()).hexdigest(),
                 "activitywatch_sha256": history.get("activitywatch_sha256")}
     if not offline:
         config = planner_settings()
@@ -120,7 +120,7 @@ def replay(selector, output, *, actions=None, offline=False, anchor=None):
     with TemporaryDirectory() as working, (output / "events.jsonl").open("x", encoding="utf-8") as log:
         store = PlannerStore(working)
         now = datetime.combine(anchor, time(12)).timestamp()
-        dev_schedule.initialize(store, profile, DATASET, replay=True, now=now)
+        dev_schedule.initialize(store, profile, directory, replay=True, now=now)
         store.clock = lambda: store.get_setting("dev_calendar").get("clock", now)
         ids, previous = {}, {}
         with _offline() if offline else nullcontext():
@@ -134,7 +134,7 @@ def replay(selector, output, *, actions=None, offline=False, anchor=None):
                     return prediction
 
                 with patch.object(estimator, "predict", record):
-                    dev_schedule.advance(store, profile)
+                    dev_schedule.advance(store, profile, directory=directory)
                 if event["action"] == "create":
                     ids[store.get_setting("dev_task_" + event["task"])] = event["task"]
                 tasks = store.list_tasks()
@@ -157,12 +157,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("history", help="History ID or two-digit prefix")
     parser.add_argument("--output", type=Path, required=True, help="A new directory for this run")
+    parser.add_argument("--demo", action="store_true", help="Select from the live Dev history catalog")
     parser.add_argument("--actions", type=int, help="Stop after this many actions (default: entire schedule)")
     parser.add_argument("--offline", action="store_true", help="Run the planner fallback with all model calls disabled")
     parser.add_argument("--anchor-day", type=date.fromisoformat, help="Replay day zero (YYYY-MM-DD, default: today)")
     args = parser.parse_args(argv)
     try:
-        result = replay(args.history, args.output, actions=args.actions, offline=args.offline, anchor=args.anchor_day)
+        result = replay(args.history, args.output, actions=args.actions, offline=args.offline, anchor=args.anchor_day,
+                        directory=DEMO_DATASET if args.demo else DATASET)
     except (ValueError, OSError) as error:
         parser.exit(1, f"{error}\n")
     print(json.dumps({"output": str(args.output), **result["overall"], "actions_applied": result["actions_applied"]}))

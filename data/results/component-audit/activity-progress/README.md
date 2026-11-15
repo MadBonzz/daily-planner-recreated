@@ -126,9 +126,11 @@ python -m examples.estimation.audit_activity_progress feedback-validation.json -
 python -m pytest -q tests/test_activity.py tests/test_activity_db.py tests/test_activity_fixture.py tests/test_report_worker.py tests/test_workspace_forecast.py tests/test_workspace_progress_scenarios.py
 ```
 
-On the final revision, replay saved judgments or rerun the two pause cases independently. The evidence checks read existing model replies. The pause trials call the configured checkpoint. Load the frozen instructions for the retry-only experiment to isolate its effect.
+The checkout below contains the original follow-on runners and their exact application code. From the current repository root, create it to replay saved judgments or rerun the pause cases independently. The evidence checks read existing model replies. The pause trials call the configured checkpoint. Supply the paths to your saved history-replay and feedback-validation files. The commands load the frozen instructions for the retry-only experiment.
 
 ```sh
+git worktree add --detach ../plan-pause-audit 44fd7074382b0af20fe288c5ced065a671d4a2e6
+cd ../plan-pause-audit
 python -m examples.estimation.rescore_activity_labels history-replay.json history-evidence-check.json
 python -m examples.estimation.rescore_activity_labels feedback-validation.json feedback-evidence-check.json
 git show 9978d5a:workspace_forecast.py > frozen-workspace-forecast.py

@@ -1,4 +1,4 @@
-"""Build public Kev website verdicts, or verify coverage offline with --check.
+"""Build Kev website verdicts for the original benchmark, or verify coverage offline with --check.
 
 Run with python -m examples.estimation.package_focus from a clone of the public repo.
 Replays published task, PDF, ActivityWatch and retrieval fixtures in temporary workspaces.
@@ -19,9 +19,9 @@ import focus_domains
 import focus_judge
 import retrieval
 import sample_retrieval
-from examples.estimation.calibrate_retrieval import cosine
-from examples.estimation.package_retrieval import inputs, public_revision, public_sources, save
-from examples.estimation.run import DATASET, REPO, histories
+from examples.estimation.scoring import cosine
+from examples.estimation.package_retrieval import inputs, public_revision, public_sources
+from examples.estimation.run import DATASET, REPO, histories, write_json
 from model_client import planner_settings
 from planner_store import PlannerStore
 
@@ -158,9 +158,9 @@ def main():
                 continue
             decisions[digest] = focus_judge.live_decision(request, config)
             if args.checkpoint:
-                save(args.checkpoint, {"public_revision": revision, "decisions": decisions})
+                write_json(args.checkpoint, {"public_revision": revision, "decisions": decisions}, sort_keys=True)
             print(f"{index}/{len(requests)} public domain judgments", flush=True)
-        save(path, {**metadata, "decisions": decisions})
+        write_json(path, {**metadata, "decisions": decisions}, sort_keys=True)
     count = sum(len(targets) for targets in snapshots.values())
     print(f"{len(requests)} unique judgments across the dated replay and {count} open/addable sample tasks.")
 

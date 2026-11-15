@@ -48,6 +48,7 @@ def profiles(tmp_path, monkeypatch):
         pdf_dir.mkdir(parents=True)
         copyfile(sample_pdf, pdf_dir / "brief.pdf")
     monkeypatch.setattr(dev, "DATASET", fixture_dir)
+    monkeypatch.setattr(dev, "DEMO_DATASET", fixture_dir)
     monkeypatch.setattr(activity, "_get", lambda *a, **kw: pytest.fail("Dev accessed the real ActivityWatch server"))
     monkeypatch.setattr(activity, "chat_json", lambda *a, **kw: pytest.fail("Dev classified invented observations"))
     return tmp_path / "profiles"

@@ -8,7 +8,7 @@ import json
 import portalocker
 
 from examples.estimation.activity_fixture import replay_task_at, task_layout
-from examples.estimation.run import DATASET, task_inputs, valid_id
+from examples.estimation.run import DATASET, sample_root, task_inputs, valid_id
 from planner_store import PlannerStore
 
 
@@ -159,6 +159,7 @@ def _run(store, history, events, calendar, directory, *, through_end, infer):
 
 def advance(store, history_id, *, through_end=False, directory=DATASET):
     """Apply each event and resolve its forecasts before advancing the simulated clock."""
+    directory = sample_root(history_id, directory)
     # Serialize two tabs advancing the same simulation. A crash releases the OS lock.
     with portalocker.Lock(str(store.data_dir / "replay.lock"), timeout=2):
         calendar = store.get_setting("dev_calendar")
@@ -176,6 +177,7 @@ def advance(store, history_id, *, through_end=False, directory=DATASET):
 
 
 def progress(store, history_id, directory=DATASET):
+    directory = sample_root(history_id, directory)
     calendar = store.get_setting("dev_calendar")
     if not calendar or calendar["history"] != history_id:
         return {"done": 0, "total": 0, "events": [], "last_day": None, "next_day": None}
@@ -195,7 +197,7 @@ def activity_preview(store, task, exclusions=(), directory=DATASET):
     ref = store.get_setting(f'dev_activity_{task["id"]}')
     if not ref:
         return []
-    root = Path(directory)
+    root = sample_root(ref["history"], directory)
     history = json.loads((root / "histories" / (ref["history"] + ".json")).read_text(encoding="utf-8"))
     row = next(r for r in [*history["tasks"], *history["open_tasks"]] if r["id"] == ref["task"])
     return replay_task_at(history, row, ref["sessions"], store.periods(task["id"]),
