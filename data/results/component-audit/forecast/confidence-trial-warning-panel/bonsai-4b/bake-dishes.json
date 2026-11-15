@@ -1,0 +1,146 @@
+{
+  "task": "bake-dishes",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T09:57:13.615587+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "d625eb5df62ccd31e40c24d53094ff1c82f1f994a12809e05b3e8073eb962ad0",
+  "frozen_candidates": [
+    "pasta-dishes",
+    "chili-dishes",
+    "stew-dishes"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.15,
+      1.28
+    ],
+    "expected_evidence": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "7a316ed1ef984c74137b63cf7f29a709348291ed4c657f413eee4321151c8ad1",
+      "max_tokens": 950,
+      "payload_sha256": "443cc607af6b7bc53994cb13041ff91e41846788269c928a8a9ae815f6bb9247",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 368,
+        "prompt_tokens": 1059,
+        "total_tokens": 1427,
+        "prompt_tokens_details": {
+          "cached_tokens": 417
+        }
+      },
+      "timings": {
+        "cache_n": 417,
+        "prompt_n": 642,
+        "prompt_ms": 16372.478,
+        "prompt_per_token_ms": 25.50230218068536,
+        "prompt_per_second": 39.21214613939319,
+        "predicted_n": 368,
+        "predicted_ms": 47986.651,
+        "predicted_per_token_ms": 130.7538174386921,
+        "predicted_per_second": 7.647960262948961
+      },
+      "content_sha256": "785fdc1b34d2ab7277b0c5b18033204f01e91c7e22aae3033957b94bb77c0354",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "For dishes after a tray bake, the skillet may require a second scrub due to cooked-on food residue, which increases cleaning time. Address this by pre-scraping the skillet with a stiff brush before hand-washing to reduce scrubbing effort and avoid extra time spent on the same task."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task 'Clear up the pasta supper' had a similar scope (washing four plates, scrubbing skillet, drying iron) and a 1.24 actual-to-budget ratio, indicating that the same effort may take slightly longer due to residue buildup."
+          }
+        ],
+        "point_min": 35,
+        "low_min": 30,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The time-driving step is scrubbing the skillet, which historically took 3.0 minutes on off-task activities and 12 minutes in the final wipe of the 'stew' task. The strongest relevant comparison is the 'chili night' task, where the skillet required extra scrubbing and the total time was 36.0 minutes, matching the current estimated scope. The 'reset kitchen after stew' task (42.0 minutes) shows that drying and final wiping can extend time, especially when multiple pots are involved. A tighter cluster of actual durations would improve confidence, but the current data lacks consistency in scrubbing time across tasks.",
+        "confidence_reason": "The variability in scrubbing time and final wipe duration across tasks suggests that the time may be influenced by food residue and drying effort, which are not consistently documented. This could widen the range if future tasks involve different types of food or more complex residue."
+      },
+      "seconds": 64.92
+    }
+  ],
+  "prediction": {
+    "point_min": 35,
+    "low_min": 30,
+    "high_min": 45,
+    "confidence": "medium",
+    "confidence_reason": "The variability in scrubbing time and final wipe duration across tasks suggests that the time may be influenced by food residue and drying effort, which are not consistently documented. This could widen the range if future tasks involve different types of food or more complex residue.",
+    "model_rationale": "The time-driving step is scrubbing the skillet, which historically took 3.0 minutes on off-task activities and 12 minutes in the final wipe of the 'stew' task. The strongest relevant comparison is the 'chili night' task, where the skillet required extra scrubbing and the total time was 36.0 minutes, matching the current estimated scope. The 'reset kitchen after stew' task (42.0 minutes) shows that drying and final wiping can extend time, especially when multiple pots are involved. A tighter cluster of actual durations would improve confidence, but the current data lacks consistency in scrubbing time across tasks.",
+    "explanation": "The time-driving step is scrubbing the skillet, which historically took 3.0 minutes on off-task activities and 12 minutes in the final wipe of the 'stew' task. The strongest relevant comparison is the 'chili night' task, where the skillet required extra scrubbing and the total time was 36.0 minutes, matching the current estimated scope. The 'reset kitchen after stew' task (42.0 minutes) shows that drying and final wiping can extend time, especially when multiple pots are involved. A tighter cluster of actual durations would improve confidence, but the current data lacks consistency in scrubbing time across tasks.",
+    "evidence": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "estimate_min": 25,
+        "actual_min": 31.0,
+        "ratio": 1.24,
+        "reason": "The task 'Clear up the pasta supper' had a similar scope (washing four plates, scrubbing skillet, drying iron) and a 1.24 actual-to-budget ratio, indicating that the same effort may take slightly longer due to residue buildup.",
+        "reason_source": "model",
+        "model_rationale": "The task 'Clear up the pasta supper' had a similar scope (washing four plates, scrubbing skillet, drying iron) and a 1.24 actual-to-budget ratio, indicating that the same effort may take slightly longer due to residue buildup.",
+        "source_quote": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "For dishes after a tray bake, the skillet may require a second scrub due to cooked-on food residue, which increases cleaning time. Address this by pre-scraping the skillet with a stiff brush before hand-washing to reduce scrubbing effort and avoid extra time spent on the same task.",
+        "sources": [
+          {
+            "task_id": "pasta-dishes",
+            "title": "Clear up the pasta supper",
+            "origin": "Completion note",
+            "observation": "The smaller plates were easy, but the skillet needed a second scrub."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "source": "decision model",
+        "score": 0.710379170627452
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "source": "decision model",
+        "score": 0.7078707760635019
+      },
+      {
+        "task_id": "stew-dishes",
+        "title": "Reset the kitchen after stew",
+        "source": "decision model",
+        "score": 0.6901440283809372
+      }
+    ],
+    "used_task_ids": [
+      "pasta-dishes"
+    ],
+    "feedback_source_ids": []
+  }
+}

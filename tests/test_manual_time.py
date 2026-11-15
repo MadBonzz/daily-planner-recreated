@@ -160,3 +160,28 @@ def test_first_known_time_creates_missing_relation_and_only_refreshes_on_match(t
     assert store.resolve_relation(pair["pair"], pair["token"], True)
     lease = store.claim_prediction()
     assert lease["task"]["id"] == current and lease["history"][0]["actual_seconds"] == 720
+
+
+def test_finishing_workspace_check_preserves_inflight_edit_time_click(tmp_path):
+    store = PlannerStore(tmp_path)
+    task_id = make_task(store)
+    code = f"""
+from unittest.mock import patch
+import streamlit as st
+from app import render_task
+from planner_store import PlannerStore
+
+def availability(store, task):
+    count = st.session_state.get("availability_reads", 0) + 1
+    st.session_state["availability_reads"] = count
+    # On the edit click the decision arrives between the card's check and its poll.
+    return None if count == 2 else {{"eligible": False}}
+
+store = PlannerStore({str(tmp_path)!r})
+with patch("workspace_ui.desk.availability", availability):
+    render_task(store, store.data_dir/'vectors', store.get_task({task_id!r}), dev=True)
+"""
+    ui = AppTest.from_string(code).run()
+    ui.button(key=f"edit-time-{task_id}").click().run()
+    assert not ui.exception
+    assert [field.label for field in ui.number_input] == ["Total time spent (minutes)"]

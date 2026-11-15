@@ -1,0 +1,178 @@
+{
+  "model": "ternary-bonsai-4b",
+  "instruction_sha256": "756d8805e6fdd2763a54f9addfbec5943b4e7d1ef86f70f02a3e5c127d9da979",
+  "cases": [
+    {
+      "case": "finished",
+      "expected_supported": true,
+      "actual_supported": true,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": true,
+        "remaining_work": true
+      },
+      "status": "adjusted",
+      "point_min": 20,
+      "low_min": 20,
+      "high_min": 20,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": 0,
+        "evidence": [
+          {
+            "kind": "task_finished",
+            "quote": "Both sections are written, the restore test passed and I sent the final handover. Everything is finished.",
+            "document": ""
+          }
+        ],
+        "status": "adjusted",
+        "explanation": "The user explicitly states that both sections are written, the restore test passed, and the final handover was sent. This constitutes a complete and verified progress on the task, including the full deliverable. No open work or blockers are mentioned. The task is fully completed.",
+        "confidence": "high",
+        "confidence_reason": "The user's message includes concrete, verifiable completion of all required steps: writing setup and recovery, verifying the restore script, and sending the final handover. This directly matches the task scope and confirms task_finished status.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-4b",
+          "decision": "direct",
+          "minutes_by": "model"
+        }
+      }
+    },
+    {
+      "case": "new test result",
+      "expected_supported": true,
+      "actual_supported": true,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": true,
+        "remaining_work": true
+      },
+      "status": "adjusted",
+      "point_min": 60,
+      "low_min": 55,
+      "high_min": 70,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": 40,
+        "evidence": [
+          {
+            "kind": "completed",
+            "quote": "My test output after the repair: restore_smoke PASS. I still need to write both sections and send them.",
+            "document": ""
+          }
+        ],
+        "status": "adjusted",
+        "explanation": "The user reported that the restore script passed, which confirms the recovery section is complete. However, the setup and final handover sections still need to be written and sent. The task scope includes writing both sections and sending the final handover, so the remaining work is focused on those parts. The user's current status is not fully complete, but the restoration is verified. Thus, the estimate of 40 minutes (with a range of 35\u201350) reflects the active minutes remaining for the remaining sections.",
+        "confidence": "medium",
+        "confidence_reason": "The user explicitly stated that the restore script passed, which is a concrete result verifying the recovery part. The setup and final handover sections are still pending, and the user has not completed writing or sending them. This provides sufficient first-hand evidence of progress to classify as supported with a partial milestone remaining.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-4b",
+          "decision": "direct",
+          "minutes_by": "model"
+        }
+      }
+    },
+    {
+      "case": "copied text",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user's message only contains a copied instruction from an assignment ('Run the restore test and send the handover') and does not indicate any actual progress on the task. There is no evidence of setup, recovery, script verification, or handover completion. The content is untrusted and does not reflect fresh, actionable progress.",
+        "confidence_reason": "The message is a hypothetical or copied instruction, not a verified step of work. No concrete results or progress are described.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-4b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "old evidence",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "unavailable",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "unavailable",
+        "explanation": "The workspace estimate could not be updated. The model could not provide a verifiable progress estimate. Cite an exact user statement or work sample outside a question.",
+        "confidence": "low",
+        "confidence_reason": "There is no verified estimate of the remaining work.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-4b",
+          "decision": "fallback"
+        }
+      }
+    },
+    {
+      "case": "hypothetical",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user's statement is hypothetical and does not indicate actual progress on the lab handover task.",
+        "confidence_reason": "No verified user statement or work sample confirms completion or progress on the task scope.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-4b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    }
+  ],
+  "supported": {
+    "TP": 2,
+    "FP": 0,
+    "FN": 0,
+    "TN": 3,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  "unavailable": 1
+}

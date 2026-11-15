@@ -1,0 +1,85 @@
+{
+  "task": "metrics-club",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:24:17.380839+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "082eecad8e0aa087366d44de1c82e9ac14bf2130a4d545316ae81a60928e2bce",
+  "frozen_candidates": [],
+  "budget": 45,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.6,
+      0.87
+    ],
+    "expected_evidence": [
+      "read-cache",
+      "read-queues",
+      "replica-figs"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "8488c202c4810a0d49aa56324af5c3ca8437513eb2bee6ee15d35a7df654d74f",
+      "max_tokens": 950,
+      "payload_sha256": "09042bd9655489074f80f05127629385aacf3cfaec1a0da05e333e7964eedfa4",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 131,
+        "prompt_tokens": 816,
+        "total_tokens": 947,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 816,
+        "prompt_ms": 37608.655,
+        "prompt_per_token_ms": 46.089037990196076,
+        "prompt_per_second": 21.69713327956025,
+        "predicted_n": 131,
+        "predicted_ms": 86436.672,
+        "predicted_per_token_ms": 664.897476923077,
+        "predicted_per_second": 1.5039912688910557
+      },
+      "content_sha256": "dc552becda06cfe21166d2dd1016b67a09334d4ed2f07ff86463201e2a60cea8",
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 40,
+        "confidence": "low",
+        "rationale": "The task requires synthesizing specific ablation details from the provided text into a single slide without derivation, which is a focused reading and synthesis activity. Since no historical timing data exists, the estimate relies on the standard scope of preparing a figures-only discussion slide.",
+        "confidence_reason": "The range widens if the user struggles to identify the specific comparison isolating the stopping rule versus the confound limitation."
+      },
+      "seconds": 452.09
+    }
+  ],
+  "prediction": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 40,
+    "confidence": "low",
+    "confidence_reason": "The range widens if the user struggles to identify the specific comparison isolating the stopping rule versus the confound limitation.",
+    "model_rationale": "The task requires synthesizing specific ablation details from the provided text into a single slide without derivation, which is a focused reading and synthesis activity. Since no historical timing data exists, the estimate relies on the standard scope of preparing a figures-only discussion slide.",
+    "explanation": "The task requires synthesizing specific ablation details from the provided text into a single slide without derivation, which is a focused reading and synthesis activity. Since no historical timing data exists, the estimate relies on the standard scope of preparing a figures-only discussion slide.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

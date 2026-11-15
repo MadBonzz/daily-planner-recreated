@@ -1,0 +1,177 @@
+{
+  "task": "bake-dishes",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:33:04.023616+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "d625eb5df62ccd31e40c24d53094ff1c82f1f994a12809e05b3e8073eb962ad0",
+  "frozen_candidates": [
+    "pasta-dishes",
+    "chili-dishes",
+    "stew-dishes"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.15,
+      1.28
+    ],
+    "expected_evidence": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "182d17988b7ef3c301efb88b3a92cb6d92875e9e8171dcabafd8dcb10575b0e7",
+      "max_tokens": 950,
+      "payload_sha256": "e51964c98aa9f752cacfd138737af1f2ccce6977948c7c6241c7ef73c78231b6",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 469,
+        "prompt_tokens": 1067,
+        "total_tokens": 1536,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1067,
+        "prompt_ms": 50021.419,
+        "prompt_per_token_ms": 46.88043017806935,
+        "prompt_per_second": 21.33086228521426,
+        "predicted_n": 469,
+        "predicted_ms": 339045.139,
+        "predicted_per_token_ms": 724.4554252136753,
+        "predicted_per_second": 1.3803471755423102
+      },
+      "content_sha256": "b709e248ee1f506aead66f72043d61cbfb2b55543a222c55481f4daa9ebe4564",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Avoid off-task gaming during the 3-minute window where the skillet required extra scrubbing, as this directly correlates to the 1.24x overrun in the pasta supper task."
+          },
+          {
+            "observation_id": "S2.2",
+            "advice": "Avoid off-task gaming during the 5-minute window where handles had cooked-on chili, as this correlates to the 1.2x overrun in the chili night task."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope (hand-washing 4 settings + iron + drying) with a 1.24x ratio suggests a baseline of 37.2 minutes for the new task."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope (hand-washing 4 settings + heavy pot + sink) with a 1.2x ratio suggests a baseline of 36.0 minutes for the new task."
+          }
+        ],
+        "point_min": 36,
+        "low_min": 32,
+        "high_min": 40,
+        "confidence": "medium",
+        "rationale": "The new task shares the same scope as slots 1 and 2 but includes a cast-iron pan requiring drying, which adds complexity similar to the 'drying space' time in slot 3. The 1.24x and 1.2x overruns indicate consistent delays due to scrubbing or off-task behavior, suggesting the new task will likely fall within the 32-40 minute range. The main assumption is that the 'drying' step for the cast-iron pan does not introduce a significantly higher time cost than the previous iron scrubbing times.",
+        "confidence_reason": "Confidence is medium because the new task includes a cast-iron pan that was not explicitly detailed in the previous two tasks, though the drying time was noted in slot 3."
+      },
+      "seconds": 566.63
+    }
+  ],
+  "prediction": {
+    "point_min": 36,
+    "low_min": 32,
+    "high_min": 40,
+    "confidence": "medium",
+    "confidence_reason": "Confidence is medium because the new task includes a cast-iron pan that was not explicitly detailed in the previous two tasks, though the drying time was noted in slot 3.",
+    "model_rationale": "The new task shares the same scope as slots 1 and 2 but includes a cast-iron pan requiring drying, which adds complexity similar to the 'drying space' time in slot 3. The 1.24x and 1.2x overruns indicate consistent delays due to scrubbing or off-task behavior, suggesting the new task will likely fall within the 32-40 minute range. The main assumption is that the 'drying' step for the cast-iron pan does not introduce a significantly higher time cost than the previous iron scrubbing times.",
+    "explanation": "The new task shares the same scope as slots 1 and 2 but includes a cast-iron pan requiring drying, which adds complexity similar to the 'drying space' time in slot 3. The 1.24x and 1.2x overruns indicate consistent delays due to scrubbing or off-task behavior, suggesting the new task will likely fall within the 32-40 minute range. The main assumption is that the 'drying' step for the cast-iron pan does not introduce a significantly higher time cost than the previous iron scrubbing times.",
+    "evidence": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "estimate_min": 25,
+        "actual_min": 31.0,
+        "ratio": 1.24,
+        "reason": "Same scope (hand-washing 4 settings + iron + drying) with a 1.24x ratio suggests a baseline of 37.2 minutes for the new task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (hand-washing 4 settings + iron + drying) with a 1.24x ratio suggests a baseline of 37.2 minutes for the new task.",
+        "source_quote": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board."
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "estimate_min": 30,
+        "actual_min": 36.0,
+        "ratio": 1.2,
+        "reason": "Same scope (hand-washing 4 settings + heavy pot + sink) with a 1.2x ratio suggests a baseline of 36.0 minutes for the new task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (hand-washing 4 settings + heavy pot + sink) with a 1.2x ratio suggests a baseline of 36.0 minutes for the new task.",
+        "source_quote": "Wash the dinner dishes for four, scrub the cast-iron pot and wipe the sink."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Avoid off-task gaming during the 3-minute window where the skillet required extra scrubbing, as this directly correlates to the 1.24x overrun in the pasta supper task.",
+        "sources": [
+          {
+            "task_id": "pasta-dishes",
+            "title": "Clear up the pasta supper",
+            "origin": "ActivityWatch",
+            "observation": "3.0 min on Candy Crush Saga on the phone labeled off-task."
+          }
+        ]
+      },
+      {
+        "advice": "Avoid off-task gaming during the 5-minute window where handles had cooked-on chili, as this correlates to the 1.2x overrun in the chili night task.",
+        "sources": [
+          {
+            "task_id": "chili-dishes",
+            "title": "Do the dishes after chili night",
+            "origin": "ActivityWatch",
+            "observation": "5.0 min on Candy Crush Saga on the phone labeled off-task."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "source": "decision model",
+        "score": 0.710379170627452
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "source": "decision model",
+        "score": 0.7078707760635019
+      },
+      {
+        "task_id": "stew-dishes",
+        "title": "Reset the kitchen after stew",
+        "source": "decision model",
+        "score": 0.6901440283809372
+      }
+    ],
+    "used_task_ids": [
+      "pasta-dishes",
+      "chili-dishes"
+    ],
+    "feedback_source_ids": []
+  }
+}

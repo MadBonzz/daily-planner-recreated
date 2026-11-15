@@ -1,0 +1,135 @@
+{
+  "task": "bridge-proof",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:43:31.708826+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "02bce0ed6bc677e9b293b8877438de5d4e1fb55a43828d7ac79fbe4d198dee7e",
+  "frozen_candidates": [
+    "barrier-proof"
+  ],
+  "budget": 75,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.14,
+      1.3
+    ],
+    "expected_evidence": [
+      "lease-restart",
+      "epoch-proof",
+      "barrier-proof"
+    ],
+    "expected_sources": [
+      "lease-restart",
+      "epoch-proof"
+    ],
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "e1999b1d74bcd8cde1f082b30e78453e03feda5f798672196d590389b99daca3",
+      "max_tokens": 950,
+      "payload_sha256": "f94eaecd58ddd01bbf52885d19ead1d302437d650ef86791681265e40efa00e6",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 366,
+        "prompt_tokens": 1021,
+        "total_tokens": 1387,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1021,
+        "prompt_ms": 53523.745,
+        "prompt_per_token_ms": 52.422864838393735,
+        "prompt_per_second": 19.07564577179717,
+        "predicted_n": 366,
+        "predicted_ms": 210433.231,
+        "predicted_per_token_ms": 576.5294,
+        "predicted_per_second": 1.7345169214267304
+      },
+      "content_sha256": "de69447f6b1b13badc5c0576a021506276dd306b48175a3a02a56c64d61190bc",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Separate failure schedule for crash recovery; proofread before sending."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it."
+          }
+        ],
+        "point_min": 85,
+        "low_min": 75,
+        "high_min": 95,
+        "confidence": "low",
+        "rationale": "The new task explicitly requires a 'repair across restart' and a 'legal failure schedule,' which mirrors the scope of the historical task 'Prove a flush barrier across restart' but adds the constraint of addressing a 'delayed DRAINED' scenario. The historical record shows a 1.2x overrun (90 vs 75), suggesting the complexity of the repair logic and the need to 'list the legal possibilities' will likely extend the duration beyond the initial 75-minute estimate, though the 'submission-ready argument' requirement may allow for a more streamlined proof than the full historical counterexample. The main assumption is that the 'repair' logic for the delayed generation does not introduce new, unforeseen adversarial cases that would further inflate the time.",
+        "confidence_reason": "The historical task involved a similar 'repair' and 'counterexample' scope, but the new task's explicit requirement to 'list the legal possibilities' and 'address every handler' suggests a potentially broader analysis than the previous 'flush barrier' proof, warranting a conservative estimate."
+      },
+      "seconds": 631.85
+    }
+  ],
+  "prediction": {
+    "point_min": 85,
+    "low_min": 75,
+    "high_min": 95,
+    "confidence": "low",
+    "confidence_reason": "The historical task involved a similar 'repair' and 'counterexample' scope, but the new task's explicit requirement to 'list the legal possibilities' and 'address every handler' suggests a potentially broader analysis than the previous 'flush barrier' proof, warranting a conservative estimate.",
+    "model_rationale": "The new task explicitly requires a 'repair across restart' and a 'legal failure schedule,' which mirrors the scope of the historical task 'Prove a flush barrier across restart' but adds the constraint of addressing a 'delayed DRAINED' scenario. The historical record shows a 1.2x overrun (90 vs 75), suggesting the complexity of the repair logic and the need to 'list the legal possibilities' will likely extend the duration beyond the initial 75-minute estimate, though the 'submission-ready argument' requirement may allow for a more streamlined proof than the full historical counterexample. The main assumption is that the 'repair' logic for the delayed generation does not introduce new, unforeseen adversarial cases that would further inflate the time.",
+    "explanation": "The new task explicitly requires a 'repair across restart' and a 'legal failure schedule,' which mirrors the scope of the historical task 'Prove a flush barrier across restart' but adds the constraint of addressing a 'delayed DRAINED' scenario. The historical record shows a 1.2x overrun (90 vs 75), suggesting the complexity of the repair logic and the need to 'list the legal possibilities' will likely extend the duration beyond the initial 75-minute estimate, though the 'submission-ready argument' requirement may allow for a more streamlined proof than the full historical counterexample. The main assumption is that the 'repair' logic for the delayed generation does not introduce new, unforeseen adversarial cases that would further inflate the time.",
+    "evidence": [
+      {
+        "task_id": "barrier-proof",
+        "title": "Prove a flush barrier across restart",
+        "estimate_min": 75,
+        "actual_min": 90.0,
+        "ratio": 1.2,
+        "reason": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it.",
+        "reason_source": "model",
+        "model_rationale": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it.",
+        "source_quote": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Separate failure schedule for crash recovery; proofread before sending.",
+        "sources": [
+          {
+            "task_id": "barrier-proof",
+            "title": "Prove a flush barrier across restart",
+            "origin": "Completion note",
+            "observation": "Separate failure schedule for crash recovery; proofread before sending."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "1 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "barrier-proof",
+        "title": "Prove a flush barrier across restart",
+        "source": "decision model",
+        "score": 0.6438314738415435
+      }
+    ],
+    "used_task_ids": [
+      "barrier-proof"
+    ],
+    "feedback_source_ids": []
+  }
+}

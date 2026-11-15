@@ -1,0 +1,8 @@
+{
+  "ring-header": {
+    "reason": "The question asks how many bytes the header contains. A bare '4' answers it when the verified page quotation establishes that the unit is bytes.",
+    "original_check": "Required '4 bytes' or 'four bytes' in the answer text.",
+    "revised_check": "Also accept an answer consisting only of '4' or 'four' with optional terminal punctuation. The verified PDF quotation is still required.",
+    "applies_to": "Both models, all revisions. --score recomputes exact PDF passes from the unchanged model output."
+  }
+}

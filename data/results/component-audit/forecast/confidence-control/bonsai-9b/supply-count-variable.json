@@ -1,0 +1,157 @@
+{
+  "task": "supply-count-variable",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:49:04.674526+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "144d8c5a403011344780337b06814e372ab4cb0011309f9d7ea1aa9419c8f8a9",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": null,
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "7d0e8d05217ff20e1271a86abe816a954c867176d4a93649f57952374d3446a5",
+      "max_tokens": 950,
+      "payload_sha256": "0a5a9adc7ae86a6aeaff5ff7fb37734a7a236f8338a9ea25e6203cfcfb7c628b",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 278,
+        "prompt_tokens": 830,
+        "total_tokens": 1108,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 830,
+        "prompt_ms": 45046.773,
+        "prompt_per_token_ms": 54.27322048192771,
+        "prompt_per_second": 18.425293194697876,
+        "predicted_n": 278,
+        "predicted_ms": 156180.84,
+        "predicted_per_token_ms": 563.8297472924188,
+        "predicted_per_second": 1.7735850313008947
+      },
+      "content_sha256": "a391d479daebe2cff77efbb0b0737a9c169203cfe2bee49409045c37da97a0e1",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope (16 bins, same procedure) with a 0.6 efficiency ratio suggests a baseline of 18 minutes for the new task."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope (16 bins, same procedure) with a 1.33 efficiency ratio suggests a baseline of 40 minutes for the new task."
+          },
+          {
+            "slot": 3,
+            "reason": "Same scope (16 bins, same procedure) with a 2.07 efficiency ratio suggests a baseline of 62 minutes for the new task."
+          }
+        ],
+        "point_min": 40,
+        "low_min": 30,
+        "high_min": 60,
+        "confidence": "low",
+        "rationale": "The new task uses the exact same scope as the historical records, but the variance in efficiency (0.6 to 2.07) indicates high uncertainty without a specific reason for the deviation.",
+        "confidence_reason": "The lack of observed data prevents identifying a consistent cause for the variance in efficiency."
+      },
+      "seconds": 664.06
+    }
+  ],
+  "prediction": {
+    "point_min": 40,
+    "low_min": 30,
+    "high_min": 60,
+    "confidence": "low",
+    "confidence_reason": "The lack of observed data prevents identifying a consistent cause for the variance in efficiency.",
+    "model_rationale": "The new task uses the exact same scope as the historical records, but the variance in efficiency (0.6 to 2.07) indicates high uncertainty without a specific reason for the deviation.",
+    "explanation": "The new task uses the exact same scope as the historical records, but the variance in efficiency (0.6 to 2.07) indicates high uncertainty without a specific reason for the deviation.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch N",
+        "estimate_min": 30,
+        "actual_min": 18.0,
+        "ratio": 0.6,
+        "reason": "Same scope (16 bins, same procedure) with a 0.6 efficiency ratio suggests a baseline of 18 minutes for the new task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (16 bins, same procedure) with a 0.6 efficiency ratio suggests a baseline of 18 minutes for the new task.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch N"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch R",
+        "estimate_min": 30,
+        "actual_min": 40.0,
+        "ratio": 1.3333333333333333,
+        "reason": "Same scope (16 bins, same procedure) with a 1.33 efficiency ratio suggests a baseline of 40 minutes for the new task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (16 bins, same procedure) with a 1.33 efficiency ratio suggests a baseline of 40 minutes for the new task.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch R"
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch V",
+        "estimate_min": 30,
+        "actual_min": 62.0,
+        "ratio": 2.066666666666667,
+        "reason": "Same scope (16 bins, same procedure) with a 2.07 efficiency ratio suggests a baseline of 62 minutes for the new task.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (16 bins, same procedure) with a 2.07 efficiency ratio suggests a baseline of 62 minutes for the new task.",
+        "source_quote": "Count and reconcile all 16 supply bins using the weekly sheet, batch V"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch N",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch R",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Count and reconcile all 16 supply bins using the weekly sheet, batch V",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "feedback_source_ids": []
+  }
+}

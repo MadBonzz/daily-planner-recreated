@@ -58,7 +58,7 @@ CASES = [
     ("development", "gpu-distraction", "distraction", "What regularly distracts me during GPU tasks?", "sports.test"),
     ("development", "fit-20", "plan", "What can I finish today? I have 20 minutes.", (20, {"File receipts"})),
     ("development", "gpu-accuracy", "accuracy", "On GPU tasks, when I underestimate, by how many minutes on average?", 12),
-    ("development", "ring-header", "pdf", "How many bytes is the ring header?", ("02-migration-lab/ring-port.pdf", r"\b(?:4|four)\s*[- ]?bytes?\b", True)),
+    ("development", "ring-header", "pdf", "How many bytes is the ring header?", ("02-migration-lab/ring-port.pdf", r"^(?:4|four)[.!]?$|\b(?:4|four)\s*[- ]?bytes?\b", True)),
     ("development", "ring-absent", "pdf", "What telephone number does the specification give for emergency support?", ("02-migration-lab/ring-port.pdf", "", False)),
     ("holdout", "time-yesterday", "count", "How many tasks did I complete yesterday?", 3),
     ("holdout", "music-distraction", "distraction", "What distracts me during Music tasks?", "shows.test"),
@@ -121,6 +121,17 @@ def priority_score(result, calls):
             "answer_source": result.get("answer_source")}
 
 
+def exact_pass(case, row):
+    """Apply the current answer key without modifying a recorded response or its original score."""
+    _, _, kind, _, expected = case
+    if kind != "pdf" or "result" not in row:
+        return row["pass"]
+    _, pattern, supported = expected
+    result = row["result"]
+    return bool(result.get("sources")) == supported and (
+        not supported or bool(re.search(pattern, result["answer"].strip(), re.I)))
+
+
 def score(records):
     """Use set membership for selected tasks/sites and a separate abstention test for PDF QA."""
     totals = {}
@@ -130,7 +141,7 @@ def score(records):
         bucket = totals.setdefault(split, {})
         summary = bucket.setdefault(kind, {"cases": 0, "exact_passes": 0})
         summary["cases"] += 1
-        summary["exact_passes"] += int(row["pass"])
+        summary["exact_passes"] += int(exact_pass(labels[key], row))
         result = row.get("result", {})
         if kind == "pdf":
             if "predicted_positive" not in row:
@@ -166,6 +177,42 @@ def score(records):
     return totals
 
 
+def summarize_panel(directory):
+    """Combine immutable stage receipts and keep source-specific ranking diagnostics separate."""
+    labels = {case[1]: case for case in CASES}
+    summary = {}
+    for model in ("ternary-bonsai-4b", "ternary-bonsai-2-9b"):
+        runs = {}
+        for stage, size in (("before", 5), ("after", 14), ("priority-before", 3),
+                            ("priority-final", 3), ("scope-guard", 1), ("sequence-repair", 3)):
+            path = directory / f"{stage}-{model}.json"
+            runs[stage] = json.loads(path.read_text())
+            if len(runs[stage]) != size:
+                raise ValueError(f"{path}: expected {size} cases, observed {len(runs[stage])}")
+        final = {**runs["after"], **runs["sequence-repair"]}
+        if set(final) != set(labels):
+            raise ValueError(f"Panel case IDs changed for {model}")
+        ranking = {}
+        for stage, cases in (("original", runs["priority-before"]),
+                             ("keyed", runs["priority-final"]),
+                             ("keyed_with_scope_guard", {**runs["priority-final"], **runs["scope-guard"]}),
+                             ("sequence_with_keyed_repair", runs["sequence-repair"])):
+            metrics = [row["ranking"] for row in cases.values()]
+            ranking[stage] = {"covered_tasks": sum(row["coverage"] for row in metrics),
+                              "task_opportunities": sum(row["expected"] for row in metrics),
+                              "feasible_ranked_first": sum(row["placed_feasible_first"] for row in metrics),
+                              "page_correct": sum(exact_pass(labels[key], row) for key, row in cases.items()),
+                              "questions": len(cases)}
+        calls = [call for stage in runs.values() for row in stage.values() for call in row["model_calls"]]
+        summary[model] = {"development_before": score(runs["before"])["development"],
+                          "final": score(final), "priority": ranking,
+                          "final_exact": [sum(exact_pass(labels[key], row) for key, row in final.items()), len(final)],
+                          "unique_requests": len({call["request_sha256"] for call in calls}),
+                          "unique_live_requests": len({call["request_sha256"] for call in calls if call["origin"] == "live"}),
+                          "final_misses": [key for key, row in final.items() if not exact_pass(labels[key], row)]}
+    return summary
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
@@ -173,7 +220,11 @@ def main():
     parser.add_argument("--score", action="store_true", help="Score existing records without calling any model")
     parser.add_argument("--case", action="append", help="Only run these case IDs")
     parser.add_argument("--cache", type=Path, help="Replay only identical successful requests to the same model")
+    parser.add_argument("--summarize", action="store_true", help="Combine all recorded stages in this results directory")
     args = parser.parse_args()
+    if args.summarize:
+        print(json.dumps(summarize_panel(args.output), indent=2))
+        return
     args.output.parent.mkdir(parents=True, exist_ok=True)
     records = json.loads(args.output.read_text()) if args.output.exists() else {}
     if args.score:
@@ -206,6 +257,9 @@ def main():
                 response = json.loads(cached.read_text()) if hit else chat_json(messages, schema, **options)
             except ModelUnavailable as exc:
                 record["error"] = str(exc)
+                record["error_type"] = type(exc).__name__
+                if exc.__cause__ is not None:
+                    record["cause_type"] = type(exc.__cause__).__name__
                 raise
             if cached is not None and not hit:
                 cached.parent.mkdir(parents=True, exist_ok=True)

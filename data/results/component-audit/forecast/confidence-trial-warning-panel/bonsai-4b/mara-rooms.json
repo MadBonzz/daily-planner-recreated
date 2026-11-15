@@ -1,0 +1,150 @@
+{
+  "task": "mara-rooms",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T09:56:08.683683+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "9a83361d33bc3f504d6545437146f1e8c5fd41c01b5a2f26b2052d0dcb2d3cb9",
+  "frozen_candidates": [
+    "mara-evening",
+    "mara-capacity",
+    "mara-late-room"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.23,
+      1.44
+    ],
+    "expected_evidence": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "expected_sources": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "10a59d93d04439ea5e0341b549754ac562e096856cdccdba478b4d9e4f893db0",
+      "max_tokens": 950,
+      "payload_sha256": "78e935b4237a11e2761ad2be1752053d3e25a2ff57a3c8ed249da1d51d2fd478",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 304,
+        "prompt_tokens": 1474,
+        "total_tokens": 1778,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1474,
+        "prompt_ms": 34426.216,
+        "prompt_per_token_ms": 23.355641791044775,
+        "prompt_per_second": 42.81620727645466,
+        "predicted_n": 304,
+        "predicted_ms": 42386.606,
+        "predicted_per_token_ms": 139.8897887788779,
+        "predicted_per_second": 7.148484594402298
+      },
+      "content_sha256": "90f7c066198adaac65ed001ef81cdc2b286111a1183432650d5a0dc1c1653ef4",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Mara joined eight minutes after the invite, which suggests a potential delay in arrival due to unanticipated delays in coordination. Ensure the invite includes a clear start time and confirm Mara's arrival with a pre-agreed buffer (e.g., 10 minutes) to account for possible delays in joining the meeting."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope: reviewing Thursday evening coverage with Mara, including final names and backup agreement. Actual (40.0) exceeds user estimate (30) by 10 minutes, indicating a delay in confirmation or coordination."
+          }
+        ],
+        "point_min": 35,
+        "low_min": 30,
+        "high_min": 45,
+        "confidence": "high",
+        "rationale": "The task involves a structured meeting with clear ownership decisions and a final handover record. The observed delays in Mara's arrival and off-task phone usage (e.g., Candy Crush Saga) suggest that early engagement and clear communication can reduce time. A tighter cluster of actual durations (e.g., 39.0 and 41.0) supports a narrow interval around 35 minutes.",
+        "confidence_reason": "The task requires agreement on owners and backup assignments, which are time-sensitive and prone to delays in coordination. If Mara arrives earlier or if off-task activities are minimized, the time could be reduced further."
+      },
+      "seconds": 91.2
+    }
+  ],
+  "prediction": {
+    "point_min": 35,
+    "low_min": 30,
+    "high_min": 45,
+    "confidence": "high",
+    "confidence_reason": "The task requires agreement on owners and backup assignments, which are time-sensitive and prone to delays in coordination. If Mara arrives earlier or if off-task activities are minimized, the time could be reduced further.",
+    "model_rationale": "The task involves a structured meeting with clear ownership decisions and a final handover record. The observed delays in Mara's arrival and off-task phone usage (e.g., Candy Crush Saga) suggest that early engagement and clear communication can reduce time. A tighter cluster of actual durations (e.g., 39.0 and 41.0) supports a narrow interval around 35 minutes.",
+    "explanation": "The task involves a structured meeting with clear ownership decisions and a final handover record. The observed delays in Mara's arrival and off-task phone usage (e.g., Candy Crush Saga) suggest that early engagement and clear communication can reduce time. A tighter cluster of actual durations (e.g., 39.0 and 41.0) supports a narrow interval around 35 minutes.",
+    "evidence": [
+      {
+        "task_id": "mara-evening",
+        "title": "Review Thursday evening coverage with Mara",
+        "estimate_min": 30,
+        "actual_min": 40.0,
+        "ratio": 1.3333333333333333,
+        "reason": "Same scope: reviewing Thursday evening coverage with Mara, including final names and backup agreement. Actual (40.0) exceeds user estimate (30) by 10 minutes, indicating a delay in confirmation or coordination.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: reviewing Thursday evening coverage with Mara, including final names and backup agreement. Actual (40.0) exceeds user estimate (30) by 10 minutes, indicating a delay in confirmation or coordination.",
+        "source_quote": "Agree on a second greeter and a backup for the late check-in with Mara Imani. Send the decisions to the shift lead."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Mara joined eight minutes after the invite, which suggests a potential delay in arrival due to unanticipated delays in coordination. Ensure the invite includes a clear start time and confirm Mara's arrival with a pre-agreed buffer (e.g., 10 minutes) to account for possible delays in joining the meeting.",
+        "sources": [
+          {
+            "task_id": "mara-evening",
+            "title": "Review Thursday evening coverage with Mara",
+            "origin": "Completion note",
+            "observation": "Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "mara-evening",
+        "title": "Review Thursday evening coverage with Mara",
+        "source": "decision model",
+        "score": 0.6253379382578589
+      },
+      {
+        "task_id": "mara-capacity",
+        "title": "Work out the overflow roster with Mara",
+        "source": "decision model",
+        "score": 0.6038016530670596
+      },
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "source": "decision model",
+        "score": 0.5799272864160627
+      }
+    ],
+    "used_task_ids": [
+      "mara-evening"
+    ],
+    "feedback_source_ids": []
+  }
+}

@@ -57,3 +57,5 @@ Both models were called through the normal workspace fallback after the test mad
 | [Bonsai 9B](9b-fallback.json) | Ineligible | Eligible |
 
 Across the 40 shipped open or addable tasks, the number of eligible workspaces changed from 10 to 9. All 40 have exact packaged Kev decisions. [Per-task decisions](public-workspaces.json)
+
+A final dashboard race appeared when workspace eligibility finished while the user clicked **Edit time spent**. Refreshing the entire app before the card handled its click could discard it. A deterministic test resolves the eligibility result between the initial check and the fragment poll during that click. It reproduced the missing dialog. The workspace offer now updates only its own fragment, and the same test opens the time editor. [Dashboard regression](../../../../tests/test_manual_time.py)

@@ -1,0 +1,136 @@
+{
+  "cases": [
+    {
+      "case": "finished",
+      "expected_supported": true,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": false,
+        "remaining_work": false
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user explicitly states the task is finished, but the system cannot verify if the actual work was completed or if this is a hypothetical statement. Without external confirmation, we cannot confirm progress.",
+        "confidence_reason": "The user's claim of completion lacks independent verification; the system cannot distinguish between actual finished work and a hypothetical or premature report.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "copied text",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user only quoted an instruction from the assignment without confirming completion of the setup, recovery, or script verification steps required by the task description.",
+        "confidence_reason": "The user's statement is a direct quote of an external instruction rather than evidence of performed work or progress toward the deliverable.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "old evidence",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user reported writing the setup but did not confirm completion of the restore dry run or the final handover. The request for a dry run explanation is a question, not evidence of work performed.",
+        "confidence_reason": "The user's request for clarification on a dry run does not constitute progress toward completing the dry run itself, and no other steps (verify script, send handover) have been reported as done.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "new test result",
+      "expected_supported": true,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": false,
+        "remaining_work": false
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user reports a test pass but does not confirm completion of the writing sections or the final send step. No evidence of the writing or sending actions being performed exists.",
+        "confidence_reason": "The user only confirms the script test passed; they explicitly state they still need to write the sections and send them, meaning the deliverable is not finished.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    }
+  ],
+  "model": "ternary-bonsai-2-9b",
+  "split": "validation",
+  "component": "progress",
+  "supported": {
+    "TP": 0,
+    "FP": 0,
+    "FN": 2,
+    "TN": 2,
+    "precision": null,
+    "recall": 0.0
+  },
+  "unavailable": 0
+}

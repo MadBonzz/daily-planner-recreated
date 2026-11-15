@@ -1,0 +1,197 @@
+{
+  "task": "mara-rooms",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:11:47.474614+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "9a83361d33bc3f504d6545437146f1e8c5fd41c01b5a2f26b2052d0dcb2d3cb9",
+  "frozen_candidates": [
+    "mara-evening",
+    "mara-capacity",
+    "mara-late-room"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.23,
+      1.44
+    ],
+    "expected_evidence": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "expected_sources": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "eeda76accda12ee3daf1736e24545d5147f01de0ddf8c52c0efca91551a01856",
+      "max_tokens": 950,
+      "payload_sha256": "d4413eefbee9f1e7e26aaaad76a27542e156f56b136ce5b3acccfc23f9f70382",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 422,
+        "prompt_tokens": 1438,
+        "total_tokens": 1860,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1438,
+        "prompt_ms": 119712.157,
+        "prompt_per_token_ms": 83.24906606397775,
+        "prompt_per_second": 12.012146769688563,
+        "predicted_n": 422,
+        "predicted_ms": 276850.431,
+        "predicted_per_token_ms": 657.6019738717339,
+        "predicted_per_second": 1.520676700698364
+      },
+      "content_sha256": "4fe57359683ebb1266de11f22d2ff2517c2e6cc4746a8b6f0a7176891dade8ca",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Mara joined eight minutes after the invite; schedule the meeting start time to align with her arrival or explicitly state the start time to prevent delays."
+          },
+          {
+            "observation_id": "S2.2",
+            "advice": "Mara was distracted by a crossword puzzle; ensure the meeting environment or device usage is restricted to prevent similar off-task behavior."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope (agreeing owners with Mara) and method (30-min invite), using the 40-minute actual from the Thursday evening coverage review as the baseline."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope (reviewing capacity and recording decisions with Mara), using the 41-minute actual from the overflow roster meeting as the baseline."
+          },
+          {
+            "slot": 3,
+            "reason": "Same scope (picking a room and agreeing an owner with Mara), using the 39-minute actual from the late intake room assignment as the baseline."
+          }
+        ],
+        "point_min": 40,
+        "low_min": 35,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The time-driving step is Mara's arrival consistency and the decision recording phase, supported by three comparable meetings averaging 39.6 minutes. The strongest comparison is the Thursday evening coverage (S1.1) which included a late arrival and off-task activity, suggesting the new task may face similar delays if not managed carefully.",
+        "confidence_reason": "The range could widen if Mara's punctuality varies or if the decision recording requires additional clarification beyond the draft list."
+      },
+      "seconds": 415.21
+    }
+  ],
+  "prediction": {
+    "point_min": 40,
+    "low_min": 35,
+    "high_min": 45,
+    "confidence": "medium",
+    "confidence_reason": "The range could widen if Mara's punctuality varies or if the decision recording requires additional clarification beyond the draft list.",
+    "model_rationale": "The time-driving step is Mara's arrival consistency and the decision recording phase, supported by three comparable meetings averaging 39.6 minutes. The strongest comparison is the Thursday evening coverage (S1.1) which included a late arrival and off-task activity, suggesting the new task may face similar delays if not managed carefully.",
+    "explanation": "The time-driving step is Mara's arrival consistency and the decision recording phase, supported by three comparable meetings averaging 39.6 minutes. The strongest comparison is the Thursday evening coverage (S1.1) which included a late arrival and off-task activity, suggesting the new task may face similar delays if not managed carefully.",
+    "evidence": [
+      {
+        "task_id": "mara-evening",
+        "title": "Review Thursday evening coverage with Mara",
+        "estimate_min": 30,
+        "actual_min": 40.0,
+        "ratio": 1.3333333333333333,
+        "reason": "Same scope (agreeing owners with Mara) and method (30-min invite), using the 40-minute actual from the Thursday evening coverage review as the baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (agreeing owners with Mara) and method (30-min invite), using the 40-minute actual from the Thursday evening coverage review as the baseline.",
+        "source_quote": "Agree on a second greeter and a backup for the late check-in with Mara Imani. Send the decisions to the shift lead."
+      },
+      {
+        "task_id": "mara-capacity",
+        "title": "Work out the overflow roster with Mara",
+        "estimate_min": 30,
+        "actual_min": 41.0,
+        "ratio": 1.3666666666666667,
+        "reason": "Same scope (reviewing capacity and recording decisions with Mara), using the 41-minute actual from the overflow roster meeting as the baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (reviewing capacity and recording decisions with Mara), using the 41-minute actual from the overflow roster meeting as the baseline.",
+        "source_quote": "Meet Mara Imani to decide who can stay for the spillover clinic. Record the owners in the rota."
+      },
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "estimate_min": 30,
+        "actual_min": 39.0,
+        "ratio": 1.3,
+        "reason": "Same scope (picking a room and agreeing an owner with Mara), using the 39-minute actual from the late intake room assignment as the baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (picking a room and agreeing an owner with Mara), using the 39-minute actual from the late intake room assignment as the baseline.",
+        "source_quote": "Mara Imani and I need to pick a second appointment room, agree an owner, then send the signed-off rota."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Mara joined eight minutes after the invite; schedule the meeting start time to align with her arrival or explicitly state the start time to prevent delays.",
+        "sources": [
+          {
+            "task_id": "mara-evening",
+            "title": "Review Thursday evening coverage with Mara",
+            "origin": "Completion note",
+            "observation": "Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments."
+          }
+        ]
+      },
+      {
+        "advice": "Mara was distracted by a crossword puzzle; ensure the meeting environment or device usage is restricted to prevent similar off-task behavior.",
+        "sources": [
+          {
+            "task_id": "mara-capacity",
+            "title": "Work out the overflow roster with Mara",
+            "origin": "ActivityWatch",
+            "observation": "3.0 min on nytimes.com labeled off-task (Daily crossword – Saturday archive)."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "mara-evening",
+        "title": "Review Thursday evening coverage with Mara",
+        "source": "decision model",
+        "score": 0.6253379382578589
+      },
+      {
+        "task_id": "mara-capacity",
+        "title": "Work out the overflow roster with Mara",
+        "source": "decision model",
+        "score": 0.6038016530670596
+      },
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "source": "decision model",
+        "score": 0.5799272864160627
+      }
+    ],
+    "used_task_ids": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "feedback_source_ids": []
+  }
+}

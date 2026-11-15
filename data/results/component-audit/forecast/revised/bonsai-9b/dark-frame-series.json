@@ -1,0 +1,154 @@
+{
+  "task": "dark-frame-series",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:53:00.922398+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "af2115f4675bd434ecc9e49fce46aed76e6fcb85019ce990c16f48e6e9ee948a",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [
+      "prior-1",
+      "prior-2"
+    ],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "dfe8b39a1f9cdf3a0e83171d01a9a168c040ba65a16bf08c0aff74bea67948e3",
+      "max_tokens": 950,
+      "payload_sha256": "9648e5a086c9e9460dbfcd72c137e1911ffe225e4c1fd5742d6518967bdc2ec1",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 280,
+        "prompt_tokens": 707,
+        "total_tokens": 987,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 707,
+        "prompt_ms": 38344.808,
+        "prompt_per_token_ms": 54.23593776520509,
+        "prompt_per_second": 18.437959058238082,
+        "predicted_n": 280,
+        "predicted_ms": 197902.186,
+        "predicted_per_token_ms": 709.3268315412186,
+        "predicted_per_second": 1.409787358286179
+      },
+      "content_sha256": "42d13df9f01c0e34bba12e8e13c6a79c25658cb5ddc815e7e4abd0c0a24fcd0f",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope: collecting 20 dark frames on this camera with the same controller."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope: acquiring the weekly batch of 20 dark frames."
+          }
+        ],
+        "point_min": 59,
+        "low_min": 55,
+        "high_min": 65,
+        "confidence": "low",
+        "rationale": "The time-driving step is the camera stabilization and controller pairing process, which historically caused a 48% to 50% overrun over the 40-minute budget. The strongest comparison is the average of the two past slots (59.0 and 60.0 minutes), which both exceeded the 40-minute estimate due to pairing delays.",
+        "confidence_reason": "Range could widen if the cooling controller requires additional re-pairing or if the camera stabilization time varies significantly based on ambient conditions."
+      },
+      "seconds": 614.51
+    }
+  ],
+  "prediction": {
+    "point_min": 59,
+    "low_min": 55,
+    "high_min": 65,
+    "confidence": "low",
+    "confidence_reason": "Range could widen if the cooling controller requires additional re-pairing or if the camera stabilization time varies significantly based on ambient conditions.",
+    "model_rationale": "The time-driving step is the camera stabilization and controller pairing process, which historically caused a 48% to 50% overrun over the 40-minute budget. The strongest comparison is the average of the two past slots (59.0 and 60.0 minutes), which both exceeded the 40-minute estimate due to pairing delays.",
+    "explanation": "The time-driving step is the camera stabilization and controller pairing process, which historically caused a 48% to 50% overrun over the 40-minute budget. The strongest comparison is the average of the two past slots (59.0 and 60.0 minutes), which both exceeded the 40-minute estimate due to pairing delays.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "estimate_min": 40,
+        "actual_min": 59.0,
+        "ratio": 1.475,
+        "reason": "Same scope: collecting 20 dark frames on this camera with the same controller.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: collecting 20 dark frames on this camera with the same controller.",
+        "source_quote": "Collect and export 20 dark frames on this camera"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "estimate_min": 40,
+        "actual_min": 60.0,
+        "ratio": 1.5,
+        "reason": "Same scope: acquiring the weekly batch of 20 dark frames.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: acquiring the weekly batch of 20 dark frames.",
+        "source_quote": "Acquire the weekly batch of 20 dark frames"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Collect and export 20 dark frames on this camera",
+            "origin": "Completion note",
+            "observation": "Cooling controller lost its USB pairing twice; re-pairing delayed capture."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2"
+    ],
+    "feedback_source_ids": []
+  }
+}

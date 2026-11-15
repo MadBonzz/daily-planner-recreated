@@ -4,7 +4,7 @@ from math import ceil, floor
 import json
 import re
 
-from model_client import ModelUnavailable
+from model_client import ModelResponseInvalid, ModelUnavailable
 
 
 def planning_context(tasks, selected_day, now):
@@ -67,6 +67,29 @@ def _clock_cutoff(day, clock, zone, start):
     stamp = min(upcoming) if upcoming else max(instants)
     value = datetime.fromtimestamp(stamp, zone)
     return value if zone is not None else value.astimezone()
+
+
+_OPEN_FIT = re.compile(
+    r"\b(?:which|what)\s+(?:(?:open|unfinished|remaining|pending|planned)\s+)?(?:tasks?|work)\s+"
+    r"(?:(?:can|could|will|would)\s+(?:I\s+)?)?(?:fits?|finish|complete)\b|"
+    r"\bwhat\s+(?:(?:can|could)\s+I\s+(?:finish|complete)|fits?)\b", re.I)
+_PAST_WORK = re.compile(r"\b(?:yesterday|historical|history|recently|previously|ago|last|archives?|archived|"
+                        r"earlier|in the past|(?:completed|finished|previous|past) (?:tasks?|work))\b", re.I)
+# The planner accepts ISO dates plus today, tomorrow and yesterday. Leave other date wordings to the router.
+_NAMED_DAY = re.compile(r"\b(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|"
+                        r"sat(?:urday)?|sun(?:day)?|jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|"
+                        r"may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|"
+                        r"nov(?:ember)?|dec(?:ember)?)\b", re.I)
+
+
+def asks_what_fits(question, today):
+    """A concrete work window and a prospective fit question identify the unfinished-plan data."""
+    if not _OPEN_FIT.search(question) or _PAST_WORK.search(question) or _NAMED_DAY.search(question):
+        return False
+    if not (_DURATION.search(question) or _DURATION_LEFT.search(question) or _CUTOFF.search(question)):
+        return False
+    iso_dates = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", question)
+    return not any(day < today.isoformat() for day in iso_dates)
 
 
 def plan_window(question, snap, previous=None):
@@ -163,6 +186,34 @@ def plan_window(question, snap, previous=None):
             "past": day < now.date(), "future": day > now.date()}
 
 
+_ORDER_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["order"],
+                 "properties": {"order": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                     "required": ["id", "reason"], "properties": {"id": {"type": "integer"}, "reason": {"type": "string"}}}}}}
+
+
+_SEQUENCE_PROMPT = (
+    "Help the user decide which work to do now or defer. Return every supplied task ID once in your "
+    "recommended sequence. Prefer explicit requirements in the question/task text, time-sensitive "
+    "dependencies, work already in progress and achievable scope. Give one short reason per task based "
+    "only on the supplied data. Do not invent deadlines, commitments, priorities or free time. If no "
+    "deadline is given, do not imply one. Use a previous answer or historical errors only when "
+    "relevant. Python checks remaining minutes and the cumulative fit. Do not claim you changed, "
+    "moved, scheduled or completed anything."
+)
+
+_COVERAGE_PROMPT = (
+    "Rank the supplied unfinished tasks. For EVERY supplied ID give an integer rank, 1 first, and one "
+    "short reason tied to a supplied task fact. For example, if two tasks fit and one must finish "
+    "before the other can start, rank that prerequisite first. Distinct tasks should have different "
+    "ranks, including tasks to defer. Prefer explicit requirements in the question/task text, "
+    "time-sensitive dependencies, work already in progress and achievable scope. Give one short reason "
+    "per task based only on the supplied data. Do not invent deadlines, commitments, priorities or "
+    "free time. If no deadline is given, do not imply one. Use a previous answer or historical errors "
+    "only when relevant. Python checks remaining minutes and the cumulative fit. Do not claim you "
+    "changed, moved, scheduled or completed anything."
+)
+
+
 def _priority_schema(rows):
     ranking = {"type": "object", "additionalProperties": False, "required": ["rank", "reason"],
                "properties": {"rank": {"type": "integer"}, "reason": {"type": "string"}}}
@@ -170,6 +221,48 @@ def _priority_schema(rows):
     return {"type": "object", "additionalProperties": False, "required": ["priorities"],
             "properties": {"priorities": {"type": "object", "additionalProperties": False,
                                             "properties": fields, "required": list(fields)}}}
+
+
+def _rank_plan(rows, data, chat_json, still_current=None):
+    """Keep a valid ordered response. Repair a missing, duplicate or unknown task once."""
+    payload = {"role": "user", "content": json.dumps(data, ensure_ascii=False)}
+    output_limit = max(900, min(3200, len(rows) * 42))
+    try:
+        reply = chat_json([{"role": "system", "content": _SEQUENCE_PROMPT}, payload],
+                          _ORDER_SCHEMA, max_tokens=output_limit)
+        order = reply["order"]
+    except ModelResponseInvalid:
+        order = []
+    except ModelUnavailable as exc:
+        return {}, f" The model could not rank these tasks ({exc}). Tasks use their plan order.", "local plan order"
+
+    ranks = {}
+    for position, item in enumerate(order, 1):
+        task_id = item["id"]
+        reason = item["reason"].strip()
+        if isinstance(task_id, bool) or task_id != int(task_id) or not 1 <= task_id <= len(rows) or not reason:
+            break
+        ranks[int(task_id)] = {"rank": position, "reason": reason}
+    else:
+        if len(ranks) == len(rows) == len(order):
+            return ranks, "", "model sequence"
+    if still_current and not still_current():
+        return None
+    try:
+        reply = chat_json([{"role": "system", "content": _COVERAGE_PROMPT}, payload],
+                          _priority_schema(rows), max_tokens=output_limit)
+        ranks = {}
+        for row in rows:
+            entry = reply["priorities"][str(row["id"])]
+            if entry["rank"] < 1 or not entry["reason"].strip():
+                return {}, " The model omitted a usable rank or reason. Tasks use their plan order.", "local plan order"
+            ranks[row["id"]] = entry
+        note = ""
+        if len({entry["rank"] for entry in ranks.values()}) < len(ranks):
+            note = " Tasks with the same model rank keep their plan order."
+        return ranks, note, "model coverage repair"
+    except ModelUnavailable as exc:
+        return {}, f" The model could not rank these tasks ({exc}). Tasks use their plan order.", "local plan order"
 
 
 def _work_amount(t):
@@ -213,29 +306,12 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
             "completed_task_accuracy_by_category": past_metrics}
     if still_current and not still_current():
         return {"answer": "Your records changed. Ask again using the current data."}
-    try:
-        reply = chat_json([{"role": "system", "content":
-            "Rank the supplied unfinished tasks. For EVERY supplied ID give an integer rank, 1 first, "
-            "and one short reason tied to a supplied task fact. For example, if two tasks fit and "
-            "one must finish before the other can start, rank that prerequisite first. "
-            "Distinct tasks should have different ranks, including tasks to defer. Prefer explicit "
-            "requirements in the question/task text, time-sensitive dependencies, work already in progress and "
-            "achievable scope. Give one short reason per task based only on the supplied data. Do not invent "
-            "deadlines, commitments, priorities or free time. If no deadline is given, do not imply one. "
-            "Use a previous answer or historical errors only when relevant. Python checks remaining minutes "
-            "and the cumulative fit. Do not claim you changed, moved, scheduled or completed anything."},
-            {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], _priority_schema(rows),
-                          max_tokens=max(900, min(3200, len(rows) * 42)))
-        priorities = reply["priorities"]
-        priority_note = ""
-    except ModelUnavailable as exc:
-        priorities = {}
-        priority_note = f" The model could not rank these tasks ({exc}). Tasks use their plan order."
-    ranks = {r["id"]: priorities[str(r["id"])] for r in rows if str(r["id"]) in priorities}
+    ranking = _rank_plan(rows, data, chat_json, still_current)
+    if ranking is None or (still_current and not still_current()):
+        return {"answer": "Your records changed. Ask again using the current data."}
+    ranks, priority_note, ranking_source = ranking
     ordered_ids = sorted((r["id"] for r in rows),
                          key=lambda i: (i not in ranks, ranks[i]["rank"] if i in ranks else 0))
-    if len({entry["rank"] for entry in ranks.values()}) < len(ranks):
-        priority_note += " Tasks with the same model rank keep their plan order."
     cutoff = datetime.fromisoformat(window["end"]).strftime("%H:%M")
     if window["budget_minutes"] is not None:
         intro = f"You gave a {window['budget_minutes']}-minute work budget. Up to {remaining} min fit before {cutoff}."
@@ -293,4 +369,4 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
                for text in [question, *(r["details"] + " " + r["description"] for r in rows)]):
         text += "\n\nShare any hard deadlines or priorities that should change this order."
     return {**base, "answer": text, "answer_source": "model" if ranks else "local order",
-            "plan_rows": audit}
+            "plan_rows": audit, "ranking_source": ranking_source}

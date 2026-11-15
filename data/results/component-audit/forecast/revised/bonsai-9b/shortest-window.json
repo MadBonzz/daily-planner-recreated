@@ -1,0 +1,155 @@
+{
+  "task": "shortest-window",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:53:17.838190+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ae00c2d615820d17cd646583ec956b223e7debb85fdcf611c4da67ec5e483e2e",
+  "frozen_candidates": [
+    "subarray-target",
+    "two-targets"
+  ],
+  "budget": 50,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.13,
+      1.31
+    ],
+    "expected_evidence": [
+      "subarray-target",
+      "window-cost",
+      "two-targets"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "58c54273c0d209edf9522476820f0a022d910a2dfe650ef1230999e683fd4b14",
+      "max_tokens": 950,
+      "payload_sha256": "ad130ad7cc440cdb1f9c1fe4fc6ed79b683f6870d12f2776d1709fe292958502",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 276,
+        "prompt_tokens": 778,
+        "total_tokens": 1054,
+        "prompt_tokens_details": {
+          "cached_tokens": 339
+        }
+      },
+      "timings": {
+        "cache_n": 339,
+        "prompt_n": 439,
+        "prompt_ms": 23542.71,
+        "prompt_per_token_ms": 53.628041002277904,
+        "prompt_per_second": 18.6469612037017,
+        "predicted_n": 276,
+        "predicted_ms": 34099.98,
+        "predicted_per_token_ms": 123.99992727272729,
+        "predicted_per_second": 8.064520858956515
+      },
+      "content_sha256": "62a821e87a8ef2079d6f81329e2621093fd58a51b397407f1d66a70296f6f303",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Both tasks require solving a subarray sum problem from scratch with negative values and duplicate prefix sums, using a blank editor."
+          },
+          {
+            "slot": 2,
+            "reason": "Both tasks require designing a prefix-index invariant and explaining it out loud while testing edge cases."
+          }
+        ],
+        "point_min": 60,
+        "low_min": 54,
+        "high_min": 72,
+        "confidence": "low",
+        "rationale": "The new task explicitly requires explaining the invariant and testing duplicates, matching the scope of slots 1 and 2 where the user exceeded their budget by 20% due to detailed explanations and off-task interruptions.",
+        "confidence_reason": "The new task explicitly requires explaining the invariant and testing duplicates, matching the scope of slots 1 and 2 where the user exceeded their budget by 20% due to detailed explanations and off-task interruptions."
+      },
+      "seconds": 57.66
+    }
+  ],
+  "prediction": {
+    "point_min": 60,
+    "low_min": 54,
+    "high_min": 72,
+    "confidence": "low",
+    "confidence_reason": "The new task explicitly requires explaining the invariant and testing duplicates, matching the scope of slots 1 and 2 where the user exceeded their budget by 20% due to detailed explanations and off-task interruptions.",
+    "model_rationale": "The new task explicitly requires explaining the invariant and testing duplicates, matching the scope of slots 1 and 2 where the user exceeded their budget by 20% due to detailed explanations and off-task interruptions.",
+    "explanation": "The new task explicitly requires explaining the invariant and testing duplicates, matching the scope of slots 1 and 2 where the user exceeded their budget by 20% due to detailed explanations and off-task interruptions.",
+    "evidence": [
+      {
+        "task_id": "subarray-target",
+        "title": "LeetCode practice · subarray sum equals k",
+        "estimate_min": 45,
+        "actual_min": 54.0,
+        "ratio": 1.2,
+        "reason": "Both tasks require solving a subarray sum problem from scratch with negative values and duplicate prefix sums, using a blank editor.",
+        "reason_source": "model",
+        "model_rationale": "Both tasks require solving a subarray sum problem from scratch with negative values and duplicate prefix sums, using a blank editor.",
+        "source_quote": "Solve from a blank editor using prefix counts; include a trace with negative values and duplicate prefix sums."
+      },
+      {
+        "task_id": "two-targets",
+        "title": "Practice two non-overlapping target ranges",
+        "estimate_min": 60,
+        "actual_min": 72.0,
+        "ratio": 1.2,
+        "reason": "Both tasks require designing a prefix-index invariant and explaining it out loud while testing edge cases.",
+        "reason_source": "model",
+        "model_rationale": "Both tasks require designing a prefix-index invariant and explaining it out loud while testing edge cases.",
+        "source_quote": "Design the prefix-index invariant, implement from blank, test negative and duplicate values, then explain it out loud."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "subarray-target",
+            "title": "LeetCode practice · subarray sum equals k",
+            "origin": "Completion note",
+            "observation": "Explaining why the initial prefix count is one took a second example."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "subarray-target",
+        "title": "LeetCode practice · subarray sum equals k",
+        "source": "decision model",
+        "score": 0.7125559194417129
+      },
+      {
+        "task_id": "two-targets",
+        "title": "Practice two non-overlapping target ranges",
+        "source": "decision model",
+        "score": 0.5093962323147673
+      }
+    ],
+    "used_task_ids": [
+      "subarray-target",
+      "two-targets"
+    ],
+    "feedback_source_ids": []
+  }
+}

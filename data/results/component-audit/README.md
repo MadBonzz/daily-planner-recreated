@@ -27,6 +27,29 @@ The reference app is [c213b3f](https://github.com/MadBonzz/daily-planner-recreat
 
 The tags TP, FP and FN count accepted relevant items, accepted irrelevant items and missed relevant items, respectively. The component tables include true negatives and their denominators. The original Kev question outperformed its more narrowly worded alternative on the historical validation cases. Assigning a precise section of a PDF and changing the wording of a judge are separately measured interventions.
 
+## Where the two Bonsai models differed
+
+| Decision and test set | Bonsai 4B | Bonsai 9B |
+| --- | --- | --- |
+| Forecast moved in the expected direction, 18 labeled cases in the revised run | 12/18 | 15/18 |
+| Direction on cases with a model answer in both the previous and revised run | 3/15 → 9/15 | 8/18 → 15/18 |
+| Timing evidence cited on the revised run, precision / recall among supplied records | 94% / 54% | 96% / 96% |
+| Adjustment direction on six fresh controls with a specified direction | 6/6 | 6/6 |
+| Warnings on the fresh panel, TP / FP / FN | 1 / 2 / 0 | 1 / 3 / 0 |
+| Activity label on 56 intervals from 10 native SQLite histories | 53/56 raw, 56/56 after the evidence check | 51/56 raw, 53/56 after the evidence check |
+| Distraction on those intervals after the evidence check | 11 TP, 0 FP, 0 FN | 9 TP, 1 FP, 2 FN |
+| Workspace-pause decisions on the two missed positive cases and three negative controls, final application | 2 TP, 0 FP, 0 FN, 3 TN | 2 TP, 0 FP, 0 FN, 3 TN |
+| Model ranked the fitting open task first, three budgets on one board | 0/3 | 3/3 |
+| User-facing list contained the correct fitting task on that board | 3/3 | 3/3 |
+
+Nineteen of the 20 previously used tasks needed a model forecast and 18 had direction labels. Both revised models authored all 19. The frozen evaluation uses the same candidates in both forecast arms. With a 40-minute budget and only past durations changed from slower to faster, 4B moved from 58 to 22 minutes and 9B from 62 to 26. In a separate end-to-end check, recovering the suite-report comparison moved estimates for the archived-transcript write-up from 45 to 29 minutes for 4B and 40 to 25 for 9B. The target calls for less work than the historical implementation assignment in the same packet. [Frozen and integrated forecast results](forecast/metrics.md)
+
+Both checkpoints produced valid classifications for all 56 eligible intervals. A blank Thunderbird inbox was the complete evidence on three rows. Replaying the same model responses with the sparse-evidence check corrected three false distractions for 4B and two for 9B. On the planner questions, Python checks cumulative available time separately from the model's ranking. That second check kept an oversized task out of the fitting list even when 4B put it first. [Activity errors and controls](activity-progress/) · [Planner chat stages](chat/)
+
+On the pause follow-up, each model accepted the user's explicit completion at zero remaining minutes and revised a partial positive test result to 40 minutes remaining. Both attempted to reuse an old milestone on one negative control; quote validation preserved the earlier forecast. This diagnostic revisited known misses and cannot establish performance on new conversations. [Pause trials and per-case decisions](activity-progress/README.md)
+
+The full forecast table measures the frozen revision. A later prompt change removed a hardware-specific example and asked the model to account for variation in comparable durations. We tested the exact release wording in four warning scenarios and four duration controls per model. Both sizes stopped copying pairing advice onto the three unrelated tasks and retained it for the camera task. Confidence decreased on the more variable history in three of four model–task pairs, compared with one of four under the warning-only wording. A sourced warning could still assert a causal link or claim that activities overlapped when the log only placed them in the same session. [Prompt versions](forecast/README.md) · [Manual warning review](forecast/warning-review.md)
+
 ## What happened when an active task finished?
 
 Three open tasks started with 30-minute budgets. Kev related the signing and verification tasks. The memo was independent. Finishing the memo in 75 minutes queued zero re-estimates. Finishing signing in 90 minutes queued exactly one for verification. Both models cited the completed signing task.

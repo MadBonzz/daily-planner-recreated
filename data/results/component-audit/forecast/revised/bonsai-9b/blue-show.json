@@ -1,0 +1,41 @@
+{
+  "task": "blue-show",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:32:59.841679+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "f50418ca71b4f968924a1d40b539825ac5d7dd7cfb9fb1d6798586cc74d37704",
+  "frozen_candidates": [],
+  "budget": 75,
+  "fixed": true,
+  "rubric": {
+    "direction": "near",
+    "expected_band": [
+      1.0,
+      1.0
+    ],
+    "expected_evidence": [
+      "radio-cabaret",
+      "short-on-air",
+      "quiet-show"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [],
+  "prediction": {
+    "point_min": 75,
+    "low_min": 75,
+    "high_min": 75,
+    "basis": "Scheduled duration",
+    "confidence": "fixed",
+    "explanation": "The scheduled duration is 75 minutes.",
+    "provenance": {
+      "provider": null,
+      "model": null,
+      "decision": "fixed",
+      "minutes_by": "schedule"
+    },
+    "evidence": [],
+    "cautions": []
+  }
+}

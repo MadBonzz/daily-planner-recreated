@@ -1,0 +1,853 @@
+{
+  "profiles": {
+    "01-replica-proofs": {
+      "task": "lease-restart",
+      "title": "Prove the takeover rule survives a desk crash",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches the task's core subject of desk recovery.",
+          "title": "Ticket desk \u2014 recovery argument",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 540.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title explicitly references the crash scenario in the task.",
+          "title": "Ticket receipt after the crash",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1380.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 240.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Chess.com is a game unrelated to distributed systems.",
+          "title": "",
+          "domain": "",
+          "device": "Phone",
+          "seconds": 240.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title directly addresses a failure schedule relevant to the task.",
+          "title": "Second desk failure schedule",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 960.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Inbox is generic and unrelated to the specific proof task.",
+          "title": "Inbox",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title references the takeover guard mechanism described in the task.",
+          "title": "Takeover guard",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 600.0
+        }
+      ],
+      "warnings": []
+    },
+    "02-migration-lab": {
+      "task": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Running trace_diff.py directly supports implementing the reporter.",
+          "title": "trace_diff.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1440.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Testing CLI tests validates the streaming comparison tool.",
+          "title": "pytest tests/test_cli.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 600.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Opening cli.py registration file is relevant to the task.",
+          "title": "cli.py \u2014 registration",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1800.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "uncertain",
+          "source": "model",
+          "reason": "Blank editor provides no clue about the user's activity.",
+          "title": "",
+          "domain": "",
+          "device": "Phone",
+          "seconds": 180.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Checking email inbox is unrelated to software engineering work.",
+          "title": "Inbox",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 60.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Comparing JSON files tests the truncated tails feature.",
+          "title": "diff -u failing-tail.jsonl reduced.jsonl",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 660.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Running test_truncated_tail.py verifies the implementation.",
+          "title": "test_truncated_tail.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1620.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Running pytest on trace tools supports the task.",
+          "title": "pytest -q / trace tools",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 720.0
+        }
+      ],
+      "warnings": []
+    },
+    "03-reading-depth": {
+      "task": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches epsilon floor lemma in task description.",
+          "title": "Audits \u2014 epsilon floor",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 960.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title expands expectation term relevant to variance lemma.",
+          "title": "Expand E[X\u00b2 | H]",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1620.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "NBA box score is unrelated to math paper work.",
+          "title": "Fourth quarter box score from last night",
+          "domain": "nba.com",
+          "device": "Laptop",
+          "seconds": 240.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 360.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches two point loss table in task.",
+          "title": "Two point loss table",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 420.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches variance bound with missing observations.",
+          "title": "Variance bound with missing observations",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1200.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches conditional variance lemma in task.",
+          "title": "Conditional variance lemma",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 240.0
+        }
+      ],
+      "warnings": []
+    },
+    "04-kernel-workbench": {
+      "task": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "File title matches the debug task description exactly.",
+          "title": "pitched-reduce.cu \u2014 row stride",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1440.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Test command targets the non-contiguous input fix.",
+          "title": "pytest -k noncontiguous",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 840.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Test file name directly references the odd pitch issue.",
+          "title": "tests/odd_pitch.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 900.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": true,
+          "label": "uncertain",
+          "source": "model",
+          "reason": "Generic Inbox title provides no specific context.",
+          "title": "Inbox",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 420.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Queue command unrelated to kernel debugging.",
+          "title": "squeue --me",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 480.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Sports content unrelated to GPU lab work.",
+          "title": "Shootout replay and post-game interviews",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 300.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Test command explicitly targets odd width regression.",
+          "title": "pytest -k odd_width",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 540.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Code file matches the primary debugging target.",
+          "title": "pitched-reduce.cu",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1080.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Running ctest against the pitch file directly supports debugging the mismatch.",
+          "title": "ctest -R pitch",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 300.0
+        }
+      ],
+      "warnings": []
+    },
+    "05-interview-practice": {
+      "task": "subarray-target",
+      "title": "LeetCode practice \u00b7 subarray sum equals k",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches LeetCode problem description exactly.",
+          "title": "Subarray sum equals K",
+          "domain": "leetcode.com",
+          "device": "Laptop",
+          "seconds": 600.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Filename implements required prefix count logic.",
+          "title": "prefix_counts.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 1080.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title specifies negative-value trace requirement.",
+          "title": "Negative-value trace",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 600.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Content is unrelated sports highlights.",
+          "title": "Game highlights \u2014 overtime finish",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 240.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Filename tests duplicate prefix sum logic.",
+          "title": "test_duplicate_prefix.py",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 720.0
+        }
+      ],
+      "warnings": []
+    },
+    "06-neighborhood-clinic": {
+      "task": "mara-evening",
+      "title": "Review Thursday evening coverage with Mara",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Meeting title matches task goal of reviewing coverage with Mara.",
+          "title": "Coverage decisions / waiting room",
+          "domain": "meet.example.org",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Playing Candy Crush Saga is unrelated to work meeting.",
+          "title": "",
+          "domain": "",
+          "device": "Phone",
+          "seconds": 180.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Meeting title matches task goal of reviewing coverage with Mara.",
+          "title": "Coverage decisions / waiting room",
+          "domain": "meet.example.org",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Meeting title explicitly mentions Mara Imani and evening capacity.",
+          "title": "Evening capacity \u2022 Mara Imani",
+          "domain": "meet.example.org",
+          "device": "Laptop",
+          "seconds": 1620.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Document title matches task goal of sending shift decisions.",
+          "title": "Thursday shift decisions",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 300.0
+        }
+      ],
+      "warnings": []
+    },
+    "07-shared-apartment": {
+      "task": "filter-renewal",
+      "title": "Renew the filter subscription",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches filter subscription renewal task.",
+          "title": "Filter supply / subscription",
+          "domain": "supply.example.org",
+          "device": "Laptop",
+          "seconds": 480.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Shoes clearance is unrelated to household filter orders.",
+          "title": "Trail running shoes \u2013 clearance sizes",
+          "domain": "rei.com",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 60.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Order frequency page supports rescheduling the filter.",
+          "title": "Order frequency",
+          "domain": "supply.example.org",
+          "device": "Laptop",
+          "seconds": 360.0
+        }
+      ],
+      "warnings": []
+    },
+    "08-community-playhouse": {
+      "task": "cabaret-load",
+      "title": "Load the incoming booth file",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Loading booth file matches task description.",
+          "title": "Radio Cabaret / workspace",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 840.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Installing fonts supports replacing broken links.",
+          "title": "Installing visiting fonts",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 540.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "uncertain",
+          "source": "model",
+          "reason": "Ticketmaster app title does not distinguish task.",
+          "title": "",
+          "domain": "",
+          "device": "Phone",
+          "seconds": 240.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 240.0
+        }
+      ],
+      "warnings": []
+    },
+    "09-rover-night": {
+      "task": "hall-encoder",
+      "title": "Log the hallway encoder run",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Running bringup script is essential for connecting the rover.",
+          "title": "rover-c / bringup",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 720.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Disconnecting the bridge prepares the system for data collection.",
+          "title": "udevadm monitor / tty disconnect",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 540.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 120.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Playing GeoGuessr is unrelated to logging encoder data.",
+          "title": "",
+          "domain": "",
+          "device": "Phone",
+          "seconds": 240.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Recording wheel ticks captures the required sensor data.",
+          "title": "ros2 bag record / wheel ticks",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 720.0
+        },
+        {
+          "expected": "uncertain",
+          "eligible_for_model": false,
+          "label": "uncertain",
+          "source": "unobserved",
+          "reason": "No foreground activity was recorded.",
+          "title": "",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 540.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Annotating the encoder trace completes the data export.",
+          "title": "encoder trace / annotate",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 720.0
+        }
+      ],
+      "warnings": []
+    },
+    "10-signal-study": {
+      "task": "symmetry-video",
+      "title": "Take notes on Fourier symmetry",
+      "rows": [
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Title matches Fourier symmetry lecture for sketching.",
+          "title": "Fourier symmetry / worked example",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 840.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Pottery wheel video unrelated to signal study.",
+          "title": "Pottery wheel wobble",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 360.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Notebook title matches odd-symmetry sketch requirement.",
+          "title": "Odd symmetry",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 180.0
+        },
+        {
+          "expected": "off_task",
+          "eligible_for_model": true,
+          "label": "off_task",
+          "source": "model",
+          "reason": "Clay compilation error unrelated to Fourier notes.",
+          "title": "Clay fails compilation",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 300.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Revisiting Fourier symmetry lecture for reference.",
+          "title": "Fourier symmetry / worked example",
+          "domain": "youtube.com",
+          "device": "Laptop",
+          "seconds": 840.0
+        },
+        {
+          "expected": "on_task",
+          "eligible_for_model": true,
+          "label": "on_task",
+          "source": "model",
+          "reason": "Continuing odd symmetry notes in LibreOffice.",
+          "title": "Odd symmetry",
+          "domain": "",
+          "device": "Laptop",
+          "seconds": 300.0
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "model": "ternary-bonsai-2-9b",
+  "split": "validation",
+  "component": "replay",
+  "eligible": 56,
+  "model_labeled": 56,
+  "by_class": {
+    "on_task": {
+      "TP": 41,
+      "FP": 0,
+      "FN": 1,
+      "TN": 14,
+      "precision": 1.0,
+      "recall": 0.9761904761904762
+    },
+    "off_task": {
+      "TP": 9,
+      "FP": 3,
+      "FN": 2,
+      "TN": 42,
+      "precision": 0.75,
+      "recall": 0.8181818181818182
+    },
+    "uncertain": {
+      "TP": 1,
+      "FP": 2,
+      "FN": 2,
+      "TN": 51,
+      "precision": 0.3333333333333333,
+      "recall": 0.3333333333333333
+    }
+  }
+}

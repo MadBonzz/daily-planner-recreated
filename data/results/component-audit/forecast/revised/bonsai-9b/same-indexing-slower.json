@@ -1,0 +1,157 @@
+{
+  "task": "same-indexing-slower",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:26:34.953990+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "fe8d9f751d030662e6d55476d5819119297e25dcd72c41b2b318d4beda045c0e",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "de5b1f108201209e8c0d33802f69429ff4f0e4cea822f245cda08075c7bdc234",
+      "max_tokens": 950,
+      "payload_sha256": "b1a0b994f70e5de653868855c6d57dca028a924fa9cde7fd5456a6c7ec77aa2f",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 253,
+        "prompt_tokens": 770,
+        "total_tokens": 1023,
+        "prompt_tokens_details": {
+          "cached_tokens": 300
+        }
+      },
+      "timings": {
+        "cache_n": 300,
+        "prompt_n": 470,
+        "prompt_ms": 20390.141,
+        "prompt_per_token_ms": 43.38327872340425,
+        "prompt_per_second": 23.0503555615432,
+        "predicted_n": 253,
+        "predicted_ms": 117175.576,
+        "predicted_per_token_ms": 464.98244444444447,
+        "predicted_per_second": 2.1506188286200527
+      },
+      "content_sha256": "ac319f86a8b5aebde3b021c75656c1e562142594b826e9ac3f3bdc7418bc64b0",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope of indexing 20 images with checksum verification."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope of indexing 20 images with checksum verification."
+          },
+          {
+            "slot": 3,
+            "reason": "Same scope of indexing 20 images with checksum verification."
+          }
+        ],
+        "point_min": 62,
+        "low_min": 60,
+        "high_min": 65,
+        "confidence": "low",
+        "rationale": "The time-driving step is the sequential execution of load, index, and checksum operations on 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three identical runs. The strongest relevant comparison is the average actual time of 60 minutes across the three slots, indicating a stable baseline without new variables.",
+        "confidence_reason": "Variability in network latency or script overhead could widen the range."
+      },
+      "seconds": 380.43
+    }
+  ],
+  "prediction": {
+    "point_min": 62,
+    "low_min": 60,
+    "high_min": 65,
+    "confidence": "low",
+    "confidence_reason": "Variability in network latency or script overhead could widen the range.",
+    "model_rationale": "The time-driving step is the sequential execution of load, index, and checksum operations on 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three identical runs. The strongest relevant comparison is the average actual time of 60 minutes across the three slots, indicating a stable baseline without new variables.",
+    "explanation": "The time-driving step is the sequential execution of load, index, and checksum operations on 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three identical runs. The strongest relevant comparison is the average actual time of 60 minutes across the three slots, indicating a stable baseline without new variables.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 58.0,
+        "ratio": 1.45,
+        "reason": "Same scope of indexing 20 images with checksum verification.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification.",
+        "source_quote": "Run the Monday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 60.0,
+        "ratio": 1.5,
+        "reason": "Same scope of indexing 20 images with checksum verification.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification.",
+        "source_quote": "Run the Tuesday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 62.0,
+        "ratio": 1.55,
+        "reason": "Same scope of indexing 20 images with checksum verification.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification.",
+        "source_quote": "Run the Wednesday indexing and checksum check on 20 images"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "feedback_source_ids": []
+  }
+}

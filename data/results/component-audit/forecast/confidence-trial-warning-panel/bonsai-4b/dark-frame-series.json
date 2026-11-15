@@ -1,0 +1,138 @@
+{
+  "task": "dark-frame-series",
+  "model": "ternary-bonsai-4b",
+  "time_utc": "2026-11-15T09:58:49.026437+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "af2115f4675bd434ecc9e49fce46aed76e6fcb85019ce990c16f48e6e9ee948a",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [
+      "prior-1",
+      "prior-2"
+    ],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "f23f14db9722399006f38d3b3781a380ebfbaf2f8ba0241cab58b86ceba5f5a2",
+      "max_tokens": 950,
+      "payload_sha256": "b3f40ed07cdf26186455e09d13be706734ea0e406285c5174dc61cc7ba4a9541",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 256,
+        "prompt_tokens": 774,
+        "total_tokens": 1030,
+        "prompt_tokens_details": {
+          "cached_tokens": 417
+        }
+      },
+      "timings": {
+        "cache_n": 417,
+        "prompt_n": 357,
+        "prompt_ms": 8548.371,
+        "prompt_per_token_ms": 23.945016806722688,
+        "prompt_per_second": 41.76234279022284,
+        "predicted_n": 256,
+        "predicted_ms": 32340.059,
+        "predicted_per_token_ms": 126.82376078431373,
+        "predicted_per_second": 7.884957785636693
+      },
+      "content_sha256": "31bf2f48356a145d81add3cd36424a7ea96261a38113f8179081eb68350cb367",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Re-pair the cooling controller before the camera stabilizes to ensure consistent capture timing and avoid USB pairing delays."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope as previous task; both involved collecting and exporting 20 dark frames with the same camera and cooling controller, showing a consistent delay due to controller re-pairing."
+          }
+        ],
+        "point_min": 59,
+        "low_min": 55,
+        "high_min": 65,
+        "confidence": "high",
+        "rationale": "The primary time-driving step is re-pairing the cooling controller, which caused a delay in the previous task. The strongest relevant comparison is the first task (59.0 minutes vs. 40 minutes), where the same scope and equipment were used, confirming that controller re-pairing is a recurring issue. A tighter cluster of actual durations would improve confidence, but current data shows a consistent pattern across similar tasks.",
+        "confidence_reason": "The observed delay in re-pairing the cooling controller is directly tied to the task's execution and is repeatable under the same conditions, suggesting a high likelihood of recurrence."
+      },
+      "seconds": 41.1
+    }
+  ],
+  "prediction": {
+    "point_min": 59,
+    "low_min": 55,
+    "high_min": 65,
+    "confidence": "high",
+    "confidence_reason": "The observed delay in re-pairing the cooling controller is directly tied to the task's execution and is repeatable under the same conditions, suggesting a high likelihood of recurrence.",
+    "model_rationale": "The primary time-driving step is re-pairing the cooling controller, which caused a delay in the previous task. The strongest relevant comparison is the first task (59.0 minutes vs. 40 minutes), where the same scope and equipment were used, confirming that controller re-pairing is a recurring issue. A tighter cluster of actual durations would improve confidence, but current data shows a consistent pattern across similar tasks.",
+    "explanation": "The primary time-driving step is re-pairing the cooling controller, which caused a delay in the previous task. The strongest relevant comparison is the first task (59.0 minutes vs. 40 minutes), where the same scope and equipment were used, confirming that controller re-pairing is a recurring issue. A tighter cluster of actual durations would improve confidence, but current data shows a consistent pattern across similar tasks.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "estimate_min": 40,
+        "actual_min": 59.0,
+        "ratio": 1.475,
+        "reason": "Same scope as previous task; both involved collecting and exporting 20 dark frames with the same camera and cooling controller, showing a consistent delay due to controller re-pairing.",
+        "reason_source": "model",
+        "model_rationale": "Same scope as previous task; both involved collecting and exporting 20 dark frames with the same camera and cooling controller, showing a consistent delay due to controller re-pairing.",
+        "source_quote": "Collect and export 20 dark frames on this camera"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Re-pair the cooling controller before the camera stabilizes to ensure consistent capture timing and avoid USB pairing delays.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Collect and export 20 dark frames on this camera",
+            "origin": "Completion note",
+            "observation": "Cooling controller lost its USB pairing twice; re-pairing delayed capture."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-4b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Collect and export 20 dark frames on this camera",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Acquire the weekly batch of 20 dark frames",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1"
+    ],
+    "feedback_source_ids": []
+  }
+}

@@ -1521,6 +1521,666 @@
         }
       }
     },
+    "confidence-trial-warning-panel": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 326.32,
+          "median_model_seconds_per_task": 326.32,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "dev-april": {
+            "budget": 20,
+            "forecast": 20,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 54.3,
+          "median_model_seconds_per_task": 54.3,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.333
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 2,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 3,
+          "direct": 1,
+          "fallback": 2,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 5,
+          "retries": 2,
+          "length_truncations": 4,
+          "median_call_seconds": 715.6,
+          "median_model_seconds_per_task": 1356.03,
+          "calls_over_default_90_seconds": 5
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "dev-april": {
+            "budget": 20,
+            "forecast": 20,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 2,
+          "warnings_emitted": 3,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 2,
+            "correct_direction": 2
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 64.92,
+          "median_model_seconds_per_task": 64.92,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 3,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 6,
+          "precision": 1.0,
+          "recall": 0.333
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "pasta-dishes"
+            ],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 2,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-evening"
+            ],
+            "warnings": [
+              "mara-evening"
+            ],
+            "interval_width_min": 15,
+            "confidence": "high",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "fresh": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 41.1,
+          "median_model_seconds_per_task": 41.1,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "cases": {
+          "dark-frame-series": {
+            "budget": 40,
+            "forecast": 59,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1"
+            ],
+            "warnings": [
+              "prior-1"
+            ],
+            "interval_width_min": 10,
+            "confidence": "high",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      }
+    },
     "integrated": {
       "matched_direct_original": {
         "counts": {
@@ -5702,6 +6362,6093 @@
             "window-video"
           ],
           "unsupported_example_copies": 0
+        }
+      }
+    },
+    "confidence-control": {
+      "matched_direct_original": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "matched_direct_current": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "paired_original": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "replayed": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "fresh": {
+        "counts": {
+          "total": 4,
+          "direct": 4,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "negative_cases_without_observations": 4,
+          "valid_interval": 4
+        },
+        "matched_counterfactual": {
+          "tight_width": 5,
+          "variable_width": 30,
+          "wider_for_variable": true,
+          "tight_confidence": "low",
+          "variable_confidence": "low",
+          "lower_confidence_for_variable": false
+        },
+        "uncertainty_pairs": {
+          "indexing": {
+            "tight_width": 5,
+            "variable_width": 30,
+            "tight_confidence": "low",
+            "variable_confidence": "low",
+            "width_ordering": "wider",
+            "confidence_ordering": "tie",
+            "tight_point": 62,
+            "variable_point": 45
+          },
+          "supply count": {
+            "tight_width": 3,
+            "variable_width": 30,
+            "tight_confidence": "low",
+            "variable_confidence": "low",
+            "width_ordering": "wider",
+            "confidence_ordering": "tie",
+            "tight_point": 41,
+            "variable_point": 40
+          }
+        },
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 4,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 653.99,
+          "median_model_seconds_per_task": 653.99,
+          "calls_over_default_90_seconds": 4
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "same-indexing-slower": {
+            "budget": 40,
+            "forecast": 62,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 5,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "same-indexing-variable": {
+            "budget": 40,
+            "forecast": 45,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "supply-count-tight": {
+            "budget": 30,
+            "forecast": 41,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 3,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "supply-count-variable": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      }
+    },
+    "confidence-trial": {
+      "matched_direct_original": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "matched_direct_current": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "paired_original": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "replayed": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      },
+      "fresh": {
+        "counts": {
+          "total": 4,
+          "direct": 4,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "negative_cases_without_observations": 4,
+          "valid_interval": 4
+        },
+        "matched_counterfactual": {
+          "tight_width": 5,
+          "variable_width": 55,
+          "wider_for_variable": true,
+          "tight_confidence": "low",
+          "variable_confidence": "low",
+          "lower_confidence_for_variable": false
+        },
+        "uncertainty_pairs": {
+          "indexing": {
+            "tight_width": 5,
+            "variable_width": 55,
+            "tight_confidence": "low",
+            "variable_confidence": "low",
+            "width_ordering": "wider",
+            "confidence_ordering": "tie",
+            "tight_point": 62,
+            "variable_point": 55
+          },
+          "supply count": {
+            "tight_width": 4,
+            "variable_width": 24,
+            "tight_confidence": "high",
+            "variable_confidence": "low",
+            "width_ordering": "wider",
+            "confidence_ordering": "lower",
+            "tight_point": 41,
+            "variable_point": 30
+          }
+        },
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 4,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 677.39,
+          "median_model_seconds_per_task": 677.39,
+          "calls_over_default_90_seconds": 4
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "same-indexing-slower": {
+            "budget": 40,
+            "forecast": 62,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 5,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "same-indexing-variable": {
+            "budget": 40,
+            "forecast": 55,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 55,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "supply-count-tight": {
+            "budget": 30,
+            "forecast": 41,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 4,
+            "confidence": "high",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "supply-count-variable": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": null,
+            "direction": "near",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 24,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      }
+    },
+    "confidence-trial-warning-panel": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 270.2,
+          "median_model_seconds_per_task": 270.2,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.5
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 2,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 9,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 3,
+          "warnings_emitted": 5,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 546.11,
+          "median_model_seconds_per_task": 546.11,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 3,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.889
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "interval_width_min": 8,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 2,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-capacity",
+              "mara-evening"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 270.2,
+          "median_model_seconds_per_task": 270.2,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.5
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 2,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 9,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 3,
+          "warnings_emitted": 5,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 546.11,
+          "median_model_seconds_per_task": 546.11,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 3,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.889
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "interval_width_min": 8,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 2,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-capacity",
+              "mara-evening"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "fresh": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "warnings_emitted": 2,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 488.89,
+          "median_model_seconds_per_task": 488.89,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "cases": {
+          "dark-frame-series": {
+            "budget": 40,
+            "forecast": 59,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2"
+            ],
+            "warnings": [
+              "prior-1",
+              "prior-2"
+            ],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      }
+    },
+    "integrated": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 2,
+          "direct": 2,
+          "labeled_bands": 2,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 2,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 305.41,
+          "median_model_seconds_per_task": 305.41,
+          "calls_over_default_90_seconds": 2
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.5,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 2,
+          "direct": 2,
+          "labeled_bands": 2,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 1,
+          "cases_with_copied_example": 1,
+          "valid_interval": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 2,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 643.86,
+          "median_model_seconds_per_task": 643.86,
+          "calls_over_default_90_seconds": 2
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "suite-report"
+            ],
+            "warnings": [],
+            "interval_width_min": 8,
+            "confidence": "low",
+            "supplied": [
+              "suite-report"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "boundary-debug",
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [
+              "boundary-debug",
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 2,
+          "direct": 2,
+          "labeled_bands": 2,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 2,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 305.41,
+          "median_model_seconds_per_task": 305.41,
+          "calls_over_default_90_seconds": 2
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.5,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 2,
+          "direct": 2,
+          "labeled_bands": 2,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 1,
+          "cases_with_copied_example": 1,
+          "valid_interval": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 2,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 643.86,
+          "median_model_seconds_per_task": 643.86,
+          "calls_over_default_90_seconds": 2
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "suite-report"
+            ],
+            "warnings": [],
+            "interval_width_min": 8,
+            "confidence": "low",
+            "supplied": [
+              "suite-report"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "boundary-debug",
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [
+              "boundary-debug",
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "fresh": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      }
+    },
+    "revised": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 19,
+          "direct": 19,
+          "labeled_bands": 18,
+          "inside_rubric_band": 7,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 19,
+          "warning_source_unavailable": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 15,
+            "correct_direction": 6
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 19,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 272.38,
+          "median_model_seconds_per_task": 272.38,
+          "calls_over_default_90_seconds": 19
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 8,
+            "fn": 8,
+            "precision": 1.0,
+            "recall": 0.2
+          },
+          "near": {
+            "tp": 1,
+            "fp": 1,
+            "tn": 14,
+            "fn": 2,
+            "precision": 0.5,
+            "recall": 0.333
+          },
+          "down": {
+            "tp": 5,
+            "fp": 9,
+            "tn": 4,
+            "fn": 0,
+            "precision": 0.357,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 26,
+          "fp": 1,
+          "tn": 0,
+          "fn": 2,
+          "precision": 0.963,
+          "recall": 0.929
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "appendix-proof": {
+            "budget": 60,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "medium",
+            "supplied": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "async-flicker": {
+            "budget": 85,
+            "forecast": 75,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "warp-tail"
+            ],
+            "warnings": [],
+            "interval_width_min": 40,
+            "confidence": "medium",
+            "supplied": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-proof": {
+            "budget": 75,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "barrier-proof"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "medium",
+            "supplied": [
+              "barrier-proof"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-trace": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "bump-crossing": {
+            "budget": 45,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "duvet": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": null,
+            "direction": "down",
+            "cited": [
+              "sheets"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "sheets"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "editorial-review": {
+            "budget": 25,
+            "forecast": 20,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "retype-merge"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "retype-merge"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "metrics-club": {
+            "budget": 45,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "replay-ramp": {
+            "budget": 40,
+            "forecast": 35,
+            "expected_direction": "near",
+            "direction": "down",
+            "cited": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "sea-preflight": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "shortest-window": {
+            "budget": 50,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "sweep-again": {
+            "budget": 60,
+            "forecast": 55,
+            "expected_direction": "near",
+            "direction": "down",
+            "cited": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "triangle-sheet": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "triangle-video": {
+            "budget": 40,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "pulse-video",
+              "window-video"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 19,
+          "direct": 19,
+          "labeled_bands": 18,
+          "inside_rubric_band": 12,
+          "warnings_emitted": 13,
+          "unsupported_copied_example_warnings": 12,
+          "cases_with_copied_example": 12,
+          "valid_interval": 19,
+          "warning_source_unavailable": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 15,
+            "correct_direction": 12
+          },
+          "medium": {
+            "labeled": 3,
+            "correct_direction": 3
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 20,
+          "retries": 1,
+          "length_truncations": 0,
+          "median_call_seconds": 449.62,
+          "median_model_seconds_per_task": 452.14,
+          "calls_over_default_90_seconds": 19
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 9,
+            "fp": 0,
+            "tn": 8,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.9
+          },
+          "near": {
+            "tp": 3,
+            "fp": 3,
+            "tn": 12,
+            "fn": 0,
+            "precision": 0.5,
+            "recall": 1.0
+          },
+          "down": {
+            "tp": 3,
+            "fp": 0,
+            "tn": 13,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.6
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 27,
+          "fp": 1,
+          "tn": 0,
+          "fn": 1,
+          "precision": 0.964,
+          "recall": 0.964
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "appendix-proof": {
+            "budget": 60,
+            "forecast": 120,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "warnings": [
+              "derive-noise"
+            ],
+            "interval_width_min": 40,
+            "confidence": "low",
+            "supplied": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "async-flicker": {
+            "budget": 85,
+            "forecast": 129,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "warnings": [
+              "warp-tail"
+            ],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "pasta-dishes"
+            ],
+            "interval_width_min": 12,
+            "confidence": "low",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "bridge-proof": {
+            "budget": 75,
+            "forecast": 85,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "barrier-proof"
+            ],
+            "warnings": [
+              "barrier-proof"
+            ],
+            "interval_width_min": 20,
+            "confidence": "low",
+            "supplied": [
+              "barrier-proof"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-trace": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "bump-crossing": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 16,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "duvet": {
+            "budget": 30,
+            "forecast": 23,
+            "expected_direction": null,
+            "direction": "down",
+            "cited": [
+              "sheets"
+            ],
+            "warnings": [
+              "sheets"
+            ],
+            "interval_width_min": 7,
+            "confidence": "low",
+            "supplied": [
+              "sheets"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "editorial-review": {
+            "budget": 25,
+            "forecast": 17,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "retype-merge"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "low",
+            "supplied": [
+              "retype-merge"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-evening"
+            ],
+            "interval_width_min": 2,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "metrics-club": {
+            "budget": 45,
+            "forecast": 30,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-note": {
+            "budget": 40,
+            "forecast": 40,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "replay-ramp": {
+            "budget": 40,
+            "forecast": 41,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "warnings": [
+              "wheel-ticks"
+            ],
+            "interval_width_min": 8,
+            "confidence": "medium",
+            "supplied": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "sea-preflight": {
+            "budget": 30,
+            "forecast": 37,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "warnings": [
+              "blue-relay"
+            ],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "shortest-window": {
+            "budget": 50,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "warnings": [
+              "subarray-target"
+            ],
+            "interval_width_min": 18,
+            "confidence": "low",
+            "supplied": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "sweep-again": {
+            "budget": 60,
+            "forecast": 60,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "warnings": [
+              "throughput-table"
+            ],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "triangle-sheet": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "triangle-video": {
+            "budget": 40,
+            "forecast": 55,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "warnings": [
+              "pulse-video"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 20,
+          "direct": 19,
+          "labeled_bands": 18,
+          "inside_rubric_band": 7,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 19,
+          "fixed_without_call": 1,
+          "warning_source_unavailable": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 15,
+            "correct_direction": 6
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 19,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 272.38,
+          "median_model_seconds_per_task": 272.38,
+          "calls_over_default_90_seconds": 19
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 8,
+            "fn": 8,
+            "precision": 1.0,
+            "recall": 0.2
+          },
+          "near": {
+            "tp": 1,
+            "fp": 1,
+            "tn": 14,
+            "fn": 2,
+            "precision": 0.5,
+            "recall": 0.333
+          },
+          "down": {
+            "tp": 5,
+            "fp": 9,
+            "tn": 4,
+            "fn": 0,
+            "precision": 0.357,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 26,
+          "fp": 1,
+          "tn": 0,
+          "fn": 2,
+          "precision": 0.963,
+          "recall": 0.929
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "appendix-proof": {
+            "budget": 60,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "medium",
+            "supplied": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "async-flicker": {
+            "budget": 85,
+            "forecast": 75,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "warp-tail"
+            ],
+            "warnings": [],
+            "interval_width_min": 40,
+            "confidence": "medium",
+            "supplied": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-proof": {
+            "budget": 75,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "barrier-proof"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "medium",
+            "supplied": [
+              "barrier-proof"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-trace": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "bump-crossing": {
+            "budget": 45,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "duvet": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": null,
+            "direction": "down",
+            "cited": [
+              "sheets"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "sheets"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "editorial-review": {
+            "budget": 25,
+            "forecast": 20,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "retype-merge"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "retype-merge"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "metrics-club": {
+            "budget": 45,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-note": {
+            "budget": 40,
+            "forecast": 25,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "replay-ramp": {
+            "budget": 40,
+            "forecast": 35,
+            "expected_direction": "near",
+            "direction": "down",
+            "cited": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "sea-preflight": {
+            "budget": 30,
+            "forecast": 25,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "shortest-window": {
+            "budget": 50,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "sweep-again": {
+            "budget": 60,
+            "forecast": 55,
+            "expected_direction": "near",
+            "direction": "down",
+            "cited": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "triangle-sheet": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "triangle-video": {
+            "budget": 40,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "pulse-video",
+              "window-video"
+            ],
+            "warnings": [],
+            "interval_width_min": 25,
+            "confidence": "medium",
+            "supplied": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 20,
+          "direct": 19,
+          "labeled_bands": 18,
+          "inside_rubric_band": 12,
+          "warnings_emitted": 13,
+          "unsupported_copied_example_warnings": 12,
+          "cases_with_copied_example": 12,
+          "valid_interval": 19,
+          "fixed_without_call": 1,
+          "warning_source_unavailable": 2
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 15,
+            "correct_direction": 12
+          },
+          "medium": {
+            "labeled": 3,
+            "correct_direction": 3
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 20,
+          "retries": 1,
+          "length_truncations": 0,
+          "median_call_seconds": 449.62,
+          "median_model_seconds_per_task": 452.14,
+          "calls_over_default_90_seconds": 19
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 9,
+            "fp": 0,
+            "tn": 8,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.9
+          },
+          "near": {
+            "tp": 3,
+            "fp": 3,
+            "tn": 12,
+            "fn": 0,
+            "precision": 0.5,
+            "recall": 1.0
+          },
+          "down": {
+            "tp": 3,
+            "fp": 0,
+            "tn": 13,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.6
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 27,
+          "fp": 1,
+          "tn": 0,
+          "fn": 1,
+          "precision": 0.964,
+          "recall": 0.964
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "appendix-proof": {
+            "budget": 60,
+            "forecast": 120,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "warnings": [
+              "derive-noise"
+            ],
+            "interval_width_min": 40,
+            "confidence": "low",
+            "supplied": [
+              "bound-floor",
+              "check-jensen",
+              "derive-noise"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "async-flicker": {
+            "budget": 85,
+            "forecast": 129,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "warnings": [
+              "warp-tail"
+            ],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "stride-kernel",
+              "warp-tail"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "pasta-dishes"
+            ],
+            "interval_width_min": 12,
+            "confidence": "low",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "bridge-proof": {
+            "budget": 75,
+            "forecast": 85,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "barrier-proof"
+            ],
+            "warnings": [
+              "barrier-proof"
+            ],
+            "interval_width_min": 20,
+            "confidence": "low",
+            "supplied": [
+              "barrier-proof"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "bridge-trace": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "bump-crossing": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 16,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "duvet": {
+            "budget": 30,
+            "forecast": 23,
+            "expected_direction": null,
+            "direction": "down",
+            "cited": [
+              "sheets"
+            ],
+            "warnings": [
+              "sheets"
+            ],
+            "interval_width_min": 7,
+            "confidence": "low",
+            "supplied": [
+              "sheets"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "editorial-review": {
+            "budget": 25,
+            "forecast": 17,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "retype-merge"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "low",
+            "supplied": [
+              "retype-merge"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-evening"
+            ],
+            "interval_width_min": 2,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "metrics-club": {
+            "budget": 45,
+            "forecast": 30,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-note": {
+            "budget": 40,
+            "forecast": 40,
+            "expected_direction": "down",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "replay-ramp": {
+            "budget": 40,
+            "forecast": 41,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "warnings": [
+              "wheel-ticks"
+            ],
+            "interval_width_min": 8,
+            "confidence": "medium",
+            "supplied": [
+              "junction-replay",
+              "wheel-ticks"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "sea-preflight": {
+            "budget": 30,
+            "forecast": 37,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "warnings": [
+              "blue-relay"
+            ],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [
+              "audio-preflight",
+              "blue-relay"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "shortest-window": {
+            "budget": 50,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "warnings": [
+              "subarray-target"
+            ],
+            "interval_width_min": 18,
+            "confidence": "low",
+            "supplied": [
+              "subarray-target",
+              "two-targets"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "sweep-again": {
+            "budget": 60,
+            "forecast": 60,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "warnings": [
+              "throughput-table"
+            ],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "median-runs",
+              "throughput-table"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "triangle-sheet": {
+            "budget": 45,
+            "forecast": 45,
+            "expected_direction": "near",
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "triangle-video": {
+            "budget": 40,
+            "forecast": 55,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "warnings": [
+              "pulse-video"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "pulse-video",
+              "symmetry-video",
+              "window-video"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "fresh": {
+        "counts": {
+          "total": 9,
+          "direct": 8,
+          "warnings_emitted": 4,
+          "unsupported_copied_example_warnings": 3,
+          "cases_with_copied_example": 3,
+          "valid_interval": 8,
+          "negative_cases_with_observations": 3,
+          "negative_cases_without_observations": 4,
+          "cold_low_confidence": 1,
+          "cold_underspecified": 1,
+          "explicit_no_timing": 1,
+          "fixed_without_call": 1
+        },
+        "matched_counterfactual": {
+          "slower_history_point": 62,
+          "faster_history_point": 26,
+          "order_correct": true,
+          "both_directions_correct": true,
+          "tight_width": 5,
+          "variable_width": 30,
+          "wider_for_variable": true,
+          "tight_confidence": "low",
+          "variable_confidence": "low",
+          "lower_confidence_for_variable": false
+        },
+        "uncertainty_pairs": {
+          "indexing": {
+            "tight_width": 5,
+            "variable_width": 30,
+            "tight_confidence": "low",
+            "variable_confidence": "low",
+            "width_ordering": "wider",
+            "confidence_ordering": "tie",
+            "tight_point": 62,
+            "variable_point": 45
+          }
+        },
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 6,
+            "correct_direction": 6
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 8,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 410.3,
+          "median_model_seconds_per_task": 410.3,
+          "calls_over_default_90_seconds": 8
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 4,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 6,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 4,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 15,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 3,
+          "tn": 4,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 3,
+          "tn": 4,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 3,
+          "tn": 4,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 1,
+          "fp": 3,
+          "tn": 4,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0
+        },
+        "cases": {
+          "dark-frame-series": {
+            "budget": 40,
+            "forecast": 59,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2"
+            ],
+            "warnings": [
+              "prior-1"
+            ],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "export-only": {
+            "budget": 20,
+            "forecast": 10,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "prior-1"
+            ],
+            "warnings": [
+              "prior-1"
+            ],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [
+              "prior-1"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "first-cabinet-check": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": null,
+            "direction": "near",
+            "cited": [],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "low",
+            "supplied": [],
+            "unsupported_example_copies": 0
+          },
+          "mail-registration-link": {
+            "budget": 15,
+            "forecast": 12,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "prior-1"
+            ],
+            "warnings": [
+              "prior-1"
+            ],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 1
+          },
+          "same-indexing-faster": {
+            "budget": 40,
+            "forecast": 26,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 4,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "same-indexing-slower": {
+            "budget": 40,
+            "forecast": 62,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 5,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "same-indexing-variable": {
+            "budget": 40,
+            "forecast": 45,
+            "expected_direction": null,
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "warnings": [],
+            "interval_width_min": 30,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2",
+              "prior-3"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "shelve-next-cart": {
+            "budget": 40,
+            "forecast": 26,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "prior-1",
+              "prior-2"
+            ],
+            "warnings": [
+              "prior-1"
+            ],
+            "interval_width_min": 5,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      }
+    },
+    "solo": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 1,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 360.09,
+          "median_model_seconds_per_task": 360.09,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 1,
+          "cases_with_copied_example": 1,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 56.08,
+          "median_model_seconds_per_task": 56.08,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 1,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 360.09,
+          "median_model_seconds_per_task": 360.09,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 60,
+            "expected_direction": "up",
+            "direction": "down",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [],
+            "interval_width_min": 45,
+            "confidence": "medium",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "labeled_bands": 1,
+          "inside_rubric_band": 0,
+          "warnings_emitted": 1,
+          "unsupported_copied_example_warnings": 1,
+          "cases_with_copied_example": 1,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 56.08,
+          "median_model_seconds_per_task": 56.08,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "patch-tool": {
+            "budget": 85,
+            "forecast": 105,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "trace-tool"
+            ],
+            "warnings": [
+              "trace-tool"
+            ],
+            "interval_width_min": 25,
+            "confidence": "low",
+            "supplied": [
+              "trace-tool"
+            ],
+            "unsupported_example_copies": 1
+          }
+        }
+      },
+      "fresh": {
+        "counts": {},
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 0,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": null,
+          "median_model_seconds_per_task": null,
+          "calls_over_default_90_seconds": 0
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {}
+      }
+    },
+    "warning-trial": {
+      "matched_direct_original": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 270.2,
+          "median_model_seconds_per_task": 270.2,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.5
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 2,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 9,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "matched_direct_current": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 3,
+          "warnings_emitted": 4,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "medium": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 709.09,
+          "median_model_seconds_per_task": 709.09,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 3,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.889
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "pasta-dishes"
+            ],
+            "interval_width_min": 12,
+            "confidence": "low",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 14,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 6,
+            "confidence": "low",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-capacity",
+              "mara-evening"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "paired_original": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 1,
+          "warnings_emitted": 0,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "medium": {
+            "labeled": 2,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 1,
+            "correct_direction": 1
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 270.2,
+          "median_model_seconds_per_task": 270.2,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 1,
+            "fn": 1,
+            "precision": 1.0,
+            "recall": 0.5
+          },
+          "near": {
+            "tp": 0,
+            "fp": 1,
+            "tn": 2,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 9,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": null,
+          "recall": 0.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 30,
+            "expected_direction": "up",
+            "direction": "near",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "warnings": [],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 15,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [],
+            "interval_width_min": 6,
+            "confidence": "high",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 35,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [],
+            "interval_width_min": 15,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "replayed": {
+        "counts": {
+          "total": 3,
+          "direct": 3,
+          "labeled_bands": 3,
+          "inside_rubric_band": 3,
+          "warnings_emitted": 4,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 3
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 2,
+            "correct_direction": 2
+          },
+          "medium": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 3,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 709.09,
+          "median_model_seconds_per_task": 709.09,
+          "calls_over_default_90_seconds": 3
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 3,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.889
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "cases": {
+          "bake-dishes": {
+            "budget": 30,
+            "forecast": 36,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "chili-dishes",
+              "pasta-dishes"
+            ],
+            "warnings": [
+              "pasta-dishes"
+            ],
+            "interval_width_min": 12,
+            "confidence": "low",
+            "supplied": [
+              "chili-dishes",
+              "pasta-dishes",
+              "stew-dishes"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "dev-april": {
+            "budget": 20,
+            "forecast": 14,
+            "expected_direction": "down",
+            "direction": "down",
+            "cited": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "warnings": [
+              "dev-stock"
+            ],
+            "interval_width_min": 6,
+            "confidence": "low",
+            "supplied": [
+              "dev-packs",
+              "dev-receipts",
+              "dev-stock"
+            ],
+            "unsupported_example_copies": 0
+          },
+          "mara-rooms": {
+            "budget": 30,
+            "forecast": 40,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "warnings": [
+              "mara-capacity",
+              "mara-evening"
+            ],
+            "interval_width_min": 10,
+            "confidence": "medium",
+            "supplied": [
+              "mara-capacity",
+              "mara-evening",
+              "mara-late-room"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      },
+      "fresh": {
+        "counts": {
+          "total": 1,
+          "direct": 1,
+          "warnings_emitted": 2,
+          "unsupported_copied_example_warnings": 0,
+          "cases_with_copied_example": 0,
+          "valid_interval": 1
+        },
+        "matched_counterfactual": {},
+        "uncertainty_pairs": {},
+        "direction_by_confidence": {
+          "low": {
+            "labeled": 1,
+            "correct_direction": 1
+          },
+          "medium": {
+            "labeled": 0,
+            "correct_direction": 0
+          },
+          "high": {
+            "labeled": 0,
+            "correct_direction": 0
+          }
+        },
+        "wall_clock_including_queue": {
+          "model_calls": 1,
+          "retries": 0,
+          "length_truncations": 0,
+          "median_call_seconds": 745.11,
+          "median_model_seconds_per_task": 745.11,
+          "calls_over_default_90_seconds": 1
+        },
+        "direction_one_vs_rest": {
+          "up": {
+            "tp": 1,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "near": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          },
+          "down": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 1,
+            "fn": 0,
+            "precision": null,
+            "recall": null
+          }
+        },
+        "timing_citations_given_candidates": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_cases_given_reachable_source_or_explicit_negative": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_and_source_cases": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_topic_source_without_example_leak": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "warning_detection_exhaustively_labeled": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "cases": {
+          "dark-frame-series": {
+            "budget": 40,
+            "forecast": 78,
+            "expected_direction": "up",
+            "direction": "up",
+            "cited": [
+              "prior-1",
+              "prior-2"
+            ],
+            "warnings": [
+              "prior-1",
+              "prior-2"
+            ],
+            "interval_width_min": 20,
+            "confidence": "low",
+            "supplied": [
+              "prior-1",
+              "prior-2"
+            ],
+            "unsupported_example_copies": 0
+          }
+        }
+      }
+    },
+    "same_request_latency": {
+      "shared": {
+        "seconds": 507.54,
+        "attempts": 1,
+        "completion_tokens": [
+          264
+        ],
+        "cached_prompt_tokens": [
+          339
+        ],
+        "point": 105
+      },
+      "solo": {
+        "seconds": 56.08,
+        "attempts": 1,
+        "completion_tokens": [
+          279
+        ],
+        "cached_prompt_tokens": [
+          339
+        ],
+        "point": 105
+      }
+    },
+    "integrated_vs_frozen": {
+      "patch-note": {
+        "integrated": {
+          "budget": 40,
+          "forecast": 25,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [
+            "suite-report"
+          ],
+          "warnings": [],
+          "interval_width_min": 8,
+          "confidence": "low",
+          "supplied": [
+            "suite-report"
+          ],
+          "unsupported_example_copies": 0
+        },
+        "frozen": {
+          "budget": 40,
+          "forecast": 40,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "low",
+          "supplied": [],
+          "unsupported_example_copies": 0
+        }
+      },
+      "patch-tool": {
+        "integrated": {
+          "budget": 85,
+          "forecast": 105,
+          "expected_direction": "up",
+          "direction": "up",
+          "cited": [
+            "boundary-debug",
+            "trace-tool"
+          ],
+          "warnings": [
+            "trace-tool"
+          ],
+          "interval_width_min": 25,
+          "confidence": "low",
+          "supplied": [
+            "boundary-debug",
+            "trace-tool"
+          ],
+          "unsupported_example_copies": 1
+        },
+        "frozen": {
+          "budget": 85,
+          "forecast": 105,
+          "expected_direction": "up",
+          "direction": "up",
+          "cited": [
+            "trace-tool"
+          ],
+          "warnings": [
+            "trace-tool"
+          ],
+          "interval_width_min": 30,
+          "confidence": "low",
+          "supplied": [
+            "trace-tool"
+          ],
+          "unsupported_example_copies": 1
         }
       }
     }

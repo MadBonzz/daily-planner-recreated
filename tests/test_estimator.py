@@ -395,11 +395,11 @@ def test_recurring_secondary_distraction_is_available_to_forecaster():
 
 
 def test_paired_audit_cases_change_only_historical_timing_and_derived_fields(tmp_path):
-    from examples.estimation.forecast_audit import challenge
+    from examples.estimation.forecast_audit import challenge, confidence_cases
 
     arms = {}
-    for target, past, _ in challenge():
-        if target["id"].startswith("same-indexing-"):
+    for target, past, _ in challenge() + confidence_cases():
+        if target["id"].startswith(("same-indexing-", "supply-count-")):
             with patch("estimator.chat_json", return_value=forecast()) as model:
                 estimator.predict(target, past, tmp_path)
             messages, schema = model.call_args.args
@@ -409,3 +409,5 @@ def test_paired_audit_cases_change_only_historical_timing_and_derived_fields(tmp
                     del row[field]
             arms[target["id"]] = (payload, messages[0], schema, model.call_args.kwargs)
     assert arms["same-indexing-slower"] == arms["same-indexing-faster"] == arms["same-indexing-variable"]
+    assert arms["supply-count-tight"] == arms["supply-count-variable"]
+    assert arms["supply-count-tight"] != arms["same-indexing-slower"]

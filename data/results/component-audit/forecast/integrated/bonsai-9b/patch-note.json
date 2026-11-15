@@ -1,0 +1,128 @@
+{
+  "task": "patch-note",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:13:09.761403+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "2d7e0529ebc0067d6e1091a04cbea25c135f65afd0f9dfc9df07bf5a34534a51",
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.6,
+      0.84
+    ],
+    "expected_evidence": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "e292cd95201e10fcf6d177712aab40b10b97098c5b9e3d7600d08fed0dd58054",
+      "max_tokens": 950,
+      "payload_sha256": "fc1e8c156d0718633c59510540d8e886271f4e33aa1220a2bb47a2c2c7e9a79f",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 233,
+        "prompt_tokens": 1063,
+        "total_tokens": 1296,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1063,
+        "prompt_ms": 48594.508,
+        "prompt_per_token_ms": 45.71449482596425,
+        "prompt_per_second": 21.87489993725217,
+        "predicted_n": 233,
+        "predicted_ms": 112817.185,
+        "predicted_per_token_ms": 486.2809698275862,
+        "predicted_per_second": 2.0564242938697683
+      },
+      "content_sha256": "aadb9a62d1f43844db040661f19b728577d5e36b4c539cd60447af56da4e059d",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The new task requires filling a comparison table and explaining one checksum collision, which is functionally identical to the historical task of filling a cursor table and explaining one failure using saved logs."
+          }
+        ],
+        "point_min": 25,
+        "low_min": 22,
+        "high_min": 30,
+        "confidence": "low",
+        "rationale": "The historical task completed in 29 minutes (64% of the 45-minute budget) for a similar scope of analyzing archived transcripts; the new task explicitly removes the 'no code changes' constraint but retains the core analysis of saved logs, suggesting a comparable effort. The assumption is that the complexity of identifying a checksum collision is equivalent to identifying a cursor failure in the previous iteration.",
+        "confidence_reason": "The new task explicitly removes the 'no code changes' constraint, which could widen the range if additional debugging or verification steps are required beyond the historical scope."
+      },
+      "seconds": 494.49
+    }
+  ],
+  "prediction": {
+    "point_min": 25,
+    "low_min": 22,
+    "high_min": 30,
+    "confidence": "low",
+    "confidence_reason": "The new task explicitly removes the 'no code changes' constraint, which could widen the range if additional debugging or verification steps are required beyond the historical scope.",
+    "model_rationale": "The historical task completed in 29 minutes (64% of the 45-minute budget) for a similar scope of analyzing archived transcripts; the new task explicitly removes the 'no code changes' constraint but retains the core analysis of saved logs, suggesting a comparable effort. The assumption is that the complexity of identifying a checksum collision is equivalent to identifying a cursor failure in the previous iteration.",
+    "explanation": "The historical task completed in 29 minutes (64% of the 45-minute budget) for a similar scope of analyzing archived transcripts; the new task explicitly removes the 'no code changes' constraint but retains the core analysis of saved logs, suggesting a comparable effort. The assumption is that the complexity of identifying a checksum collision is equivalent to identifying a cursor failure in the previous iteration.",
+    "evidence": [
+      {
+        "task_id": "suite-report",
+        "title": "Write up three saved replay transcripts",
+        "estimate_min": 45,
+        "actual_min": 29.0,
+        "ratio": 0.6444444444444445,
+        "reason": "The new task requires filling a comparison table and explaining one checksum collision, which is functionally identical to the historical task of filling a cursor table and explaining one failure using saved logs.",
+        "reason_source": "model",
+        "model_rationale": "The new task requires filling a comparison table and explaining one checksum collision, which is functionally identical to the historical task of filling a cursor table and explaining one failure using saved logs.",
+        "source_quote": "Fill the cursor table and explain one failure using saved logs. No code changes."
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "1 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "suite-report",
+        "title": "Write up three saved replay transcripts",
+        "source": "decision model",
+        "score": 0.5725500606319619
+      }
+    ],
+    "used_task_ids": [
+      "suite-report"
+    ],
+    "feedback_source_ids": []
+  },
+  "supplied_candidates": [
+    "suite-report"
+  ],
+  "qwen_candidates": [
+    {
+      "task_id": "trace-tool",
+      "cosine": 0.5970860192185168
+    },
+    {
+      "task_id": "codec-caption",
+      "cosine": 0.5826477329088378
+    },
+    {
+      "task_id": "suite-report",
+      "cosine": 0.5725500606319619
+    }
+  ],
+  "retrieval": "Production Qdrant lookup and Kev screening using exact packaged inference outputs"
+}

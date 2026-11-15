@@ -1,0 +1,162 @@
+{
+  "task": "bake-dishes",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:25:35.441747+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "d625eb5df62ccd31e40c24d53094ff1c82f1f994a12809e05b3e8073eb962ad0",
+  "frozen_candidates": [
+    "pasta-dishes",
+    "chili-dishes",
+    "stew-dishes"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.15,
+      1.28
+    ],
+    "expected_evidence": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "3e1d170dffbfbbf8227564220d5ea2f80abad12b81e016c83af1363adfd2da83",
+      "max_tokens": 950,
+      "payload_sha256": "f9f374ed1ff96e6e799417e1c7a8ca766a43054578e9fdab11a948c938e7ef33",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 323,
+        "prompt_tokens": 1029,
+        "total_tokens": 1352,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1029,
+        "prompt_ms": 45812.766,
+        "prompt_per_token_ms": 44.52163848396502,
+        "prompt_per_second": 22.460988275626054,
+        "predicted_n": 323,
+        "predicted_ms": 148943.953,
+        "predicted_per_token_ms": 462.5588602484472,
+        "predicted_per_second": 2.161887028740267
+      },
+      "content_sha256": "1ad899ee40c58947905faaca4f8bfc46d6e20b38c53e09d6eed633a980cef17e",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Avoid off-task gaming during the 3-minute window where the skillet required a second scrub, as this adds time to the task."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope of washing four plates and drying the iron, adjusted for the extra scrub time noted in S1.1."
+          },
+          {
+            "slot": 2,
+            "reason": "Identical scope of washing four plates, scrubbing the cast-iron pot, and wiping the sink, adjusted for the heavier pot and cooked-on residue."
+          }
+        ],
+        "point_min": 36,
+        "low_min": 30,
+        "high_min": 42,
+        "confidence": "low",
+        "rationale": "The new task includes drying a cast-iron pan and wiping the sink, which matches the scope of slots 2 and 3 but lacks the extra scrubbing complexity of slot 1. The 30-minute estimate is optimistic given the 1.2 ratio in history, while 42 minutes accounts for the potential of another off-task interruption or heavier residue.",
+        "confidence_reason": "The range widens if the cast-iron pan requires more than a standard dry or if a distraction occurs during the drying phase."
+      },
+      "seconds": 827.96
+    }
+  ],
+  "prediction": {
+    "point_min": 36,
+    "low_min": 30,
+    "high_min": 42,
+    "confidence": "low",
+    "confidence_reason": "The range widens if the cast-iron pan requires more than a standard dry or if a distraction occurs during the drying phase.",
+    "model_rationale": "The new task includes drying a cast-iron pan and wiping the sink, which matches the scope of slots 2 and 3 but lacks the extra scrubbing complexity of slot 1. The 30-minute estimate is optimistic given the 1.2 ratio in history, while 42 minutes accounts for the potential of another off-task interruption or heavier residue.",
+    "explanation": "The new task includes drying a cast-iron pan and wiping the sink, which matches the scope of slots 2 and 3 but lacks the extra scrubbing complexity of slot 1. The 30-minute estimate is optimistic given the 1.2 ratio in history, while 42 minutes accounts for the potential of another off-task interruption or heavier residue.",
+    "evidence": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "estimate_min": 25,
+        "actual_min": 31.0,
+        "ratio": 1.24,
+        "reason": "Same scope of washing four plates and drying the iron, adjusted for the extra scrub time noted in S1.1.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of washing four plates and drying the iron, adjusted for the extra scrub time noted in S1.1.",
+        "source_quote": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board."
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "estimate_min": 30,
+        "actual_min": 36.0,
+        "ratio": 1.2,
+        "reason": "Identical scope of washing four plates, scrubbing the cast-iron pot, and wiping the sink, adjusted for the heavier pot and cooked-on residue.",
+        "reason_source": "model",
+        "model_rationale": "Identical scope of washing four plates, scrubbing the cast-iron pot, and wiping the sink, adjusted for the heavier pot and cooked-on residue.",
+        "source_quote": "Wash the dinner dishes for four, scrub the cast-iron pot and wipe the sink."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Avoid off-task gaming during the 3-minute window where the skillet required a second scrub, as this adds time to the task.",
+        "sources": [
+          {
+            "task_id": "pasta-dishes",
+            "title": "Clear up the pasta supper",
+            "origin": "ActivityWatch",
+            "observation": "3.0 min on Candy Crush Saga on the phone labeled off-task."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "source": "decision model",
+        "score": 0.710379170627452
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "source": "decision model",
+        "score": 0.7078707760635019
+      },
+      {
+        "task_id": "stew-dishes",
+        "title": "Reset the kitchen after stew",
+        "source": "decision model",
+        "score": 0.6901440283809372
+      }
+    ],
+    "used_task_ids": [
+      "pasta-dishes",
+      "chili-dishes"
+    ],
+    "feedback_source_ids": []
+  }
+}

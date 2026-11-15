@@ -46,11 +46,16 @@ def offer_workspace(store, task, sample=None):
         _button(store, task, decision, sample)
         return
 
-    @st.fragment(run_every="2s")
+    @st.fragment(run_every="2s", key=f"workspace-offer-{task['id']}")
     def check():
-        if desk.availability(store, task) is not None:
-            st.rerun()
-        st.caption("Checking workspace availability…")
+        nonlocal decision
+        if decision is None:
+            decision = desk.availability(store, task)
+        if decision is None:
+            st.caption("Checking workspace availability…")
+        else:
+            # Render the completed decision here so the rest of the card keeps its pending clicks.
+            _button(store, task, decision, sample)
     check()
 
 

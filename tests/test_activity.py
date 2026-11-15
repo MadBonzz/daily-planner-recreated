@@ -142,3 +142,49 @@ def test_concurrent_devices_are_judged_independently_and_counted_once(monkeypatc
     assert rows[0]["label"] == "uncertain" and "Phone: off-task" in rows[0]["reason"]
     report = activity._summarize({"intervals": rows})
     assert report["totals"] == {"on_task": 0, "off_task": 60, "uncertain": 60}
+
+
+def test_generic_browser_claim_requires_context_and_honors_explicit_feedback(monkeypatch):
+    task = {"title": "Reconcile the pantry stock sheet", "description": "Enter new deliveries.", "category": "Clinic"}
+    other = {"title": "Plan a hiking route", "description": "Check trail access.", "category": "Outdoors"}
+    row = {"period": 0, "seconds": 60, "app": "Firefox", "domain": "orchid.example", "title": "Dashboard",
+           "idle": False, "excluded": False}
+    feedback = [{"task": "Update the pantry stock sheet", "category": "Clinic", "domain": "orchid.example",
+                 "title": "Dashboard", "label": "on_task"}]
+
+    def classify(target, observation, reason, label="on_task", *, examples=(), overrides=None):
+        def answer(messages, schema, **kwargs):
+            assert not overrides, "explicit user corrections should bypass the model"
+            return {"0": {"label": label, "reason": reason}}
+
+        monkeypatch.setattr(activity, "chat_json", answer)
+        entry = dict(observation)
+        activity._classify(target, [entry], [], examples=examples, overrides=overrides)
+        return entry["label"], entry["label_source"]
+
+    assert classify(task, row, "Checking deliveries matches the inventory work.") == ("uncertain", "insufficient evidence")
+    assert classify(task, row, "The user uses this dashboard for inventory.", examples=feedback) == ("on_task", "model")
+    assert classify(other, row, "Watching football highlights.", "off_task", examples=feedback) == (
+        "uncertain", "insufficient evidence")
+    assert classify(other, {**row, "title": "Trailhead road closures"}, "The road closure affects the hiking route.") == (
+        "on_task", "model")
+    assert classify(other, {**row, "domain": "chess.com"}, "Chess is unrelated to checking trail access.", "off_task") == (
+        "off_task", "model")
+    assert classify({**other, "details": "Look up permit inventory at orchid.example."}, row, "Checking permits.") == (
+        "on_task", "model")
+    assert classify(other, row, "", overrides={activity.activity_key(row): "off_task"}) == ("off_task", "user")
+    # A generic laptop page cannot erase a specific concurrent phone signal.
+    assert not activity.ungrounded_activity_label(other, {**row, "phone_app": "Trail Map"}, [], "on_task", "Trail map open.")
+
+
+def test_native_inbox_needs_task_or_message_context():
+    task = {"title": "Debug the kernel", "description": "Verify the CUDA reduction."}
+    inbox = {"app": "Thunderbird.exe", "title": "Inbox", "domain": "", "excluded": False}
+    assert activity.ungrounded_activity_label(task, inbox, [], "off_task", "Emails are unrelated to the kernel.")
+    assert activity.ungrounded_activity_label(task, {**inbox, "app": r"C:\Apps\Thunderbird.exe"}, [], "off_task", "")
+    assert not activity.ungrounded_activity_label({"title": "Check the inbox for the signed permit"}, inbox,
+                                                [], "on_task", "Checking the requested inbox.")
+    assert not activity.ungrounded_activity_label(task, {**inbox, "title": "Weekend baseball tickets"}, [],
+                                                "off_task", "The tickets are unrelated.")
+    assert not activity.ungrounded_activity_label(task, {**inbox, "label_source": "user"}, [], "off_task", "")
+    assert not activity.ungrounded_activity_label(task, {**inbox, "phone_app": "Game"}, [], "off_task", "")

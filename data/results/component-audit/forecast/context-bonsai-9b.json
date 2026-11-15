@@ -1,0 +1,27 @@
+{
+  "model": "ternary-bonsai-2-9b",
+  "number_explicitly_selected": 80,
+  "receipts": [
+    {
+      "bytes_sent": 98994,
+      "http_status": 400,
+      "server_error": {
+        "code": "400",
+        "message": "request (25302 tokens) exceeds the available context size (6144 tokens), try increasing it",
+        "type": "exceed_context_size_error",
+        "n_prompt_tokens": "25302",
+        "n_ctx": "6144"
+      }
+    }
+  ],
+  "retained_selection": true,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "fallback",
+    "minutes_by": "history"
+  },
+  "explanation": "Model estimate unavailable. ternary-bonsai-2-9b rejected the input because it exceeds the context window (25,302 input tokens, 6,144 available). Local calculation used 80 similar past tasks, a median ratio of 1.14× and 100% of that correction.",
+  "model_error": "ternary-bonsai-2-9b rejected the input because it exceeds the context window (25,302 input tokens, 6,144 available).",
+  "retryable": true
+}

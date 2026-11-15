@@ -1,0 +1,136 @@
+{
+  "cases": [
+    {
+      "case": "finished",
+      "expected_supported": true,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": false,
+        "remaining_work": false
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user explicitly states in the single message that all deliverables (setup/recovery sections, restore test, and final handover) are complete. However, the instruction requires grounding progress in what the user actually reports or demonstrates, and since this is the only message provided, we cannot verify if the work was actually performed or if the statement is a hypothetical scenario. Given the strict requirement to avoid assuming completion without verified evidence or a separate progress report, and the lack of any prior context showing the work in progress, we must treat the evidence as insufficient to confirm the task is truly done.",
+        "confidence_reason": "The user's statement claims completion, but without prior context showing the work was in progress or a separate confirmation of the specific steps (writing, testing, sending), we cannot verify the authenticity of the claim against the task scope. The single message serves as both the report and the only evidence, which creates ambiguity regarding whether the work was actually executed or if this is a hypothetical statement.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "copied text",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user only reported that the instruction 'Run the restore test and send the handover' was copied from the assignment, but did not confirm completion of the setup, recovery, or script verification steps required by the task description. No evidence of actual work performed or progress on the deliverable exists.",
+        "confidence_reason": "The user's statement describes the source of an instruction rather than demonstrating completion of any task component. Without explicit confirmation that the setup, recovery, and script verification were executed, the remaining work cannot be estimated.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "old evidence",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user reported writing the setup in turn 1, but the task scope requires writing setup AND recovery sections, verifying the restore script, and sending the final handover. The user's question in turn 2 about a dry run does not confirm they have completed the recovery section or the verification step. Without explicit confirmation of the remaining steps being finished, we cannot assume progress on the unreported portions.",
+        "confidence_reason": "The user asked a question about a dry run rather than confirming completion of the recovery section or script verification. The task scope includes multiple distinct deliverables (setup, recovery, verification, final send), and only one (setup) has been explicitly claimed as done. The lack of evidence for the other three required steps prevents a supported revision.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "new test result",
+      "expected_supported": true,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": false,
+        "remaining_work": false
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user reports a test pass but does not confirm completion of the writing sections or the final send step required by the task scope.",
+        "confidence_reason": "The user's statement only confirms the test output status; it does not provide evidence that the writing sections were drafted or that the final handover was sent.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    }
+  ],
+  "model": "ternary-bonsai-2-9b",
+  "split": "validation",
+  "component": "progress",
+  "supported": {
+    "TP": 0,
+    "FP": 0,
+    "FN": 2,
+    "TN": 2,
+    "precision": null,
+    "recall": 0.0
+  },
+  "unavailable": 0
+}

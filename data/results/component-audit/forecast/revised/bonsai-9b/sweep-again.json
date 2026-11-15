@@ -1,0 +1,154 @@
+{
+  "task": "sweep-again",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:48:55.357743+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "a01c24ed34e94a9f1c4f389f9889a3716204b08c3a401075df8c221b266c98fa",
+  "frozen_candidates": [
+    "throughput-table",
+    "median-runs"
+  ],
+  "budget": 60,
+  "fixed": false,
+  "rubric": {
+    "direction": "near",
+    "expected_band": [
+      0.9,
+      1.11
+    ],
+    "expected_evidence": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "fa32ce4e8dbc0032986c2e0683c5a825dbc1656226cbbb68e81fc82823bdf6bb",
+      "max_tokens": 950,
+      "payload_sha256": "6718ce944ea4d67a614a7d7f56279dcfe7d53890792fb430ce282d85320a8d02",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 326,
+        "prompt_tokens": 1243,
+        "total_tokens": 1569,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1243,
+        "prompt_ms": 70273.678,
+        "prompt_per_token_ms": 56.53554143201931,
+        "prompt_per_second": 17.68798838165266,
+        "predicted_n": 326,
+        "predicted_ms": 281612.913,
+        "predicted_per_token_ms": 866.5012707692308,
+        "predicted_per_second": 1.1540663975163667
+      },
+      "content_sha256": "781b6edac9972c6a66dc8b6bbf0d0c7855e7c72e0bf257d2ba623aae4fe258f7",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope: publishing timing table from reference branch (59 min actual vs 60 min budget). Ratio 0.98 suggests slight efficiency gain over 60 min baseline."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope: repeating archived shape sweep (51 min actual vs 50 min budget). Ratio 1.02 indicates minor overhead despite similar task type."
+          }
+        ],
+        "point_min": 60,
+        "low_min": 58,
+        "high_min": 62,
+        "confidence": "low",
+        "rationale": "The new task explicitly removes implementation work but retains the same sweep scope and verification steps as the historical tasks, so timing should remain within the 58–62 minute range based on the 0.98–1.02 efficiency ratios observed. The main assumption is that the 'no implementation' detail does not introduce unexpected setup or cleanup delays not present in the previous sweeps.",
+        "confidence_reason": "Potential widening factor: unrecorded warm-up or stream synchronization overhead not captured in the 20-iteration warmup of the previous tasks."
+      },
+      "seconds": 515.99
+    }
+  ],
+  "prediction": {
+    "point_min": 60,
+    "low_min": 58,
+    "high_min": 62,
+    "confidence": "low",
+    "confidence_reason": "Potential widening factor: unrecorded warm-up or stream synchronization overhead not captured in the 20-iteration warmup of the previous tasks.",
+    "model_rationale": "The new task explicitly removes implementation work but retains the same sweep scope and verification steps as the historical tasks, so timing should remain within the 58–62 minute range based on the 0.98–1.02 efficiency ratios observed. The main assumption is that the 'no implementation' detail does not introduce unexpected setup or cleanup delays not present in the previous sweeps.",
+    "explanation": "The new task explicitly removes implementation work but retains the same sweep scope and verification steps as the historical tasks, so timing should remain within the 58–62 minute range based on the 0.98–1.02 efficiency ratios observed. The main assumption is that the 'no implementation' detail does not introduce unexpected setup or cleanup delays not present in the previous sweeps.",
+    "evidence": [
+      {
+        "task_id": "throughput-table",
+        "title": "Publish timing table from the reference branch",
+        "estimate_min": 60,
+        "actual_min": 59.0,
+        "ratio": 0.9833333333333333,
+        "reason": "Same scope: publishing timing table from reference branch (59 min actual vs 60 min budget). Ratio 0.98 suggests slight efficiency gain over 60 min baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: publishing timing table from reference branch (59 min actual vs 60 min budget). Ratio 0.98 suggests slight efficiency gain over 60 min baseline.",
+        "source_quote": "Run the existing sweep, copy four medians and list compiler/driver."
+      },
+      {
+        "task_id": "median-runs",
+        "title": "Repeat the archived shape sweep",
+        "estimate_min": 50,
+        "actual_min": 51.0,
+        "ratio": 1.02,
+        "reason": "Same scope: repeating archived shape sweep (51 min actual vs 50 min budget). Ratio 1.02 indicates minor overhead despite similar task type.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: repeating archived shape sweep (51 min actual vs 50 min budget). Ratio 1.02 indicates minor overhead despite similar task type.",
+        "source_quote": "Use the validated binary to collect timing medians and a screenshot."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "throughput-table",
+            "title": "Publish timing table from the reference branch",
+            "origin": "ActivityWatch",
+            "observation": "3.0 min on FotMob on the phone labeled off-task."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "throughput-table",
+        "title": "Publish timing table from the reference branch",
+        "source": "decision model",
+        "score": 0.9278558517939999
+      },
+      {
+        "task_id": "median-runs",
+        "title": "Repeat the archived shape sweep",
+        "source": "decision model",
+        "score": 0.5223119062118731
+      }
+    ],
+    "used_task_ids": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "feedback_source_ids": []
+  }
+}

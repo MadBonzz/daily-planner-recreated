@@ -1,0 +1,162 @@
+{
+  "task": "bake-dishes",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:32:59.832012+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "d625eb5df62ccd31e40c24d53094ff1c82f1f994a12809e05b3e8073eb962ad0",
+  "frozen_candidates": [
+    "pasta-dishes",
+    "chili-dishes",
+    "stew-dishes"
+  ],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.15,
+      1.28
+    ],
+    "expected_evidence": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "b13274d8827a91707e6b040c653ec2a2c8808d73ae2468e0f84c6ad88136113a",
+      "max_tokens": 950,
+      "payload_sha256": "c0049a7c3e590b5972cc5f50e32897408699840040f615962a7959bd3b950d1b",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 305,
+        "prompt_tokens": 992,
+        "total_tokens": 1297,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 992,
+        "prompt_ms": 47749.812,
+        "prompt_per_token_ms": 48.134891129032255,
+        "prompt_per_second": 20.774950904518747,
+        "predicted_n": 305,
+        "predicted_ms": 189170.557,
+        "predicted_per_token_ms": 622.2715690789473,
+        "predicted_per_second": 1.6070154088513893
+      },
+      "content_sha256": "68d717bd9c1159d69aa15cbf77361cf7dbabc5499f1b8867fbe49b19999b4bc5",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope (four plates + skillet + drying) with 1.24x ratio suggests 37.2 minutes baseline."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope (four plates + heavy pot + drying) with 1.20x ratio suggests 36.0 minutes baseline."
+          }
+        ],
+        "point_min": 36,
+        "low_min": 30,
+        "high_min": 42,
+        "confidence": "low",
+        "rationale": "The new task explicitly removes the 'clearing the draining board' step from Slot 1 and 'clearing the sink' from Slot 2, reducing scope by approximately 5 minutes; however, the cast-iron pan requires more scrubbing than the skillet in Slot 1, potentially offsetting gains. The main assumption is that the 'cooked-on chili' difficulty in Slot 2 does not recur here.",
+        "confidence_reason": "Variability in scrubbing intensity for the cast-iron pan could widen the range."
+      },
+      "seconds": 778.85
+    }
+  ],
+  "prediction": {
+    "point_min": 36,
+    "low_min": 30,
+    "high_min": 42,
+    "confidence": "low",
+    "confidence_reason": "Variability in scrubbing intensity for the cast-iron pan could widen the range.",
+    "model_rationale": "The new task explicitly removes the 'clearing the draining board' step from Slot 1 and 'clearing the sink' from Slot 2, reducing scope by approximately 5 minutes; however, the cast-iron pan requires more scrubbing than the skillet in Slot 1, potentially offsetting gains. The main assumption is that the 'cooked-on chili' difficulty in Slot 2 does not recur here.",
+    "explanation": "The new task explicitly removes the 'clearing the draining board' step from Slot 1 and 'clearing the sink' from Slot 2, reducing scope by approximately 5 minutes; however, the cast-iron pan requires more scrubbing than the skillet in Slot 1, potentially offsetting gains. The main assumption is that the 'cooked-on chili' difficulty in Slot 2 does not recur here.",
+    "evidence": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "estimate_min": 25,
+        "actual_min": 31.0,
+        "ratio": 1.24,
+        "reason": "Same scope (four plates + skillet + drying) with 1.24x ratio suggests 37.2 minutes baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (four plates + skillet + drying) with 1.24x ratio suggests 37.2 minutes baseline.",
+        "source_quote": "Hand-wash four plates, the skillet and the serving dish, dry the iron, then clear the draining board."
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "estimate_min": 30,
+        "actual_min": 36.0,
+        "ratio": 1.2,
+        "reason": "Same scope (four plates + heavy pot + drying) with 1.20x ratio suggests 36.0 minutes baseline.",
+        "reason_source": "model",
+        "model_rationale": "Same scope (four plates + heavy pot + drying) with 1.20x ratio suggests 36.0 minutes baseline.",
+        "source_quote": "Wash the dinner dishes for four, scrub the cast-iron pot and wipe the sink."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "pasta-dishes",
+            "title": "Clear up the pasta supper",
+            "origin": "ActivityWatch",
+            "observation": "3.0 min on Candy Crush Saga on the phone labeled off-task."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "pasta-dishes",
+        "title": "Clear up the pasta supper",
+        "source": "decision model",
+        "score": 0.710379170627452
+      },
+      {
+        "task_id": "chili-dishes",
+        "title": "Do the dishes after chili night",
+        "source": "decision model",
+        "score": 0.7078707760635019
+      },
+      {
+        "task_id": "stew-dishes",
+        "title": "Reset the kitchen after stew",
+        "source": "decision model",
+        "score": 0.6901440283809372
+      }
+    ],
+    "used_task_ids": [
+      "pasta-dishes",
+      "chili-dishes"
+    ],
+    "feedback_source_ids": []
+  }
+}

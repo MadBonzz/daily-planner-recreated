@@ -1,0 +1,163 @@
+{
+  "model": "ternary-bonsai-2-9b",
+  "source": "9b-validation-feedback.json",
+  "model_calls": 0,
+  "n": 9,
+  "changed": 0,
+  "corrected_errors": 0,
+  "introduced_errors": 0,
+  "cases": [
+    {
+      "scenario": "no feedback",
+      "app": "Firefox",
+      "domain": "orchid.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific task context clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "no feedback",
+      "app": "Firefox",
+      "domain": "marble.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific task context clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "no feedback",
+      "app": "Firefox",
+      "domain": "birch.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific task context clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "related feedback",
+      "app": "Firefox",
+      "domain": "orchid.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "on_task",
+      "model_label": "on_task",
+      "model_source": "model",
+      "model_reason": "Dashboard on orchid.example matches prior stock reconciliation context.",
+      "final_label": "on_task",
+      "final_source": "model"
+    },
+    {
+      "scenario": "related feedback",
+      "app": "Firefox",
+      "domain": "marble.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "off_task",
+      "model_label": "off_task",
+      "model_source": "model",
+      "model_reason": "Dashboard on marble.example contradicts prior stock reconciliation context.",
+      "final_label": "off_task",
+      "final_source": "model"
+    },
+    {
+      "scenario": "related feedback",
+      "app": "Firefox",
+      "domain": "birch.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Title Dashboard lacks specific clue to distinguish task purpose.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "different task",
+      "app": "Firefox",
+      "domain": "orchid.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific hiking or map clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "different task",
+      "app": "Firefox",
+      "domain": "marble.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific hiking or map clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    },
+    {
+      "scenario": "different task",
+      "app": "Firefox",
+      "domain": "birch.example",
+      "title": "Dashboard",
+      "device": "Laptop",
+      "phone_app": "",
+      "expected": "uncertain",
+      "model_label": "uncertain",
+      "model_source": "model",
+      "model_reason": "Dashboard title lacks specific hiking or map clues.",
+      "final_label": "uncertain",
+      "final_source": "model"
+    }
+  ],
+  "by_class": {
+    "on_task": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 0,
+      "TN": 8,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "off_task": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 0,
+      "TN": 8,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "uncertain": {
+      "TP": 7,
+      "FP": 0,
+      "FN": 0,
+      "TN": 2,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  }
+}

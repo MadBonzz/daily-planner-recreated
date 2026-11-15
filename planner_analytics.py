@@ -13,7 +13,7 @@ import streamlit as st
 
 from activity import device_label, exclusion_terms, visible_saved_event
 from model_client import chat_json, forecast_endpoint, ModelUnavailable
-from planner_chat import answer_plan, planning_context
+from planner_chat import answer_plan, asks_what_fits, planning_context
 
 
 def model_minutes(task):
@@ -321,7 +321,11 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
         if still_current is not None and not still_current():
             return {"answer": "Your analytics records changed. Ask again using the current data."}
         result["query_source"] = "model"
-        if planned["tool"] == "plan_remaining" and plan is not None:
+        explicit_fit = plan is not None and asks_what_fits(question, plan["now"].date())
+        if plan is not None and (planned["tool"] == "plan_remaining" or explicit_fit):
+            if planned["tool"] != "plan_remaining":
+                # The SQL projection contains completed history only. It cannot identify unfinished work.
+                result.update(query_source="open-plan scope check", model_proposed_tool=planned["tool"])
             return {**result, **answer_plan(question, plan, history, accuracy(tasks, "user_minutes"),
                                             chat_json, still_current)}
         scope = planned["scope"]
@@ -494,7 +498,12 @@ def _show_turn(turn):
             if turn.get("tool") == "distraction_sources" and turn.get("answer_source") == "model":
                 answer += " (selected observed findings)"
             if turn.get("tool") == "plan_remaining":
-                st.caption(f"Plan request · {model}  |  Priorities · {answer}  |  Time calculations · local")
+                route = model if not turn.get("model_proposed_tool") else f"open-plan scope check (model suggested {turn['model_proposed_tool']})"
+                if turn.get("ranking_source") == "model coverage repair":
+                    answer += " (second request for missing or invalid ranks)"
+                elif turn.get("ranking_source") == "local plan order":
+                    answer = "local plan order"
+                st.caption(f"Plan request · {route}  |  Priorities · {answer}  |  Time calculations · local")
             else:
                 st.caption(f"Query · {query}  |  Answer · {answer}")
             if scope := turn.get("scope"):

@@ -1,0 +1,177 @@
+{
+  "task": "patch-tool",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:26:23.035560+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "2fa9bff0a872307e8adb2401d48983a36b594537f6e1cf5ddd42517100cb00b8",
+  "budget": 85,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.34,
+      1.65
+    ],
+    "expected_evidence": [
+      "ring-port",
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "expected_sources": [
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "24c0f3fc2df97b0ef365aaabe5e55d89014716d85337bc69fb5c6ddfda861dc3",
+      "max_tokens": 950,
+      "payload_sha256": "d73755546b511137359d00a50c1470a485a98653054610491a2b002876f017dd",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 270,
+        "prompt_tokens": 1092,
+        "total_tokens": 1362,
+        "prompt_tokens_details": {
+          "cached_tokens": 339
+        }
+      },
+      "timings": {
+        "cache_n": 339,
+        "prompt_n": 753,
+        "prompt_ms": 34785.554,
+        "prompt_per_token_ms": 46.195954847277555,
+        "prompt_per_second": 21.646916993186313,
+        "predicted_n": 270,
+        "predicted_ms": 142702.954,
+        "predicted_per_token_ms": 530.4942527881041,
+        "predicted_per_second": 1.885034559270581
+      },
+      "content_sha256": "468883a40f91c5556ad2f603cca46019431064af6e7768bdaa6f5e55942aae33",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope streaming tool implementation with 1.48x ratio applied to 85 min budget."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope API exposure with 1.55x ratio applied to 85 min budget."
+          }
+        ],
+        "point_min": 105,
+        "low_min": 95,
+        "high_min": 120,
+        "confidence": "low",
+        "rationale": "The new task explicitly removes the 'missing side' check complexity present in S1.1, but the 'EOF fixture' trimming issue from S2.1 remains a high-risk variable that could widen the range.",
+        "confidence_reason": "The 'missing side' check removal reduces complexity, but the 'EOF fixture' trimming issue from S2.1 remains a high-risk variable that could widen the range."
+      },
+      "seconds": 793.23
+    }
+  ],
+  "prediction": {
+    "point_min": 105,
+    "low_min": 95,
+    "high_min": 120,
+    "confidence": "low",
+    "confidence_reason": "The 'missing side' check removal reduces complexity, but the 'EOF fixture' trimming issue from S2.1 remains a high-risk variable that could widen the range.",
+    "model_rationale": "The new task explicitly removes the 'missing side' check complexity present in S1.1, but the 'EOF fixture' trimming issue from S2.1 remains a high-risk variable that could widen the range.",
+    "explanation": "The new task explicitly removes the 'missing side' check complexity present in S1.1, but the 'EOF fixture' trimming issue from S2.1 remains a high-risk variable that could widen the range.",
+    "evidence": [
+      {
+        "task_id": "trace-tool",
+        "title": "Implement the bounded mismatch reporter",
+        "estimate_min": 80,
+        "actual_min": 118.0,
+        "ratio": 1.475,
+        "reason": "Same scope streaming tool implementation with 1.48x ratio applied to 85 min budget.",
+        "reason_source": "model",
+        "model_rationale": "Same scope streaming tool implementation with 1.48x ratio applied to 85 min budget.",
+        "source_quote": "Add a streaming comparison tool and wire its error envelope into the CLI; test truncated tails."
+      },
+      {
+        "task_id": "boundary-debug",
+        "title": "Expose a ring cursor mismatch in the tool API",
+        "estimate_min": 85,
+        "actual_min": 132.0,
+        "ratio": 1.5529411764705883,
+        "reason": "Same scope API exposure with 1.55x ratio applied to 85 min budget.",
+        "reason_source": "model",
+        "model_rationale": "Same scope API exposure with 1.55x ratio applied to 85 min budget.",
+        "source_quote": "Implement a first-bad-offset tool that handles an empty side and add three failing regression seeds."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "trace-tool",
+            "title": "Implement the bounded mismatch reporter",
+            "origin": "Completion note",
+            "observation": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "trace-tool",
+        "title": "Implement the bounded mismatch reporter",
+        "source": "decision model",
+        "score": 0.628513362257733
+      },
+      {
+        "task_id": "boundary-debug",
+        "title": "Expose a ring cursor mismatch in the tool API",
+        "source": "decision model",
+        "score": 0.5173604165364645
+      }
+    ],
+    "used_task_ids": [
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "feedback_source_ids": []
+  },
+  "supplied_candidates": [
+    "trace-tool",
+    "boundary-debug"
+  ],
+  "qwen_candidates": [
+    {
+      "task_id": "trace-tool",
+      "cosine": 0.628513362257733
+    },
+    {
+      "task_id": "suite-report",
+      "cosine": 0.5750046881464865
+    },
+    {
+      "task_id": "boundary-debug",
+      "cosine": 0.5173604165364645
+    },
+    {
+      "task_id": "ring-port",
+      "cosine": 0.5066780706377588
+    }
+  ],
+  "retrieval": "Production Qdrant lookup and Kev screening using exact packaged inference outputs"
+}

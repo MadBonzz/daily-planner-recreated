@@ -229,6 +229,7 @@ def main():
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--model", choices=MODELS, required=True)
     parser.add_argument("--run", required=True)
+    parser.add_argument("--production", action="store_true", help="Use the current app prompt in a fresh production run.")
     parser.add_argument("--confidence-trial", action="store_true", help="Run the frozen confidence instruction.")
     parser.add_argument("--warning-trial", action="store_true", help="Run the frozen alternative warning instruction.")
     parser.add_argument("--solo", action="store_true",
@@ -244,23 +245,33 @@ def main():
     with build_opener(ProxyHandler({})).open(args.endpoint.removesuffix("/chat/completions") + "/models") as response:
         if args.model not in {record["id"] for record in json.load(response)["data"]}:
             parser.error("Endpoint does not serve requested model")
-    if args.warning_trial and args.run not in {"warning-trial", "confidence-control"}:
-        parser.error("Record the warning variant in warning-trial or confidence-control.")
-    if args.confidence_trial and (args.run != "confidence-trial" or args.warning_trial):
-        parser.error("Record the confidence variant in its own confidence-trial run.")
+    if not fixtures.valid_id(args.run):
+        parser.error("Use a single run name containing letters, digits, hyphens or underscores.")
+    def named_run(prefix):
+        return args.run == prefix or args.run.startswith(prefix + "-")
+    if args.production != named_run("production") or (args.production and (args.warning_trial or args.confidence_trial)):
+        parser.error("Pair --production with a separate production run name, optionally suffixed.")
+    if args.warning_trial != (named_run("warning-trial") or named_run("confidence-control")):
+        parser.error("Pair --warning-trial with a warning-trial or confidence-control run name, optionally suffixed.")
+    if args.confidence_trial != named_run("confidence-trial"):
+        parser.error("Pair --confidence-trial with a confidence-trial run name, optionally suffixed.")
     if args.solo and (args.run == "revised" or args.cases != ["patch-tool"] or args.integrated):
         parser.error("Use a separate run with --solo patch-tool (the median archived prompt size).")
     if args.integrated and (args.run == "revised" or any(name not in {"patch-note", "patch-tool"} for name in args.cases)):
         parser.error("Use a dedicated run and the two declared integrated cases: patch-note and patch-tool.")
+    if args.integrated:
+        os.environ.update(PLANNER_RELEVANCE_THRESHOLD="0.50", PLANNER_EMBEDDING_MODEL=estimator.retrieval.EMBEDDING_MODEL,
+                          PLANNER_DECISION_MODEL=estimator.retrieval.DECISION_MODEL)
     groups = {"challenge": challenge(), "published": published(args.integrated), "confidence": confidence_cases()}
     pool = {case[0]["id"]: case for group in groups.values() for case in group}
+    versions = json.loads((OUT / "prompt-versions.json").read_text())
+    version = "confidence-trial" if args.confidence_trial else "warning-trial" if args.warning_trial else "revised"
+    instructions = estimator._FORECAST_INSTRUCTIONS if args.production else versions[version]
     for name in args.cases:
         if name not in groups and name not in pool:
             parser.error(f"Unknown case {name}")
         for case in groups[name] if name in groups else [pool[name]]:
-            versions = json.loads((OUT / "prompt-versions.json").read_text())
-            version = "confidence-trial" if args.confidence_trial else "warning-trial" if args.warning_trial else "revised"
-            with patch.object(estimator, "_FORECAST_INSTRUCTIONS", versions[version]):
+            with patch.object(estimator, "_FORECAST_INSTRUCTIONS", instructions):
                 evaluate(case, OUT / args.run / MODELS[args.model], args.model, integrated=args.integrated, solo=args.solo)
 
 

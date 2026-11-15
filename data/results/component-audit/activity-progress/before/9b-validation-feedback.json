@@ -1,0 +1,232 @@
+{
+  "scenarios": [
+    {
+      "scenario": "no feedback",
+      "task": {
+        "title": "Reconcile another stock sheet",
+        "category": "Clinic",
+        "description": "Update the clinic inventory from the latest deliveries."
+      },
+      "feedback": [],
+      "warnings": [],
+      "intervals": [
+        {
+          "app": "Firefox",
+          "domain": "orchid.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab is unrelated to reconciling stock sheets.",
+          "expected": "uncertain"
+        },
+        {
+          "app": "Firefox",
+          "domain": "marble.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab is unrelated to reconciling stock sheets.",
+          "expected": "uncertain"
+        },
+        {
+          "app": "Firefox",
+          "domain": "birch.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab is unrelated to reconciling stock sheets.",
+          "expected": "uncertain"
+        }
+      ]
+    },
+    {
+      "scenario": "related feedback",
+      "task": {
+        "title": "Reconcile another stock sheet",
+        "category": "Clinic",
+        "description": "Update the clinic inventory from the latest deliveries."
+      },
+      "feedback": [
+        {
+          "source_id": "prior-stock",
+          "task": "Reconcile the clinic stock sheet",
+          "category": "Clinic",
+          "app": "Firefox",
+          "domain": "orchid.example",
+          "title": "Dashboard",
+          "idle": false,
+          "phone_app": "",
+          "label": "on_task"
+        },
+        {
+          "source_id": "prior-stock",
+          "task": "Reconcile the clinic stock sheet",
+          "category": "Clinic",
+          "app": "Firefox",
+          "domain": "marble.example",
+          "title": "Dashboard",
+          "idle": false,
+          "phone_app": "",
+          "label": "off_task"
+        }
+      ],
+      "warnings": [],
+      "intervals": [
+        {
+          "app": "Firefox",
+          "domain": "orchid.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "on_task",
+          "label_source": "model",
+          "reason": "Dashboard on orchid.example matches prior-stock reconciliation task.",
+          "expected": "on_task"
+        },
+        {
+          "app": "Firefox",
+          "domain": "marble.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard on marble.example differs from prior-stock reconciliation context.",
+          "expected": "off_task"
+        },
+        {
+          "app": "Firefox",
+          "domain": "birch.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "uncertain",
+          "label_source": "model",
+          "reason": "Birch domain lacks specific task relevance clues.",
+          "expected": "uncertain"
+        }
+      ]
+    },
+    {
+      "scenario": "different task",
+      "task": {
+        "title": "Plan a solo hiking route",
+        "description": "Map the trail and elevation."
+      },
+      "feedback": [
+        {
+          "source_id": "prior-stock",
+          "task": "Reconcile the clinic stock sheet",
+          "category": "Clinic",
+          "app": "Firefox",
+          "domain": "orchid.example",
+          "title": "Dashboard",
+          "idle": false,
+          "phone_app": "",
+          "label": "on_task"
+        },
+        {
+          "source_id": "prior-stock",
+          "task": "Reconcile the clinic stock sheet",
+          "category": "Clinic",
+          "app": "Firefox",
+          "domain": "marble.example",
+          "title": "Dashboard",
+          "idle": false,
+          "phone_app": "",
+          "label": "off_task"
+        }
+      ],
+      "warnings": [],
+      "intervals": [
+        {
+          "app": "Firefox",
+          "domain": "orchid.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab unrelated to hiking route planning.",
+          "expected": "uncertain"
+        },
+        {
+          "app": "Firefox",
+          "domain": "marble.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab unrelated to hiking route planning.",
+          "expected": "uncertain"
+        },
+        {
+          "app": "Firefox",
+          "domain": "birch.example",
+          "title": "Dashboard",
+          "idle": false,
+          "excluded": false,
+          "period": 0,
+          "seconds": 60,
+          "label": "off_task",
+          "label_source": "model",
+          "reason": "Dashboard tab unrelated to hiking route planning.",
+          "expected": "uncertain"
+        }
+      ]
+    }
+  ],
+  "by_class": {
+    "on_task": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 0,
+      "TN": 8,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "off_task": {
+      "TP": 1,
+      "FP": 6,
+      "FN": 0,
+      "TN": 2,
+      "precision": 0.14285714285714285,
+      "recall": 1.0
+    },
+    "uncertain": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 6,
+      "TN": 2,
+      "precision": 1.0,
+      "recall": 0.14285714285714285
+    }
+  },
+  "model_labeled": 9,
+  "model": "ternary-bonsai-2-9b",
+  "split": "validation",
+  "component": "feedback"
+}

@@ -9,30 +9,48 @@ Direct outputs alone receive model-quality credit. A scheduled event is counted 
 | bonsai-4b original | 20 | 16 | 3 | 3/15 | 3/15 | 93% / 68% |
 | bonsai-4b revised | 20 | 19 | 0 | 12/18 | 10/18 | 94% / 54% |
 | bonsai-9b original | 20 | 19 | 0 | 8/18 | 7/18 | 96% / 93% |
+| bonsai-9b revised | 20 | 19 | 0 | 15/18 | 12/18 | 96% / 96% |
 
 | Model and version | Increase TP / FP / FN | Decrease TP / FP / FN | Near budget TP / FP / FN | Citation TP / FP / FN | Reachable warning source hit / labeled |
 | --- | --- | --- | --- | --- | --- |
 | bonsai-4b original | 0 / 0 / 7 | 0 / 2 / 5 | 3 / 10 / 0 | 13 / 1 / 6 | 0/1 |
 | bonsai-4b revised | 9 / 1 / 1 | 1 / 1 / 4 | 2 / 4 / 1 | 15 / 1 / 13 | 3/3 |
 | bonsai-9b original | 2 / 0 / 8 | 5 / 9 / 0 | 1 / 1 / 2 | 26 / 1 / 2 | 0/3 |
+| bonsai-9b revised | 9 / 0 / 1 | 3 / 0 / 2 | 3 / 3 / 0 | 27 / 1 / 1 | 3/3 |
 
 The following rows restrict each within-model comparison to cases with a direct forecast in both versions. A case with no direction label remains eligible for other checks.
 
 | Model | Common direct cases | Old → revised correct direction | Old → revised in behavioral band |
 | --- | ---: | --- | --- |
 | bonsai-4b | 16 | 3/15 → 9/15 | 3/15 → 7/15 |
+| bonsai-9b | 19 | 8/18 → 15/18 | 7/18 → 12/18 |
 
 ## Fresh cases
 
 | Model | Direct | Correct direction | Evidence TP / FP / FN | Warning TP / FP / FN | Cold low confidence | Explicitly acknowledged missing timing |
 | --- | ---: | ---: | --- | --- | --- | --- |
 | bonsai-4b | 8 | 6/6 | 13 / 0 / 2 | 1 / 2 / 0 | 1/1 | 1/1 |
+| bonsai-9b | 8 | 6/6 | 15 / 0 / 0 | 1 / 3 / 0 | 1/1 | 1/1 |
 
 Only the historical durations and derived arithmetic change across these requests. All three new tasks have a 40-minute budget. The first and third histories also share a mean and median of 60.
 
 | Model | Slower history point | Faster history point | Both directions correct | Tight interval width | Variable interval width | Tight / variable confidence |
 | --- | ---: | ---: | --- | ---: | ---: | --- |
 | bonsai-4b | 58 | 22 | yes | 22 | 30 | low / high |
+| bonsai-9b | 62 | 26 | yes | 5 | 30 | low / low |
+
+## Four-case warning replay
+
+The first three tasks have no pairing evidence. The fourth, a camera run, has two documented pairing failures. Copied advice counts the exact demonstration on an unrelated source. The camera check requires a source with a documented failure and advice that mentions the obstacle. See the [manual review](warning-review.md) for unsupported procedures, time attribution and other advice that passes a terminology check.
+
+| Model and instruction | Tasks | Tasks with warnings | Tasks with unsupported example copying | Camera pairing warning |
+| --- | ---: | ---: | ---: | --- |
+| bonsai-4b first revision | 4 | 4 | 3 | yes |
+| bonsai-4b warnings only | 4 | 4 | 0 | yes |
+| bonsai-4b combined | 4 | 4 | 0 | yes |
+| bonsai-9b first revision | 4 | 4 | 3 | yes |
+| bonsai-9b warnings only | 4 | 4 | 0 | yes |
+| bonsai-9b combined | 4 | 4 | 0 | yes |
 
 ## One-sentence confidence trial
 
@@ -44,6 +62,10 @@ The two arms differ only by the confidence instruction. Each pair preserves the 
 | bonsai-4b confidence-control | supply count | 11 → 44 | wider | medium → low | lower |
 | bonsai-4b confidence-trial | indexing | 15 → 35 | wider | high → medium | lower |
 | bonsai-4b confidence-trial | supply count | 11 → 44 | wider | high → medium | lower |
+| bonsai-9b confidence-control | indexing | 5 → 30 | wider | low → low | tie |
+| bonsai-9b confidence-control | supply count | 3 → 30 | wider | low → low | tie |
+| bonsai-9b confidence-trial | indexing | 5 → 55 | wider | low → low | tie |
+| bonsai-9b confidence-trial | supply count | 4 → 24 | wider | high → low | lower |
 
 ## Integrated retrieval and forecasting
 
@@ -53,6 +75,8 @@ Both forecast versions use the same revised forecast prompt. The integrated arm 
 | --- | --- | --- | ---: | ---: | --- |
 | bonsai-4b patch-note | none → none | suite-report → suite-report | 40 | 45 → 29 | down |
 | bonsai-4b patch-tool | trace-tool → trace-tool | boundary-debug, trace-tool → trace-tool | 85 | 90 → 90 | up |
+| bonsai-9b patch-note | none → none | suite-report → suite-report | 40 | 40 → 25 | down |
+| bonsai-9b patch-tool | trace-tool → trace-tool | boundary-debug, trace-tool → boundary-debug, trace-tool | 85 | 105 → 105 | up |
 
 ## Runtime
 
@@ -65,9 +89,13 @@ Shared CPU wall time includes queueing. The solo check uses the median-sized arc
 | bonsai-4b revised fresh | 8 | 0 | 0 | 141.08 | 7 |
 | bonsai-4b solo patch-tool | 1 | 0 | 0 | 33.06 | 0 |
 | bonsai-9b original published | 19 | 0 | 0 | 272.38 | 19 |
+| bonsai-9b revised published | 20 | 1 | 0 | 449.62 | 19 |
+| bonsai-9b revised fresh | 8 | 0 | 0 | 410.3 | 8 |
+| bonsai-9b solo patch-tool | 1 | 0 | 0 | 56.08 | 0 |
 
 The following latency comparison checks primary HTTP payload hashes before comparing timings. The server is warm. Context reuse and generated length can differ.
 
 | Model | Shared → solo wall seconds | Shared → solo generated tokens by attempt | Shared → solo cached input tokens by attempt |
 | --- | ---: | --- | --- |
 | bonsai-4b | 211.3 → 33.06 | [246] → [242] | [3] → [65] |
+| bonsai-9b | 507.54 → 56.08 | [264] → [279] | [339] → [339] |

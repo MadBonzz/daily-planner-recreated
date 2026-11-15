@@ -1,0 +1,113 @@
+{
+  "task": "editorial-review",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:16:45.285366+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ee6635d19947f89e57d8dbcacdeb2a50d82283c24215d05a60a8da0f4210e1b5",
+  "frozen_candidates": [
+    "retype-merge"
+  ],
+  "budget": 25,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.6,
+      0.87
+    ],
+    "expected_evidence": [
+      "retype-merge",
+      "retype-stack"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "0393a5b9c2944ca3d37612dcb265c77f82318b29703987da56680709c5425295",
+      "max_tokens": 950,
+      "payload_sha256": "e0d87b6f8443ab068dad2b6a3036ffde093f134e420111f8a79fc817b0faca23",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 178,
+        "prompt_tokens": 544,
+        "total_tokens": 722,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 544,
+        "prompt_ms": 29256.02,
+        "prompt_per_token_ms": 53.779448529411766,
+        "prompt_per_second": 18.594463635176623,
+        "predicted_n": 178,
+        "predicted_ms": 165343.494,
+        "predicted_per_token_ms": 934.1440338983051,
+        "predicted_per_second": 1.0704987279390623
+      },
+      "content_sha256": "352f7abf53e96c3239027d9bb1bce68dfe8b986f2df2489b1202a711f2880f63",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Reimplementing the saved interval merge matches the scope of retyping intervals from notes, sharing the same equality boundary check and endpoint verification steps."
+          }
+        ],
+        "point_min": 17,
+        "low_min": 14,
+        "high_min": 20,
+        "confidence": "low",
+        "rationale": "The new task explicitly reuses the saved solution rather than starting from scratch, but the 'redo' nature implies potential debugging overhead not present in the historical 'retype' task.",
+        "confidence_reason": "The new task involves testing endpoints touching, which adds complexity compared to the historical task's focus solely on sending the link."
+      },
+      "seconds": 447.14
+    }
+  ],
+  "prediction": {
+    "point_min": 17,
+    "low_min": 14,
+    "high_min": 20,
+    "confidence": "low",
+    "confidence_reason": "The new task involves testing endpoints touching, which adds complexity compared to the historical task's focus solely on sending the link.",
+    "model_rationale": "The new task explicitly reuses the saved solution rather than starting from scratch, but the 'redo' nature implies potential debugging overhead not present in the historical 'retype' task.",
+    "explanation": "The new task explicitly reuses the saved solution rather than starting from scratch, but the 'redo' nature implies potential debugging overhead not present in the historical 'retype' task.",
+    "evidence": [
+      {
+        "task_id": "retype-merge",
+        "title": "Retype merge intervals from my notes",
+        "estimate_min": 25,
+        "actual_min": 17.0,
+        "ratio": 0.68,
+        "reason": "Reimplementing the saved interval merge matches the scope of retyping intervals from notes, sharing the same equality boundary check and endpoint verification steps.",
+        "reason_source": "model",
+        "model_rationale": "Reimplementing the saved interval merge matches the scope of retyping intervals from notes, sharing the same equality boundary check and endpoint verification steps.",
+        "source_quote": "Use last week’s accepted answer; check the equality boundary and send the link."
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "1 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "retype-merge",
+        "title": "Retype merge intervals from my notes",
+        "source": "decision model",
+        "score": 0.6512650940814004
+      }
+    ],
+    "used_task_ids": [
+      "retype-merge"
+    ],
+    "feedback_source_ids": []
+  }
+}

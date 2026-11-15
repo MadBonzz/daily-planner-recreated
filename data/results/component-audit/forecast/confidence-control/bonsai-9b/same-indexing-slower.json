@@ -1,0 +1,157 @@
+{
+  "task": "same-indexing-slower",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:14:26.536805+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "fe8d9f751d030662e6d55476d5819119297e25dcd72c41b2b318d4beda045c0e",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2",
+    "prior-3"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "36db13f02b8e5306dac548afe3dc6fb517a486cf80afed0ac7023076a8eb3750",
+      "max_tokens": 950,
+      "payload_sha256": "027c222919d906f9138e6e0d0a3cc8a95af0c1a6eb272514b83899fa834ffa7e",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 278,
+        "prompt_tokens": 807,
+        "total_tokens": 1085,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 807,
+        "prompt_ms": 38706.4,
+        "prompt_per_token_ms": 47.963320941759605,
+        "prompt_per_second": 20.84926523779013,
+        "predicted_n": 278,
+        "predicted_ms": 244992.226,
+        "predicted_per_token_ms": 884.4484693140794,
+        "predicted_per_second": 1.1306481210550738
+      },
+      "content_sha256": "d060c81d488a7a9fad0ca1ff0856f81b7ad67eb44e6d535c2911a604b9aaf862",
+      "response": {
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script."
+          },
+          {
+            "slot": 3,
+            "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script."
+          }
+        ],
+        "point_min": 62,
+        "low_min": 60,
+        "high_min": 65,
+        "confidence": "low",
+        "rationale": "The time-driving step is the cumulative execution of loading the manifest, indexing, and checksumming for 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three consecutive runs. The strongest relevant comparison is the average actual time of 60 minutes across the three identical slots, suggesting a baseline overrun rather than a one-off anomaly.",
+        "confidence_reason": "Variability in system load or minor script adjustments could widen the range."
+      },
+      "seconds": 571.57
+    }
+  ],
+  "prediction": {
+    "point_min": 62,
+    "low_min": 60,
+    "high_min": 65,
+    "confidence": "low",
+    "confidence_reason": "Variability in system load or minor script adjustments could widen the range.",
+    "model_rationale": "The time-driving step is the cumulative execution of loading the manifest, indexing, and checksumming for 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three consecutive runs. The strongest relevant comparison is the average actual time of 60 minutes across the three identical slots, suggesting a baseline overrun rather than a one-off anomaly.",
+    "explanation": "The time-driving step is the cumulative execution of loading the manifest, indexing, and checksumming for 20 images, which consistently exceeded the 40-minute budget by 1.45x to 1.55x over three consecutive runs. The strongest relevant comparison is the average actual time of 60 minutes across the three identical slots, suggesting a baseline overrun rather than a one-off anomaly.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 58.0,
+        "ratio": 1.45,
+        "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "source_quote": "Run the Monday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 60.0,
+        "ratio": 1.5,
+        "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "source_quote": "Run the Tuesday indexing and checksum check on 20 images"
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "estimate_min": 40,
+        "actual_min": 62.0,
+        "ratio": 1.55,
+        "reason": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "reason_source": "model",
+        "model_rationale": "Same scope of indexing 20 images with checksum verification on the identical workstation and script.",
+        "source_quote": "Run the Wednesday indexing and checksum check on 20 images"
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Run the Monday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Run the Tuesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-3",
+        "title": "Run the Wednesday indexing and checksum check on 20 images",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2",
+      "prior-3"
+    ],
+    "feedback_source_ids": []
+  }
+}

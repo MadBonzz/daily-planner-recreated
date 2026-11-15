@@ -1,0 +1,84 @@
+{
+  "task": "bridge-trace",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:51:03.852260+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "c52dcee0431f8e944646d96782acdb193ab8a1e71c47f1262c2dbe182b7d097e",
+  "frozen_candidates": [],
+  "budget": 30,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.7,
+      0.93
+    ],
+    "expected_evidence": [
+      "clock-two",
+      "ack-traces"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "9e68152b114877b5ee756d723df30751c2c8329fdb7111366f7277d78f4f31c6",
+      "max_tokens": 950,
+      "payload_sha256": "defb32a45c0ec7c2a64d8d4e15619857497a185e3393aa45afaa22129ae2f077",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 147,
+        "prompt_tokens": 853,
+        "total_tokens": 1000,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 853,
+        "prompt_ms": 37710.641,
+        "prompt_per_token_ms": 44.209426729191094,
+        "prompt_per_second": 22.619610204981665,
+        "predicted_n": 147,
+        "predicted_ms": 36496.994,
+        "predicted_per_token_ms": 249.9794109589041,
+        "predicted_per_second": 4.00032945178992
+      },
+      "content_sha256": "4a0ef502779e8dfdd3b8bb09fdf053274134fde12f05686001ed8dbfa1a31b12",
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "low",
+        "rationale": "The task requires labeling six exchanges and recording durable states based on the provided document excerpt, which involves tracing packet sequences and generation numbers. Since no historical timing data exists, the estimate relies on the user's initial 30-minute estimate as the baseline, assuming the scope matches the provided details without additional hidden complexity.",
+        "confidence_reason": "The range widens if the document excerpt is incomplete or if the 'durable state' recording requires manual reconstruction of state tables beyond simple labeling."
+      },
+      "seconds": 452.14
+    }
+  ],
+  "prediction": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 35,
+    "confidence": "low",
+    "confidence_reason": "The range widens if the document excerpt is incomplete or if the 'durable state' recording requires manual reconstruction of state tables beyond simple labeling.",
+    "model_rationale": "The task requires labeling six exchanges and recording durable states based on the provided document excerpt, which involves tracing packet sequences and generation numbers. Since no historical timing data exists, the estimate relies on the user's initial 30-minute estimate as the baseline, assuming the scope matches the provided details without additional hidden complexity.",
+    "explanation": "The task requires labeling six exchanges and recording durable states based on the provided document excerpt, which involves tracing packet sequences and generation numbers. Since no historical timing data exists, the estimate relies on the user's initial 30-minute estimate as the baseline, assuming the scope matches the provided details without additional hidden complexity.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

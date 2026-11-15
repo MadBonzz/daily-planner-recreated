@@ -1,0 +1,178 @@
+{
+  "model": "ternary-bonsai-2-9b",
+  "instruction_sha256": "756d8805e6fdd2763a54f9addfbec5943b4e7d1ef86f70f02a3e5c127d9da979",
+  "cases": [
+    {
+      "case": "finished",
+      "expected_supported": true,
+      "actual_supported": true,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": true,
+        "remaining_work": true
+      },
+      "status": "adjusted",
+      "point_min": 20,
+      "low_min": 20,
+      "high_min": 20,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": 0,
+        "evidence": [
+          {
+            "kind": "task_finished",
+            "quote": "Both sections are written, the restore test passed and I sent the final handover. Everything is finished.",
+            "document": ""
+          }
+        ],
+        "status": "adjusted",
+        "explanation": "The user explicitly states that both sections are written, the restore test passed, and the final handover was sent. This constitutes a complete fulfillment of the task scope described in the baseline.",
+        "confidence": "high",
+        "confidence_reason": "Explicit confirmation of task completion in the fresh user turn.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "direct",
+          "minutes_by": "model"
+        }
+      }
+    },
+    {
+      "case": "new test result",
+      "expected_supported": true,
+      "actual_supported": true,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true,
+        "cites_fresh_user_turn": true,
+        "remaining_work": true
+      },
+      "status": "adjusted",
+      "point_min": 60,
+      "low_min": 50,
+      "high_min": 70,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": 40,
+        "evidence": [
+          {
+            "kind": "remaining",
+            "quote": "My test output after the repair: restore_smoke PASS. I still need to write both sections and send them.",
+            "document": ""
+          }
+        ],
+        "status": "adjusted",
+        "explanation": "The user confirmed the restore script verification is complete ('restore_smoke PASS') but explicitly stated that both writing sections and sending the final handover remain. The baseline forecast of 60 minutes includes the initial setup/recovery work; since 20 minutes have elapsed and the script step is done, the remaining scope is roughly 40 minutes. Uncertainty exists because writing speed and final review time are not yet observed.",
+        "confidence": "medium",
+        "confidence_reason": "The user provided a concrete progress report on a sub-task (verification) while acknowledging outstanding work (writing and sending). This justifies a partial revision of the forecast rather than insufficient evidence.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "direct",
+          "minutes_by": "model"
+        }
+      }
+    },
+    {
+      "case": "copied text",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user explicitly states the content is a copied instruction from an assignment, not a fresh progress report. No concrete work authored in the chat or verified completion of any step is provided. The scope of 'Write a lab handover' (setup, recovery, verify script, send) remains unconfirmed.",
+        "confidence_reason": "The input is identified as hypothetical or copied instruction rather than fresh progress evidence.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "case": "old evidence",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "unavailable",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "unavailable",
+        "explanation": "The workspace estimate could not be updated. The model could not provide a verifiable progress estimate. A supported revision needs a verified user statement or work sample from a fresh turn.",
+        "confidence": "low",
+        "confidence_reason": "There is no verified estimate of the remaining work.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "fallback"
+        }
+      }
+    },
+    {
+      "case": "hypothetical",
+      "expected_supported": false,
+      "actual_supported": false,
+      "checks": {
+        "ordered_range": true,
+        "unsupported_keeps_total": true
+      },
+      "status": "insufficient_evidence",
+      "point_min": 60,
+      "low_min": 45,
+      "high_min": 80,
+      "update": {
+        "paused_at": 2000,
+        "elapsed_minutes": 20.0,
+        "previous_total_min": 60,
+        "remaining_min": null,
+        "evidence": [],
+        "status": "insufficient_evidence",
+        "confidence": "low",
+        "explanation": "The user's message is hypothetical ('if I had finished...'), which does not establish fresh progress. No concrete work was authored or verified in this turn. The scope remains uncompleted.",
+        "confidence_reason": "Hypothetical statement does not confirm completion of any step.",
+        "provenance": {
+          "provider": "Local endpoint",
+          "model": "ternary-bonsai-2-9b",
+          "decision": "insufficient_evidence"
+        }
+      }
+    }
+  ],
+  "supported": {
+    "TP": 2,
+    "FP": 0,
+    "FN": 0,
+    "TN": 3,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  "unavailable": 1
+}

@@ -1,0 +1,154 @@
+{
+  "task": "replay-ramp",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:45:06.434229+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "0b4551e2b1dd34c62b4e8a45e9e9835efbc6f381f0a99c4900ed6df0c70542bd",
+  "frozen_candidates": [
+    "wheel-ticks",
+    "junction-replay"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "near",
+    "expected_band": [
+      0.85,
+      1.12
+    ],
+    "expected_evidence": [
+      "junction-replay",
+      "wheel-ticks"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "90beee9ccc1b4e7d46f93ce9ce77f13d9d24800684b567bad74099892e3e64f5",
+      "max_tokens": 950,
+      "payload_sha256": "fc07bc4921d1b080d60fa780cadebe6f8104c2e093ecf6a7bd8f043f2b6dd41a",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 330,
+        "prompt_tokens": 1096,
+        "total_tokens": 1426,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1096,
+        "prompt_ms": 48453.797,
+        "prompt_per_token_ms": 44.20966879562044,
+        "prompt_per_second": 22.61948635315412,
+        "predicted_n": 330,
+        "predicted_ms": 201403.579,
+        "predicted_per_token_ms": 612.1689331306991,
+        "predicted_per_second": 1.6335360157626593
+      },
+      "content_sha256": "18b6b8a8e32e833d93d3f5bd85962f3a5efc380c24230aa048f2c923b8242740",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same offline analysis scope with wheel counter correction."
+          },
+          {
+            "slot": 2,
+            "reason": "Same offline analysis scope with sensor threshold plotting."
+          }
+        ],
+        "point_min": 41,
+        "low_min": 37,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The new task involves offline plotting of wheel slip events similar to the Thursday replot (S1.1) and line-junction replay (S2.1), both requiring data inspection and export. The Thursday task took 36 minutes for a 35-minute estimate (ratio 1.03), while the line-junction task finished early at 42 minutes for a 45-minute estimate (ratio 0.93). The new task includes additional diagnostic ambiguity resolution (deriving forward differences and explaining wrap assumptions), which may slightly increase time compared to the simpler Thursday task but aligns with the line-junction complexity. The main assumption is that the diagnostic explanation step does not add significant time beyond the initial plotting and export.",
+        "confidence_reason": "Variability in data interpretation complexity could widen the range."
+      },
+      "seconds": 442.15
+    }
+  ],
+  "prediction": {
+    "point_min": 41,
+    "low_min": 37,
+    "high_min": 45,
+    "confidence": "medium",
+    "confidence_reason": "Variability in data interpretation complexity could widen the range.",
+    "model_rationale": "The new task involves offline plotting of wheel slip events similar to the Thursday replot (S1.1) and line-junction replay (S2.1), both requiring data inspection and export. The Thursday task took 36 minutes for a 35-minute estimate (ratio 1.03), while the line-junction task finished early at 42 minutes for a 45-minute estimate (ratio 0.93). The new task includes additional diagnostic ambiguity resolution (deriving forward differences and explaining wrap assumptions), which may slightly increase time compared to the simpler Thursday task but aligns with the line-junction complexity. The main assumption is that the diagnostic explanation step does not add significant time beyond the initial plotting and export.",
+    "explanation": "The new task involves offline plotting of wheel slip events similar to the Thursday replot (S1.1) and line-junction replay (S2.1), both requiring data inspection and export. The Thursday task took 36 minutes for a 35-minute estimate (ratio 1.03), while the line-junction task finished early at 42 minutes for a 45-minute estimate (ratio 0.93). The new task includes additional diagnostic ambiguity resolution (deriving forward differences and explaining wrap assumptions), which may slightly increase time compared to the simpler Thursday task but aligns with the line-junction complexity. The main assumption is that the diagnostic explanation step does not add significant time beyond the initial plotting and export.",
+    "evidence": [
+      {
+        "task_id": "wheel-ticks",
+        "title": "Replot the wheel slip from Thursday’s bag",
+        "estimate_min": 35,
+        "actual_min": 36.0,
+        "ratio": 1.0285714285714285,
+        "reason": "Same offline analysis scope with wheel counter correction.",
+        "reason_source": "model",
+        "model_rationale": "Same offline analysis scope with wheel counter correction.",
+        "source_quote": "Open the recorded bag on the laptop, correct the wheel diameter in the plotting notebook and export the overlay."
+      },
+      {
+        "task_id": "junction-replay",
+        "title": "Replay the line-junction bag",
+        "estimate_min": 45,
+        "actual_min": 42.0,
+        "ratio": 0.9333333333333333,
+        "reason": "Same offline analysis scope with sensor threshold plotting.",
+        "reason_source": "model",
+        "model_rationale": "Same offline analysis scope with sensor threshold plotting.",
+        "source_quote": "Play back the saved junction bag on my laptop, add a plot of sensor threshold crossings, and export the two marked frames."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "wheel-ticks",
+            "title": "Replot the wheel slip from Thursday’s bag",
+            "origin": "Completion note",
+            "observation": "Plot updated on the first full run."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "wheel-ticks",
+        "title": "Replot the wheel slip from Thursday’s bag",
+        "source": "decision model",
+        "score": 0.6561302670155655
+      },
+      {
+        "task_id": "junction-replay",
+        "title": "Replay the line-junction bag",
+        "source": "decision model",
+        "score": 0.5635425464660696
+      }
+    ],
+    "used_task_ids": [
+      "wheel-ticks",
+      "junction-replay"
+    ],
+    "feedback_source_ids": []
+  }
+}

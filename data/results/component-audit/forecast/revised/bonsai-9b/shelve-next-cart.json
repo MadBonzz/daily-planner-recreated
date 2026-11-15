@@ -1,0 +1,151 @@
+{
+  "task": "shelve-next-cart",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:01:08.766733+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ddecaa9a64ffaab158225a15bf891fd5e0a1fe9546170b170778c511e271605b",
+  "frozen_candidates": [
+    "prior-1",
+    "prior-2"
+  ],
+  "budget": 40,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_sources": [],
+    "expected_evidence": [
+      "prior-1",
+      "prior-2"
+    ],
+    "low_confidence": false,
+    "exhaustive_warning_labels": true
+  },
+  "receipts": [
+    {
+      "request_sha256": "4ce773f1c67d4ba6997f84e4eb1057fd308adb2e860e3970bfb5d592cbc5cff0",
+      "max_tokens": 950,
+      "payload_sha256": "35a6e838e3b7f111ec9d0655dab318e3c29b474a67af0e681058cac41ad79d81",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 263,
+        "prompt_tokens": 685,
+        "total_tokens": 948,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 685,
+        "prompt_ms": 32043.866,
+        "prompt_per_token_ms": 46.779366423357665,
+        "prompt_per_second": 21.376946214916764,
+        "predicted_n": 263,
+        "predicted_ms": 222436.777,
+        "predicted_per_token_ms": 848.9953320610687,
+        "predicted_per_second": 1.1778627776107364
+      },
+      "content_sha256": "e29400443314d6c7efbd1de742335a67e4839278491912acb685b758f02310b7",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Same scope: scanning and shelving a standard 40-book returns cart."
+          },
+          {
+            "slot": 2,
+            "reason": "Same scope: scanning and shelving a standard 40-book returns cart."
+          }
+        ],
+        "point_min": 26,
+        "low_min": 24,
+        "high_min": 29,
+        "confidence": "low",
+        "rationale": "The time-driving step is the manual scanning and shelving sequence, which historically averages 26.5 minutes based on slots 1 and 2. The strongest comparison is the consistent 0.65–0.68 efficiency ratio of previous identical scopes, suggesting a baseline of roughly 26 minutes for the new task.",
+        "confidence_reason": "Variability in scanning speed or shelf availability could widen the range."
+      },
+      "seconds": 487.84
+    }
+  ],
+  "prediction": {
+    "point_min": 26,
+    "low_min": 24,
+    "high_min": 29,
+    "confidence": "low",
+    "confidence_reason": "Variability in scanning speed or shelf availability could widen the range.",
+    "model_rationale": "The time-driving step is the manual scanning and shelving sequence, which historically averages 26.5 minutes based on slots 1 and 2. The strongest comparison is the consistent 0.65–0.68 efficiency ratio of previous identical scopes, suggesting a baseline of roughly 26 minutes for the new task.",
+    "explanation": "The time-driving step is the manual scanning and shelving sequence, which historically averages 26.5 minutes based on slots 1 and 2. The strongest comparison is the consistent 0.65–0.68 efficiency ratio of previous identical scopes, suggesting a baseline of roughly 26 minutes for the new task.",
+    "evidence": [
+      {
+        "task_id": "prior-1",
+        "title": "Scan and shelve a standard 40-book returns cart",
+        "estimate_min": 40,
+        "actual_min": 26.0,
+        "ratio": 0.65,
+        "reason": "Same scope: scanning and shelving a standard 40-book returns cart.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: scanning and shelving a standard 40-book returns cart.",
+        "source_quote": "Scan and shelve a standard 40-book returns cart"
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Scan and shelve another 40-book returns cart",
+        "estimate_min": 40,
+        "actual_min": 27.0,
+        "ratio": 0.675,
+        "reason": "Same scope: scanning and shelving a standard 40-book returns cart.",
+        "reason_source": "model",
+        "model_rationale": "Same scope: scanning and shelving a standard 40-book returns cart.",
+        "source_quote": "Scan and shelve another 40-book returns cart"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "prior-1",
+            "title": "Scan and shelve a standard 40-book returns cart",
+            "origin": "Completion note",
+            "observation": "All books shelved successfully."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "prior-1",
+        "title": "Scan and shelve a standard 40-book returns cart",
+        "source": "user",
+        "score": null
+      },
+      {
+        "task_id": "prior-2",
+        "title": "Scan and shelve another 40-book returns cart",
+        "source": "user",
+        "score": null
+      }
+    ],
+    "used_task_ids": [
+      "prior-1",
+      "prior-2"
+    ],
+    "feedback_source_ids": []
+  }
+}

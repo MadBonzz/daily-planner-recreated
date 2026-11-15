@@ -1,0 +1,155 @@
+{
+  "task": "async-flicker",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:20:00.981224+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ac0430ff31355236168f4b831ec36a749165af81d5e61f519cabc6560a4201d9",
+  "frozen_candidates": [
+    "warp-tail",
+    "stride-kernel"
+  ],
+  "budget": 85,
+  "fixed": false,
+  "rubric": {
+    "direction": "up",
+    "expected_band": [
+      1.38,
+      1.68
+    ],
+    "expected_evidence": [
+      "warp-tail",
+      "stride-kernel",
+      "race-repro"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "8edbd3c9b2afce648af4257c7a162bf0b87dbb716b1b94e1bf5ad50dc6c78bec",
+      "max_tokens": 950,
+      "payload_sha256": "8ec1674ac47b5882fee1fb4ae5b7a99855dcc3488e6f559989e9ff23f2ad9fa0",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 427,
+        "prompt_tokens": 1140,
+        "total_tokens": 1567,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1140,
+        "prompt_ms": 61750.546,
+        "prompt_per_token_ms": 54.16714561403509,
+        "prompt_per_second": 18.46137522411543,
+        "predicted_n": 427,
+        "predicted_ms": 272692.291,
+        "predicted_per_token_ms": 640.1227488262912,
+        "predicted_per_second": 1.5622003777143814
+      },
+      "content_sha256": "f1cb8ab67b7a67f1619c87fb70e0503c18d2eab43c307572af0d26034de23b44",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Shared work involves fixing kernel ownership and adding a regression, matching the scope of the historical 'Fix corruption on partial warp tails' task which took 129.6 minutes (1.52x budget). The new task explicitly requires proving ownership and adding a regression, which aligns with the historical scope of correcting ownership rules and adding a fixture."
+          },
+          {
+            "slot": 2,
+            "reason": "Shared work involves debugging a mismatched pitch and running an odd-width regression, matching the scope of the historical 'Debug a mismatched pitch in the strided kernel' task which took 132.4 minutes (1.56x budget). The new task requires constructing a non-contiguous input and fixing offsets, which is comparable to the historical strided kernel debugging."
+          }
+        ],
+        "point_min": 129,
+        "low_min": 115,
+        "high_min": 145,
+        "confidence": "low",
+        "rationale": "The new task explicitly removes the need for a separate student kernel change mentioned in the history, but retains the core ownership and regression requirements. The main assumption is that the 'non-power-of-two failure' correction does not introduce new complexity beyond the historical 'partial warp tails' issue. Comparable timing is unavailable for the specific 'non-power-of-two' correction, so the historical 'corruption on partial warp tails' serves as the primary benchmark.",
+        "confidence_reason": "The new task's specific 'non-power-of-two failure' correction is not explicitly detailed in the historical records, creating uncertainty about whether the complexity will match the historical 'partial warp tails' scenario."
+      },
+      "seconds": 905.41
+    }
+  ],
+  "prediction": {
+    "point_min": 129,
+    "low_min": 115,
+    "high_min": 145,
+    "confidence": "low",
+    "confidence_reason": "The new task's specific 'non-power-of-two failure' correction is not explicitly detailed in the historical records, creating uncertainty about whether the complexity will match the historical 'partial warp tails' scenario.",
+    "model_rationale": "The new task explicitly removes the need for a separate student kernel change mentioned in the history, but retains the core ownership and regression requirements. The main assumption is that the 'non-power-of-two failure' correction does not introduce new complexity beyond the historical 'partial warp tails' issue. Comparable timing is unavailable for the specific 'non-power-of-two' correction, so the historical 'corruption on partial warp tails' serves as the primary benchmark.",
+    "explanation": "The new task explicitly removes the need for a separate student kernel change mentioned in the history, but retains the core ownership and regression requirements. The main assumption is that the 'non-power-of-two failure' correction does not introduce new complexity beyond the historical 'partial warp tails' issue. Comparable timing is unavailable for the specific 'non-power-of-two' correction, so the historical 'corruption on partial warp tails' serves as the primary benchmark.",
+    "evidence": [
+      {
+        "task_id": "warp-tail",
+        "title": "Fix corruption on partial warp tails",
+        "estimate_min": 80,
+        "actual_min": 122.0,
+        "ratio": 1.525,
+        "reason": "Shared work involves fixing kernel ownership and adding a regression, matching the scope of the historical 'Fix corruption on partial warp tails' task which took 129.6 minutes (1.52x budget). The new task explicitly requires proving ownership and adding a regression, which aligns with the historical scope of correcting ownership rules and adding a fixture.",
+        "reason_source": "model",
+        "model_rationale": "Shared work involves fixing kernel ownership and adding a regression, matching the scope of the historical 'Fix corruption on partial warp tails' task which took 129.6 minutes (1.52x budget). The new task explicitly requires proving ownership and adding a regression, which aligns with the historical scope of correcting ownership rules and adding a fixture.",
+        "source_quote": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression."
+      },
+      {
+        "task_id": "stride-kernel",
+        "title": "Debug a mismatched pitch in the strided kernel",
+        "estimate_min": 70,
+        "actual_min": 109.0,
+        "ratio": 1.5571428571428572,
+        "reason": "Shared work involves debugging a mismatched pitch and running an odd-width regression, matching the scope of the historical 'Debug a mismatched pitch in the strided kernel' task which took 132.4 minutes (1.56x budget). The new task requires constructing a non-contiguous input and fixing offsets, which is comparable to the historical strided kernel debugging.",
+        "reason_source": "model",
+        "model_rationale": "Shared work involves debugging a mismatched pitch and running an odd-width regression, matching the scope of the historical 'Debug a mismatched pitch in the strided kernel' task which took 132.4 minutes (1.56x budget). The new task requires constructing a non-contiguous input and fixing offsets, which is comparable to the historical strided kernel debugging.",
+        "source_quote": "Construct a non-contiguous input and fix the offset; run the odd-width regression."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "warp-tail",
+            "title": "Fix corruption on partial warp tails",
+            "origin": "Completion note",
+            "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "2 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "warp-tail",
+        "title": "Fix corruption on partial warp tails",
+        "source": "decision model",
+        "score": 0.8254453068630736
+      },
+      {
+        "task_id": "stride-kernel",
+        "title": "Debug a mismatched pitch in the strided kernel",
+        "source": "decision model",
+        "score": 0.5704855097598562
+      }
+    ],
+    "used_task_ids": [
+      "warp-tail",
+      "stride-kernel"
+    ],
+    "feedback_source_ids": []
+  }
+}

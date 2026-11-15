@@ -260,6 +260,30 @@ def write_tables(data):
             lines.append(f"| {model} | {cf['slower_history_point']} | {cf['faster_history_point']} | "
                          f"{'yes' if cf['both_directions_correct'] else 'no'} | {cf.get('tight_width','—')} | "
                          f"{cf.get('variable_width','—')} | {cf.get('tight_confidence','—')} / {cf.get('variable_confidence','—')} |")
+    lines += ["", "## Four-case warning replay", "",
+              "The first three tasks have no pairing evidence. The fourth, a camera run, has two documented pairing failures. "
+              "Copied advice counts the exact demonstration on an unrelated source. The camera check requires a source with a "
+              "documented failure and advice that mentions the obstacle. See the [manual review](warning-review.md) for "
+              "unsupported procedures, time attribution and other advice that passes a terminology check.", "",
+              "| Model and instruction | Tasks | Tasks with warnings | Tasks with unsupported example copying | Camera pairing warning |",
+              "| --- | ---: | ---: | ---: | --- |"]
+    warning_panel = {"mara-rooms", "bake-dishes", "dev-april", "dark-frame-series"}
+    for model, runs in data.items():
+        for stage, label in [("revised", "first revision"), ("warning-trial", "warnings only"),
+                             ("confidence-trial-warning-panel", "combined")]:
+            if stage not in runs:
+                continue
+            cases = {task: case for cohort in ("replayed", "fresh")
+                     for task, case in runs[stage][cohort]["cases"].items() if task in warning_panel}
+            if not cases:
+                continue
+            camera_path = OUT / stage / model / "dark-frame-series.json"
+            camera_check = "—"
+            if camera_path.exists():
+                camera = score([json.loads(camera_path.read_text())])
+                camera_check = "yes" if camera["warning_topic_source_without_example_leak"]["tp"] else "no"
+            lines.append(f"| {model} {label} | {len(cases)} | {sum(bool(c['warnings']) for c in cases.values())} | "
+                         f"{sum(c['unsupported_example_copies'] > 0 for c in cases.values())} | {camera_check} |")
     lines += ["", "## One-sentence confidence trial", "",
               "The two arms differ only by the confidence instruction. Each pair preserves the same task and historical "
               "mean and median. Ties are permitted. A narrower interval or higher confidence on the more variable history "

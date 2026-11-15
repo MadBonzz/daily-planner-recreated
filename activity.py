@@ -97,9 +97,13 @@ def _segments(periods, disabled_periods, capture):
             yield number, cursor, end, capture
 
 
-def _browser(app):
+def _app_name(app):
     name = str(app or "").replace("\\", "/").split("/")[-1].lower()
-    return BROWSERS.get(name.removesuffix(".exe"))
+    return name.removesuffix(".exe")
+
+
+def _browser(app):
+    return BROWSERS.get(_app_name(app))
 
 
 def _tab_browser(bucket):
@@ -404,6 +408,57 @@ def revise_report(report, overrides):
     return _summarize({**report, "intervals": rows})
 
 
+_GENERIC_PAGES = {"", "dashboard", "home", "homepage", "inbox", "untitled", "new tab", "start page", "loading"}
+_SCOPE_STOPWORDS = {"a", "an", "and", "another", "at", "for", "from", "in", "my", "new", "next",
+                    "of", "on", "or", "our", "previous", "review", "task", "the", "this", "to", "with"}
+
+
+def _words(text):
+    return set(re.findall(r"[^\W_]+", str(text or "").casefold()))
+
+
+def classification_context(task):
+    """Use the same bounded task context for the interval model and its evidence check."""
+    context = {key: _clean(task.get(key), 650) for key in ("name", "title", "description", "category", "details", "scope_summary") if task.get(key)}
+    if task.get("pdf_text"):
+        context["pdf_text"] = document_excerpt(task, 900)
+    return context
+
+
+def ungrounded_activity_label(task, row, examples, label, reason):
+    """Abstain when an opaque app surface provides no evidence tying it to this task."""
+    if label == "uncertain" or row.get("excluded") or row.get("phone_app") or row.get("label_source") == "user":
+        return False
+    title = (row.get("title") or "").strip().casefold()
+    app = _app_name(row.get("app"))
+    mailbox = title == "inbox" and app in {"thunderbird", "outlook", "microsoft outlook", "apple mail", "mail"}
+    browser = _browser(app)
+    if not mailbox and not (browser and title in _GENERIC_PAGES):
+        return False
+    domain = str(row.get("domain") or "").casefold().strip(".")
+    host_terms = _words(domain.rsplit(".", 1)[0]) - {"www", "mail", "web", "app", "account", "accounts", "login"}
+    scope = _words(" ".join(str(task.get(key) or "") for key in
+                            ("title", "name", "description", "details", "category", "scope_summary", "pdf_text")))
+    if mailbox and (scope & {"email", "emails", "inbox", "mailbox", "mailboxes", "thunderbird", "outlook", "gmail"}):
+        return False
+    if browser and host_terms.intersection(scope | _words(reason)):
+        return False
+    # A matching user correction can disambiguate a private dashboard across
+    # comparable tasks. A correction on a different task cannot establish use.
+    scope -= _SCOPE_STOPWORDS
+    for example in examples:
+        prior_app = _app_name(example.get("app"))
+        same_surface = prior_app == app if mailbox else domain and (example.get("domain") or "").casefold() == domain
+        if (not same_surface or example.get("label") != label or example.get("phone_app")
+                or (example.get("title") or "").strip().casefold() != title):
+            continue
+        common = (_words(example.get("task")) - _SCOPE_STOPWORDS) & scope
+        same_category = task.get("category") and str(task["category"]).casefold() == str(example.get("category")).casefold()
+        if len(common) >= 2 or (common and same_category):
+            return False
+    return True
+
+
 def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrides=None):
     pending = []
     for index, row in enumerate(rows):
@@ -424,9 +479,7 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
             row["reason"] = "No valid classification was available."
             row["label_source"] = "unavailable"
             pending.append(index)
-    context = {key: _clean(task.get(key), 650) for key in ("name", "title", "description", "category", "details", "scope_summary") if task.get(key)}
-    if task.get("pdf_text"):
-        context["pdf_text"] = document_excerpt(task, 900)
+    context = classification_context(task)
     system = (
         "Label each interval by its likely relevance to the user's described task. "
         "on_task: activity directly supports the task, e.g. reading a relevant reference. "
@@ -494,7 +547,12 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
                               "The active device is unclear.")
             else:
                 label = item["label"]
-            rows[i].update(label=label, reason=_clean(reason, 200), label_source="model")
+            source = "model"
+            if ungrounded_activity_label(context, rows[i], examples, label, reason):
+                label = "uncertain"
+                reason = "Only a generic window was observed. Its purpose could not be established."
+                source = "insufficient evidence"
+            rows[i].update(label=label, reason=_clean(reason, 200), label_source=source)
 
 
 def build_report(task, periods, exclusions=(), *, capture=True, disabled_periods=(),

@@ -1,0 +1,84 @@
+{
+  "task": "triangle-sheet",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T09:40:19.367767+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "ea39ef46c1dc243c125e7ce8756942f9f3baa55e65d94d0ee80d960310e43276",
+  "frozen_candidates": [],
+  "budget": 45,
+  "fixed": false,
+  "rubric": {
+    "direction": "near",
+    "expected_band": [
+      0.86,
+      1.13
+    ],
+    "expected_evidence": [
+      "phasor-paper",
+      "filter-exercise"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "6fef0336cdb07af293ba1272ba5dd90b21438c0f80842da8c0f572972778aa2b",
+      "max_tokens": 950,
+      "payload_sha256": "5bd39c2748b941dcae354a7812db3055c775a404d697c536a4f5f21380234af9",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 145,
+        "prompt_tokens": 812,
+        "total_tokens": 957,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 812,
+        "prompt_ms": 38306.005,
+        "prompt_per_token_ms": 47.1748830049261,
+        "prompt_per_second": 21.197720827321984,
+        "predicted_n": 145,
+        "predicted_ms": 116769.818,
+        "predicted_per_token_ms": 810.9015138888889,
+        "predicted_per_second": 1.2331953793059778
+      },
+      "content_sha256": "4a5e61a06ed27c9933c2bd1eaa8b72769f7512792ba20183f37999f2c9d61c1f",
+      "response": {
+        "point_min": 45,
+        "low_min": 40,
+        "high_min": 50,
+        "confidence": "low",
+        "rationale": "The task requires setting up an integral, evaluating three specific coefficients, and performing a numerical check, which aligns with the user's 45-minute estimate. Since no historical timing data exists, the range is derived directly from the stated scope and the assumption that the mathematical steps will proceed without unexpected delays.",
+        "confidence_reason": "The primary risk is the complexity of the integration by parts and the subsequent algebraic verification of the truncated series against the piecewise source values."
+      },
+      "seconds": 341.72
+    }
+  ],
+  "prediction": {
+    "point_min": 45,
+    "low_min": 40,
+    "high_min": 50,
+    "confidence": "low",
+    "confidence_reason": "The primary risk is the complexity of the integration by parts and the subsequent algebraic verification of the truncated series against the piecewise source values.",
+    "model_rationale": "The task requires setting up an integral, evaluating three specific coefficients, and performing a numerical check, which aligns with the user's 45-minute estimate. Since no historical timing data exists, the range is derived directly from the stated scope and the assumption that the mathematical steps will proceed without unexpected delays.",
+    "explanation": "The task requires setting up an integral, evaluating three specific coefficients, and performing a numerical check, which aligns with the user's 45-minute estimate. Since no historical timing data exists, the range is derived directly from the stated scope and the assumption that the mathematical steps will proceed without unexpected delays.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "There are no earlier completed tasks with usable timing.",
+    "related_tasks": [],
+    "used_task_ids": [],
+    "feedback_source_ids": []
+  }
+}

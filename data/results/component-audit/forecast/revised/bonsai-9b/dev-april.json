@@ -1,0 +1,178 @@
+{
+  "task": "dev-april",
+  "model": "ternary-bonsai-2-9b",
+  "time_utc": "2026-11-15T08:42:46.411265+00:00",
+  "estimator_sha256": "85f4e67e3549a4d7c6b7c0be4a148dcf0976321e2d1f3765de958fbad0165592",
+  "case_sha256": "7f17f5c99974939bbbc19dc40faaf6d510ae40bb358b8eb91e745058bd2e833f",
+  "frozen_candidates": [
+    "dev-stock",
+    "dev-packs",
+    "dev-receipts"
+  ],
+  "budget": 20,
+  "fixed": false,
+  "rubric": {
+    "direction": "down",
+    "expected_band": [
+      0.66,
+      0.86
+    ],
+    "expected_evidence": [
+      "dev-stock",
+      "dev-packs",
+      "dev-receipts"
+    ],
+    "expected_sources": null,
+    "low_confidence": false
+  },
+  "receipts": [
+    {
+      "request_sha256": "ee43f70982bebdc9c72e357623daac814669789623878a47f16c1fef9004eacd",
+      "max_tokens": 950,
+      "payload_sha256": "a16ec13ce28621431e267a22fb03c45748ee88f24b3a9d9e8f4cad8890f6827b",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 362,
+        "prompt_tokens": 897,
+        "total_tokens": 1259,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 897,
+        "prompt_ms": 58007.075,
+        "prompt_per_token_ms": 64.66786510590858,
+        "prompt_per_second": 15.463630945018345,
+        "predicted_n": 362,
+        "predicted_ms": 227793.846,
+        "predicted_per_token_ms": 631.0078836565096,
+        "predicted_per_second": 1.5847662539575367
+      },
+      "content_sha256": "996a9b32ad0c7493ec5e4de245315ebc13b52e9abc4663f9093dc90fa4a9a696",
+      "response": {
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Test the pairing before the run."
+          }
+        ],
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Shared work involves reviewing stock sheets with Dev Patel to agree on quantities for the buyer."
+          },
+          {
+            "slot": 2,
+            "reason": "Shared work involves cross-referencing replenishment lists and received items with Dev Patel."
+          },
+          {
+            "slot": 3,
+            "reason": "Shared work involves verifying mask and envelope counts with Dev Patel to finalize the order list."
+          }
+        ],
+        "point_min": 16,
+        "low_min": 14,
+        "high_min": 18,
+        "confidence": "low",
+        "rationale": "The time-driving step is the collaborative review of quantities and counts with Dev Patel, which historically averages 15-16 minutes based on the three provided records. The strongest comparison is the mean of the actual times (15.0, 14.0, 16.0) adjusted for the new task's explicit scope of agreeing on two quantities versus the previous three distinct actions. A wider range could occur if Dev Patel requires additional clarification on the specific buyer quantities or if the 'calendar held for twenty minutes' implies a potential scheduling buffer not present in prior slots.",
+        "confidence_reason": "The range could widen if Dev Patel requests further clarification on the buyer quantities or if the calendar buffer is not strictly enforced."
+      },
+      "seconds": 668.99
+    }
+  ],
+  "prediction": {
+    "point_min": 16,
+    "low_min": 14,
+    "high_min": 18,
+    "confidence": "low",
+    "confidence_reason": "The range could widen if Dev Patel requests further clarification on the buyer quantities or if the calendar buffer is not strictly enforced.",
+    "model_rationale": "The time-driving step is the collaborative review of quantities and counts with Dev Patel, which historically averages 15-16 minutes based on the three provided records. The strongest comparison is the mean of the actual times (15.0, 14.0, 16.0) adjusted for the new task's explicit scope of agreeing on two quantities versus the previous three distinct actions. A wider range could occur if Dev Patel requires additional clarification on the specific buyer quantities or if the 'calendar held for twenty minutes' implies a potential scheduling buffer not present in prior slots.",
+    "explanation": "The time-driving step is the collaborative review of quantities and counts with Dev Patel, which historically averages 15-16 minutes based on the three provided records. The strongest comparison is the mean of the actual times (15.0, 14.0, 16.0) adjusted for the new task's explicit scope of agreeing on two quantities versus the previous three distinct actions. A wider range could occur if Dev Patel requires additional clarification on the specific buyer quantities or if the 'calendar held for twenty minutes' implies a potential scheduling buffer not present in prior slots.",
+    "evidence": [
+      {
+        "task_id": "dev-stock",
+        "title": "Stock check with Dev",
+        "estimate_min": 20,
+        "actual_min": 15.0,
+        "ratio": 0.75,
+        "reason": "Shared work involves reviewing stock sheets with Dev Patel to agree on quantities for the buyer.",
+        "reason_source": "model",
+        "model_rationale": "Shared work involves reviewing stock sheets with Dev Patel to agree on quantities for the buyer.",
+        "source_quote": "Run through the gloves and badge sleeves that need reordering with Dev Patel. He has the counts in his sheet."
+      },
+      {
+        "task_id": "dev-packs",
+        "title": "Check replenishment list with Dev",
+        "estimate_min": 20,
+        "actual_min": 14.0,
+        "ratio": 0.7,
+        "reason": "Shared work involves cross-referencing replenishment lists and received items with Dev Patel.",
+        "reason_source": "model",
+        "model_rationale": "Shared work involves cross-referencing replenishment lists and received items with Dev Patel.",
+        "source_quote": "Ask Dev Patel which three packing supplies to add to Friday’s order and cross off two received items."
+      },
+      {
+        "task_id": "dev-receipts",
+        "title": "Close the supply list with Dev",
+        "estimate_min": 20,
+        "actual_min": 16.0,
+        "ratio": 0.8,
+        "reason": "Shared work involves verifying mask and envelope counts with Dev Patel to finalize the order list.",
+        "reason_source": "model",
+        "model_rationale": "Shared work involves verifying mask and envelope counts with Dev Patel to finalize the order list.",
+        "source_quote": "Check the masks and envelope counts with Dev Patel and hand his order list to reception."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Test the pairing before the run.",
+        "sources": [
+          {
+            "task_id": "dev-stock",
+            "title": "Stock check with Dev",
+            "origin": "Completion note",
+            "observation": "Dev had already filtered the stock sheet. We finished before the end of the slot."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Local endpoint",
+      "model": "ternary-bonsai-2-9b",
+      "decision": "direct",
+      "minutes_by": "model"
+    },
+    "timing_context": "3 selected past tasks have recorded durations.",
+    "related_tasks": [
+      {
+        "task_id": "dev-stock",
+        "title": "Stock check with Dev",
+        "source": "decision model",
+        "score": 0.7680068978106029
+      },
+      {
+        "task_id": "dev-packs",
+        "title": "Check replenishment list with Dev",
+        "source": "decision model",
+        "score": 0.7036435876326517
+      },
+      {
+        "task_id": "dev-receipts",
+        "title": "Close the supply list with Dev",
+        "source": "decision model",
+        "score": 0.6805588778472098
+      }
+    ],
+    "used_task_ids": [
+      "dev-stock",
+      "dev-packs",
+      "dev-receipts"
+    ],
+    "feedback_source_ids": []
+  }
+}
