@@ -1,0 +1,129 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires filling a three-row comparison table from archived transcripts and explaining one checksum collision where identical exit codes hid a logical difference. The scope is limited to analyzing existing data (the tail-drop log) and generating a specific explanation, which aligns with the complexity of a single case study in a software engineering lab. The step driving time is the data analysis and synthesis of the comparison table and the specific checksum explanation. Since no comparable timing exists in the history, this estimate relies on the task's defined scope and the typical duration for such analytical work in a lab setting.",
+  "model_calls": [
+    {
+      "prompt_sha256": "d3ab7242320b5e9a7fabe5db1601b0c7b918cf538548b1185a28f14e50b6c24a",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 25,
+        "low_min": 20,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "The task requires filling a three-row comparison table from archived transcripts and explaining one checksum collision where identical exit codes hid a logical difference. The scope is limited to analyzing existing data (the tail-drop log) and generating a specific explanation, which aligns with the complexity of a single case study in a software engineering lab. The step driving time is the data analysis and synthesis of the comparison table and the specific checksum explanation. Since no comparable timing exists in the history, this estimate relies on the task's defined scope and the typical duration for such analytical work in a lab setting.",
+        "confidence_reason": "The range reflects uncertainty in the exact time spent on data interpretation versus writing the explanation. If the user is unfamiliar with the specific checksum collision mechanics or the data format, the time could approach the high end. Conversely, if the user is experienced with the log format and the collision is straightforward, the time could be near the low end. The evidence supporting the range is the explicit requirement to analyze three rows and explain one case, which is a standard analytical workload."
+      },
+      "seconds": 250.735
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.84
+    ],
+    "evidence_ids": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "rationale": "Two prior write-ups were quick when archived logs were already available.",
+    "predicted_ratio": 0.625,
+    "realized_ratio": 0.7,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-note",
+  "title": "Explain the three saved replay transcripts",
+  "original": 40,
+  "category": 51,
+  "planner": 25,
+  "actual": 28,
+  "range": [
+    20,
+    35
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires filling a three-row comparison table from archived transcripts and explaining one checksum collision where identical exit codes hid a logical difference. The scope is limited to analyzing existing data (the tail-drop log) and generating a specific explanation, which aligns with the complexity of a single case study in a software engineering lab. The step driving time is the data analysis and synthesis of the comparison table and the specific checksum explanation. Since no comparable timing exists in the history, this estimate relies on the task's defined scope and the typical duration for such analytical work in a lab setting.",
+  "confidence_reason": "The range reflects uncertainty in the exact time spent on data interpretation versus writing the explanation. If the user is unfamiliar with the specific checksum collision mechanics or the data format, the time could approach the high end. Conversely, if the user is experienced with the log format and the collision is straightforward, the time could be near the low end. The evidence supporting the range is the explicit requirement to analyze three rows and explain one case, which is a standard analytical workload.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 250.735,
+  "latency_seconds": 250.83,
+  "evidence": [],
+  "check": "Two prior write-ups were quick when archived logs were already available.",
+  "qwen_candidates": [
+    {
+      "candidate": "trace-tool",
+      "cosine": 0.5970860192185168,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "suite-report",
+      "cosine": 0.5725500606319619,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "codec-caption",
+      "cosine": 0.5665055731449896,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "67e134006b946b2463a7923d3b330112f6388e7dc214547c67608a707c7518b6",
+      "same_input_cohere_id": "7ae7c3fed05c81192ef86993124d3e6b940c4e3e14317f13d17bf6219cacbd4b"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "67e134006b946b2463a7923d3b330112f6388e7dc214547c67608a707c7518b6",
+      "started_utc": "2026-11-15T05:17:47.007896+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "e525e9d1413a5c09a76a5a2a46768cf9483a94eb1140de1c4c03ed2a10f10773",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 262,
+        "prompt_tokens": 928,
+        "total_tokens": 1190,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 928,
+        "prompt_ms": 177519.711,
+        "prompt_per_token_ms": 191.29279202586207,
+        "prompt_per_second": 5.2275885014256245,
+        "predicted_n": 262,
+        "predicted_ms": 73154.377,
+        "predicted_per_token_ms": 280.284969348659,
+        "predicted_per_second": 3.5677974538693706
+      },
+      "content_sha256": "c521f86a65a5f93490bf318b07258517739eadfe11790b5afff9300efb5f8048",
+      "ended_utc": "2026-11-15T05:21:57.735797+00:00",
+      "seconds": 250.728
+    }
+  ],
+  "started_utc": "2026-11-15T05:17:46.867243+00:00",
+  "ended_utc": "2026-11-15T05:21:57.742388+00:00",
+  "wall_model_seconds": 250.728
+}

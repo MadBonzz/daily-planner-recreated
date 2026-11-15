@@ -1,0 +1,44 @@
+{
+  "repository": "prism-ml/Ternary-Bonsai-2-9B-gguf",
+  "file": "Ternary-Bonsai-2-9B-Q2_0.gguf",
+  "runtime": "LM Studio bundled llama.cpp-linux-x86_64-avx2 2.66.0",
+  "server_revision": "b11966 / ff0d396e3",
+  "decoder": {
+    "temperature": 0,
+    "reasoning": "off",
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "schema": "production strict JSON schema",
+    "token_budget": "unchanged production estimator budget (950 on this cohort)"
+  },
+  "server_args": [
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "1243",
+    "--alias",
+    "ternary-bonsai-2-9b",
+    "-m",
+    "<GGUF>",
+    "-ngl",
+    "0",
+    "-c",
+    "16384",
+    "-np",
+    "4",
+    "-t",
+    "8",
+    "-tb",
+    "8",
+    "--no-warmup",
+    "--reasoning",
+    "off",
+    "--chat-template-kwargs",
+    "{\"enable_thinking\":false}",
+    "--no-mmap",
+    "--cache-ram",
+    "0"
+  ],
+  "concurrency": "One model at a time, four cases in independent Python processes sharing one local model and four 4096-token slots."
+}

@@ -1,0 +1,212 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The new task requires deriving a variance bound and constructing a two-item example, which mirrors the scope of the previous three tasks (slots 1, 2, and 3) that all involved deriving inequalities and examples from Appendix A. The user's budget of 60 minutes aligns with the actual outcomes of the prior tasks (104, 86, and 97 minutes), suggesting a consistent tendency to underestimate by roughly 70-80%. However, since the new task explicitly asks for a 'two-item execution' similar to the 'two-point loss table' in slot 2 and the 'two-item example' in slot 1, the core algebraic work is shared. The estimated 45 minutes reflects the user's stated budget adjusted downward to account for the high probability of distraction or overestimation observed in history, while acknowledging that the specific derivation steps are identical to the prior work. The assumption here is that the 'two-item example' does not require additional simulation setup beyond the algebraic construction implied by the previous tasks.",
+  "model_calls": [
+    {
+      "prompt_sha256": "0114f00513c06eaddb71396683d64c342e227b407b7213fe84f1eea79649f6b6",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 30,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The new task requires deriving a variance bound and constructing a two-item example, which mirrors the scope of the previous three tasks (slots 1, 2, and 3) that all involved deriving inequalities and examples from Appendix A. The user's budget of 60 minutes aligns with the actual outcomes of the prior tasks (104, 86, and 97 minutes), suggesting a consistent tendency to underestimate by roughly 70-80%. However, since the new task explicitly asks for a 'two-item execution' similar to the 'two-point loss table' in slot 2 and the 'two-item example' in slot 1, the core algebraic work is shared. The estimated 45 minutes reflects the user's stated budget adjusted downward to account for the high probability of distraction or overestimation observed in history, while acknowledging that the specific derivation steps are identical to the prior work. The assumption here is that the 'two-item example' does not require additional simulation setup beyond the algebraic construction implied by the previous tasks.",
+        "confidence_reason": "The task scope is nearly identical to the prior three tasks, which all involved deriving second-moment inequalities and constructing examples. The user consistently underestimates time by a factor of 1.7x across these tasks. While the new task shares the core derivation work, the explicit request for a 'two-item example' adds a small amount of setup compared to the 'conditional expectation' focus of slot 1 or the 'variance lemma' of slot 2. The range reflects the uncertainty of whether the 'two-item' requirement introduces significant new algebraic complexity or if it is a straightforward instantiation of the methods already practiced.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Slot 1 involved deriving a conditional second moment and writing a two-item example; the new task requires the same two-item example construction, so the core example-building effort is shared."
+          },
+          {
+            "slot": 2,
+            "reason": "Slot 2 required testing a bound on a two-point loss table, which is the same mathematical object as the 'two-item execution' requested here, confirming the shared algebraic workload."
+          },
+          {
+            "slot": 3,
+            "reason": "Slot 3 involved deriving an inequality from an indicator identity, which is the primary derivation step requested in the new task."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 365.118
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.48,
+      1.86
+    ],
+    "evidence_ids": [
+      "derive-noise",
+      "bound-floor",
+      "check-jensen"
+    ],
+    "rationale": "Deriving a proof takes substantially longer than a figures-only reading.",
+    "predicted_ratio": 0.75,
+    "realized_ratio": 1.75,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "bound-floor",
+      "check-jensen",
+      "derive-noise"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "appendix-proof",
+  "title": "Prepare the appendix board derivation",
+  "original": 60,
+  "category": 75,
+  "planner": 45,
+  "actual": 105,
+  "range": [
+    30,
+    60
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "source": "decision model",
+      "score": 0.8847854005296033
+    },
+    {
+      "task_id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "source": "decision model",
+      "score": 0.5577083000739383
+    },
+    {
+      "task_id": "check-jensen",
+      "title": "Verify the weighted-bin bound",
+      "source": "decision model",
+      "score": 0.5026706072138061
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The new task requires deriving a variance bound and constructing a two-item example, which mirrors the scope of the previous three tasks (slots 1, 2, and 3) that all involved deriving inequalities and examples from Appendix A. The user's budget of 60 minutes aligns with the actual outcomes of the prior tasks (104, 86, and 97 minutes), suggesting a consistent tendency to underestimate by roughly 70-80%. However, since the new task explicitly asks for a 'two-item execution' similar to the 'two-point loss table' in slot 2 and the 'two-item example' in slot 1, the core algebraic work is shared. The estimated 45 minutes reflects the user's stated budget adjusted downward to account for the high probability of distraction or overestimation observed in history, while acknowledging that the specific derivation steps are identical to the prior work. The assumption here is that the 'two-item example' does not require additional simulation setup beyond the algebraic construction implied by the previous tasks.",
+  "confidence_reason": "The task scope is nearly identical to the prior three tasks, which all involved deriving second-moment inequalities and constructing examples. The user consistently underestimates time by a factor of 1.7x across these tasks. While the new task shares the core derivation work, the explicit request for a 'two-item example' adds a small amount of setup compared to the 'conditional expectation' focus of slot 1 or the 'variance lemma' of slot 2. The range reflects the uncertainty of whether the 'two-item' requirement introduces significant new algebraic complexity or if it is a straightforward instantiation of the methods already practiced.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 365.118,
+  "latency_seconds": 365.173,
+  "evidence": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "estimate_min": 60,
+      "actual_min": 104.0,
+      "ratio": 1.7333333333333334,
+      "reason": "Slot 1 involved deriving a conditional second moment and writing a two-item example; the new task requires the same two-item example construction, so the core example-building effort is shared.",
+      "reason_source": "model",
+      "model_rationale": "Slot 1 involved deriving a conditional second moment and writing a two-item example; the new task requires the same two-item example construction, so the core example-building effort is shared.",
+      "source_quote": "Derive a conditional second moment on paper and write an example where ignoring missing observations biases it."
+    },
+    {
+      "task_id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "estimate_min": 50,
+      "actual_min": 86.0,
+      "ratio": 1.72,
+      "reason": "Slot 2 required testing a bound on a two-point loss table, which is the same mathematical object as the 'two-item execution' requested here, confirming the shared algebraic workload.",
+      "reason_source": "model",
+      "model_rationale": "Slot 2 required testing a bound on a two-point loss table, which is the same mathematical object as the 'two-item execution' requested here, confirming the shared algebraic workload.",
+      "source_quote": "Write out all conditioning steps and test the bound on a two-point loss table."
+    },
+    {
+      "task_id": "check-jensen",
+      "title": "Verify the weighted-bin bound",
+      "estimate_min": 55,
+      "actual_min": 97.0,
+      "ratio": 1.7636363636363637,
+      "reason": "Slot 3 involved deriving an inequality from an indicator identity, which is the primary derivation step requested in the new task.",
+      "reason_source": "model",
+      "model_rationale": "Slot 3 involved deriving an inequality from an indicator identity, which is the primary derivation step requested in the new task.",
+      "source_quote": "Derive the inequality from the indicator identity and calculate a numerical counterexample."
+    }
+  ],
+  "check": "Deriving a proof takes substantially longer than a figures-only reading.",
+  "qwen_candidates": [
+    {
+      "candidate": "derive-noise",
+      "cosine": 0.8847854005296033,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "read-cache",
+      "cosine": 0.8573738206593879,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "bound-floor",
+      "cosine": 0.5577083000739383,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "read-queues",
+      "cosine": 0.5123431693165799,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "check-jensen",
+      "cosine": 0.5026706072138061,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "5d3bb88cbfc925ce4726fe4611a6c145061563497c220baf26095fbeb2df3af1",
+      "same_input_cohere_id": "fcc86eb8bc93b7289fe0689271ae37f9c64c3aa7531211bd041c86b8c12ce05c"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "5d3bb88cbfc925ce4726fe4611a6c145061563497c220baf26095fbeb2df3af1",
+      "started_utc": "2026-11-15T05:21:57.960145+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "8184f4970058be2ee356b87509dcc7928fdc828bfe090c42a745f1795d8a5208",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 572,
+        "prompt_tokens": 1552,
+        "total_tokens": 2124,
+        "prompt_tokens_details": {
+          "cached_tokens": 412
+        }
+      },
+      "timings": {
+        "cache_n": 412,
+        "prompt_n": 1140,
+        "prompt_ms": 50152.572,
+        "prompt_per_token_ms": 43.99348421052632,
+        "prompt_per_second": 22.730638819480685,
+        "predicted_n": 572,
+        "predicted_ms": 314905.083,
+        "predicted_per_token_ms": 551.4975183887916,
+        "predicted_per_second": 1.8132447865250876
+      },
+      "content_sha256": "97c876365b4ed85c441fd44336e83d89443a910036cc60f99ca04071e9563b75",
+      "ended_utc": "2026-11-15T05:28:03.077283+00:00",
+      "seconds": 365.117
+    }
+  ],
+  "started_utc": "2026-11-15T05:21:57.743425+00:00",
+  "ended_utc": "2026-11-15T05:28:03.078429+00:00",
+  "wall_model_seconds": 365.117
+}

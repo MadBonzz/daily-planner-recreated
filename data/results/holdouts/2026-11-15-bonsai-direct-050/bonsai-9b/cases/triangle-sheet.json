@@ -1,0 +1,119 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires calculating three nonzero coefficients via integration by parts, evaluating a numerical sum at three specific time points, and correcting a sketch based on symmetry arguments. The explicit step of setting up the cosine integral over half a period and evaluating the first three nonzero terms drives the bulk of the time, likely requiring 20–25 minutes of focused calculation. The subsequent numerical check and sketch correction add approximately 10–15 minutes. Since no comparable timed task exists in the history, this estimate relies on the complexity of the signal reconstruction steps described in the excerpt rather than prior performance data.",
+  "model_calls": [
+    {
+      "prompt_sha256": "487fc317903717a4e276235f7fc178ecf7dfb8bff2d1c2d3f1ade58dd9b965e3",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 35,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The task requires calculating three nonzero coefficients via integration by parts, evaluating a numerical sum at three specific time points, and correcting a sketch based on symmetry arguments. The explicit step of setting up the cosine integral over half a period and evaluating the first three nonzero terms drives the bulk of the time, likely requiring 20–25 minutes of focused calculation. The subsequent numerical check and sketch correction add approximately 10–15 minutes. Since no comparable timed task exists in the history, this estimate relies on the complexity of the signal reconstruction steps described in the excerpt rather than prior performance data.",
+        "confidence_reason": "The range reflects uncertainty in the efficiency of the integration steps and the time needed to interpret the symmetry discrepancy in the sketch. If the user is unfamiliar with integration by parts for Fourier series, the time could approach the high end; if they are experienced, it may fall toward the low end. The scope is well-defined by the worksheet requirements, but the 'correction' of the older notebook sketch introduces a variable dependent on the clarity of the original error."
+      },
+      "seconds": 98.542
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": [
+      0.86,
+      1.13
+    ],
+    "evidence_ids": [
+      "phasor-paper",
+      "filter-exercise"
+    ],
+    "rationale": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.9777777777777777,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "10-signal-study",
+  "task": "triangle-sheet",
+  "title": "Complete the triangle-wave practice problems",
+  "original": 45,
+  "category": 60,
+  "planner": 45,
+  "actual": 44,
+  "range": [
+    35,
+    60
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires calculating three nonzero coefficients via integration by parts, evaluating a numerical sum at three specific time points, and correcting a sketch based on symmetry arguments. The explicit step of setting up the cosine integral over half a period and evaluating the first three nonzero terms drives the bulk of the time, likely requiring 20–25 minutes of focused calculation. The subsequent numerical check and sketch correction add approximately 10–15 minutes. Since no comparable timed task exists in the history, this estimate relies on the complexity of the signal reconstruction steps described in the excerpt rather than prior performance data.",
+  "confidence_reason": "The range reflects uncertainty in the efficiency of the integration steps and the time needed to interpret the symmetry discrepancy in the sketch. If the user is unfamiliar with integration by parts for Fourier series, the time could approach the high end; if they are experienced, it may fall toward the low end. The scope is well-defined by the worksheet requirements, but the 'correction' of the older notebook sketch introduces a variable dependent on the clarity of the original error.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 98.542,
+  "latency_seconds": 98.596,
+  "evidence": [],
+  "check": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+  "qwen_candidates": [
+    {
+      "candidate": "pulse-video",
+      "cosine": 0.5476150659182812,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "f9f05a8a6bb01c83254d9853b8c2520554e0d616e5d0b6640d26403aeca5f359",
+      "same_input_cohere_id": "999d5b225edc1cc3bd3c623a6d8f39e55a9c6e6542676846a9ec62f36a920ae7"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "f9f05a8a6bb01c83254d9853b8c2520554e0d616e5d0b6640d26403aeca5f359",
+      "started_utc": "2026-11-15T05:37:39.368153+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "286e44aebaed1e3ae2d8539b25de9e6eef3d748a256a4da6bb0472498f50f9c6",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 266,
+        "prompt_tokens": 926,
+        "total_tokens": 1192,
+        "prompt_tokens_details": {
+          "cached_tokens": 353
+        }
+      },
+      "timings": {
+        "cache_n": 353,
+        "prompt_n": 573,
+        "prompt_ms": 28912.631,
+        "prompt_per_token_ms": 50.45834380453753,
+        "prompt_per_second": 19.818327844325204,
+        "predicted_n": 266,
+        "predicted_ms": 69433.78,
+        "predicted_per_token_ms": 262.0142641509434,
+        "predicted_per_second": 3.8165861054950487
+      },
+      "content_sha256": "0b802236639b50b92b6a3d2adfc7ac8b39827e61a78b7cd476c34ebb0117bdbb",
+      "ended_utc": "2026-11-15T05:39:17.909082+00:00",
+      "seconds": 98.541
+    }
+  ],
+  "started_utc": "2026-11-15T05:37:39.283350+00:00",
+  "ended_utc": "2026-11-15T05:39:17.910075+00:00",
+  "wall_model_seconds": 98.541
+}

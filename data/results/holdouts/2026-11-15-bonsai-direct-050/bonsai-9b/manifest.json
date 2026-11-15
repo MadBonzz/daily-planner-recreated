@@ -1,0 +1,25 @@
+{
+  "model": "ternary-bonsai-2-9b",
+  "file": "Ternary-Bonsai-2-9B-Q2_0.gguf",
+  "file_sha256": "1f884aa56aacd2bbbb2e4b7abaead2b1102b74a9c75a23fc33dab916813a384d",
+  "bytes": 2556640128,
+  "reference": "2026-11-15-qwen-query-instruction",
+  "cases": 20,
+  "fixture_sha256": "e7be121608d09238369cbee41da49b7bddb4eb8dce890426edc5f796413649ae",
+  "cosine_cutoff": 0.5,
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "temperature": 0,
+  "prompt_parity": "SHA256 of messages, schema, temperature and token budget against the instructed Cohere primary request",
+  "client_processes": 4,
+  "server_slots": 4,
+  "context_per_slot": 4096,
+  "endpoint": "http://127.0.0.1:1243/v1/chat/completions",
+  "http_timeout_seconds": 3600,
+  "implementation_sha256": {
+    "estimator.py": "7d744e32291ac87c5bf877fa9efcf63ba500c2a7760ffa9b2f2a1d6321f26df5",
+    "model_client.py": "b8865e4569331fd37f8691ac3fa151f526e651cef0d72db4e574a005736aa91c",
+    "retrieval.py": "c24c173373b64dbfffdb421dba2e63af41ab067d7eb20a5d867a9ebf3e21b593",
+    "examples/estimation/run.py": "31e9f58f4fa5fb8ad5436c6a2e4f952923ec54633cc7873bada9fe3e4dc92fef",
+    "examples/estimation/bonsai_holdouts.py": "1f940f9f5cede401190b0a5c774d94c3724231f3d19eb3d6f274dcb219182ee8"
+  }
+}

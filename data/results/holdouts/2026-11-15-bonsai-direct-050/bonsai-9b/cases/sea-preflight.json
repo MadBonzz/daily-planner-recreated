@@ -1,0 +1,175 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves checking two projector routes, fixing a broken path, and returning screens to standby, which mirrors the scope of the 'Check the booth playback outputs' task (Slot 2). That task took 38 minutes against a 30-minute budget (ratio 1.27), suggesting a baseline of roughly 30 minutes for similar verification work. The new task adds the complexity of verifying lobby output separately and fixing a broken path, which may extend the time slightly, but the 'Test the relay for the Blue House tour' (Slot 1) shows that fixing a broken path or rebind asset can add 8 minutes to a 35-minute budget (actual 43). Since the new task explicitly includes fixing a broken path and checking lobby output, a duration near the higher end of the range is prudent. However, the scope is slightly narrower than the full relay changeover in Slot 1, so 25 minutes is a reasonable starting point, with the potential to drift up to 35 if the broken path requires significant troubleshooting.",
+  "model_calls": [
+    {
+      "prompt_sha256": "26c3dda49ac7e2edc11008452b0fc7ac70020b0e366c2f1e5efadf498ab61f29",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 25,
+        "low_min": 20,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "The task involves checking two projector routes, fixing a broken path, and returning screens to standby, which mirrors the scope of the 'Check the booth playback outputs' task (Slot 2). That task took 38 minutes against a 30-minute budget (ratio 1.27), suggesting a baseline of roughly 30 minutes for similar verification work. The new task adds the complexity of verifying lobby output separately and fixing a broken path, which may extend the time slightly, but the 'Test the relay for the Blue House tour' (Slot 1) shows that fixing a broken path or rebind asset can add 8 minutes to a 35-minute budget (actual 43). Since the new task explicitly includes fixing a broken path and checking lobby output, a duration near the higher end of the range is prudent. However, the scope is slightly narrower than the full relay changeover in Slot 1, so 25 minutes is a reasonable starting point, with the potential to drift up to 35 if the broken path requires significant troubleshooting.",
+        "confidence_reason": "The range reflects uncertainty about the exact nature of the 'broken path' and whether the lobby output check requires additional setup time. Evidence from Slot 2 supports a ~30-minute baseline for output verification, while Slot 1 indicates that path fixes can add 8 minutes. Personal evidence is limited to the historical ratios, so the range accounts for potential variations in troubleshooting time.",
+        "comparisons": [
+          {
+            "slot": 2,
+            "reason": "Similar scope of verifying two outputs and fixing a path; Slot 2 took 38 minutes vs. a 30-minute budget, suggesting a 30-minute baseline for this type of verification."
+          },
+          {
+            "slot": 1,
+            "reason": "Slot 1 involved fixing a broken path and rebinding an asset, adding 8 minutes to the budget (43 vs. 35). The new task includes fixing a broken path, so this adds potential time overhead."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 346.53
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.16,
+      1.42
+    ],
+    "evidence_ids": [
+      "cabaret-load",
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+    "predicted_ratio": 0.8333333333333334,
+    "realized_ratio": 1.2333333333333334,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "08-community-playhouse",
+  "task": "sea-preflight",
+  "title": "Do the Sea Glass booth preflight",
+  "original": 30,
+  "category": 38,
+  "planner": 25,
+  "actual": 37,
+  "range": [
+    20,
+    35
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "source": "decision model",
+      "score": 0.6364931422001361
+    },
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "source": "decision model",
+      "score": 0.6327198999749959
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves checking two projector routes, fixing a broken path, and returning screens to standby, which mirrors the scope of the 'Check the booth playback outputs' task (Slot 2). That task took 38 minutes against a 30-minute budget (ratio 1.27), suggesting a baseline of roughly 30 minutes for similar verification work. The new task adds the complexity of verifying lobby output separately and fixing a broken path, which may extend the time slightly, but the 'Test the relay for the Blue House tour' (Slot 1) shows that fixing a broken path or rebind asset can add 8 minutes to a 35-minute budget (actual 43). Since the new task explicitly includes fixing a broken path and checking lobby output, a duration near the higher end of the range is prudent. However, the scope is slightly narrower than the full relay changeover in Slot 1, so 25 minutes is a reasonable starting point, with the potential to drift up to 35 if the broken path requires significant troubleshooting.",
+  "confidence_reason": "The range reflects uncertainty about the exact nature of the 'broken path' and whether the lobby output check requires additional setup time. Evidence from Slot 2 supports a ~30-minute baseline for output verification, while Slot 1 indicates that path fixes can add 8 minutes. Personal evidence is limited to the historical ratios, so the range accounts for potential variations in troubleshooting time.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 346.53,
+  "latency_seconds": 346.591,
+  "evidence": [
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "estimate_min": 30,
+      "actual_min": 38.0,
+      "ratio": 1.2666666666666666,
+      "reason": "Similar scope of verifying two outputs and fixing a path; Slot 2 took 38 minutes vs. a 30-minute budget, suggesting a 30-minute baseline for this type of verification.",
+      "reason_source": "model",
+      "model_rationale": "Similar scope of verifying two outputs and fixing a path; Slot 2 took 38 minutes vs. a 30-minute budget, suggesting a 30-minute baseline for this type of verification.",
+      "source_quote": "Open the touring workspace, verify both projector outputs and fix the path to the house loop before doors."
+    },
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "estimate_min": 35,
+      "actual_min": 43.0,
+      "ratio": 1.2285714285714286,
+      "reason": "Slot 1 involved fixing a broken path and rebinding an asset, adding 8 minutes to the budget (43 vs. 35). The new task includes fixing a broken path, so this adds potential time overhead.",
+      "reason_source": "model",
+      "model_rationale": "Slot 1 involved fixing a broken path and rebinding an asset, adding 8 minutes to the budget (43 vs. 35). The new task includes fixing a broken path, so this adds potential time overhead.",
+      "source_quote": "Follow the visiting crew’s booth changeover sheet. Verify the mirror display and restore the house workspace when the test is finished."
+    }
+  ],
+  "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+  "qwen_candidates": [
+    {
+      "candidate": "blue-relay",
+      "cosine": 0.6364931422001361,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "audio-preflight",
+      "cosine": 0.6327198999749959,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "85af46a13132b3c0888066b9dd96a328788791d09361edc4388203d951bff9a8",
+      "same_input_cohere_id": "091471897ca46ff289ca595651cf7c67b6d05b95b62d37c913ee0709475ceec2"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "85af46a13132b3c0888066b9dd96a328788791d09361edc4388203d951bff9a8",
+      "started_utc": "2026-11-15T05:32:50.134213+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "b70c4106af2ff034a8fadfaa92f80d9897a72e0b651a54e816a91f52809ec5a5",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 492,
+        "prompt_tokens": 1499,
+        "total_tokens": 1991,
+        "prompt_tokens_details": {
+          "cached_tokens": 452
+        }
+      },
+      "timings": {
+        "cache_n": 452,
+        "prompt_n": 1047,
+        "prompt_ms": 46028.836,
+        "prompt_per_token_ms": 43.96259407831901,
+        "prompt_per_second": 22.746610407441107,
+        "predicted_n": 492,
+        "predicted_ms": 300370.972,
+        "predicted_per_token_ms": 611.7535071283096,
+        "predicted_per_second": 1.6346453078694967
+      },
+      "content_sha256": "cb7d07c1983856fe4fcd2380f6e27f31bddfea57267ae0a81b57f3c527e8e1e9",
+      "ended_utc": "2026-11-15T05:38:36.663585+00:00",
+      "seconds": 346.529
+    }
+  ],
+  "started_utc": "2026-11-15T05:32:50.047619+00:00",
+  "ended_utc": "2026-11-15T05:38:36.664708+00:00",
+  "wall_model_seconds": 346.529
+}

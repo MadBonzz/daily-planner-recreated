@@ -1,0 +1,215 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "This task involves a 30-minute meeting with Mara to agree handover owners for two intake rooms and record the decision, which mirrors the scope of the three prior tasks (slots 1, 2, and 3). The primary driver of time is the discussion and agreement phase, similar to the 'Work out the overflow roster' and 'Assign the late intake room' tasks where Mara joined late (6–9 minutes) and the meeting ran longer than the 30-minute invite due to discussion. The estimated 35 minutes accounts for the standard 30-minute slot plus a buffer for potential delays in reaching consensus or administrative recording, consistent with the observed average actual time of approximately 40 minutes across the three history entries. The assumption is that the 'draft list' mentioned in the details will be reviewed efficiently without requiring additional proposal rounds, as seen in the prior tasks where all necessary names were proposed within the meeting.",
+  "model_calls": [
+    {
+      "prompt_sha256": "a251ee6f2395161b946407dc93e180919c34db5cc1447491758b2a518466dc50",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 35,
+        "low_min": 30,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "This task involves a 30-minute meeting with Mara to agree handover owners for two intake rooms and record the decision, which mirrors the scope of the three prior tasks (slots 1, 2, and 3). The primary driver of time is the discussion and agreement phase, similar to the 'Work out the overflow roster' and 'Assign the late intake room' tasks where Mara joined late (6–9 minutes) and the meeting ran longer than the 30-minute invite due to discussion. The estimated 35 minutes accounts for the standard 30-minute slot plus a buffer for potential delays in reaching consensus or administrative recording, consistent with the observed average actual time of approximately 40 minutes across the three history entries. The assumption is that the 'draft list' mentioned in the details will be reviewed efficiently without requiring additional proposal rounds, as seen in the prior tasks where all necessary names were proposed within the meeting.",
+        "confidence_reason": "The range reflects the likelihood of Mara joining late (as observed in slots 1 and 2) or requiring extra time to finalize the clipboard ownership details mentioned in the handout. Personal evidence from the three history slots shows a consistent pattern of 1.3x to 1.37x overrun, suggesting that while the scope is similar, the actual duration will likely exceed the 30-minute budget by about 5 minutes. If Mara were punctual and the discussion concluded immediately, the time could approach the low end of 30 minutes, but the historical data supports a higher estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Mara joined 8 minutes late and the meeting extended to 40 minutes; this task shares the same participant and likely similar discussion depth regarding room assignments."
+          },
+          {
+            "slot": 2,
+            "reason": "Mara was 9 minutes late and the meeting took 41 minutes; the current task involves a similar decision-making process for roster items."
+          },
+          {
+            "slot": 3,
+            "reason": "Mara arrived 6 minutes late and the meeting took 39 minutes; the current task includes recording decisions on a rota sheet, which adds a minor administrative step compared to the previous tasks."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 270.199
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.23,
+      1.44
+    ],
+    "evidence_ids": [
+      "mara-evening",
+      "mara-capacity",
+      "mara-late-room"
+    ],
+    "rationale": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison.",
+    "expected_caution": {
+      "evidence_ids": [
+        "mara-evening",
+        "mara-capacity",
+        "mara-late-room"
+      ],
+      "rationale": "Mention that Mara previously joined these capacity reviews late, attributing it to the coordinator’s notes."
+    },
+    "predicted_ratio": 1.1666666666666667,
+    "realized_ratio": 1.3666666666666667,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "mara-capacity",
+      "mara-evening",
+      "mara-late-room"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "06-neighborhood-clinic",
+  "task": "mara-rooms",
+  "title": "Set the handover rota with Mara",
+  "original": 30,
+  "category": 32,
+  "planner": 35,
+  "actual": 41,
+  "range": [
+    30,
+    45
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "mara-evening",
+      "title": "Review Thursday evening coverage with Mara",
+      "source": "decision model",
+      "score": 0.6253379382578589
+    },
+    {
+      "task_id": "mara-capacity",
+      "title": "Work out the overflow roster with Mara",
+      "source": "decision model",
+      "score": 0.6038016530670596
+    },
+    {
+      "task_id": "mara-late-room",
+      "title": "Assign the late intake room with Mara",
+      "source": "decision model",
+      "score": 0.5799272864160627
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "This task involves a 30-minute meeting with Mara to agree handover owners for two intake rooms and record the decision, which mirrors the scope of the three prior tasks (slots 1, 2, and 3). The primary driver of time is the discussion and agreement phase, similar to the 'Work out the overflow roster' and 'Assign the late intake room' tasks where Mara joined late (6–9 minutes) and the meeting ran longer than the 30-minute invite due to discussion. The estimated 35 minutes accounts for the standard 30-minute slot plus a buffer for potential delays in reaching consensus or administrative recording, consistent with the observed average actual time of approximately 40 minutes across the three history entries. The assumption is that the 'draft list' mentioned in the details will be reviewed efficiently without requiring additional proposal rounds, as seen in the prior tasks where all necessary names were proposed within the meeting.",
+  "confidence_reason": "The range reflects the likelihood of Mara joining late (as observed in slots 1 and 2) or requiring extra time to finalize the clipboard ownership details mentioned in the handout. Personal evidence from the three history slots shows a consistent pattern of 1.3x to 1.37x overrun, suggesting that while the scope is similar, the actual duration will likely exceed the 30-minute budget by about 5 minutes. If Mara were punctual and the discussion concluded immediately, the time could approach the low end of 30 minutes, but the historical data supports a higher estimate.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 270.199,
+  "latency_seconds": 270.255,
+  "evidence": [
+    {
+      "task_id": "mara-evening",
+      "title": "Review Thursday evening coverage with Mara",
+      "estimate_min": 30,
+      "actual_min": 40.0,
+      "ratio": 1.3333333333333333,
+      "reason": "Mara joined 8 minutes late and the meeting extended to 40 minutes; this task shares the same participant and likely similar discussion depth regarding room assignments.",
+      "reason_source": "model",
+      "model_rationale": "Mara joined 8 minutes late and the meeting extended to 40 minutes; this task shares the same participant and likely similar discussion depth regarding room assignments.",
+      "source_quote": "Agree on a second greeter and a backup for the late check-in with Mara Imani. Send the decisions to the shift lead."
+    },
+    {
+      "task_id": "mara-capacity",
+      "title": "Work out the overflow roster with Mara",
+      "estimate_min": 30,
+      "actual_min": 41.0,
+      "ratio": 1.3666666666666667,
+      "reason": "Mara was 9 minutes late and the meeting took 41 minutes; the current task involves a similar decision-making process for roster items.",
+      "reason_source": "model",
+      "model_rationale": "Mara was 9 minutes late and the meeting took 41 minutes; the current task involves a similar decision-making process for roster items.",
+      "source_quote": "Meet Mara Imani to decide who can stay for the spillover clinic. Record the owners in the rota."
+    },
+    {
+      "task_id": "mara-late-room",
+      "title": "Assign the late intake room with Mara",
+      "estimate_min": 30,
+      "actual_min": 39.0,
+      "ratio": 1.3,
+      "reason": "Mara arrived 6 minutes late and the meeting took 39 minutes; the current task includes recording decisions on a rota sheet, which adds a minor administrative step compared to the previous tasks.",
+      "reason_source": "model",
+      "model_rationale": "Mara arrived 6 minutes late and the meeting took 39 minutes; the current task includes recording decisions on a rota sheet, which adds a minor administrative step compared to the previous tasks.",
+      "source_quote": "Mara Imani and I need to pick a second appointment room, agree an owner, then send the signed-off rota."
+    }
+  ],
+  "check": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison.",
+  "qwen_candidates": [
+    {
+      "candidate": "mara-evening",
+      "cosine": 0.6253379382578589,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "mara-capacity",
+      "cosine": 0.6038016530670596,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "mara-late-room",
+      "cosine": 0.5799272864160627,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dev-receipts",
+      "cosine": 0.5042273712646219,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "1e1656a6f26db87bf761317bd3cdb6821f3e74076c81888a52e6ef144b077e23",
+      "same_input_cohere_id": "b1755a247879d6114afe2ac583402cd6bf634d9310c786e0c7b671140dcb11db"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "1e1656a6f26db87bf761317bd3cdb6821f3e74076c81888a52e6ef144b077e23",
+      "started_utc": "2026-11-15T05:28:19.823475+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "9a63713a599ce3997bdb9ac016e2c0d3d4e8f83e1ae42070d13eabc24958f8e9",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 543,
+        "prompt_tokens": 1481,
+        "total_tokens": 2024,
+        "prompt_tokens_details": {
+          "cached_tokens": 452
+        }
+      },
+      "timings": {
+        "cache_n": 452,
+        "prompt_n": 1029,
+        "prompt_ms": 44982.261,
+        "prompt_per_token_ms": 43.71453935860058,
+        "prompt_per_second": 22.87568426140251,
+        "predicted_n": 543,
+        "predicted_ms": 225033.203,
+        "predicted_per_token_ms": 415.1904114391144,
+        "predicted_per_second": 2.408533464281713
+      },
+      "content_sha256": "e6aa1a2ad511b67137b5ffce0e7011b5dd93f57d535be65b6d15c20e5a44363e",
+      "ended_utc": "2026-11-15T05:32:50.021581+00:00",
+      "seconds": 270.198
+    }
+  ],
+  "started_utc": "2026-11-15T05:28:19.753261+00:00",
+  "ended_utc": "2026-11-15T05:32:50.022449+00:00",
+  "wall_model_seconds": 270.198
+}

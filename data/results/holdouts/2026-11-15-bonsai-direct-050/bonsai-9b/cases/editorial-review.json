@@ -1,0 +1,146 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The new task involves reimplementing a saved solution and testing endpoints, which is a direct extension of the prior task 'Retype merge intervals from my notes'. The previous task had a budget of 25 minutes and an actual duration of 17 minutes (ratio 0.68), indicating a consistent under-estimation of effort for similar administrative coding tasks. Since the new task includes the same core logic (reimplementing the solution) plus an additional step (testing endpoints), the time requirement is slightly higher than the baseline 17 minutes. However, the 'testing endpoints' step is likely minimal given the existence of an example trace, so the total time should remain close to the previous actual duration, perhaps adding 3-5 minutes for verification. Thus, a point estimate of 20 minutes is appropriate, with a low bound of 15 minutes if the trace is sufficient and a high bound of 25 minutes to account for any unexpected debugging or endpoint verification delays.",
+  "model_calls": [
+    {
+      "prompt_sha256": "759c69a40b39f02c59fd5301aab1938b7954b33df7fd8d0b80104e5c62747a9b",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 20,
+        "low_min": 15,
+        "high_min": 25,
+        "confidence": "medium",
+        "rationale": "The new task involves reimplementing a saved solution and testing endpoints, which is a direct extension of the prior task 'Retype merge intervals from my notes'. The previous task had a budget of 25 minutes and an actual duration of 17 minutes (ratio 0.68), indicating a consistent under-estimation of effort for similar administrative coding tasks. Since the new task includes the same core logic (reimplementing the solution) plus an additional step (testing endpoints), the time requirement is slightly higher than the baseline 17 minutes. However, the 'testing endpoints' step is likely minimal given the existence of an example trace, so the total time should remain close to the previous actual duration, perhaps adding 3-5 minutes for verification. Thus, a point estimate of 20 minutes is appropriate, with a low bound of 15 minutes if the trace is sufficient and a high bound of 25 minutes to account for any unexpected debugging or endpoint verification delays.",
+        "confidence_reason": "The task scope is well-defined by the prior task's successful completion of a similar reimplementation. The only added complexity is endpoint testing, which is a standard, low-effort step when an example trace is available. Personal evidence from the single prior task (17 minutes actual vs. 25-minute budget) suggests a 30% efficiency factor for this type of work, supporting the adjusted estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The prior task 'Retype merge intervals from my notes' (budget 25 min, actual 17 min) shares the core reimplementation step. The new task adds endpoint testing, which is a minor extension of the same workflow, suggesting a similar duration with a slight increase."
+          }
+        ]
+      },
+      "seconds": 231.762
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.87
+    ],
+    "evidence_ids": [
+      "retype-merge",
+      "retype-stack"
+    ],
+    "rationale": "Review uses prior solution and is routinely shorter.",
+    "predicted_ratio": 0.8,
+    "realized_ratio": 0.76,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "retype-merge"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "05-interview-practice",
+  "task": "editorial-review",
+  "title": "Redo the saved interval merge after lunch",
+  "original": 25,
+  "category": 30,
+  "planner": 20,
+  "actual": 19,
+  "range": [
+    15,
+    25
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "source": "decision model",
+      "score": 0.6512650940814004
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The new task involves reimplementing a saved solution and testing endpoints, which is a direct extension of the prior task 'Retype merge intervals from my notes'. The previous task had a budget of 25 minutes and an actual duration of 17 minutes (ratio 0.68), indicating a consistent under-estimation of effort for similar administrative coding tasks. Since the new task includes the same core logic (reimplementing the solution) plus an additional step (testing endpoints), the time requirement is slightly higher than the baseline 17 minutes. However, the 'testing endpoints' step is likely minimal given the existence of an example trace, so the total time should remain close to the previous actual duration, perhaps adding 3-5 minutes for verification. Thus, a point estimate of 20 minutes is appropriate, with a low bound of 15 minutes if the trace is sufficient and a high bound of 25 minutes to account for any unexpected debugging or endpoint verification delays.",
+  "confidence_reason": "The task scope is well-defined by the prior task's successful completion of a similar reimplementation. The only added complexity is endpoint testing, which is a standard, low-effort step when an example trace is available. Personal evidence from the single prior task (17 minutes actual vs. 25-minute budget) suggests a 30% efficiency factor for this type of work, supporting the adjusted estimate.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 231.762,
+  "latency_seconds": 231.831,
+  "evidence": [
+    {
+      "task_id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "estimate_min": 25,
+      "actual_min": 17.0,
+      "ratio": 0.68,
+      "reason": "The prior task 'Retype merge intervals from my notes' (budget 25 min, actual 17 min) shares the core reimplementation step. The new task adds endpoint testing, which is a minor extension of the same workflow, suggesting a similar duration with a slight increase.",
+      "reason_source": "model",
+      "model_rationale": "The prior task 'Retype merge intervals from my notes' (budget 25 min, actual 17 min) shares the core reimplementation step. The new task adds endpoint testing, which is a minor extension of the same workflow, suggesting a similar duration with a slight increase.",
+      "source_quote": "Use last week’s accepted answer; check the equality boundary and send the link."
+    }
+  ],
+  "check": "Review uses prior solution and is routinely shorter.",
+  "qwen_candidates": [
+    {
+      "candidate": "retype-merge",
+      "cosine": 0.6512650940814004,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "780f23a9a1dc17fe579ebacd290566ce5bb407c062ed9e2ffe08d182626236fd",
+      "same_input_cohere_id": "5455fcf7b10763f0a0d188de9f7579bedd0ce42f9204a2d41895e93ed7a71f04"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "780f23a9a1dc17fe579ebacd290566ce5bb407c062ed9e2ffe08d182626236fd",
+      "started_utc": "2026-11-15T05:28:03.182917+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "8abc36783173b71b7a10adb5281993c1b3746641f2ee428c17dd0d526c419c70",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 428,
+        "prompt_tokens": 646,
+        "total_tokens": 1074,
+        "prompt_tokens_details": {
+          "cached_tokens": 412
+        }
+      },
+      "timings": {
+        "cache_n": 412,
+        "prompt_n": 234,
+        "prompt_ms": 10849.72,
+        "prompt_per_token_ms": 46.36632478632478,
+        "prompt_per_second": 21.567376853964895,
+        "predicted_n": 428,
+        "predicted_ms": 220746.849,
+        "predicted_per_token_ms": 516.9715433255269,
+        "predicted_per_second": 1.9343424467182315
+      },
+      "content_sha256": "1d0f8bf95cd0ea6b9537375bfe85749e0adcd98bcfb41986667398d3a4829ab0",
+      "ended_utc": "2026-11-15T05:31:54.944210+00:00",
+      "seconds": 231.761
+    }
+  ],
+  "started_utc": "2026-11-15T05:28:03.080002+00:00",
+  "ended_utc": "2026-11-15T05:31:54.953270+00:00",
+  "wall_model_seconds": 231.761
+}

@@ -1,0 +1,175 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The deliverable is a submission-ready argument proving the retirement invariant or legal failure schedule for Part B of the bridge handout, which requires analyzing a delayed DRAINED event and providing a counterexample with a specific repair. This task shares the core analysis workload of the prior task 'Prove a flush barrier across restart' (Slot 1), which took 90 minutes against a 75-minute budget. The new task is slightly more focused on the invariant proof and repair rather than the full flush barrier derivation, suggesting a similar or marginally shorter duration than the previous 90-minute outcome. The 75-minute user estimate aligns well with the prior task's actual time, so maintaining the budget is reasonable given the comparable scope of analyzing event sequences and crash recovery.",
+  "model_calls": [
+    {
+      "prompt_sha256": "86ab4e3ec135bb8180f46b289087451c184b37f8d5acf7ca638f1033ca6eb2e7",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 60,
+        "low_min": 50,
+        "high_min": 80,
+        "confidence": "medium",
+        "rationale": "The deliverable is a submission-ready argument proving the retirement invariant or legal failure schedule for Part B of the bridge handout, which requires analyzing a delayed DRAINED event and providing a counterexample with a specific repair. This task shares the core analysis workload of the prior task 'Prove a flush barrier across restart' (Slot 1), which took 90 minutes against a 75-minute budget. The new task is slightly more focused on the invariant proof and repair rather than the full flush barrier derivation, suggesting a similar or marginally shorter duration than the previous 90-minute outcome. The 75-minute user estimate aligns well with the prior task's actual time, so maintaining the budget is reasonable given the comparable scope of analyzing event sequences and crash recovery.",
+        "confidence_reason": "The prior task involved similar distributed systems reasoning and repair work, but included an additional step (separate failure schedule for crash recovery) that may not be fully required here. The user's 75-minute estimate matches the prior task's 90-minute actual time closely, indicating the scope is comparable. However, since the prior task exceeded its budget by 15 minutes, there is some uncertainty about whether the current task will require additional time for proofreading or adversarial execution analysis. The range reflects this uncertainty while acknowledging the shared analytical foundation.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The prior task 'Prove a flush barrier across restart' (Slot 1) involved reasoning from stable cursor state and producing a counterexample for a delayed generation, which is directly relevant to the current task's requirement to analyze a delayed DRAINED event and provide a repair. The prior task took 90 minutes versus a 75-minute budget, suggesting the current task may require similar or slightly less time due to its narrower focus on the invariant proof rather than the full barrier derivation."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 423.991
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.14,
+      1.3
+    ],
+    "evidence_ids": [
+      "lease-restart",
+      "epoch-proof",
+      "barrier-proof"
+    ],
+    "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+    "expected_caution": {
+      "evidence_ids": [
+        "lease-restart",
+        "epoch-proof"
+      ],
+      "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+    },
+    "predicted_ratio": 0.8,
+    "realized_ratio": 1.24,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "barrier-proof"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-proof",
+  "title": "Solve part B of the bridge handout",
+  "original": 75,
+  "category": 90,
+  "planner": 60,
+  "actual": 93,
+  "range": [
+    50,
+    80
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "source": "decision model",
+      "score": 0.6438314738415435
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The deliverable is a submission-ready argument proving the retirement invariant or legal failure schedule for Part B of the bridge handout, which requires analyzing a delayed DRAINED event and providing a counterexample with a specific repair. This task shares the core analysis workload of the prior task 'Prove a flush barrier across restart' (Slot 1), which took 90 minutes against a 75-minute budget. The new task is slightly more focused on the invariant proof and repair rather than the full flush barrier derivation, suggesting a similar or marginally shorter duration than the previous 90-minute outcome. The 75-minute user estimate aligns well with the prior task's actual time, so maintaining the budget is reasonable given the comparable scope of analyzing event sequences and crash recovery.",
+  "confidence_reason": "The prior task involved similar distributed systems reasoning and repair work, but included an additional step (separate failure schedule for crash recovery) that may not be fully required here. The user's 75-minute estimate matches the prior task's 90-minute actual time closely, indicating the scope is comparable. However, since the prior task exceeded its budget by 15 minutes, there is some uncertainty about whether the current task will require additional time for proofreading or adversarial execution analysis. The range reflects this uncertainty while acknowledging the shared analytical foundation.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 423.991,
+  "latency_seconds": 424.083,
+  "evidence": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "estimate_min": 75,
+      "actual_min": 90.0,
+      "ratio": 1.2,
+      "reason": "The prior task 'Prove a flush barrier across restart' (Slot 1) involved reasoning from stable cursor state and producing a counterexample for a delayed generation, which is directly relevant to the current task's requirement to analyze a delayed DRAINED event and provide a repair. The prior task took 90 minutes versus a 75-minute budget, suggesting the current task may require similar or slightly less time due to its narrower focus on the invariant proof rather than the full barrier derivation.",
+      "reason_source": "model",
+      "model_rationale": "The prior task 'Prove a flush barrier across restart' (Slot 1) involved reasoning from stable cursor state and producing a counterexample for a delayed generation, which is directly relevant to the current task's requirement to analyze a delayed DRAINED event and provide a repair. The prior task took 90 minutes versus a 75-minute budget, suggesting the current task may require similar or slightly less time due to its narrower focus on the invariant proof rather than the full barrier derivation.",
+      "source_quote": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it."
+    }
+  ],
+  "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+  "qwen_candidates": [
+    {
+      "candidate": "barrier-proof",
+      "cosine": 0.6438314738415435,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "lease-restart",
+      "cosine": 0.5962086967750375,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "epoch-proof",
+      "cosine": 0.5363106545822541,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "clock-two",
+      "cosine": 0.519947634428948,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "ack-traces",
+      "cosine": 0.5077189763502974,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "1e9acb57ab351476b2a87336ffdee9fc0c2ced3d2ef1ccda492d2ef9742f480f",
+      "same_input_cohere_id": "43cae0e74b0ee9b2252f5ff35f7676021cd7bed0bf511c57722000def1a90c4b"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "1e9acb57ab351476b2a87336ffdee9fc0c2ced3d2ef1ccda492d2ef9742f480f",
+      "started_utc": "2026-11-15T05:17:47.011791+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "54ac42c4932162fe792b6bc44555cabe751fa33e9e64de39f44c0d26f8dac629",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 459,
+        "prompt_tokens": 1123,
+        "total_tokens": 1582,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1123,
+        "prompt_ms": 177522.089,
+        "prompt_per_token_ms": 158.07844078361532,
+        "prompt_per_second": 6.325973327184089,
+        "predicted_n": 459,
+        "predicted_ms": 246415.185,
+        "predicted_per_token_ms": 538.0244213973799,
+        "predicted_per_second": 1.8586516898299106
+      },
+      "content_sha256": "13c21caa67065715f06ac34d549ece943d32a72329940575fa68fb8b9c024ae4",
+      "ended_utc": "2026-11-15T05:24:51.002094+00:00",
+      "seconds": 423.99
+    }
+  ],
+  "started_utc": "2026-11-15T05:17:46.863661+00:00",
+  "ended_utc": "2026-11-15T05:24:51.002990+00:00",
+  "wall_model_seconds": 423.99
+}

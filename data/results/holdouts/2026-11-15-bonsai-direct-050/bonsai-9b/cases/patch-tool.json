@@ -1,0 +1,160 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires implementing a bounded streaming tool, registering it in the repair loop, and passing four acceptance cases. The scope is limited to Part I where the environment already builds both decoders, and only the Python tool and its registration need to be changed. This aligns with the 'Implement the bounded mismatch reporter' task (slot 1), which took 118 minutes against an 80-minute budget (ratio 1.48). However, the new task is smaller in scope as it does not involve wiring the error envelope into the CLI or testing truncated tails, which were significant time sinks in the prior task. Assuming the core logic of the streaming tool is similar, the estimated time is reduced. The four acceptance cases are straightforward given the existing decoder setup.",
+  "model_calls": [
+    {
+      "prompt_sha256": "f5c4988462afcc47d9264f3dfdf7e2133cedf8e9a2df89283e854a1cab202104",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 60,
+        "low_min": 45,
+        "high_min": 90,
+        "confidence": "medium",
+        "rationale": "The task requires implementing a bounded streaming tool, registering it in the repair loop, and passing four acceptance cases. The scope is limited to Part I where the environment already builds both decoders, and only the Python tool and its registration need to be changed. This aligns with the 'Implement the bounded mismatch reporter' task (slot 1), which took 118 minutes against an 80-minute budget (ratio 1.48). However, the new task is smaller in scope as it does not involve wiring the error envelope into the CLI or testing truncated tails, which were significant time sinks in the prior task. Assuming the core logic of the streaming tool is similar, the estimated time is reduced. The four acceptance cases are straightforward given the existing decoder setup.",
+        "confidence_reason": "The prior task's underestimation (1.48x) suggests potential hidden complexity, but the new task's reduced scope (no CLI wiring, no tail testing) mitigates this. The four acceptance cases are well-defined, and the environment setup is already complete, supporting the lower end of the range. Personal evidence is limited to the prior task's duration and the current task's scope, which is sufficient to estimate a moderate range.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The prior task involved wiring the error envelope into the CLI and testing truncated tails, which are not required here. The core streaming tool logic is similar, but the reduced scope supports a shorter time estimate."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 360.094
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.34,
+      1.65
+    ],
+    "evidence_ids": [
+      "ring-port",
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+    "expected_caution": {
+      "evidence_ids": [
+        "trace-tool",
+        "boundary-debug"
+      ],
+      "rationale": "The EOF regression fixture needed minimizing twice."
+    },
+    "predicted_ratio": 0.7058823529411765,
+    "realized_ratio": 1.6235294117647059,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "trace-tool"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-tool",
+  "title": "Implement first divergence for C and Rust traces",
+  "original": 85,
+  "category": 109,
+  "planner": 60,
+  "actual": 138,
+  "range": [
+    45,
+    90
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "source": "decision model",
+      "score": 0.6215277851037868
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-2-9b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires implementing a bounded streaming tool, registering it in the repair loop, and passing four acceptance cases. The scope is limited to Part I where the environment already builds both decoders, and only the Python tool and its registration need to be changed. This aligns with the 'Implement the bounded mismatch reporter' task (slot 1), which took 118 minutes against an 80-minute budget (ratio 1.48). However, the new task is smaller in scope as it does not involve wiring the error envelope into the CLI or testing truncated tails, which were significant time sinks in the prior task. Assuming the core logic of the streaming tool is similar, the estimated time is reduced. The four acceptance cases are straightforward given the existing decoder setup.",
+  "confidence_reason": "The prior task's underestimation (1.48x) suggests potential hidden complexity, but the new task's reduced scope (no CLI wiring, no tail testing) mitigates this. The four acceptance cases are well-defined, and the environment setup is already complete, supporting the lower end of the range. Personal evidence is limited to the prior task's duration and the current task's scope, which is sufficient to estimate a moderate range.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 360.094,
+  "latency_seconds": 360.151,
+  "evidence": [
+    {
+      "task_id": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "estimate_min": 80,
+      "actual_min": 118.0,
+      "ratio": 1.475,
+      "reason": "The prior task involved wiring the error envelope into the CLI and testing truncated tails, which are not required here. The core streaming tool logic is similar, but the reduced scope supports a shorter time estimate.",
+      "reason_source": "model",
+      "model_rationale": "The prior task involved wiring the error envelope into the CLI and testing truncated tails, which are not required here. The core streaming tool logic is similar, but the reduced scope supports a shorter time estimate.",
+      "source_quote": "Add a streaming comparison tool and wire its error envelope into the CLI; test truncated tails."
+    }
+  ],
+  "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+  "qwen_candidates": [
+    {
+      "candidate": "trace-tool",
+      "cosine": 0.6215277851037868,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "suite-report",
+      "cosine": 0.5526656907758711,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "b7665868034f80722357ad8ecb206e56119aa957bb6a57026962e1ca01a4915e",
+      "same_input_cohere_id": "05758449ea2c52ed3d6d679d7eb642ec60eaca6bdecd8ff38f378afb0e646f81"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "b7665868034f80722357ad8ecb206e56119aa957bb6a57026962e1ca01a4915e",
+      "started_utc": "2026-11-15T05:17:47.008472+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "e466f1f9bb546da3754ddfec06f16e70bef9658dd81c863fd28c0afb81438911",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-2-9b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 378,
+        "prompt_tokens": 1068,
+        "total_tokens": 1446,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1068,
+        "prompt_ms": 177523.161,
+        "prompt_per_token_ms": 166.2201882022472,
+        "prompt_per_second": 6.016116398468141,
+        "predicted_n": 378,
+        "predicted_ms": 182512.27,
+        "predicted_per_token_ms": 484.1174270557029,
+        "predicted_per_second": 2.0656145474493304
+      },
+      "content_sha256": "76e1c0c1b5f209bec613e16cc21b77e7db55f06c4aae50460fb14a3ddcc5181a",
+      "ended_utc": "2026-11-15T05:23:47.102020+00:00",
+      "seconds": 360.094
+    }
+  ],
+  "started_utc": "2026-11-15T05:17:46.864402+00:00",
+  "ended_utc": "2026-11-15T05:23:47.103204+00:00",
+  "wall_model_seconds": 360.094
+}

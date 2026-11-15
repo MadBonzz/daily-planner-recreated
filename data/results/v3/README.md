@@ -6,4 +6,4 @@ The separate Fourier test classified historical activity from the synthetic SQLi
 
 The offline fallback was measured across all 20 held-out tasks in the ten histories. [Offline results](runs/2026-11-14-offline-sqlite/results.json)
 
-The Bonsai direct-forecast evaluation was paused during the first 4B case. No direct Bonsai forecast was saved, and the 9B direct run had not started. Existing results for the previous estimator are in the [V2 comparison](../v2/README.md).
+The November 14 Bonsai run was paused during its first 4B case. The later [paired Bonsai 4B, Bonsai 9B and Cohere evaluation](../holdouts/2026-11-15-bonsai-direct-050/) uses the instructed Qwen query and a 0.50 cutoff. Results for the earlier hybrid estimator are in the [V2 comparison](../v2/README.md).
