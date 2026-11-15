@@ -1,0 +1,139 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Review the recorded step before deciding how much time to reserve.",
+      "sources": [
+        {
+          "task_id": "derive-noise",
+          "title": "Rebuild the loss estimate under one audit coin",
+          "origin": "Completion note",
+          "observation": "I had to expand the conditional expectation one event at a time."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 2 comparisons, the median ratio of actual to estimated time was 1.73×. Applied 67% of the adjustment. 60 min × 1.48 ≈ 89 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "a0bd944b034a9d00f7c7dff393a1e3abadab2cd41f8a3752a22ee945d0b06c8d",
+      "max_tokens": 480,
+      "seconds": 75.797,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Identical deliverable (Appendix A derivation + two-item example) and method (paper reading), though slot 1 focuses on the 'observed-only' bias while the new task requires the full 'second-moment inequality' proof.",
+            "flag": 1
+          },
+          {
+            "slot": 4,
+            "reason": "Identical deliverable (Appendix A derivation) and method (paper reading), sharing the same difficulty level of algebraic expansion required for the variance bound.",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.48,
+      1.86
+    ],
+    "evidence_ids": [
+      "derive-noise",
+      "bound-floor",
+      "check-jensen"
+    ],
+    "rationale": "Deriving a proof takes substantially longer than a figures-only reading.",
+    "predicted_ratio": 1.4833333333333334,
+    "realized_ratio": 1.75,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "bound-floor",
+      "derive-noise"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "appendix-proof",
+  "title": "Prepare the appendix board derivation",
+  "original": 60,
+  "category": 75,
+  "planner": 89,
+  "actual": 105,
+  "range": [
+    53,
+    125
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 75.797,
+  "latency_seconds": 75.821,
+  "evidence": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "estimate_min": 60,
+      "actual_min": 104.0,
+      "ratio": 1.7333333333333334,
+      "reason": "Identical deliverable (Appendix A derivation + two-item example) and method (paper reading), though slot 1 focuses on the 'observed-only' bias while the new task requires the full 'second-moment inequality' proof."
+    },
+    {
+      "task_id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "estimate_min": 50,
+      "actual_min": 86.0,
+      "ratio": 1.72,
+      "reason": "Identical deliverable (Appendix A derivation) and method (paper reading), sharing the same difficulty level of algebraic expansion required for the variance bound."
+    }
+  ],
+  "check": "Deriving a proof takes substantially longer than a figures-only reading.",
+  "start_utc": "2026-11-14T20:38:36.558482+00:00",
+  "end_utc": "2026-11-14T20:39:52.409268+00:00",
+  "cpu_threads": 8,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T20:38:36.612824+00:00",
+      "request_body_sha256": "245eb3e2463ddcf3b32cef3f551bba2de7bbc9502b15102ab965f595a409f1aa",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "derive-noise",
+        "read-cache",
+        "read-queues",
+        "bound-floor",
+        "check-jensen",
+        "replica-figs"
+      ],
+      "usage": {
+        "completion_tokens": 117,
+        "prompt_tokens": 1297,
+        "total_tokens": 1414,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1297,
+        "prompt_ms": 63702.285,
+        "prompt_per_token_ms": 49.11510023130301,
+        "prompt_per_second": 20.360337152741067,
+        "predicted_n": 117,
+        "predicted_ms": 12080.077,
+        "predicted_per_token_ms": 104.1385948275862,
+        "predicted_per_second": 9.602587798074467
+      },
+      "content": "{\"matches\": [{\"slot\": 1, \"reason\": \"Identical deliverable (Appendix A derivation + two-item example) and method (paper reading), though slot 1 focuses on the 'observed-only' bias while the new task requires the full 'second-moment inequality' proof.\", \"flag\": 1}, {\"slot\": 4, \"reason\": \"Identical deliverable (Appendix A derivation) and method (paper reading), sharing the same difficulty level of algebraic expansion required for the variance bound.\", \"flag\": 0}]\n}",
+      "finish_utc": "2026-11-14T20:39:52.405468+00:00"
+    }
+  ]
+}

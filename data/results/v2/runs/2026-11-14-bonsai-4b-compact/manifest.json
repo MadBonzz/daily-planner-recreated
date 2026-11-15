@@ -1,0 +1,105 @@
+{
+  "run_id": "2026-11-14-bonsai-4b-compact",
+  "model": "4b",
+  "stage": "compact",
+  "input_corpus": "Ten v2 synthetic histories frozen on 2026-11-14. A replay check preserving the estimator confirmed the JSON export and native SQLite fixtures supplied identical model-bound data for all 19 forecast requests.",
+  "whole_run_sha256": "33f8c176e153f7251fdad3dec1854e5a1c709e9706773a88b9d025f231e4502f",
+  "configuration": {
+    "model": "ternary-bonsai-4b",
+    "strategy": "Replay recorded first HTTP content and finish_reason; call the live compact retry once per capped case.",
+    "first_pass_file": "results.json",
+    "first_pass_sha256": "403386e3d27bab9bff46201699e837eb038c3e3f0d23d7baf121acbdf14f47c2",
+    "started_utc": "2026-11-14T20:31:48.637949+00:00",
+    "runtime": "LM Studio bundled llama-server (llama.cpp-linux-x86_64-avx2@2.66.0)",
+    "cpu_threads": 8,
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "http_timeout_seconds": 600,
+    "context_tokens": 8192,
+    "slots": 1,
+    "gpu_layers": 0,
+    "temperature": 0,
+    "module_sha256": {
+      "activity.py": "1a14974af9c0055128db29784611ffa85b1bc679359c19c1a970be0bb15a9353",
+      "data/tasks/render_pdfs.py": "0496273a9753dbf0cf7266fb86ccef957cb99a009dda7fc8dd6027b821fb7207",
+      "dev_workspace.py": "4e761e91f34298c2ab06f4d326a83262428f5d2c881da393aae278441cfe6a16",
+      "estimate_worker.py": "fd9b916b565e8af7a6b0c6ff4a6cddb1c89b8e4748e3a0c0ae4a88d7b10c22a1",
+      "estimator.py": "6a88fd903ebc5603630c83fdb182da9fff1a65343b6b665a26804e849c791d23",
+      "examples/estimation/activity_fixture.py": "c49c693234e3be9fd693e7563f9d6cd59890fb1f901c5d7a1628a2e9dd96ccd1",
+      "examples/estimation/run.py": "046baacc9e1e092b951bb1f05aed559b858a4ec4e231ade384dc24e787f0fe78",
+      "examples/estimation/scoring.py": "238f8279896d25d6448b178be0afc9884e4860b403b83e7623dafed58390f49c",
+      "model_client.py": "356ab7c581241ce472c5ffcea619fd17b3a9e8b217e00aebad11b9477a7b6366",
+      "pdf_reader.py": "dfbbeb30eeda3a24fa6ad58114dd7c3aa958bf4cdf84217d284f33af0a11e7a0",
+      "planner_store.py": "564bfdf52052624c4c153c5a8011e38b661c5ab3531fa9d21c04a027a8024983",
+      "task_forecasts.py": "68d9526587e3cdbda1fd62bbbd7113df15070e6278b0a78654299e3846aa2912"
+    },
+    "eligible_length_failures": 13,
+    "updated_utc": "2026-11-14T20:38:29.644270+00:00",
+    "elapsed_seconds": 401.006,
+    "finished_utc": "2026-11-14T20:38:29.644264+00:00"
+  },
+  "summary": {
+    "cases": 13,
+    "rubric_cases": 13,
+    "fixed_duration_cases": 0,
+    "model_eligible_cases": 13,
+    "model_eligible_patterned_cases": 11,
+    "model_eligible_patterned_hits": 6,
+    "patterned_cases": 11,
+    "patterned_cases_in_declared_band": {
+      "original": 1,
+      "category": 3,
+      "planner": 6,
+      "actual": 11
+    },
+    "control_cases": 2,
+    "cases_with_declared_comparables": 12,
+    "cases_selecting_a_declared_comparable": 12,
+    "expected_caution_cases": 2,
+    "cautions_citing_expected_source": 2,
+    "cases_with_unknown_caution_sources": 0,
+    "cases_with_cautions": 12,
+    "mae_on_patterned_minutes": 10,
+    "mae_minutes": {
+      "original": 16.46,
+      "category": 15.46,
+      "planner": 12.62
+    },
+    "ranges_covering_actual": 10,
+    "mean_range_width_minutes": 27.54,
+    "basis_counts": {
+      "Model-selected tasks": 13
+    },
+    "model_status_counts": {
+      "ok_after_retry": 13
+    },
+    "mean_prediction_seconds": 138.813
+  },
+  "case_files": [
+    "cases/01-replica-proofs/bridge-trace.json",
+    "cases/02-migration-lab/patch-note.json",
+    "cases/03-reading-depth/appendix-proof.json",
+    "cases/03-reading-depth/metrics-club.json",
+    "cases/04-kernel-workbench/async-flicker.json",
+    "cases/04-kernel-workbench/sweep-again.json",
+    "cases/06-neighborhood-clinic/dev-april.json",
+    "cases/07-shared-apartment/bake-dishes.json",
+    "cases/07-shared-apartment/duvet.json",
+    "cases/08-community-playhouse/sea-preflight.json",
+    "cases/09-rover-night/bump-crossing.json",
+    "cases/09-rover-night/replay-ramp.json",
+    "cases/10-signal-study/triangle-video.json"
+  ],
+  "separate_transport_attempts": [],
+  "first_pass": "../2026-11-14-bonsai-4b-first-pass/manifest.json",
+  "note": "The first HTTP receipt was replayed from the primary run. The second is a separate live request sent only for a truncated choice. Per-case latency sums the measured first and second stages."
+}

@@ -1,0 +1,505 @@
+{
+  "configuration": {
+    "mode": "configured_model",
+    "model": "command-r7b-12-2024",
+    "endpoint": "https://api.cohere.ai/compatibility/v1/chat/completions",
+    "strict_model": true,
+    "history_activity_labels": "configured_model",
+    "started_at_utc": "2026-11-14T20:58:10.227507+00:00",
+    "ended_at_utc": "2026-11-14T20:59:10.341777+00:00",
+    "elapsed_seconds": 60.114,
+    "model_seconds": 59.943
+  },
+  "cases": [
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "Be mindful of off-task activities during the lecture, as they can disrupt focus and increase the time needed to complete the task.",
+          "sources": [
+            {
+              "task_id": "symmetry-video",
+              "title": "Take notes on Fourier symmetry",
+              "origin": "ActivityWatch",
+              "observation": "11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation)."
+            }
+          ]
+        },
+        {
+          "advice": "Avoid off-task activities during the lecture, as they can disrupt focus and increase the time needed to complete the task.",
+          "sources": [
+            {
+              "task_id": "window-video",
+              "title": "Work through the windowing video",
+              "origin": "ActivityWatch",
+              "observation": "16.0 min on youtube.com labeled off-task (Final-minute hockey goals / Tiny van kitchen build)."
+            }
+          ]
+        }
+      ],
+      "explanation": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+      "model_calls": [
+        {
+          "prompt_sha256": "ec5cdae52c98edfada4da38427d02e1b8ae842835555396acbca45761d33828b",
+          "max_tokens": 950,
+          "response": {
+            "point_min": 45,
+            "low_min": 40,
+            "high_min": 50,
+            "confidence": "medium",
+            "rationale": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+            "confidence_reason": "The user's history shows that tasks in the Signal study category tend to take longer than estimated, with an average deviation of 5-10 minutes. The new task involves watching a lecture and sketching, which are similar to the previous tasks but with a longer estimated time.",
+            "comparisons": [
+              {
+                "slot": 1,
+                "reason": "The new task involves watching a lecture and sketching, which are similar to the previous tasks in terms of content and required actions."
+              },
+              {
+                "slot": 2,
+                "reason": "The user's history shows that tasks in the Signal study category tend to take longer than estimated, with an average deviation of 5-10 minutes."
+              }
+            ],
+            "warnings": [
+              {
+                "observation_id": "S1.2",
+                "advice": "Be mindful of off-task activities during the lecture, as they can disrupt focus and increase the time needed to complete the task."
+              },
+              {
+                "observation_id": "S2.2",
+                "advice": "Avoid off-task activities during the lecture, as they can disrupt focus and increase the time needed to complete the task."
+              }
+            ]
+          },
+          "seconds": 6.524
+        }
+      ],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.25,
+          1.46
+        ],
+        "evidence_ids": [
+          "pulse-video",
+          "window-video",
+          "symmetry-video"
+        ],
+        "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+        "expected_caution": {
+          "evidence_ids": [
+            "pulse-video",
+            "window-video",
+            "symmetry-video"
+          ],
+          "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user’s past notes give specific evidence."
+        },
+        "predicted_ratio": 1.125,
+        "realized_ratio": 1.35,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "symmetry-video",
+          "window-video"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": true,
+        "unknown_caution_source_ids": []
+      },
+      "history": "10-signal-study",
+      "task": "triangle-video",
+      "title": "Watch the triangular-wave Fourier lecture",
+      "original": 40,
+      "category": 54,
+      "planner": 45,
+      "actual": 54,
+      "range": [
+        40,
+        50
+      ],
+      "covered": false,
+      "confidence": "medium",
+      "basis": "Model forecast",
+      "provenance": {
+        "provider": "Cohere",
+        "model": "command-r7b-12-2024",
+        "decision": "direct",
+        "minutes_by": "model"
+      },
+      "model_rationale": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+      "confidence_reason": "The user's history shows that tasks in the Signal study category tend to take longer than estimated, with an average deviation of 5-10 minutes. The new task involves watching a lecture and sketching, which are similar to the previous tasks but with a longer estimated time.",
+      "model_status": "ok",
+      "model_error": null,
+      "model_seconds": 6.524,
+      "latency_seconds": 6.616,
+      "evidence": [
+        {
+          "task_id": "symmetry-video",
+          "title": "Take notes on Fourier symmetry",
+          "estimate_min": 35,
+          "actual_min": 47.0,
+          "ratio": 1.3428571428571427,
+          "reason": "The new task involves watching a lecture and sketching, which are similar to the previous tasks in terms of content and required actions.",
+          "reason_source": "model",
+          "model_rationale": "The new task involves watching a lecture and sketching, which are similar to the previous tasks in terms of content and required actions.",
+          "source_quote": "Watch the course lecture on YouTube and sketch the odd-symmetry example. Work through the sign check before closing the notebook."
+        },
+        {
+          "task_id": "window-video",
+          "title": "Work through the windowing video",
+          "estimate_min": 45,
+          "actual_min": 61.0,
+          "ratio": 1.3555555555555556,
+          "reason": "The user's history shows that tasks in the Signal study category tend to take longer than estimated, with an average deviation of 5-10 minutes.",
+          "reason_source": "model",
+          "model_rationale": "The user's history shows that tasks in the Signal study category tend to take longer than estimated, with an average deviation of 5-10 minutes.",
+          "source_quote": "Watch the windowing and leakage lesson on YouTube. Pause to draw the rectangular and Hann examples."
+        }
+      ],
+      "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact."
+    }
+  ],
+  "summary": {
+    "cases": 1,
+    "rubric_cases": 1,
+    "fixed_duration_cases": 0,
+    "model_eligible_cases": 1,
+    "model_eligible_patterned_cases": 1,
+    "model_eligible_patterned_hits": 0,
+    "patterned_cases": 1,
+    "patterned_cases_in_declared_band": {
+      "original": 0,
+      "category": 1,
+      "planner": 0,
+      "actual": 1
+    },
+    "control_cases": 0,
+    "cases_with_declared_comparables": 1,
+    "cases_selecting_a_declared_comparable": 1,
+    "expected_caution_cases": 1,
+    "cautions_citing_expected_source": 1,
+    "cases_with_unknown_caution_sources": 0,
+    "cases_with_cautions": 1,
+    "mae_on_patterned_minutes": 9,
+    "mae_minutes": {
+      "original": 14,
+      "category": 0,
+      "planner": 9
+    },
+    "ranges_covering_actual": 0,
+    "mean_range_width_minutes": 10,
+    "basis_counts": {
+      "Model forecast": 1
+    },
+    "model_status_counts": {
+      "ok": 1
+    },
+    "mean_prediction_seconds": 6.616,
+    "history_classification_calls": 8,
+    "history_classification_failed_calls": 0
+  },
+  "history_classification": [
+    {
+      "history": "10-signal-study",
+      "calls": [
+        {
+          "prompt_sha256": "c881953f79202cadcea6a055d8af75a2dbe761258f8a3b4b48dea4c30fe81511",
+          "max_tokens": 600,
+          "task_title": "Watch the Fourier pulse-train lecture",
+          "interval_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "watching the Fourier pulse-train lecture directly supports the task"
+            },
+            "1": {
+              "label": "off_task",
+              "reason": "watching cats chasing a printer cable is unrelated to the task"
+            },
+            "2": {
+              "label": "on_task",
+              "reason": "creating coefficient sketches in notebook directly supports the task"
+            },
+            "3": {
+              "label": "on_task",
+              "reason": "watching the Fourier pulse-train lecture directly supports the task"
+            },
+            "4": {
+              "label": "off_task",
+              "reason": "watching commuter train bloopers is unrelated to the task"
+            },
+            "5": {
+              "label": "on_task",
+              "reason": "creating coefficient sketches in notebook directly supports the task"
+            }
+          },
+          "seconds": 7.414
+        },
+        {
+          "prompt_sha256": "4b0223eaf325c1df5a3c72434ce2b8cf31c39868e73216e7f455a817257076a3",
+          "max_tokens": 600,
+          "task_title": "Do the complex exponential worksheet",
+          "interval_ids": [
+            0,
+            2
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "Reading worksheet instructions and solving problems on paper."
+            },
+            "2": {
+              "label": "on_task",
+              "reason": "Scanning and checking answers on the worksheet."
+            }
+          },
+          "seconds": 5.445
+        },
+        {
+          "prompt_sha256": "15819a3efb0efc33bc3594ec84edd1174ab7949dd53213e6df9d071eab97b008",
+          "max_tokens": 600,
+          "task_title": "Work through the windowing video",
+          "interval_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "watching the windowing and leakage lesson on YouTube directly supports the task"
+            },
+            "1": {
+              "label": "off_task",
+              "reason": "watching hockey goals unrelated to the task of drawing examples"
+            },
+            "2": {
+              "label": "on_task",
+              "reason": "drawing windowing examples directly supports the task"
+            },
+            "3": {
+              "label": "off_task",
+              "reason": "watching a van kitchen build unrelated to the task of drawing examples"
+            },
+            "4": {
+              "label": "on_task",
+              "reason": "watching the windowing and leakage lesson on YouTube directly supports the task"
+            },
+            "5": {
+              "label": "on_task",
+              "reason": "drawing windowing examples directly supports the task"
+            }
+          },
+          "seconds": 8.148
+        },
+        {
+          "prompt_sha256": "25e39781c91d2360beef14f577d4a9c72b1f388b4d6d88bd1c7b554ce31c36e7",
+          "max_tokens": 600,
+          "task_title": "Clean up the town-hall voice clip",
+          "interval_ids": [
+            0,
+            1
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "The user's task involves using Audacity to clean up the audio clip."
+            },
+            "1": {
+              "label": "on_task",
+              "reason": "The user's task involves exporting the cleaned audio clip as a WAV file."
+            }
+          },
+          "seconds": 7.055
+        },
+        {
+          "prompt_sha256": "33ba009e811d66e380f72ca6b51c28d254b118ae3ac81d971bcffacd5d0835cf",
+          "max_tokens": 600,
+          "task_title": "Take notes on Fourier symmetry",
+          "interval_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "watching YouTube lecture on Fourier symmetry, sketching example"
+            },
+            "1": {
+              "label": "off_task",
+              "reason": "watching video unrelated to Fourier symmetry, pottery wheel wobble"
+            },
+            "2": {
+              "label": "on_task",
+              "reason": "working on odd-symmetry example in LibreOffice Writer"
+            },
+            "3": {
+              "label": "off_task",
+              "reason": "watching YouTube video unrelated to Fourier symmetry, Clay fails compilation"
+            },
+            "4": {
+              "label": "on_task",
+              "reason": "watching YouTube lecture on Fourier symmetry, sketching example"
+            },
+            "5": {
+              "label": "on_task",
+              "reason": "working on odd-symmetry example in LibreOffice Writer"
+            }
+          },
+          "seconds": 8.078
+        },
+        {
+          "prompt_sha256": "8b8b0d6ef73e8bdc05640c2ff184f75fc0f9925c4844dfb4fb50944e827c28e9",
+          "max_tokens": 600,
+          "task_title": "Monitor the club concert web stream",
+          "interval_ids": [
+            0,
+            1
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "Monitoring the stream is the main task, requiring attention to the video and audio."
+            },
+            "1": {
+              "label": "on_task",
+              "reason": "Writing booth notes is a task-related activity, ensuring continuity for the next volunteer."
+            }
+          },
+          "seconds": 6.277
+        },
+        {
+          "prompt_sha256": "b00cf4456a7fa7acdf0c48427758227537a574c9201d534d62ca35e969eacc5c",
+          "max_tokens": 600,
+          "task_title": "Calculate the shelf filter gain",
+          "interval_ids": [
+            0,
+            2
+          ],
+          "response": {
+            "0": {
+              "label": "uncertain",
+              "reason": "Context unclear, but likely related to signal study."
+            },
+            "2": {
+              "label": "on_task",
+              "reason": "Directly related to the task of calculating shelf filter gain."
+            }
+          },
+          "seconds": 5.772
+        },
+        {
+          "prompt_sha256": "05f9b8e20667976054bca05d6026729e4ca10b01ca2c1cba837ca3dff5a229fe",
+          "max_tokens": 600,
+          "task_title": "Listen back to the producer interview",
+          "interval_ids": [
+            0
+          ],
+          "response": {
+            "0": {
+              "label": "on_task",
+              "reason": "The task involves marking speaker turns in an audio file, which is directly supported by the provided instructions."
+            }
+          },
+          "seconds": 5.23
+        }
+      ],
+      "tasks": [
+        {
+          "task": "pulse-video",
+          "label_seconds": {
+            "on_task": 2640.0,
+            "off_task": 660.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "venue-mic",
+          "label_seconds": {
+            "on_task": 0.0,
+            "off_task": 0.0,
+            "uncertain": 1140.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "phasor-paper",
+          "label_seconds": {
+            "on_task": 840.0,
+            "off_task": 0.0,
+            "uncertain": 1980.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "window-video",
+          "label_seconds": {
+            "on_task": 2700.0,
+            "off_task": 960.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "voice-repair",
+          "label_seconds": {
+            "on_task": 1680.0,
+            "off_task": 0.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "symmetry-video",
+          "label_seconds": {
+            "on_task": 2160.0,
+            "off_task": 660.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "stream-shift",
+          "label_seconds": {
+            "on_task": 2700.0,
+            "off_task": 0.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "filter-exercise",
+          "label_seconds": {
+            "on_task": 480.0,
+            "off_task": 0.0,
+            "uncertain": 2100.0
+          },
+          "warnings": []
+        },
+        {
+          "task": "quiet-news",
+          "label_seconds": {
+            "on_task": 1800.0,
+            "off_task": 0.0,
+            "uncertain": 0.0
+          },
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

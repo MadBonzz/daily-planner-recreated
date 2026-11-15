@@ -1,0 +1,75 @@
+{
+  "task": "Watch the triangular-wave Fourier lecture",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T21:01:16.987409+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "ec5cdae52c98edfada4da38427d02e1b8ae842835555396acbca45761d33828b",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 40,
+        "high_min": 50,
+        "confidence": "medium",
+        "rationale": "The task involves watching a YouTube lecture and sketching, which can vary in focus and engagement. The user's history shows a tendency to get distracted, with off-task observations in previous tasks. However, the user has a good track record of completing tasks within the estimated time, with only a slight tendency to exceed the budget.",
+        "confidence_reason": "The user's history provides a reasonable basis for estimating the time required for this task, considering the potential for distraction.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The 'Take notes on Fourier symmetry' task had a similar focus on watching a lecture and sketching, with a slight tendency to exceed the budget, similar to this task."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Be mindful of off-task observations during the lecture to stay focused on the task at hand."
+          }
+        ]
+      },
+      "seconds": 6.493
+    }
+  ],
+  "forecast": {
+    "point_min": 45,
+    "low_min": 40,
+    "high_min": 50,
+    "confidence": "medium",
+    "confidence_reason": "The user's history provides a reasonable basis for estimating the time required for this task, considering the potential for distraction.",
+    "model_rationale": "The task involves watching a YouTube lecture and sketching, which can vary in focus and engagement. The user's history shows a tendency to get distracted, with off-task observations in previous tasks. However, the user has a good track record of completing tasks within the estimated time, with only a slight tendency to exceed the budget.",
+    "explanation": "The task involves watching a YouTube lecture and sketching, which can vary in focus and engagement. The user's history shows a tendency to get distracted, with off-task observations in previous tasks. However, the user has a good track record of completing tasks within the estimated time, with only a slight tendency to exceed the budget.",
+    "evidence": [
+      {
+        "task_id": "symmetry-video",
+        "title": "Take notes on Fourier symmetry",
+        "estimate_min": 35,
+        "actual_min": 47.0,
+        "ratio": 1.3428571428571427,
+        "reason": "The 'Take notes on Fourier symmetry' task had a similar focus on watching a lecture and sketching, with a slight tendency to exceed the budget, similar to this task.",
+        "reason_source": "model",
+        "model_rationale": "The 'Take notes on Fourier symmetry' task had a similar focus on watching a lecture and sketching, with a slight tendency to exceed the budget, similar to this task.",
+        "source_quote": "Watch the course lecture on YouTube and sketch the odd-symmetry example. Work through the sign check before closing the notebook."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Be mindful of off-task observations during the lecture to stay focused on the task at hand.",
+        "sources": [
+          {
+            "task_id": "symmetry-video",
+            "title": "Take notes on Fourier symmetry",
+            "origin": "ActivityWatch",
+            "observation": "11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation)."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

@@ -1,0 +1,39 @@
+{
+  "task": "Outline a ten minute talk",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T21:00:41.639970+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "35f24dbe837293c09ed48c1e2a65f5d2f87e7078ecbc3cad4962e507eb669d24",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 10,
+        "low_min": 8,
+        "high_min": 12,
+        "confidence": "medium",
+        "rationale": "The task involves summarizing a paper and creating slides, which can be time-consuming. However, the user has already read the paper, so the initial preparation is already done. The rehearsal is a single session, which should be manageable within the estimated time frame.",
+        "confidence_reason": "The user's estimate is high, but the task is well-defined and the user has the necessary information. The low end is estimated based on the potential for minor delays during slide creation and the need for a few practice runs to feel comfortable with the material."
+      },
+      "seconds": 5.639
+    }
+  ],
+  "forecast": {
+    "point_min": 10,
+    "low_min": 8,
+    "high_min": 12,
+    "confidence": "medium",
+    "confidence_reason": "The user's estimate is high, but the task is well-defined and the user has the necessary information. The low end is estimated based on the potential for minor delays during slide creation and the need for a few practice runs to feel comfortable with the material.",
+    "model_rationale": "The task involves summarizing a paper and creating slides, which can be time-consuming. However, the user has already read the paper, so the initial preparation is already done. The rehearsal is a single session, which should be manageable within the estimated time frame.",
+    "explanation": "The task involves summarizing a paper and creating slides, which can be time-consuming. However, the user has already read the paper, so the initial preparation is already done. The rehearsal is a single session, which should be manageable within the estimated time frame.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

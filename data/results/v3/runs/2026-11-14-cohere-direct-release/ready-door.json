@@ -1,0 +1,39 @@
+{
+  "task": "Order two door wedges",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T21:00:53.139586+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "1ae7e418f9495e111d585c616d726e2f2a765b4aef1a886933105ea3d0c0ad27",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 10,
+        "low_min": 8,
+        "high_min": 12,
+        "confidence": "medium",
+        "rationale": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, it requires attention to detail to ensure the correct item is found and the item number is accurate.",
+        "confidence_reason": "Based on the user's estimate and the nature of the task, a medium confidence level is assigned."
+      },
+      "seconds": 4.235
+    }
+  ],
+  "forecast": {
+    "point_min": 10,
+    "low_min": 8,
+    "high_min": 12,
+    "confidence": "medium",
+    "confidence_reason": "Based on the user's estimate and the nature of the task, a medium confidence level is assigned.",
+    "model_rationale": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, it requires attention to detail to ensure the correct item is found and the item number is accurate.",
+    "explanation": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, it requires attention to detail to ensure the correct item is found and the item number is accurate.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

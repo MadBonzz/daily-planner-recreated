@@ -1,0 +1,126 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 2 comparisons, the median ratio of actual to estimated time was 0.69×. Applied 67% of the adjustment. 25 min × 0.79 ≈ 20 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "22ebd249532e5722eff8e73326aeab211462af3d8c44ceeae74fb3f81aeb7d54",
+      "max_tokens": 480,
+      "seconds": 43.942,
+      "response": {
+        "matches": [
+          {
+            "slot": 2,
+            "reason": "Same deliverable (reimplementing a saved solution) and method (replaying example + typing existing code), though slot 2 is explicitly labeled 'review' while the new task implies a 'redo' of a 'saved interval merge'—the core activity of re-engaging with a prior solution matches.",
+            "flag": 0
+          },
+          {
+            "slot": 4,
+            "reason": "Same deliverable (retying/redoing a previously accepted solution) and method (using prior notes/answer), matching the 'redo the saved interval merge' intent of the new task.",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.87
+    ],
+    "evidence_ids": [
+      "retype-merge",
+      "retype-stack"
+    ],
+    "rationale": "Review uses prior solution and is routinely shorter.",
+    "predicted_ratio": 0.8,
+    "realized_ratio": 0.76,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "retype-merge",
+      "retype-stack"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "05-interview-practice",
+  "task": "editorial-review",
+  "title": "Redo the saved interval merge after lunch",
+  "original": 25,
+  "category": 30,
+  "planner": 20,
+  "actual": 19,
+  "range": [
+    11,
+    28
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 43.942,
+  "latency_seconds": 43.954,
+  "evidence": [
+    {
+      "task_id": "retype-stack",
+      "title": "Review the saved monotone stack solution",
+      "estimate_min": 30,
+      "actual_min": 21.0,
+      "ratio": 0.7,
+      "reason": "Same deliverable (reimplementing a saved solution) and method (replaying example + typing existing code), though slot 2 is explicitly labeled 'review' while the new task implies a 'redo' of a 'saved interval merge'—the core activity of re-engaging wi"
+    },
+    {
+      "task_id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "estimate_min": 25,
+      "actual_min": 17.0,
+      "ratio": 0.68,
+      "reason": "Same deliverable (retying/redoing a previously accepted solution) and method (using prior notes/answer), matching the 'redo the saved interval merge' intent of the new task."
+    }
+  ],
+  "check": "Review uses prior solution and is routinely shorter.",
+  "start_utc": "2026-11-14T20:44:22.457660+00:00",
+  "end_utc": "2026-11-14T20:45:06.428492+00:00",
+  "cpu_threads": 8,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T20:44:22.487065+00:00",
+      "request_body_sha256": "30dd20793905facddaf54eb042bc3495e23fe8cafbf2726e32db3bd2f24fee6a",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "window-cost",
+        "retype-stack",
+        "subarray-target",
+        "retype-merge",
+        "two-targets",
+        "cfg-paper"
+      ],
+      "usage": {
+        "completion_tokens": 168,
+        "prompt_tokens": 760,
+        "total_tokens": 928,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 648,
+        "prompt_ms": 27969.93,
+        "prompt_per_token_ms": 43.163472222222225,
+        "prompt_per_second": 23.16773763824221,
+        "predicted_n": 168,
+        "predicted_ms": 15739.682,
+        "predicted_per_token_ms": 94.24959281437125,
+        "predicted_per_second": 10.610125414223743
+      },
+      "content": "{\n  \"matches\": [\n    {\n      \"slot\": 2,\n      \"reason\": \"Same deliverable (reimplementing a saved solution) and method (replaying example + typing existing code), though slot 2 is explicitly labeled 'review' while the new task implies a 'redo' of a 'saved interval merge'—the core activity of re-engaging with a prior solution matches.\",\n      \"flag\": 0\n    },\n    {\n      \"slot\": 4,\n      \"reason\": \"Same deliverable (retying/redoing a previously accepted solution) and method (using prior notes/answer), matching the 'redo the saved interval merge' intent of the new task.\",\n      \"flag\": 0\n    }\n  ]\n}",
+      "finish_utc": "2026-11-14T20:45:06.426355+00:00"
+    }
+  ]
+}

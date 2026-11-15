@@ -1,0 +1,178 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Queue the planned video directly and save unrelated recommendations for later.",
+      "sources": [
+        {
+          "task_id": "symmetry-video",
+          "title": "Take notes on Fourier symmetry",
+          "origin": "Completion note",
+          "observation": "A recommended pottery short turned into a chain of clips. Lost my place and replayed the sign check."
+        },
+        {
+          "task_id": "pulse-video",
+          "title": "Watch the Fourier pulse-train lecture",
+          "origin": "Completion note",
+          "observation": "I opened two recommended clips during the lecture and left the timer going before returning to the coefficients."
+        }
+      ]
+    },
+    {
+      "advice": "Open the task material directly and leave unrelated content on youtube.com for after the task.",
+      "sources": [
+        {
+          "task_id": "window-video",
+          "title": "Work through the windowing video",
+          "origin": "ActivityWatch",
+          "observation": "16.0 min on youtube.com labeled off-task (Final-minute hockey goals / Tiny van kitchen build)."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.36×. Applied 100% of the adjustment. 40 min × 1.36 ≈ 54 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "98621014906e8d174b5c1c7dffe1de643d1ede28962a3a5a0580a5269b6a511d",
+      "max_tokens": 480,
+      "seconds": 277.56,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Same deliverable (sketching series reconstructions), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate).",
+            "flag": 1
+          },
+          {
+            "slot": 2,
+            "reason": "Same deliverable (sketching examples), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate).",
+            "flag": 2
+          },
+          {
+            "slot": 3,
+            "reason": "Same deliverable (recreating coefficient sketches), method (watching recorded lecture + sketching), scope (signal study), and difficulty (moderate).",
+            "flag": 1
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.25,
+      1.46
+    ],
+    "evidence_ids": [
+      "pulse-video",
+      "window-video",
+      "symmetry-video"
+    ],
+    "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+    "expected_caution": {
+      "evidence_ids": [
+        "pulse-video",
+        "window-video",
+        "symmetry-video"
+      ],
+      "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user’s past notes give specific evidence."
+    },
+    "predicted_ratio": 1.35,
+    "realized_ratio": 1.35,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "pulse-video",
+      "symmetry-video",
+      "window-video"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": true,
+    "unknown_caution_source_ids": []
+  },
+  "history": "10-signal-study",
+  "task": "triangle-video",
+  "title": "Watch the triangular-wave Fourier lecture",
+  "original": 40,
+  "category": 54,
+  "planner": 54,
+  "actual": 54,
+  "range": [
+    48,
+    60
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 277.56,
+  "latency_seconds": 277.569,
+  "evidence": [
+    {
+      "task_id": "symmetry-video",
+      "title": "Take notes on Fourier symmetry",
+      "estimate_min": 35,
+      "actual_min": 47.0,
+      "ratio": 1.3428571428571427,
+      "reason": "Same deliverable (sketching series reconstructions), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate)."
+    },
+    {
+      "task_id": "window-video",
+      "title": "Work through the windowing video",
+      "estimate_min": 45,
+      "actual_min": 61.0,
+      "ratio": 1.3555555555555556,
+      "reason": "Same deliverable (sketching examples), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate)."
+    },
+    {
+      "task_id": "pulse-video",
+      "title": "Watch the Fourier pulse-train lecture",
+      "estimate_min": 40,
+      "actual_min": 55.0,
+      "ratio": 1.375,
+      "reason": "Same deliverable (recreating coefficient sketches), method (watching recorded lecture + sketching), scope (signal study), and difficulty (moderate)."
+    }
+  ],
+  "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+  "start_utc": "2026-11-14T20:55:49.742101+00:00",
+  "end_utc": "2026-11-14T21:00:27.318004+00:00",
+  "cpu_threads": 8,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T20:55:49.758636+00:00",
+      "request_body_sha256": "74a0963e552fe9fb65eddc038e29e7bee86f3ddfc8d6b9fa431cc2fc8b896006",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "symmetry-video",
+        "window-video",
+        "pulse-video",
+        "phasor-paper",
+        "filter-exercise",
+        "quiet-news"
+      ],
+      "usage": {
+        "completion_tokens": 189,
+        "prompt_tokens": 1047,
+        "total_tokens": 1236,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 935,
+        "prompt_ms": 62234.81,
+        "prompt_per_token_ms": 66.56129411764705,
+        "prompt_per_second": 15.02374635674151,
+        "predicted_n": 189,
+        "predicted_ms": 215092.572,
+        "predicted_per_token_ms": 1144.109425531915,
+        "predicted_per_second": 0.8740422705066728
+      },
+      "content": "{\n  \"matches\": [\n    {\n      \"slot\": 1,\n      \"reason\": \"Same deliverable (sketching series reconstructions), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate).\",\n      \"flag\": 1\n    },\n    {\n      \"slot\": 2,\n      \"reason\": \"Same deliverable (sketching examples), method (watching YouTube lecture + sketching), scope (signal study), and difficulty (moderate).\",\n      \"flag\": 2\n    },\n    {\n      \"slot\": 3,\n      \"reason\": \"Same deliverable (recreating coefficient sketches), method (watching recorded lecture + sketching), scope (signal study), and difficulty (moderate).\",\n      \"flag\": 1\n    }\n  ]\n}",
+      "finish_utc": "2026-11-14T21:00:27.315035+00:00"
+    }
+  ]
+}

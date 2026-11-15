@@ -1,0 +1,135 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 2 comparisons, the median ratio of actual to estimated time was 1.57×. Applied 67% of the adjustment. 45 min × 1.38 ≈ 62 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "1b155d01bb3fb1a6cd05fce26a3c8d36bb43302086c64c14e87905f42165d2ee",
+      "max_tokens": 480,
+      "seconds": 71.304,
+      "response": {
+        "matches": [
+          {
+            "slot": 2,
+            "reason": "Same rover (C), same USB bridge, and same goal of collecting wheel-speed/IMU data across a physical crossing; both involve real-time data collection with USB bridge connectivity issues.",
+            "flag": 2
+          },
+          {
+            "slot": 3,
+            "reason": "Same rover (C), same USB bridge, and same category (Robotics lab); both involve collecting sensor traces (wheel counts/IMU) during a physical maneuver with documented USB disconnection obstacles.",
+            "flag": 2
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.43,
+      1.68
+    ],
+    "evidence_ids": [
+      "hall-encoder",
+      "turntable",
+      "dock-trace"
+    ],
+    "rationale": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+    "expected_caution": {
+      "evidence_ids": [
+        "hall-encoder",
+        "turntable",
+        "dock-trace"
+      ],
+      "rationale": "Warn that the original USB bridge disconnected on earlier live captures; leave time to reconnect and repeat the affected run."
+    },
+    "predicted_ratio": 1.3777777777777778,
+    "realized_ratio": 1.5777777777777777,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "dock-trace",
+      "hall-encoder"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "09-rover-night",
+  "task": "bump-crossing",
+  "title": "Record the cable-cover crossing on rover C",
+  "original": 45,
+  "category": 69,
+  "planner": 62,
+  "actual": 71,
+  "range": [
+    37,
+    87
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 71.304,
+  "latency_seconds": 71.315,
+  "evidence": [
+    {
+      "task_id": "hall-encoder",
+      "title": "Log the hallway encoder run",
+      "estimate_min": 40,
+      "actual_min": 63.0,
+      "ratio": 1.575,
+      "reason": "Same rover (C), same USB bridge, and same goal of collecting wheel-speed/IMU data across a physical crossing; both involve real-time data collection with USB bridge connectivity issues."
+    },
+    {
+      "task_id": "dock-trace",
+      "title": "Capture docking sensor traces on the club cart",
+      "estimate_min": 45,
+      "actual_min": 70.0,
+      "ratio": 1.5555555555555556,
+      "reason": "Same rover (C), same USB bridge, and same category (Robotics lab); both involve collecting sensor traces (wheel counts/IMU) during a physical maneuver with documented USB disconnection obstacles."
+    }
+  ],
+  "check": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+  "start_utc": "2026-11-14T20:49:19.945839+00:00",
+  "end_utc": "2026-11-14T20:50:31.275903+00:00",
+  "cpu_threads": 8,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T20:49:19.972618+00:00",
+      "request_body_sha256": "23c4b6c1a604a479ca5a7849702a3161a5d21a75f95f0d9230e6ae0e9102b19e",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "turntable",
+        "hall-encoder",
+        "dock-trace",
+        "junction-replay",
+        "grant-email",
+        "wheel-ticks"
+      ],
+      "usage": {
+        "completion_tokens": 144,
+        "prompt_tokens": 1367,
+        "total_tokens": 1511,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 1255,
+        "prompt_ms": 57388.479,
+        "prompt_per_token_ms": 45.72787171314741,
+        "prompt_per_second": 21.868500818779324,
+        "predicted_n": 144,
+        "predicted_ms": 13666.393,
+        "predicted_per_token_ms": 95.56918181818182,
+        "predicted_per_second": 10.463624161839924
+      },
+      "content": "{\n  \"matches\": [\n    {\n      \"slot\": 2,\n      \"reason\": \"Same rover (C), same USB bridge, and same goal of collecting wheel-speed/IMU data across a physical crossing; both involve real-time data collection with USB bridge connectivity issues.\",\n      \"flag\": 2\n    },\n    {\n      \"slot\": 3,\n      \"reason\": \"Same rover (C), same USB bridge, and same category (Robotics lab); both involve collecting sensor traces (wheel counts/IMU) during a physical maneuver with documented USB disconnection obstacles.\",\n      \"flag\": 2\n    }\n  ]\n}",
+      "finish_utc": "2026-11-14T20:50:31.273024+00:00"
+    }
+  ]
+}

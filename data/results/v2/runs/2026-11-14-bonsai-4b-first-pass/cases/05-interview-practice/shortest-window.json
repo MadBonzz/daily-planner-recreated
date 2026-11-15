@@ -1,0 +1,207 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Review the recorded step before deciding how much time to reserve.",
+      "sources": [
+        {
+          "task_id": "subarray-target",
+          "title": "LeetCode practice · subarray sum equals k",
+          "origin": "Completion note",
+          "observation": "Explaining why the initial prefix count is one took a second example."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 6 comparisons, the median ratio of actual to estimated time was 1.07×. Applied 100% of the adjustment. 50 min × 1.07 ≈ 53 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "0d0e6e797f972060fafd4c079ddec2fe5152738830af672df80789033fdf1371",
+      "max_tokens": 480,
+      "seconds": 47.305,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "The new task involves solving a shortest-window problem with signed integers, which requires prefix sums and handling of negative values and duplicate prefix sums. This aligns with the LeetCode practice on subarray sum equals K, which explicitly includes negative values and duplicate prefix sums. The shared focus on prefix counts and edge cases (like negative values and duplicates) makes this the most applicable earlier task.",
+            "flag": 1
+          },
+          {
+            "slot": 4,
+            "reason": "The new task requires designing a prefix-index invariant and testing it with negative and duplicate values, which directly mirrors the 'Practice two non-overlapping target ranges' candidate. Both involve prefix-based reasoning and handling of edge cases such as negative numbers and duplicate prefix sums. The method (prefix sum with invariant) and scope (subarray sum with signed integers) are identical in structure and challenge. The purpose of explaining the invariant out loud matches the requirement in the new task.",
+            "flag": 1
+          },
+          {
+            "slot": 2,
+            "reason": "The new task does not involve bounded replacement or maintaining a left endpoint invariant. The 'longest window with bounded replacement' task is unrelated in both method and purpose. No overlap in deliverable, method, scope, or difficulty. Thus, no match.",
+            "flag": 0
+          },
+          {
+            "slot": 3,
+            "reason": "This is a review task (replay and retyping) and does not involve solving from scratch with a new problem. The new task requires a fresh solve with explanation of prefix candidates and test duplicates — not a review. Therefore, no match.",
+            "flag": 0
+          },
+          {
+            "slot": 5,
+            "reason": "This involves retyping an accepted solution and verifying boundaries, which is a documentation or verification task, not a problem-solving one. The new task requires a fresh solve with explanation and testing, not just verification. No match.",
+            "flag": 0
+          },
+          {
+            "slot": 6,
+            "reason": "This is a program analysis task involving graph validation, data-flow equations, and fact sets — unrelated to subarray sum or prefix-based window problems. The new task is about algorithmic problem solving with signed integers and prefix sums. No match.",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.13,
+      1.31
+    ],
+    "evidence_ids": [
+      "subarray-target",
+      "window-cost",
+      "two-targets"
+    ],
+    "rationale": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+    "predicted_ratio": 1.06,
+    "realized_ratio": 1.24,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "subarray-target",
+      "two-targets",
+      "window-cost"
+    ],
+    "selected_unlisted_ids": [
+      "retype-merge",
+      "retype-stack",
+      "rubric"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "05-interview-practice",
+  "task": "shortest-window",
+  "title": "Solve a new shortest-window problem",
+  "original": 50,
+  "category": 60,
+  "planner": 53,
+  "actual": 62,
+  "range": [
+    34,
+    63
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 47.305,
+  "latency_seconds": 47.326,
+  "evidence": [
+    {
+      "task_id": "subarray-target",
+      "title": "LeetCode practice · subarray sum equals k",
+      "estimate_min": 45,
+      "actual_min": 54.0,
+      "ratio": 1.2,
+      "reason": "The new task involves solving a shortest-window problem with signed integers, which requires prefix sums and handling of negative values and duplicate prefix sums. This aligns with the LeetCode practice on subarray sum equals K, which explicitly incl"
+    },
+    {
+      "task_id": "two-targets",
+      "title": "Practice two non-overlapping target ranges",
+      "estimate_min": 60,
+      "actual_min": 72.0,
+      "ratio": 1.2,
+      "reason": "The new task requires designing a prefix-index invariant and testing it with negative and duplicate values, which directly mirrors the 'Practice two non-overlapping target ranges' candidate. Both involve prefix-based reasoning and handling of edge ca"
+    },
+    {
+      "task_id": "window-cost",
+      "title": "Practice the longest window with bounded replacement",
+      "estimate_min": 40,
+      "actual_min": 50.0,
+      "ratio": 1.25,
+      "reason": "The new task does not involve bounded replacement or maintaining a left endpoint invariant. The 'longest window with bounded replacement' task is unrelated in both method and purpose. No overlap in deliverable, method, scope, or difficulty. Thus, no "
+    },
+    {
+      "task_id": "retype-stack",
+      "title": "Review the saved monotone stack solution",
+      "estimate_min": 30,
+      "actual_min": 21.0,
+      "ratio": 0.7,
+      "reason": "This is a review task (replay and retyping) and does not involve solving from scratch with a new problem. The new task requires a fresh solve with explanation of prefix candidates and test duplicates — not a review. Therefore, no match."
+    },
+    {
+      "task_id": "retype-merge",
+      "title": "Retype merge intervals from my notes",
+      "estimate_min": 25,
+      "actual_min": 17.0,
+      "ratio": 0.68,
+      "reason": "This involves retyping an accepted solution and verifying boundaries, which is a documentation or verification task, not a problem-solving one. The new task requires a fresh solve with explanation and testing, not just verification. No match."
+    },
+    {
+      "task_id": "rubric",
+      "title": "Proofread the resource tracking write-up",
+      "estimate_min": 30,
+      "actual_min": 28.0,
+      "ratio": 0.9333333333333333,
+      "reason": "This is a program analysis task involving graph validation, data-flow equations, and fact sets — unrelated to subarray sum or prefix-based window problems. The new task is about algorithmic problem solving with signed integers and prefix sums. No mat"
+    }
+  ],
+  "check": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+  "cpu_threads": 8,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "started_utc": "2026-11-14T19:50:10.769251+00:00",
+  "completed_utc": "2026-11-14T19:50:58.113573+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:50:10.811755+00:00",
+      "request_body_sha256": "3fb7811940a51f53c10f6bc76085b81d8006bbb29a09cb926dbab75d284545e2",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "subarray-target",
+        "window-cost",
+        "retype-stack",
+        "two-targets",
+        "retype-merge",
+        "rubric"
+      ],
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 474,
+        "prompt_tokens": 771,
+        "total_tokens": 1245,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 771,
+        "prompt_ms": 19003.394,
+        "prompt_per_token_ms": 24.6477224383917,
+        "prompt_per_second": 40.571699981592765,
+        "predicted_n": 474,
+        "predicted_ms": 28239.378,
+        "predicted_per_token_ms": 59.702701902748416,
+        "predicted_per_second": 16.749660704283215
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"The new task involves solving a shortest-window problem with signed integers, which requires prefix sums and handling of negative values and duplicate prefix sums. This aligns with the LeetCode practice on subarray sum equals K, which explicitly includes negative values and duplicate prefix sums. The shared focus on prefix counts and edge cases (like negative values and duplicates) makes this the most applicable earlier task.\", \"flag\": 1 }, { \"slot\": 4, \"reason\": \"The new task requires designing a prefix-index invariant and testing it with negative and duplicate values, which directly mirrors the 'Practice two non-overlapping target ranges' candidate. Both involve prefix-based reasoning and handling of edge cases such as negative numbers and duplicate prefix sums. The method (prefix sum with invariant) and scope (subarray sum with signed integers) are identical in structure and challenge. The purpose of explaining the invariant out loud matches the requirement in the new task.\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"The new task does not involve bounded replacement or maintaining a left endpoint invariant. The 'longest window with bounded replacement' task is unrelated in both method and purpose. No overlap in deliverable, method, scope, or difficulty. Thus, no match.\", \"flag\": 0 }, { \"slot\": 3, \"reason\": \"This is a review task (replay and retyping) and does not involve solving from scratch with a new problem. The new task requires a fresh solve with explanation of prefix candidates and test duplicates — not a review. Therefore, no match.\", \"flag\": 0 }, { \"slot\": 5, \"reason\": \"This involves retyping an accepted solution and verifying boundaries, which is a documentation or verification task, not a problem-solving one. The new task requires a fresh solve with explanation and testing, not just verification. No match.\", \"flag\": 0 }, { \"slot\": 6, \"reason\": \"This is a program analysis task involving graph validation, data-flow equations, and fact sets — unrelated to subarray sum or prefix-based window problems. The new task is about algorithmic problem solving with signed integers and prefix sums. No match.\", \"flag\": 0 } ] }",
+      "finished_utc": "2026-11-14T19:50:58.104967+00:00"
+    }
+  ]
+}

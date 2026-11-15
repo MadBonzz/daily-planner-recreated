@@ -1,0 +1,171 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Review the recorded step before deciding how much time to reserve.",
+      "sources": [
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove a flush barrier across restart",
+          "origin": "Completion note",
+          "observation": "Separate failure schedule for crash recovery; proofread before sending."
+        },
+        {
+          "task_id": "lease-restart",
+          "title": "Prove the takeover rule survives a desk crash",
+          "origin": "Completion note",
+          "observation": "I needed a separate failure schedule for the recovery case."
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Prove one receipt per token after a leader change",
+          "origin": "Completion note",
+          "observation": "Writing out a separate failure schedule took another pass."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 100% of the adjustment. 75 min × 1.20 ≈ 90 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "000f830f6565cb33842824be65c809c6beb3a38d466df880d8e69664a253bad4",
+      "max_tokens": 480,
+      "seconds": 156.344,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve proving a distributed system invariant under crash and replay scenarios, specifically regarding the stability of journal entries and the behavior of a control process (C) during restart. The focus on 'stable cursor' and 'durable record' aligns with the bridge's in-memory deduplication map and the journal entries in the bridge handout. The requirement to include a repair across restart and a legal failure schedule matches the structure of the 'repair across restart' and 'legal failure schedule' components in the new task. Obstacle 1: 'Completion note: Separate failure schedule for crash recovery; proofread before sending.'",
+            "flag": 1
+          },
+          {
+            "slot": 3,
+            "reason": "Both tasks require analyzing the system's behavior after a crash and during recovery, including the visibility of journal entries and the preservation of invariants. The task 'Prove the takeover rule survives a desk crash' directly parallels the 'repair across restart' and 'legal failure schedule' in the new task, as both involve handling delayed responses and ensuring that the system maintains consistency after a crash. The need to consider the crash after the receipt and analyze transitions that create receipts or discard tokens matches the analysis of the bridge's failure and recovery in the new task. Obstacle 1: 'Completion note: I needed a separate failure schedule for the recovery case.'",
+            "flag": 1
+          },
+          {
+            "slot": 5,
+            "reason": "Both tasks involve analyzing message interleavings to verify or violate invariants under crash and replay conditions. The new task requires a quantified invariant for the receipt and a repair that rules out adversarial executions, which is exactly what the 'Prove one receipt per token after a leader change' task requires. The focus on stale journal replies and the earliest inconsistent pair of records aligns with the 'repair' and 'legal failure schedule' components. Obstacle 1: 'Completion note: Writing out a separate failure schedule took another pass.'",
+            "flag": 1
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.14,
+      1.3
+    ],
+    "evidence_ids": [
+      "lease-restart",
+      "epoch-proof",
+      "barrier-proof"
+    ],
+    "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+    "expected_caution": {
+      "evidence_ids": [
+        "lease-restart",
+        "epoch-proof"
+      ],
+      "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+    },
+    "predicted_ratio": 1.2,
+    "realized_ratio": 1.24,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "barrier-proof",
+      "epoch-proof",
+      "lease-restart"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": true,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-proof",
+  "title": "Solve part B of the bridge handout",
+  "original": 75,
+  "category": 90,
+  "planner": 90,
+  "actual": 93,
+  "range": [
+    81,
+    100
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 156.344,
+  "latency_seconds": 156.363,
+  "evidence": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "estimate_min": 75,
+      "actual_min": 90.0,
+      "ratio": 1.2,
+      "reason": "Both tasks involve proving a distributed system invariant under crash and replay scenarios, specifically regarding the stability of journal entries and the behavior of a control process (C) during restart. The focus on 'stable cursor' and 'durable re"
+    },
+    {
+      "task_id": "lease-restart",
+      "title": "Prove the takeover rule survives a desk crash",
+      "estimate_min": 60,
+      "actual_min": 72.0,
+      "ratio": 1.2,
+      "reason": "Both tasks require analyzing the system's behavior after a crash and during recovery, including the visibility of journal entries and the preservation of invariants. The task 'Prove the takeover rule survives a desk crash' directly parallels the 'rep"
+    },
+    {
+      "task_id": "epoch-proof",
+      "title": "Prove one receipt per token after a leader change",
+      "estimate_min": 80,
+      "actual_min": 100.0,
+      "ratio": 1.25,
+      "reason": "Both tasks involve analyzing message interleavings to verify or violate invariants under crash and replay conditions. The new task requires a quantified invariant for the receipt and a repair that rules out adversarial executions, which is exactly wh"
+    }
+  ],
+  "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+  "started_utc": "2026-11-14T19:27:56.375401+00:00",
+  "completed_utc": "2026-11-14T19:30:32.773981+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:27:56.431884+00:00",
+      "request_body_sha256": "aa75f34be8881373fd4b55ae40913af61adf352c760d74acb463611ef1bfb5c9",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "barrier-proof",
+        "ack-traces",
+        "lease-restart",
+        "clock-two",
+        "epoch-proof",
+        "bus-pass"
+      ],
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 424,
+        "prompt_tokens": 1702,
+        "total_tokens": 2126,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1702,
+        "prompt_ms": 97771.344,
+        "prompt_per_token_ms": 57.44497297297297,
+        "prompt_per_second": 17.407963625824763,
+        "predicted_n": 424,
+        "predicted_ms": 58556.608,
+        "predicted_per_token_ms": 138.4316973995272,
+        "predicted_per_second": 7.223779082285641
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve proving a distributed system invariant under crash and replay scenarios, specifically regarding the stability of journal entries and the behavior of a control process (C) during restart. The focus on 'stable cursor' and 'durable record' aligns with the bridge's in-memory deduplication map and the journal entries in the bridge handout. The requirement to include a repair across restart and a legal failure schedule matches the structure of the 'repair across restart' and 'legal failure schedule' components in the new task. Obstacle 1: 'Completion note: Separate failure schedule for crash recovery; proofread before sending.'\", \"flag\": 1 }, { \"slot\": 3, \"reason\": \"Both tasks require analyzing the system's behavior after a crash and during recovery, including the visibility of journal entries and the preservation of invariants. The task 'Prove the takeover rule survives a desk crash' directly parallels the 'repair across restart' and 'legal failure schedule' in the new task, as both involve handling delayed responses and ensuring that the system maintains consistency after a crash. The need to consider the crash after the receipt and analyze transitions that create receipts or discard tokens matches the analysis of the bridge's failure and recovery in the new task. Obstacle 1: 'Completion note: I needed a separate failure schedule for the recovery case.'\", \"flag\": 1 }, { \"slot\": 5, \"reason\": \"Both tasks involve analyzing message interleavings to verify or violate invariants under crash and replay conditions. The new task requires a quantified invariant for the receipt and a repair that rules out adversarial executions, which is exactly what the 'Prove one receipt per token after a leader change' task requires. The focus on stale journal replies and the earliest inconsistent pair of records aligns with the 'repair' and 'legal failure schedule' components. Obstacle 1: 'Completion note: Writing out a separate failure schedule took another pass.'\", \"flag\": 1 } ] }",
+      "finished_utc": "2026-11-14T19:30:32.771416+00:00"
+    }
+  ]
+}

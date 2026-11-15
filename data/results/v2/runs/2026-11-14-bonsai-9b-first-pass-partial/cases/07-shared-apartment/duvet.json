@@ -1,0 +1,106 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 1 comparison, the median ratio of actual to estimated time was 0.70×. Applied 33% of the adjustment. 30 min × 0.90 ≈ 27 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "2215dfec44b0d75cfa530378a120f8eb4f1ca7814227800e72b7e15670e4b699",
+      "max_tokens": 480,
+      "seconds": 35.494,
+      "response": {
+        "matches": [
+          {
+            "slot": 2,
+            "reason": "Same method (machine cycle with pause) and scope (laundry load + setup), though difficulty differs slightly due to folding; participant matches (guest room context).",
+            "flag": 2
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": null,
+    "evidence_ids": [],
+    "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+    "predicted_ratio": 0.9,
+    "realized_ratio": 1.9333333333333333,
+    "prediction_in_band": null,
+    "realization_in_band": null,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [
+      "towels-one"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "07-shared-apartment",
+  "task": "duvet",
+  "title": "Wash the spare duvet cover",
+  "original": 30,
+  "category": 28,
+  "planner": 27,
+  "actual": 58,
+  "range": [
+    16,
+    38
+  ],
+  "covered": false,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 35.494,
+  "latency_seconds": 35.503,
+  "evidence": [
+    {
+      "task_id": "towels-one",
+      "title": "Wash and fold the bath towels",
+      "estimate_min": 30,
+      "actual_min": 21.0,
+      "ratio": 0.7,
+      "reason": "Same method (machine cycle with pause) and scope (laundry load + setup), though difficulty differs slightly due to folding; participant matches (guest room context)."
+    }
+  ],
+  "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+  "start_utc": "2026-11-14T20:47:37.050428+00:00",
+  "end_utc": "2026-11-14T20:48:12.555018+00:00",
+  "cpu_threads": 8,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T20:47:37.061270+00:00",
+      "request_body_sha256": "a8cedb4300b0b75ffda2eddfdc134d4707858fd1d5f40b84a2efc1427d2d9f63",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "sheets",
+        "towels-one",
+        "stew-dishes",
+        "pasta-dishes",
+        "mugs",
+        "chili-dishes"
+      ],
+      "usage": {
+        "completion_tokens": 73,
+        "prompt_tokens": 757,
+        "total_tokens": 830,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 645,
+        "prompt_ms": 28384.196,
+        "prompt_per_token_ms": 44.00650542635659,
+        "prompt_per_second": 22.723912983126244,
+        "predicted_n": 73,
+        "predicted_ms": 6734.907,
+        "predicted_per_token_ms": 93.540375,
+        "predicted_per_second": 10.690570782937314
+      },
+      "content": "{\n  \"matches\": [\n    {\n      \"slot\": 2,\n      \"reason\": \"Same method (machine cycle with pause) and scope (laundry load + setup), though difficulty differs slightly due to folding; participant matches (guest room context).\",\n      \"flag\": 2\n    }\n  ]\n}",
+      "finish_utc": "2026-11-14T20:48:12.552686+00:00"
+    }
+  ]
+}

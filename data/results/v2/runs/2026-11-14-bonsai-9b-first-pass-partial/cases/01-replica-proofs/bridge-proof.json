@@ -1,0 +1,191 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 6 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 100% of the adjustment. 75 min × 1.20 ≈ 90 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "000f830f6565cb33842824be65c809c6beb3a38d466df880d8e69664a253bad4",
+      "max_tokens": 480,
+      "seconds": 229.194,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Same deliverable (proof of invariant/repair) and scope (bridge/distributed systems), but different method (flush barrier vs. retirement invariant) and purpose (separate failure schedule vs. retirement argument).",
+            "flag": 0
+          },
+          {
+            "slot": 2,
+            "reason": "Different scope (ticket-desk vs. bridge) and purpose (labeling vs. proving invariant).",
+            "flag": 0
+          },
+          {
+            "slot": 3,
+            "reason": "Same category and document context, but different deliverable (safety invariant for takeover vs. retirement invariant) and method (interleaving construction vs. quantified invariant).",
+            "flag": 0
+          },
+          {
+            "slot": 4,
+            "reason": "Different scope (ticket-desk vs. bridge) and purpose (reconstructing timeline vs. proving invariant).",
+            "flag": 0
+          },
+          {
+            "slot": 5,
+            "reason": "Same category and document context, but different deliverable (one receipt per token vs. retirement invariant) and method (checking takeover handler vs. establishing initialization).",
+            "flag": 0
+          },
+          {
+            "slot": 6,
+            "reason": "Different category (Personal vs. Distributed systems) and scope (bus pass vs. bridge handout).",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.14,
+      1.3
+    ],
+    "evidence_ids": [
+      "lease-restart",
+      "epoch-proof",
+      "barrier-proof"
+    ],
+    "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+    "expected_caution": {
+      "evidence_ids": [
+        "lease-restart",
+        "epoch-proof"
+      ],
+      "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+    },
+    "predicted_ratio": 1.2,
+    "realized_ratio": 1.24,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "barrier-proof",
+      "epoch-proof",
+      "lease-restart"
+    ],
+    "selected_unlisted_ids": [
+      "ack-traces",
+      "bus-pass",
+      "clock-two"
+    ],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-proof",
+  "title": "Solve part B of the bridge handout",
+  "original": 75,
+  "category": 90,
+  "planner": 90,
+  "actual": 93,
+  "range": [
+    55,
+    120
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 229.194,
+  "latency_seconds": 229.215,
+  "evidence": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "estimate_min": 75,
+      "actual_min": 90.0,
+      "ratio": 1.2,
+      "reason": "Same deliverable (proof of invariant/repair) and scope (bridge/distributed systems), but different method (flush barrier vs. retirement invariant) and purpose (separate failure schedule vs. retirement argument)."
+    },
+    {
+      "task_id": "ack-traces",
+      "title": "Label received and delayed ticket-desk acknowledgments",
+      "estimate_min": 30,
+      "actual_min": 24.0,
+      "ratio": 0.8,
+      "reason": "Different scope (ticket-desk vs. bridge) and purpose (labeling vs. proving invariant)."
+    },
+    {
+      "task_id": "lease-restart",
+      "title": "Prove the takeover rule survives a desk crash",
+      "estimate_min": 60,
+      "actual_min": 72.0,
+      "ratio": 1.2,
+      "reason": "Same category and document context, but different deliverable (safety invariant for takeover vs. retirement invariant) and method (interleaving construction vs. quantified invariant)."
+    },
+    {
+      "task_id": "clock-two",
+      "title": "Reconstruct the ticket-desk ACK timeline",
+      "estimate_min": 35,
+      "actual_min": 26.0,
+      "ratio": 0.7428571428571429,
+      "reason": "Different scope (ticket-desk vs. bridge) and purpose (reconstructing timeline vs. proving invariant)."
+    },
+    {
+      "task_id": "epoch-proof",
+      "title": "Prove one receipt per token after a leader change",
+      "estimate_min": 80,
+      "actual_min": 100.0,
+      "ratio": 1.25,
+      "reason": "Same category and document context, but different deliverable (one receipt per token vs. retirement invariant) and method (checking takeover handler vs. establishing initialization)."
+    },
+    {
+      "task_id": "bus-pass",
+      "title": "Renew bus pass",
+      "estimate_min": 10,
+      "actual_min": 16.0,
+      "ratio": 1.6,
+      "reason": "Different category (Personal vs. Distributed systems) and scope (bus pass vs. bridge handout)."
+    }
+  ],
+  "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+  "start_utc": "2026-11-14T19:27:54.363619+00:00",
+  "end_utc": "2026-11-14T19:31:43.618977+00:00",
+  "cpu_threads": 4,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:27:54.426610+00:00",
+      "request_body_sha256": "7beeb2fa823489f5dc68e6019be465d210b11a17571469cdaf378b4d963f5648",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "barrier-proof",
+        "ack-traces",
+        "lease-restart",
+        "clock-two",
+        "epoch-proof",
+        "bus-pass"
+      ],
+      "usage": {
+        "completion_tokens": 275,
+        "prompt_tokens": 1702,
+        "total_tokens": 1977,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1702,
+        "prompt_ms": 180520.57,
+        "prompt_per_token_ms": 106.06378965922444,
+        "prompt_per_second": 9.428288421646352,
+        "predicted_n": 275,
+        "predicted_ms": 48654.57,
+        "predicted_per_token_ms": 177.57142335766423,
+        "predicted_per_second": 5.631536770338326
+      },
+      "content": "{\"matches\": [{\"slot\": 1, \"reason\": \"Same deliverable (proof of invariant/repair) and scope (bridge/distributed systems), but different method (flush barrier vs. retirement invariant) and purpose (separate failure schedule vs. retirement argument).\", \"flag\": 0}, {\"slot\": 2, \"reason\": \"Different scope (ticket-desk vs. bridge) and purpose (labeling vs. proving invariant).\", \"flag\": 0}, {\"slot\": 3, \"reason\": \"Same category and document context, but different deliverable (safety invariant for takeover vs. retirement invariant) and method (interleaving construction vs. quantified invariant).\", \"flag\": 0}, {\"slot\": 4, \"reason\": \"Different scope (ticket-desk vs. bridge) and purpose (reconstructing timeline vs. proving invariant).\", \"flag\": 0}, {\"slot\": 5, \"reason\": \"Same category and document context, but different deliverable (one receipt per token vs. retirement invariant) and method (checking takeover handler vs. establishing initialization).\", \"flag\": 0}, {\"slot\": 6, \"reason\": \"Different category (Personal vs. Distributed systems) and scope (bus pass vs. bridge handout).\", \"flag\": 0}]}",
+      "finish_utc": "2026-11-14T19:31:43.616131+00:00"
+    }
+  ]
+}

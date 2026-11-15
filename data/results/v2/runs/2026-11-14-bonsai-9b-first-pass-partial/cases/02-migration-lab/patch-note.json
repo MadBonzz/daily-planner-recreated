@@ -1,0 +1,183 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 6 comparisons, the median ratio of actual to estimated time was 1.01×. Applied 100% of the adjustment. 40 min × 1.01 ≈ 40 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "053968720f02f8d4b69b78abe773c9ecb31ea77c3e0035962d5aad2548261426",
+      "max_tokens": 480,
+      "seconds": 547.911,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Same deliverable (three saved replay transcripts) and method (fill comparison table/explain checksum collision), but distinct purpose (this task requires code changes and new tool registration; slot 1 is reporting-only with no code changes).",
+            "flag": 0
+          },
+          {
+            "slot": 2,
+            "reason": "Different deliverable (annotated screenshots vs. written explanation) and method (visual comparison vs. textual analysis of checksum collision).",
+            "flag": 0
+          },
+          {
+            "slot": 3,
+            "reason": "Different deliverable (implementing a first-bad-offset tool vs. explaining existing transcripts) and scope (new implementation vs. archival analysis).",
+            "flag": 0
+          },
+          {
+            "slot": 4,
+            "reason": "Different deliverable (running existing tests vs. writing up transcripts) and purpose (verification vs. explanatory report).",
+            "flag": 0
+          },
+          {
+            "slot": 5,
+            "reason": "Different deliverable (porting wraparound header reader vs. explaining checksum collisions) and scope (implementation vs. archival analysis).",
+            "flag": 0
+          },
+          {
+            "slot": 6,
+            "reason": "Different category (Home vs. Software engineering) and deliverable (physical task vs. technical report).",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.84
+    ],
+    "evidence_ids": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "rationale": "Two prior write-ups were quick when archived logs were already available.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.7,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "codec-caption",
+      "suite-report"
+    ],
+    "selected_unlisted_ids": [
+      "bins",
+      "boundary-debug",
+      "replay-cases",
+      "ring-port"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-note",
+  "title": "Explain the three saved replay transcripts",
+  "original": 40,
+  "category": 51,
+  "planner": 40,
+  "actual": 28,
+  "range": [
+    25,
+    63
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 547.911,
+  "latency_seconds": 547.925,
+  "evidence": [
+    {
+      "task_id": "suite-report",
+      "title": "Write up three saved replay transcripts",
+      "estimate_min": 45,
+      "actual_min": 29.0,
+      "ratio": 0.6444444444444445,
+      "reason": "Same deliverable (three saved replay transcripts) and method (fill comparison table/explain checksum collision), but distinct purpose (this task requires code changes and new tool registration; slot 1 is reporting-only with no code changes)."
+    },
+    {
+      "task_id": "codec-caption",
+      "title": "Annotate the saved decoder comparison",
+      "estimate_min": 40,
+      "actual_min": 27.0,
+      "ratio": 0.675,
+      "reason": "Different deliverable (annotated screenshots vs. written explanation) and method (visual comparison vs. textual analysis of checksum collision)."
+    },
+    {
+      "task_id": "boundary-debug",
+      "title": "Expose a ring cursor mismatch in the tool API",
+      "estimate_min": 85,
+      "actual_min": 132.0,
+      "ratio": 1.5529411764705883,
+      "reason": "Different deliverable (implementing a first-bad-offset tool vs. explaining existing transcripts) and scope (new implementation vs. archival analysis)."
+    },
+    {
+      "task_id": "replay-cases",
+      "title": "Run the existing test pack",
+      "estimate_min": 35,
+      "actual_min": 38.0,
+      "ratio": 1.0857142857142856,
+      "reason": "Different deliverable (running existing tests vs. writing up transcripts) and purpose (verification vs. explanatory report)."
+    },
+    {
+      "task_id": "ring-port",
+      "title": "Port the wraparound header reader",
+      "estimate_min": 90,
+      "actual_min": 137.0,
+      "ratio": 1.5222222222222221,
+      "reason": "Different deliverable (porting wraparound header reader vs. explaining checksum collisions) and scope (implementation vs. archival analysis)."
+    },
+    {
+      "task_id": "bins",
+      "title": "Take recycling to the loading bay",
+      "estimate_min": 15,
+      "actual_min": 14.0,
+      "ratio": 0.9333333333333333,
+      "reason": "Different category (Home vs. Software engineering) and deliverable (physical task vs. technical report)."
+    }
+  ],
+  "check": "Two prior write-ups were quick when archived logs were already available.",
+  "start_utc": "2026-11-14T19:40:30.772824+00:00",
+  "end_utc": "2026-11-14T19:49:38.727200+00:00",
+  "cpu_threads": 4,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:40:30.816658+00:00",
+      "request_body_sha256": "a9e876da9da2987d178fecbc746b4b2d899db97e7fb6f0ff7861cf6ebca9d971",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "suite-report",
+        "codec-caption",
+        "boundary-debug",
+        "replay-cases",
+        "ring-port",
+        "bins"
+      ],
+      "usage": {
+        "completion_tokens": 272,
+        "prompt_tokens": 1257,
+        "total_tokens": 1529,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 1145,
+        "prompt_ms": 104864.154,
+        "prompt_per_token_ms": 91.58441397379912,
+        "prompt_per_second": 10.918888450671142,
+        "predicted_n": 272,
+        "predicted_ms": 442876.75,
+        "predicted_per_token_ms": 1634.231549815498,
+        "predicted_per_second": 0.6119083921203812
+      },
+      "content": "{\"matches\": [{\"slot\": 1, \"reason\": \"Same deliverable (three saved replay transcripts) and method (fill comparison table/explain checksum collision), but distinct purpose (this task requires code changes and new tool registration; slot 1 is reporting-only with no code changes).\", \"flag\": 0}, {\"slot\": 2, \"reason\": \"Different deliverable (annotated screenshots vs. written explanation) and method (visual comparison vs. textual analysis of checksum collision).\", \"flag\": 0}, {\"slot\": 3, \"reason\": \"Different deliverable (implementing a first-bad-offset tool vs. explaining existing transcripts) and scope (new implementation vs. archival analysis).\", \"flag\": 0}, {\"slot\": 4, \"reason\": \"Different deliverable (running existing tests vs. writing up transcripts) and purpose (verification vs. explanatory report).\", \"flag\": 0}, {\"slot\": 5, \"reason\": \"Different deliverable (porting wraparound header reader vs. explaining checksum collisions) and scope (implementation vs. archival analysis).\", \"flag\": 0}, {\"slot\": 6, \"reason\": \"Different category (Home vs. Software engineering) and deliverable (physical task vs. technical report).\", \"flag\": 0}]}",
+      "finish_utc": "2026-11-14T19:49:38.724643+00:00"
+    }
+  ]
+}

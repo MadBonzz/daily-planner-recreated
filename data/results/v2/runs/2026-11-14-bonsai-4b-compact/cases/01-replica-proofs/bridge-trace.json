@@ -1,0 +1,225 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “I needed a separate failure schedule for the recovery case.”",
+      "sources": [
+        {
+          "task_id": "lease-restart",
+          "title": "Prove the takeover rule survives a desk crash",
+          "origin": "Completion note",
+          "observation": "I needed a separate failure schedule for the recovery case."
+        }
+      ]
+    },
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “Separate failure schedule for crash recovery; proofread before sending.”",
+      "sources": [
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove a flush barrier across restart",
+          "origin": "Completion note",
+          "observation": "Separate failure schedule for crash recovery; proofread before sending."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 5 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 100% of the adjustment. 30 min × 1.20 ≈ 36 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "e705ce404c87b329b17110112f595a5e95312e9dda53a9ea6277084676febcd5",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 144.555
+    },
+    {
+      "prompt_sha256": "7456bff8cab906557343f2da7c3a0d3ddf9db94f3f03b35c364cb3fd8694e86c",
+      "max_tokens": 120,
+      "seconds": 45.777,
+      "response": {
+        "1": 2,
+        "2": 1,
+        "3": 2,
+        "4": 1,
+        "5": 1,
+        "6": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.7,
+      0.93
+    ],
+    "evidence_ids": [
+      "clock-two",
+      "ack-traces"
+    ],
+    "rationale": "Two bounded offline table replays finished ahead of budget.",
+    "predicted_ratio": 1.2,
+    "realized_ratio": 0.7666666666666667,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "ack-traces",
+      "clock-two"
+    ],
+    "selected_unlisted_ids": [
+      "barrier-proof",
+      "epoch-proof",
+      "lease-restart"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-trace",
+  "title": "Fill the replay table in part A",
+  "original": 30,
+  "category": 36,
+  "planner": 36,
+  "actual": 23,
+  "range": [
+    22,
+    40
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 190.332,
+  "latency_seconds": 190.414,
+  "evidence": [
+    {
+      "task_id": "lease-restart",
+      "title": "Prove the takeover rule survives a desk crash",
+      "estimate_min": 60,
+      "actual_min": 72.0,
+      "ratio": 1.2,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "ack-traces",
+      "title": "Label received and delayed ticket-desk acknowledgments",
+      "estimate_min": 30,
+      "actual_min": 24.0,
+      "ratio": 0.8,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "estimate_min": 75,
+      "actual_min": 90.0,
+      "ratio": 1.2,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "epoch-proof",
+      "title": "Prove one receipt per token after a leader change",
+      "estimate_min": 80,
+      "actual_min": 100.0,
+      "ratio": 1.25,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "clock-two",
+      "title": "Reconstruct the ticket-desk ACK timeline",
+      "estimate_min": 35,
+      "actual_min": 26.0,
+      "ratio": 0.7428571428571429,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "Two bounded offline table replays finished ahead of budget.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:30:32.868148+00:00",
+      "request_body_sha256": "ad0b0873403df61e36175c638fe0debef97936c6fe8f9a6caa4b20a76af03ae8",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "lease-restart",
+        "ack-traces",
+        "barrier-proof",
+        "epoch-proof",
+        "clock-two",
+        "dish-rack"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1685,
+        "total_tokens": 2165,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1562,
+        "prompt_ms": 87099.282,
+        "prompt_per_token_ms": 55.76138412291934,
+        "prompt_per_second": 17.933557707169157,
+        "predicted_n": 480,
+        "predicted_ms": 56857.059,
+        "predicted_per_token_ms": 118.69949686847599,
+        "predicted_per_second": 8.42463554085694
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"The task 'Fill the replay table in part A' involves labeling exchanges and durable states after each event, which aligns with the 'Label received and delayed ticket-desk acknowledgments' task (slot 2) in terms of method (replay and journal annotation), scope (tracking effect journal entries and acknowledgments), and difficulty (determining which exchanges are acknowledged and which are lost). Both tasks require reconstructing execution timelines based on journal entries and acknowledgments, and both are part of a distributed systems recovery analysis. However, 'Prove the takeover rule survives a desk crash' (slot 1) is more focused on safety invariants and crash recovery, while 'Label received and delayed ticket-desk acknowledgments' (slot 2) is about annotating journal responses during a crash. The shared topic of crash recovery and journal-based state tracking makes them relevant, but the method and scope differ significantly. Thus, no direct match is found.\", \"flag\": 0 }, { \"slot\": 2, \"reason\": \"The task 'Label received and delayed ticket-desk acknowledgments' (slot 2) directly matches the deliverable of 'Fill the replay table in part A' (new_task) in terms of method (labeling exchanges and durable states), scope (tracking acknowledgments and journal entries), and difficulty (determining which exchanges are acknowledged and which are lost). Both involve analyzing journal entries and acknowledging delayed or stale messages in a distributed system. The shared topic of journal-based state reconstruction and acknowledgment handling is sufficient, but the specific deliverable of labeling exchanges and durable states after each event is identical. This is a direct match. The most applicable earlier obstacle is observation 2: 'When can a standby issue tickets? Exercise 2 · Recovery argument' — which involves analyzing delayed DRAINED messages and journal entries during a crash, and requires reconstructing the effect timeline. This is a concrete, specific obstacle related to delayed acknowledgments and crash recovery, making it the most relevant off-task activity.\", \"flag\": 2 }, { \"slot\": 3, \"reason\": \"The task 'Prove a flush barrier across restart' (slot 3) involves reasoning from stable cursor state and producing a counterexample for delayed generation, which is directly related to",
+      "finished_utc": "2026-11-14T19:32:57.422028+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:31:48.692414+00:00",
+      "request_body_sha256": "57509127f529c94a46715f1a3a77b2ea76b46cd00aca20df914a9ff0b1cc620c",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "lease-restart",
+        "ack-traces",
+        "barrier-proof",
+        "epoch-proof",
+        "clock-two",
+        "dish-rack"
+      ],
+      "usage": {
+        "completion_tokens": 52,
+        "prompt_tokens": 1677,
+        "total_tokens": 1729,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1677,
+        "prompt_ms": 42652.418,
+        "prompt_per_token_ms": 25.433761478831244,
+        "prompt_per_second": 39.317817808125206,
+        "predicted_n": 52,
+        "predicted_ms": 3113.481,
+        "predicted_per_token_ms": 61.04864705882353,
+        "predicted_per_second": 16.38037938885768
+      },
+      "content": "{\n  \"1\": 2,\n  \"2\": 1,\n  \"3\": 2,\n  \"4\": 1,\n  \"5\": 1,\n  \"6\": 0\n}",
+      "finished_utc": "2026-11-14T20:32:34.466258+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 33,
+    "basis": "Category history",
+    "range": [
+      19,
+      47
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 144.617
+  },
+  "recovery_started_utc": "2026-11-14T20:31:48.640490+00:00",
+  "recovery_completed_utc": "2026-11-14T20:32:34.468631+00:00",
+  "recovery_elapsed_seconds": 45.797,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

@@ -1,0 +1,74 @@
+{
+  "case": "mara-rooms",
+  "seconds": 5.77,
+  "result": {
+    "point_min": 40,
+    "low_min": 36,
+    "high_min": 44,
+    "confidence": "medium",
+    "basis": "Model-selected tasks",
+    "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.33×. Applied 100% of the adjustment. 30 min × 1.33 ≈ 40 min. The range includes the observed ratios and a 10% planning margin.",
+    "evidence": [
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "estimate_min": 30,
+        "actual_min": 39.0,
+        "ratio": 1.3,
+        "reason": "The task involves assigning a second appointment room and agreeing on an owner, which aligns with the 'Assign the late intake room with Mara' task."
+      },
+      {
+        "task_id": "mara-capacity",
+        "title": "Work out the overflow roster with Mara",
+        "estimate_min": 30,
+        "actual_min": 41.0,
+        "ratio": 1.3666666666666667,
+        "reason": "The task is about deciding who can stay for the spillover clinic and recording the owners in the rota, matching the 'Work out the overflow roster with Mara' task."
+      },
+      {
+        "task_id": "mara-evening",
+        "title": "Review Thursday evening coverage with Mara",
+        "estimate_min": 30,
+        "actual_min": 40.0,
+        "ratio": 1.3333333333333333,
+        "reason": "The task requires agreeing on a second greeter and a backup for the late check-in, similar to the 'Review Thursday evening coverage with Mara' task."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Allow time for this if it comes up again. You recorded “Mara arrived six minutes after the start. She stayed until the owner confirmed.”",
+        "sources": [
+          {
+            "task_id": "mara-late-room",
+            "title": "Assign the late intake room with Mara",
+            "origin": "Completion note",
+            "observation": "Mara arrived six minutes after the start. She stayed until the owner confirmed."
+          }
+        ]
+      },
+      {
+        "advice": "Allow time for this if it comes up again. You recorded “Mara was nine minutes late. We still reviewed all three names and left at 18:11.”",
+        "sources": [
+          {
+            "task_id": "mara-capacity",
+            "title": "Work out the overflow roster with Mara",
+            "origin": "Completion note",
+            "observation": "Mara was nine minutes late. We still reviewed all three names and left at 18:11."
+          }
+        ]
+      },
+      {
+        "advice": "Allow time for this if it comes up again. You recorded “Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments.”",
+        "sources": [
+          {
+            "task_id": "mara-evening",
+            "title": "Review Thursday evening coverage with Mara",
+            "origin": "Completion note",
+            "observation": "Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments."
+          }
+        ]
+      }
+    ],
+    "retryable": false
+  }
+}

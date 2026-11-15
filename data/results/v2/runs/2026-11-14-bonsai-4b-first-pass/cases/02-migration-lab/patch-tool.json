@@ -1,0 +1,145 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Review the recorded step before deciding how much time to reserve.",
+      "sources": [
+        {
+          "task_id": "trace-tool",
+          "title": "Implement the bounded mismatch reporter",
+          "origin": "Completion note",
+          "observation": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 2 comparisons, the median ratio of actual to estimated time was 1.50×. Applied 67% of the adjustment. 85 min × 1.33 ≈ 113 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "e28663c0f42989c6b08828b83f7e3e8d25ee8b1bfdd12c393e1168e83e97813e",
+      "max_tokens": 480,
+      "seconds": 97.221,
+      "response": {
+        "matches": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve implementing a streaming comparison tool for traces and require modifying the Python tool's registration. The goal of 'Find the first divergent operation' (Part I) aligns with 'Implement the bounded mismatch reporter' in terms of scope and deliverable (a streaming tool that detects first divergence). The shared focus on traces, decoding, and divergence detection makes this a direct match. The most applicable earlier obstacle is Observation 1: 'Completion note: Minimizing the EOF fixture was slow because the harness silently zipped the iterators.' This indicates a prior issue with handling EOF/empty events in streaming tools, which is directly relevant to the divergence detection logic in the new task.",
+            "flag": 1
+          },
+          {
+            "slot": 2,
+            "reason": "The task 'Port the wraparound header reader' involves implementing a Rust iterator for reading four-byte headers and verifying cursor behavior before and after empty events. This is directly related to the 'Find the first divergent operation' task, which requires handling empty events (zero payload) and detecting divergence in traces. The shared method (using iterators and cursor verification) and scope (header parsing and cursor state) make this a strong match. The most applicable earlier obstacle is Observation 2: 'Completion note: Had to minimize an EOF fixture before the Rust harness would reproduce it.' This shows a prior struggle with EOF handling, which is critical for detecting divergences in traces where empty events are valid but can cause mismatches.",
+            "flag": 2
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.34,
+      1.65
+    ],
+    "evidence_ids": [
+      "ring-port",
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+    "expected_caution": {
+      "evidence_ids": [
+        "trace-tool",
+        "boundary-debug"
+      ],
+      "rationale": "The EOF regression fixture needed minimizing twice."
+    },
+    "predicted_ratio": 1.3294117647058823,
+    "realized_ratio": 1.6235294117647059,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "ring-port",
+      "trace-tool"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": true,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-tool",
+  "title": "Implement first divergence for C and Rust traces",
+  "original": 85,
+  "category": 109,
+  "planner": 113,
+  "actual": 138,
+  "range": [
+    67,
+    159
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 97.221,
+  "latency_seconds": 97.235,
+  "evidence": [
+    {
+      "task_id": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "estimate_min": 80,
+      "actual_min": 118.0,
+      "ratio": 1.475,
+      "reason": "Both tasks involve implementing a streaming comparison tool for traces and require modifying the Python tool's registration. The goal of 'Find the first divergent operation' (Part I) aligns with 'Implement the bounded mismatch reporter' in terms of s"
+    },
+    {
+      "task_id": "ring-port",
+      "title": "Port the wraparound header reader",
+      "estimate_min": 90,
+      "actual_min": 137.0,
+      "ratio": 1.5222222222222221,
+      "reason": "The task 'Port the wraparound header reader' involves implementing a Rust iterator for reading four-byte headers and verifying cursor behavior before and after empty events. This is directly related to the 'Find the first divergent operation' task, w"
+    }
+  ],
+  "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+  "started_utc": "2026-11-14T19:32:57.423653+00:00",
+  "completed_utc": "2026-11-14T19:34:34.690566+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:32:57.470281+00:00",
+      "request_body_sha256": "c8fa6d8ea91056a9671a8eef2b1ca55dbf84c9385819bbea9f261ef7aae489a7",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "trace-tool",
+        "ring-port",
+        "boundary-debug",
+        "suite-report",
+        "codec-caption",
+        "replay-cases"
+      ],
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 323,
+        "prompt_tokens": 1290,
+        "total_tokens": 1613,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1167,
+        "prompt_ms": 61774.294,
+        "prompt_per_token_ms": 52.93427077977721,
+        "prompt_per_second": 18.891353092598678,
+        "predicted_n": 323,
+        "predicted_ms": 35181.728,
+        "predicted_per_token_ms": 109.2600248447205,
+        "predicted_per_second": 9.152478240977816
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve implementing a streaming comparison tool for traces and require modifying the Python tool's registration. The goal of 'Find the first divergent operation' (Part I) aligns with 'Implement the bounded mismatch reporter' in terms of scope and deliverable (a streaming tool that detects first divergence). The shared focus on traces, decoding, and divergence detection makes this a direct match. The most applicable earlier obstacle is Observation 1: 'Completion note: Minimizing the EOF fixture was slow because the harness silently zipped the iterators.' This indicates a prior issue with handling EOF/empty events in streaming tools, which is directly relevant to the divergence detection logic in the new task.\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"The task 'Port the wraparound header reader' involves implementing a Rust iterator for reading four-byte headers and verifying cursor behavior before and after empty events. This is directly related to the 'Find the first divergent operation' task, which requires handling empty events (zero payload) and detecting divergence in traces. The shared method (using iterators and cursor verification) and scope (header parsing and cursor state) make this a strong match. The most applicable earlier obstacle is Observation 2: 'Completion note: Had to minimize an EOF fixture before the Rust harness would reproduce it.' This shows a prior struggle with EOF handling, which is critical for detecting divergences in traces where empty events are valid but can cause mismatches.\", \"flag\": 2 } ] }",
+      "finished_utc": "2026-11-14T19:34:34.688672+00:00"
+    }
+  ]
+}

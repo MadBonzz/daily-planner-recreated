@@ -1,0 +1,57 @@
+{
+  "case": "phone-and-laptop-06-neighborhood-clinic",
+  "seconds": 6.68,
+  "result": {
+    "intervals": [
+      {
+        "start": 1772524917.0,
+        "end": 1772524920.0,
+        "seconds": 3.0,
+        "app": "LibreOffice Writer",
+        "title": "March public hours",
+        "domain": "",
+        "idle": false,
+        "excluded": false,
+        "period": 0,
+        "label": "on_task",
+        "reason": "Reading and editing the flyer in LibreOffice Writer supports the task."
+      },
+      {
+        "start": 1772524920.0,
+        "end": 1772524965.0,
+        "seconds": 45.0,
+        "phone_app": "Calendar",
+        "app": "LibreOffice Writer",
+        "title": "March public hours",
+        "domain": "",
+        "idle": false,
+        "excluded": false,
+        "period": 0,
+        "label": "on_task",
+        "reason": "Checking the calendar for confirmation is relevant to the task."
+      },
+      {
+        "start": 1772524965.0,
+        "end": 1772524968.0,
+        "seconds": 3.0,
+        "app": "LibreOffice Writer",
+        "title": "March public hours",
+        "domain": "",
+        "idle": false,
+        "excluded": false,
+        "period": 0,
+        "label": "on_task",
+        "reason": "Editing the flyer in LibreOffice Writer is directly related to the task."
+      }
+    ],
+    "warnings": [],
+    "totals": {
+      "on_task": 51.0,
+      "off_task": 0.0,
+      "uncertain": 0.0
+    },
+    "elapsed_seconds": 51.0,
+    "switches": 2,
+    "summary": "Across 0.8 recorded minutes, 0.8 min were labeled on-task, 0.0 min off-task and 0.0 min uncertain. A 0.8 min interval in LibreOffice Writer was labeled on-task. Checking the calendar for confirmation is relevant to the task."
+  }
+}

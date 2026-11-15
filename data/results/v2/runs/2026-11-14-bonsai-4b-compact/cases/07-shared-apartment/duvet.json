@@ -1,0 +1,198 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “Stopped the timer during both machine cycles. The folding was straightforward.”",
+      "sources": [
+        {
+          "task_id": "towels-one",
+          "title": "Wash and fold the bath towels",
+          "origin": "Completion note",
+          "observation": "Stopped the timer during both machine cycles. The folding was straightforward."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 4 comparisons, the median ratio of actual to estimated time was 0.95×. Applied 100% of the adjustment. 30 min × 0.95 ≈ 28 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "2215dfec44b0d75cfa530378a120f8eb4f1ca7814227800e72b7e15670e4b699",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 39.516
+    },
+    {
+      "prompt_sha256": "0e6c1c5cd26fb0eb2e76ce733624344d36d2fc8e43a9bf74d0d0e61def3518bb",
+      "max_tokens": 120,
+      "seconds": 18.427,
+      "response": {
+        "1": 1,
+        "2": 2,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 1
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": null,
+    "evidence_ids": [],
+    "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+    "predicted_ratio": 0.9333333333333333,
+    "realized_ratio": 1.9333333333333333,
+    "prediction_in_band": null,
+    "realization_in_band": null,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [
+      "chili-dishes",
+      "pasta-dishes",
+      "sheets",
+      "towels-one"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "07-shared-apartment",
+  "task": "duvet",
+  "title": "Wash the spare duvet cover",
+  "original": 30,
+  "category": 28,
+  "planner": 28,
+  "actual": 58,
+  "range": [
+    19,
+    38
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 57.943,
+  "latency_seconds": 57.959,
+  "evidence": [
+    {
+      "task_id": "sheets",
+      "title": "Wash the guest-room sheets",
+      "estimate_min": 35,
+      "actual_min": 23.0,
+      "ratio": 0.6571428571428571,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "towels-one",
+      "title": "Wash and fold the bath towels",
+      "estimate_min": 30,
+      "actual_min": 21.0,
+      "ratio": 0.7,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "pasta-dishes",
+      "title": "Clear up the pasta supper",
+      "estimate_min": 25,
+      "actual_min": 31.0,
+      "ratio": 1.24,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "chili-dishes",
+      "title": "Do the dishes after chili night",
+      "estimate_min": 30,
+      "actual_min": 36.0,
+      "ratio": 1.2,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:53:40.961592+00:00",
+      "request_body_sha256": "0dd3394c11ecae0f3a6a03da00a1cda0684e9e06ead37d61db8ab691459616d0",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "sheets",
+        "towels-one",
+        "stew-dishes",
+        "pasta-dishes",
+        "mugs",
+        "chili-dishes"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 757,
+        "total_tokens": 1237,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 634,
+        "prompt_ms": 15101.715,
+        "prompt_per_token_ms": 23.81973974763407,
+        "prompt_per_second": 41.981986814080386,
+        "predicted_n": 480,
+        "predicted_ms": 23914.694,
+        "predicted_per_token_ms": 49.92629227557411,
+        "predicted_per_second": 20.029526616564695
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve washing a bedding item (duvet cover and sheets) and require a machine cycle. The spare duvet cover is in the guest cupboard, matching the location of the guest-room sheets. The shared method (machine washing) and scope (housework) are aligned. The key difference is that the duvet cover is a second-hand item and requires a pause during the machine run, which is not noted in the sheets task. However, the task of washing a bedding item with a machine and a pause during operation is not explicitly present in any other task. The most applicable earlier obstacle is observation 1: 'Completion note: The fitted sheet took a few tries. The machine ran while I went shopping.' This indicates a prior task involving a machine run interrupted by an activity (shopping), which mirrors the pause during the machine run in the duvet cover task. Thus, the obstacle is relevant and applies to the duvet cover task.\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"Both tasks involve washing and folding towels, using a washer and manual folding. The method (washing while doing other tasks) and scope (housework) are similar. Observation 2: 'Completion note: Stopped the timer during both machine cycles. The folding was straightforward.' Shows that the participant paused the timer during machine cycles, which is a shared pattern. The task of washing and folding towels is distinct from the duvet cover task, but the method (washing with a timer pause) and shared context (towels, washer, folding) make this a strong match. However, the duvet cover task does not involve towels or folding, so this is not a direct match. The shared pattern of pausing the timer during machine cycles is present in both, but the specific deliverable (towels vs. duvet) and purpose (cleaning bedding vs. cleaning kitchen items) differ. Therefore, no direct match is found for this slot.\", \"flag\": 0 }, { \"slot\": 3, \"reason\": \"No match. The task involves resetting the kitchen after stew, which includes washing a cast-iron Dutch oven and wiping the sink. This is unrelated to the duvet cover task in terms of deliverable (bedding vs. kitchen",
+      "finished_utc": "2026-11-14T19:54:20.476262+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:36:01.888319+00:00",
+      "request_body_sha256": "aeddc1e4acbc2a19fc88388055040b052ae6db49fef2a9299bfe3c307e9218c3",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "sheets",
+        "towels-one",
+        "stew-dishes",
+        "pasta-dishes",
+        "mugs",
+        "chili-dishes"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 749,
+        "total_tokens": 802,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 634,
+        "prompt_ms": 15786.88,
+        "prompt_per_token_ms": 24.90044164037855,
+        "prompt_per_second": 40.15993027121255,
+        "predicted_n": 53,
+        "predicted_ms": 2522.993,
+        "predicted_per_token_ms": 48.51909615384615,
+        "predicted_per_second": 20.610441646092557
+      },
+      "content": "{\n  \"1\": 1,\n  \"2\": 2,\n  \"3\": 0,\n  \"4\": 1,\n  \"5\": 0,\n  \"6\": 1\n}",
+      "finished_utc": "2026-11-14T20:36:20.313221+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 29,
+    "basis": "Category history",
+    "range": [
+      15,
+      41
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 39.523
+  },
+  "recovery_started_utc": "2026-11-14T20:36:01.877135+00:00",
+  "recovery_completed_utc": "2026-11-14T20:36:20.315265+00:00",
+  "recovery_elapsed_seconds": 18.436,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

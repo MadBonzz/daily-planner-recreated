@@ -1,0 +1,154 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Model comparison unavailable. ternary-bonsai-4b reached its response length limit. Across 6 comparisons, the median ratio of actual to estimated time was 0.95×. Applied 50% of the adjustment. 30 min × 0.97 ≈ 29 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "2215dfec44b0d75cfa530378a120f8eb4f1ca7814227800e72b7e15670e4b699",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 39.516
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": null,
+    "evidence_ids": [],
+    "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+    "predicted_ratio": 0.9666666666666667,
+    "realized_ratio": 1.9333333333333333,
+    "prediction_in_band": null,
+    "realization_in_band": null,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [
+      "chili-dishes",
+      "mugs",
+      "pasta-dishes",
+      "sheets",
+      "stew-dishes",
+      "towels-one"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "07-shared-apartment",
+  "task": "duvet",
+  "title": "Wash the spare duvet cover",
+  "original": 30,
+  "category": 28,
+  "planner": 29,
+  "actual": 58,
+  "range": [
+    15,
+    41
+  ],
+  "covered": false,
+  "confidence": "low",
+  "basis": "Category history",
+  "model_status": "unavailable",
+  "model_error": "ternary-bonsai-4b reached its response length limit.",
+  "model_seconds": 39.516,
+  "latency_seconds": 39.523,
+  "evidence": [
+    {
+      "task_id": "chili-dishes",
+      "title": "Do the dishes after chili night",
+      "estimate_min": 30,
+      "actual_min": 36.0,
+      "ratio": 1.2,
+      "reason": "Same category. The scope may differ."
+    },
+    {
+      "task_id": "towels-one",
+      "title": "Wash and fold the bath towels",
+      "estimate_min": 30,
+      "actual_min": 21.0,
+      "ratio": 0.7,
+      "reason": "Same category. The scope may differ."
+    },
+    {
+      "task_id": "pasta-dishes",
+      "title": "Clear up the pasta supper",
+      "estimate_min": 25,
+      "actual_min": 31.0,
+      "ratio": 1.24,
+      "reason": "Same category. The scope may differ."
+    },
+    {
+      "task_id": "sheets",
+      "title": "Wash the guest-room sheets",
+      "estimate_min": 35,
+      "actual_min": 23.0,
+      "ratio": 0.6571428571428571,
+      "reason": "Same category. The scope may differ."
+    },
+    {
+      "task_id": "stew-dishes",
+      "title": "Reset the kitchen after stew",
+      "estimate_min": 35,
+      "actual_min": 42.0,
+      "ratio": 1.2,
+      "reason": "Same category. The scope may differ."
+    },
+    {
+      "task_id": "mugs",
+      "title": "Rinse the two coffee mugs",
+      "estimate_min": 10,
+      "actual_min": 5.0,
+      "ratio": 0.5,
+      "reason": "Same category. The scope may differ."
+    }
+  ],
+  "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+  "cpu_threads": 8,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "started_utc": "2026-11-14T19:53:40.952584+00:00",
+  "completed_utc": "2026-11-14T19:54:20.476491+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:53:40.961592+00:00",
+      "request_body_sha256": "0dd3394c11ecae0f3a6a03da00a1cda0684e9e06ead37d61db8ab691459616d0",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "sheets",
+        "towels-one",
+        "stew-dishes",
+        "pasta-dishes",
+        "mugs",
+        "chili-dishes"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 757,
+        "total_tokens": 1237,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 634,
+        "prompt_ms": 15101.715,
+        "prompt_per_token_ms": 23.81973974763407,
+        "prompt_per_second": 41.981986814080386,
+        "predicted_n": 480,
+        "predicted_ms": 23914.694,
+        "predicted_per_token_ms": 49.92629227557411,
+        "predicted_per_second": 20.029526616564695
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve washing a bedding item (duvet cover and sheets) and require a machine cycle. The spare duvet cover is in the guest cupboard, matching the location of the guest-room sheets. The shared method (machine washing) and scope (housework) are aligned. The key difference is that the duvet cover is a second-hand item and requires a pause during the machine run, which is not noted in the sheets task. However, the task of washing a bedding item with a machine and a pause during operation is not explicitly present in any other task. The most applicable earlier obstacle is observation 1: 'Completion note: The fitted sheet took a few tries. The machine ran while I went shopping.' This indicates a prior task involving a machine run interrupted by an activity (shopping), which mirrors the pause during the machine run in the duvet cover task. Thus, the obstacle is relevant and applies to the duvet cover task.\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"Both tasks involve washing and folding towels, using a washer and manual folding. The method (washing while doing other tasks) and scope (housework) are similar. Observation 2: 'Completion note: Stopped the timer during both machine cycles. The folding was straightforward.' Shows that the participant paused the timer during machine cycles, which is a shared pattern. The task of washing and folding towels is distinct from the duvet cover task, but the method (washing with a timer pause) and shared context (towels, washer, folding) make this a strong match. However, the duvet cover task does not involve towels or folding, so this is not a direct match. The shared pattern of pausing the timer during machine cycles is present in both, but the specific deliverable (towels vs. duvet) and purpose (cleaning bedding vs. cleaning kitchen items) differ. Therefore, no direct match is found for this slot.\", \"flag\": 0 }, { \"slot\": 3, \"reason\": \"No match. The task involves resetting the kitchen after stew, which includes washing a cast-iron Dutch oven and wiping the sink. This is unrelated to the duvet cover task in terms of deliverable (bedding vs. kitchen",
+      "finished_utc": "2026-11-14T19:54:20.476262+00:00"
+    }
+  ]
+}

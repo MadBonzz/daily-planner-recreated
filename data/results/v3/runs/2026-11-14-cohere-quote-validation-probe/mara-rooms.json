@@ -1,0 +1,141 @@
+{
+  "task": "Set the handover rota with Mara",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T20:54:58.306938+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "03228adc14d7d248a195141f58a3c52a8001efe1f54c072ef26f2b9a791a828c",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "Based on the history of meetings with Mara Imani, which have ranged from 25 to 41 minutes, and the complexity of the task, which involves multiple decisions and coordination.",
+        "confidence_reason": "The history of meetings with Mara Imani provides a reasonable estimate, considering the task's scope and the need for thorough discussion and agreement.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Similar meeting duration",
+            "quote": "Assign the late intake room with Mara Imani"
+          },
+          {
+            "slot": 2,
+            "reason": "Similar meeting duration",
+            "quote": "Work out the overflow roster with Mara Imani"
+          },
+          {
+            "slot": 3,
+            "reason": "Similar meeting duration",
+            "quote": "Review Thursday evening coverage with Mara Imani"
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Mara arrived late, which may impact the meeting's efficiency. Ensure to start on time to avoid delays."
+          },
+          {
+            "observation_id": "S2.1",
+            "advice": "Mara was late, but the meeting still achieved its goals. Ensure to start on time to avoid delays."
+          },
+          {
+            "observation_id": "S3.1",
+            "advice": "Mara joined late, but the meeting still achieved its goals. Ensure to start on time to avoid delays."
+          }
+        ]
+      },
+      "seconds": 8.46
+    },
+    {
+      "prompt_sha256": "78622130917a41c0b65537ac2e2e46e656aa982e1ec1c09a261abb8e3d61ffc7",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "The task involves a 30-minute meeting with Mara Imani to agree on handover owners for two intake rooms and record the decision in the shift rota. This is similar to the 'Assign the late intake room with Mara' task, which also involved a 30-minute meeting with Mara to agree on an owner and send the signed-off rota. The 'Review Thursday evening coverage with Mara' task also involved a 30-minute meeting with Mara to agree on assignments and send the decisions to the shift lead. Based on the history, the actual duration of these tasks ranged from 25 to 40 minutes, with an average of 32.5 minutes. Therefore, the estimated duration for this task is 30 minutes, with a low estimate of 25 minutes and a high estimate of 35 minutes.",
+        "confidence_reason": "Based on the history of similar tasks, the actual duration of this task is likely to be within the estimated range.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Similar meeting task",
+            "quote": "Mara Imani and I need to pick a second appointment room, agree an owner, then send the signed-off rota."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Mara arrived six minutes after the start, which may impact the actual duration of the task."
+          }
+        ]
+      },
+      "seconds": 7.511
+    }
+  ],
+  "forecast": {
+    "point_min": 32,
+    "low_min": 18,
+    "high_min": 45,
+    "confidence": "low",
+    "confidence_reason": "The local calculation matched task wording. Scope and difficulty were not assessed by the model.",
+    "basis": "Text similarity",
+    "retryable": true,
+    "evidence": [
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "estimate_min": 30,
+        "actual_min": 39.0,
+        "ratio": 1.3,
+        "reason": "Similar wording in the task or document.",
+        "reason_source": "local"
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "On related work, you recorded “Mara arrived six minutes after the start. She stayed until the owner confirmed.”",
+        "sources": [
+          {
+            "task_id": "mara-late-room",
+            "title": "Assign the late intake room with Mara",
+            "origin": "Completion note",
+            "observation": "Mara arrived six minutes after the start. She stayed until the owner confirmed."
+          }
+        ]
+      },
+      {
+        "advice": "On related work, you recorded “Mara was nine minutes late. We still reviewed all three names and left at 18:11.”",
+        "sources": [
+          {
+            "task_id": "mara-capacity",
+            "title": "Work out the overflow roster with Mara",
+            "origin": "Completion note",
+            "observation": "Mara was nine minutes late. We still reviewed all three names and left at 18:11."
+          }
+        ]
+      },
+      {
+        "advice": "On related work, you recorded “Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments.”",
+        "sources": [
+          {
+            "task_id": "mara-evening",
+            "title": "Review Thursday evening coverage with Mara",
+            "origin": "Completion note",
+            "observation": "Mara joined eight minutes after the invite. Kept the call open, then stayed until we agreed both assignments."
+          }
+        ]
+      }
+    ],
+    "explanation": "Model estimate unavailable. The model could not supply a valid forecast. For comparison 1, copy a short exact passage from that task and explain the shared work, or omit it. Local calculation used 1 similar past tasks, a median ratio of 1.30× and 17% of that correction.",
+    "model_error": "The model could not supply a valid forecast. For comparison 1, copy a short exact passage from that task and explain the shared work, or omit it.",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "fallback",
+      "minutes_by": "history"
+    }
+  },
+  "core_fields_equal_model_reply": false
+}

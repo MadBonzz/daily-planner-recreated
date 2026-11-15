@@ -1,0 +1,33 @@
+{
+  "task": "Outline a ten minute talk",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T20:59:44.578457+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "06bcdf1e33bff025a07a7b5da25991030ae93ecce422c288e85ab4d643a04a78",
+      "max_tokens": 950,
+      "error": "api.cohere.ai returned HTTP 400 for command-r7b-12-2024.",
+      "seconds": 3.313
+    }
+  ],
+  "forecast": {
+    "point_min": 60,
+    "low_min": 30,
+    "high_min": 90,
+    "confidence": "low",
+    "basis": "User estimate",
+    "explanation": "Model estimate unavailable. api.cohere.ai returned HTTP 400 for command-r7b-12-2024. Using your estimate with a default planning margin of ±50%.",
+    "confidence_reason": "The local fallback has no reliable timing comparison for this task.",
+    "evidence": [],
+    "cautions": [],
+    "retryable": true,
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "fallback",
+      "minutes_by": "user"
+    },
+    "model_error": "api.cohere.ai returned HTTP 400 for command-r7b-12-2024."
+  },
+  "core_fields_equal_model_reply": false
+}

@@ -1,0 +1,105 @@
+{
+  "task": "Typeset the recovery argument",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T20:56:22.923835+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "4473cf91ea49c463ca39a148ee801e453b5b5fbc03f4b1d5adae4961deabac57",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "The task involves typesetting and checking quantifiers, which are specific and detailed steps. The provided history includes similar tasks with varying durations, but the new task's complexity and the need for typesetting and quantifier checking suggest a longer duration than the provided estimates.",
+        "confidence_reason": "The new task requires a combination of typesetting and logical reasoning, which can be more time-consuming than the provided estimates. The history provides a range of durations, but the new task's specific requirements make it challenging to estimate precisely.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Proving the takeover rule survives a desk crash involved a similar level of detail and complexity, with a user-estimated duration of 60 minutes and an actual duration of 72 minutes."
+          },
+          {
+            "slot": 2,
+            "reason": "Labeling received and delayed ticket-desk acknowledgments was a more straightforward task, with a user-estimated duration of 30 minutes and an actual duration of 24 minutes."
+          },
+          {
+            "slot": 3,
+            "reason": "Proving one receipt per token after a leader change was a complex task, with a user-estimated duration of 80 minutes and an actual duration of 100 minutes."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "O1",
+            "advice": "Consider creating a separate schedule for the typesetting and quantifier checking steps to ensure a more accurate estimate."
+          }
+        ]
+      },
+      "seconds": 7.969
+    }
+  ],
+  "forecast": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 35,
+    "confidence": "medium",
+    "confidence_reason": "The new task requires a combination of typesetting and logical reasoning, which can be more time-consuming than the provided estimates. The history provides a range of durations, but the new task's specific requirements make it challenging to estimate precisely.",
+    "model_rationale": "The task involves typesetting and checking quantifiers, which are specific and detailed steps. The provided history includes similar tasks with varying durations, but the new task's complexity and the need for typesetting and quantifier checking suggest a longer duration than the provided estimates.",
+    "explanation": "The task involves typesetting and checking quantifiers, which are specific and detailed steps. The provided history includes similar tasks with varying durations, but the new task's complexity and the need for typesetting and quantifier checking suggest a longer duration than the provided estimates.",
+    "evidence": [
+      {
+        "task_id": "lease-restart",
+        "title": "Prove the takeover rule survives a desk crash",
+        "estimate_min": 60,
+        "actual_min": 72.0,
+        "ratio": 1.2,
+        "reason": "Proving the takeover rule survives a desk crash involved a similar level of detail and complexity, with a user-estimated duration of 60 minutes and an actual duration of 72 minutes.",
+        "model_rationale": "Proving the takeover rule survives a desk crash involved a similar level of detail and complexity, with a user-estimated duration of 60 minutes and an actual duration of 72 minutes.",
+        "reason_source": "model",
+        "source_quote": "Write a safety invariant for a returned ticket under delayed responses; consider the crash after the receipt."
+      },
+      {
+        "task_id": "ack-traces",
+        "title": "Label received and delayed ticket-desk acknowledgments",
+        "estimate_min": 30,
+        "actual_min": 24.0,
+        "ratio": 0.8,
+        "reason": "Labeling received and delayed ticket-desk acknowledgments was a more straightforward task, with a user-estimated duration of 30 minutes and an actual duration of 24 minutes.",
+        "model_rationale": "Labeling received and delayed ticket-desk acknowledgments was a more straightforward task, with a user-estimated duration of 30 minutes and an actual duration of 24 minutes.",
+        "reason_source": "model",
+        "source_quote": "Annotate which journals actually responded in the standby desk replay. No argument or repair is due."
+      },
+      {
+        "task_id": "epoch-proof",
+        "title": "Prove one receipt per token after a leader change",
+        "estimate_min": 80,
+        "actual_min": 100.0,
+        "ratio": 1.25,
+        "reason": "Proving one receipt per token after a leader change was a complex task, with a user-estimated duration of 80 minutes and an actual duration of 100 minutes.",
+        "model_rationale": "Proving one receipt per token after a leader change was a complex task, with a user-estimated duration of 80 minutes and an actual duration of 100 minutes.",
+        "reason_source": "model",
+        "source_quote": "Hand in a quantified invariant, then check the takeover handler against stale journal replies."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Consider creating a separate schedule for the typesetting and quantifier checking steps to ensure a more accurate estimate.",
+        "sources": [
+          {
+            "task_id": "barrier-proof",
+            "title": "Prove a flush barrier across restart",
+            "origin": "Completion note",
+            "observation": "Separate failure schedule for crash recovery; proofread before sending."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

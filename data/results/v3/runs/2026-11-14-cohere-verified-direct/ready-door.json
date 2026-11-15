@@ -1,0 +1,41 @@
+{
+  "task": "Order two door wedges",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T20:57:39.743322+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "41dbcc334cd86e972aadbd4116088ff73a7c122299cb5a5ce22405b99306492a",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 12,
+        "low_min": 10,
+        "high_min": 14,
+        "confidence": "medium",
+        "rationale": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, the user's estimate of 12 minutes might be optimistic, as it doesn't account for potential delays in finding the correct item or any communication needed with the buyer.",
+        "confidence_reason": "Based on the task's simplicity, the user's estimate seems reasonable, but the potential for delays makes a medium confidence level appropriate.",
+        "comparisons": [],
+        "warnings": []
+      },
+      "seconds": 6.114
+    }
+  ],
+  "forecast": {
+    "point_min": 12,
+    "low_min": 10,
+    "high_min": 14,
+    "confidence": "medium",
+    "confidence_reason": "Based on the task's simplicity, the user's estimate seems reasonable, but the potential for delays makes a medium confidence level appropriate.",
+    "model_rationale": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, the user's estimate of 12 minutes might be optimistic, as it doesn't account for potential delays in finding the correct item or any communication needed with the buyer.",
+    "explanation": "The task involves finding a specific item and sending the item number, which is a straightforward process. However, the user's estimate of 12 minutes might be optimistic, as it doesn't account for potential delays in finding the correct item or any communication needed with the buyer.",
+    "evidence": [],
+    "cautions": [],
+    "basis": "Model estimate from task scope",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

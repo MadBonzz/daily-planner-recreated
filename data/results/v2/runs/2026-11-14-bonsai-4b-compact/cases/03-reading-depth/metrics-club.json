@@ -1,0 +1,206 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “Expanding the conditional expectation before taking the variance fixed my algebra.”",
+      "sources": [
+        {
+          "task_id": "bound-floor",
+          "title": "Work out the epsilon-floor variance lemma",
+          "origin": "Completion note",
+          "observation": "Expanding the conditional expectation before taking the variance fixed my algebra."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 4 comparisons, the median ratio of actual to estimated time was 1.25×. Applied 100% of the adjustment. 45 min × 1.25 ≈ 56 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "711e1afec1846a95aa1c475354e5b871d667539bd593a7b990a85eb4383d409d",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 103.453
+    },
+    {
+      "prompt_sha256": "1420cddd940e9428e44387419b3ad9f466392236ca82034da48a3c2dc3edc4af",
+      "max_tokens": 120,
+      "seconds": 34.896,
+      "response": {
+        "1": 0,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "6": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.87
+    ],
+    "evidence_ids": [
+      "read-cache",
+      "read-queues",
+      "replica-figs"
+    ],
+    "rationale": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+    "predicted_ratio": 1.2444444444444445,
+    "realized_ratio": 0.6888888888888889,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "read-cache",
+      "replica-figs"
+    ],
+    "selected_unlisted_ids": [
+      "bound-floor",
+      "derive-noise"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "metrics-club",
+  "title": "Make one slide about the two ablations",
+  "original": 45,
+  "category": 56,
+  "planner": 56,
+  "actual": 31,
+  "range": [
+    32,
+    78
+  ],
+  "covered": false,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 138.349,
+  "latency_seconds": 138.368,
+  "evidence": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "estimate_min": 60,
+      "actual_min": 104.0,
+      "ratio": 1.7333333333333334,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "replica-figs",
+      "title": "Explain a simulator control at group meeting",
+      "estimate_min": 40,
+      "actual_min": 31.0,
+      "ratio": 0.775,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "read-cache",
+      "title": "Read the cutoff-vs-drain ablation",
+      "estimate_min": 45,
+      "actual_min": 32.0,
+      "ratio": 0.7111111111111111,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "estimate_min": 50,
+      "actual_min": 86.0,
+      "ratio": 1.72,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:38:16.847618+00:00",
+      "request_body_sha256": "42f1f4077f48a556ee7c2c1976c7d7ad3698101a9fca11793a4453d7b3333b33",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "read-queues",
+        "derive-noise",
+        "replica-figs",
+        "read-cache",
+        "bound-floor",
+        "dishes"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1256,
+        "total_tokens": 1736,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1133,
+        "prompt_ms": 55003.665,
+        "prompt_per_token_ms": 48.546924095322154,
+        "prompt_per_second": 20.598627382375337,
+        "predicted_n": 480,
+        "predicted_ms": 48161.994,
+        "predicted_per_token_ms": 100.54696033402922,
+        "predicted_per_second": 9.945601504788193
+      },
+      "content": "{\"matches\": [\n  {\n    \"slot\": 1,\n    \"reason\": \"The task 'Prepare one slide about the delay experiment' aligns with the new task 'Make one slide about the two ablations' in terms of deliverable (a slide), method (using experiments 1 and 2), scope (comparing reporting routines with ablation and control), and difficulty (requires understanding of loss tables and audit dynamics). However, it lacks the specific focus on ablation and confound identification, and instead focuses on delayed observations and inspection curves. The shared topic of 'delayed observations' is insufficient without the required structure of finding, control, and confound. The most applicable earlier obstacle is observation 1: 'Completion note: I had to expand the conditional expectation one event at a time.' This reflects the difficulty in handling conditional expectations and missing observations, which is central to the ablation task.\",\n    \"flag\": 1\n  },\n  {\n    \"slot\": 2,\n    \"reason\": \"The task 'Rebuild the loss estimate under one audit coin' involves deriving a conditional second moment and analyzing bias from ignoring missing observations — directly relevant to the ablation task. It matches the required method (using experiments 1 and 2), scope (comparing reporting routines), and difficulty (handling conditional expectations and missing data). The shared topic of 'ablation' and 'missing observations' is present, but the task is focused on derivation and bias, not slide preparation. The most applicable earlier obstacle is observation 2: 'Completion note: Expanding the conditional expectation before taking the variance fixed my algebra.' This indicates a struggle with algebraic manipulation in conditional expectations, which is a key technical barrier in the ablation analysis.\",\n    \"flag\": 2\n  },\n  {\n    \"slot\": 3,\n    \"reason\": \"The task 'Explain a simulator control at group meeting' involves reading the experiment and ablation, giving a headline, and a caveat — this matches the purpose of the new task (explaining findings, controls, and confounds) and the method (reading experiments). However, it is a live meeting activity (group discussion) and does not involve the specific structure of a slide with a finding, control, and confound. It lacks the required deliverable format and is not a standalone preparation. Thus",
+      "finished_utc": "2026-11-14T19:40:00.298888+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:33:42.189605+00:00",
+      "request_body_sha256": "06127134f0a4f75f7febea905738d901de229ff75ea34d8dca8b09b7e075f9cf",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "read-queues",
+        "derive-noise",
+        "replica-figs",
+        "read-cache",
+        "bound-floor",
+        "dishes"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 1248,
+        "total_tokens": 1301,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 1133,
+        "prompt_ms": 31670.299,
+        "prompt_per_token_ms": 27.952602824360106,
+        "prompt_per_second": 35.77484380554791,
+        "predicted_n": 53,
+        "predicted_ms": 3156.197,
+        "predicted_per_token_ms": 60.696096153846156,
+        "predicted_per_second": 16.475524183059548
+      },
+      "content": "{\n  \"1\": 0,\n  \"2\": 1,\n  \"3\": 1,\n  \"4\": 1,\n  \"5\": 2,\n  \"6\": 0\n}",
+      "finished_utc": "2026-11-14T20:34:17.082879+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 42,
+    "basis": "Text similarity",
+    "range": [
+      25,
+      60
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 103.462
+  },
+  "recovery_started_utc": "2026-11-14T20:33:42.154034+00:00",
+  "recovery_completed_utc": "2026-11-14T20:34:17.084998+00:00",
+  "recovery_elapsed_seconds": 34.906,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

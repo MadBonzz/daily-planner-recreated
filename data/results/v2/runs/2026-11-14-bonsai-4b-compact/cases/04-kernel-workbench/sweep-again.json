@@ -1,0 +1,205 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “I lost time getting a GPU allocation after I had reduced the failure.”",
+      "sources": [
+        {
+          "task_id": "warp-tail",
+          "title": "Fix corruption on partial warp tails",
+          "origin": "Completion note",
+          "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 4 comparisons, the median ratio of actual to estimated time was 1.53×. Applied 100% of the adjustment. 60 min × 1.53 ≈ 92 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "ff64ee7643d4d944b1cf2e4ce7bd7af919d30c6d9bbd1d675e800db803134ee4",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 486.319
+    },
+    {
+      "prompt_sha256": "629700568710e9cf82a084b1335c9ce187a8f6f745e6e0e77b1e96f4d1b59585",
+      "max_tokens": 120,
+      "seconds": 33.171,
+      "response": {
+        "1": 1,
+        "2": 0,
+        "3": 2,
+        "4": 1,
+        "5": 0,
+        "6": 1
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.9,
+      1.11
+    ],
+    "evidence_ids": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "rationale": "The scripted sweeps are already well budgeted.",
+    "predicted_ratio": 1.5333333333333334,
+    "realized_ratio": 1.0166666666666666,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "throughput-table"
+    ],
+    "selected_unlisted_ids": [
+      "race-repro",
+      "stride-kernel",
+      "warp-tail"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "sweep-again",
+  "title": "Rerun the validated reference sweep",
+  "original": 60,
+  "category": 76,
+  "planner": 92,
+  "actual": 61,
+  "range": [
+    59,
+    101
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 519.49,
+  "latency_seconds": 519.507,
+  "evidence": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "estimate_min": 60,
+      "actual_min": 59.0,
+      "ratio": 0.9833333333333333,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "estimate_min": 80,
+      "actual_min": 122.0,
+      "ratio": 1.525,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "estimate_min": 70,
+      "actual_min": 109.0,
+      "ratio": 1.5571428571428572,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "race-repro",
+      "title": "Make the shared scratch race reproducible",
+      "estimate_min": 90,
+      "actual_min": 138.0,
+      "ratio": 1.5333333333333334,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "The scripted sweeps are already well budgeted.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:41:45.488514+00:00",
+      "request_body_sha256": "122edbdc17daab0a96bb1c98ca207f84a043827f65639c665fffa1c22b8738a4",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "throughput-table",
+        "median-runs",
+        "warp-tail",
+        "stride-kernel",
+        "masked-add",
+        "race-repro"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1302,
+        "total_tokens": 1782,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1179,
+        "prompt_ms": 59830.302,
+        "prompt_per_token_ms": 50.7466513994911,
+        "prompt_per_second": 19.705733726699222,
+        "predicted_n": 480,
+        "predicted_ms": 426105.109,
+        "predicted_per_token_ms": 889.5722526096033,
+        "predicted_per_second": 1.1241357821879576
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"This task directly matches the validated reference sweep by requiring raw timing measurements and median/p90 reporting for specific row sizes (32, 33, 65, 257), which aligns with the description of rerunning the sweep to report medians and p90. It shares the same category (GPU lab), deliverable (raw timings and four medians), method (rerun validated sweep), scope (benchmarking with poison padding and host pre-filling), and difficulty (requires precise timing and verification under poison padding). The most applicable earlier obstacle is Observation 1: 'Completion note: I lost time getting a GPU allocation after I had reduced the failure.' This indicates a prior delay due to GPU allocation, which directly impacts the ability to rerun the sweep and collect accurate timing data.\", \"flag\": 1 }, { \"slot\": 3, \"reason\": \"This task involves debugging a segmented activity kernel with a poisoned tail to trace ownership and fix reduction issues, which matches the 'Fix the kernel and prove ownership' component of the new task. It shares the same category, deliverable (ownership trace and reduction fix), method (use poisoned tail to verify ownership), and scope (thread ownership in segmented kernels). The most applicable earlier obstacle is Observation 1: 'Completion note: I lost time getting a GPU allocation after I had reduced the failure.' This shows a prior failure in GPU allocation due to reduced kernel size, which could have caused the current difficulty in reproducing the segmented kernel with proper ownership verification.\", \"flag\": 1 }, { \"slot\": 4, \"reason\": \"This task addresses a mismatched pitch in a strided kernel, which is a related but distinct issue from the reference sweep. While it shares the same category and method (GPU lab, kernel debugging), the scope (strided kernel with non-contiguous input) and deliverable (fix pitch and run odd-width regression) differ from the reference sweep's focus on median/p90 reporting and row-specific cutoffs. No direct match in deliverable, method, or scope. No shared topic or concrete reason for overlap.\", \"flag\": 0 }, { \"slot\": 5, \"reason\": \"This task reviews a scalar fallback and checks against CPU output, which is",
+      "finished_utc": "2026-11-14T19:49:51.806267+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:34:48.724693+00:00",
+      "request_body_sha256": "d878a84655ef30a2e3f09bc897830d185ba7bec38c6ef73071f0f0c6adf9c26b",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "throughput-table",
+        "median-runs",
+        "warp-tail",
+        "stride-kernel",
+        "masked-add",
+        "race-repro"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 1294,
+        "total_tokens": 1347,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 1179,
+        "prompt_ms": 30101.015,
+        "prompt_per_token_ms": 25.530971162001695,
+        "prompt_per_second": 39.16811443069279,
+        "predicted_n": 53,
+        "predicted_ms": 2937.026,
+        "predicted_per_token_ms": 56.48126923076923,
+        "predicted_per_second": 17.704984566020187
+      },
+      "content": "{\n  \"1\": 1,\n  \"2\": 0,\n  \"3\": 2,\n  \"4\": 1,\n  \"5\": 0,\n  \"6\": 1\n}",
+      "finished_utc": "2026-11-14T20:35:21.892923+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 60,
+    "basis": "Text similarity",
+    "range": [
+      35,
+      84
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 486.327
+  },
+  "recovery_started_utc": "2026-11-14T20:34:48.693230+00:00",
+  "recovery_completed_utc": "2026-11-14T20:35:21.894706+00:00",
+  "recovery_elapsed_seconds": 33.18,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

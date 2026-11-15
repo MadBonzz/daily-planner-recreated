@@ -1,0 +1,196 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “I lost time getting a GPU allocation after I had reduced the failure.”",
+      "sources": [
+        {
+          "task_id": "warp-tail",
+          "title": "Fix corruption on partial warp tails",
+          "origin": "Completion note",
+          "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.53×. Applied 100% of the adjustment. 85 min × 1.53 ≈ 130 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "8a0ea740c9ec9f162788643cba1d63825cdf998c4e76f1f496c979741c3be1e8",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 105.117
+    },
+    {
+      "prompt_sha256": "6bf80880d1332b1eb59dd864b45fa8b77bdc6869837922f3a69e807b3642ab30",
+      "max_tokens": 120,
+      "seconds": 31.562,
+      "response": {
+        "1": 2,
+        "2": 0,
+        "3": 1,
+        "4": 1,
+        "5": 0,
+        "6": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.38,
+      1.68
+    ],
+    "evidence_ids": [
+      "warp-tail",
+      "stride-kernel",
+      "race-repro"
+    ],
+    "rationale": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+    "predicted_ratio": 1.5294117647058822,
+    "realized_ratio": 1.5529411764705883,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "race-repro",
+      "stride-kernel",
+      "warp-tail"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "async-flicker",
+  "title": "Fix nondeterministic segmented sums",
+  "original": 85,
+  "category": 108,
+  "planner": 130,
+  "actual": 132,
+  "range": [
+    117,
+    144
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 136.679,
+  "latency_seconds": 136.706,
+  "evidence": [
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "estimate_min": 80,
+      "actual_min": 122.0,
+      "ratio": 1.525,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "estimate_min": 70,
+      "actual_min": 109.0,
+      "ratio": 1.5571428571428572,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "race-repro",
+      "title": "Make the shared scratch race reproducible",
+      "estimate_min": 90,
+      "actual_min": 138.0,
+      "ratio": 1.5333333333333334,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:40:00.338359+00:00",
+      "request_body_sha256": "f42b66320265296ec8c6de27fb8e4f6e42ae9b48b33561609dde88aba7270548",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "warp-tail",
+        "throughput-table",
+        "stride-kernel",
+        "race-repro",
+        "masked-add",
+        "median-runs"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1280,
+        "total_tokens": 1760,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1157,
+        "prompt_ms": 57891.895,
+        "prompt_per_token_ms": 50.03621002592912,
+        "prompt_per_second": 19.985526471365294,
+        "predicted_n": 480,
+        "predicted_ms": 47000.044,
+        "predicted_per_token_ms": 98.12117745302714,
+        "predicted_per_second": 10.191479820742295
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve fixing thread ownership in segmented activity kernels and require a regression to reproduce an intermittent failure. The shared topic of thread ownership and segmented kernels is sufficient, but the specific focus on 'nondeterministic segmented sums' and 'ownership rule' aligns directly with the new task. The observation that 'I lost time getting a GPU allocation after I had reduced the failure' indicates a prior obstacle related to GPU resource contention, which is a known issue in segmented kernels. This matches the current task's need to fix ownership and handle segmented reductions with proper thread visibility. The difficulty and scope are similar (GPU lab, kernel-level ownership, reduction correctness), and the purpose (fixing ownership and adding regression) is directly applicable. Obstacle observation number: 1\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"This task involves running a benchmark sweep, collecting timing medians, and reporting performance under different row sizes and cutoffs. While it does not directly fix kernel ownership or handle segmented sums, it is part of the same testing and validation pipeline as the new task. However, it lacks the specific focus on ownership or segmentation-related failure. The shared topic is too broad; no concrete match in deliverable, method, or scope. Obstacle observation number: 0\", \"flag\": 0 }, { \"slot\": 3, \"reason\": \"Both tasks involve debugging a mismatched pitch in a strided kernel and require a regression to reproduce a failure. The description of 'non-contiguous input' and 'offset' relates to pitch mismatches, which are a common cause of segmented sum failures. The new task requires fixing a reduction in segmented.cu and adding a regression for intermittent failure, which is consistent with the pitch-related regression. The method (debugging pitch, running regression) and scope (strided kernel, row-specific cutoffs) are aligned. The observation 'Waiting for a GPU allocation delayed the reproducer' reflects a prior obstacle in resource scheduling, which is relevant to the current task's thread visibility and ownership issues. This is a concrete, earlier obstacle that directly impacts the ability to reproduce the failure. Obstacle observation number: 1\", \"flag\": 1 }, { \"slot\": 4, \"reason\": \"This task",
+      "finished_utc": "2026-11-14T19:41:45.453143+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:34:17.125687+00:00",
+      "request_body_sha256": "bced8400c5487f7d7f094e0dbdaf24610a71ffcc92a45d35759c1013e213081f",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "warp-tail",
+        "throughput-table",
+        "stride-kernel",
+        "race-repro",
+        "masked-add",
+        "median-runs"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 1272,
+        "total_tokens": 1325,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 1157,
+        "prompt_ms": 28231.072,
+        "prompt_per_token_ms": 24.400235090751945,
+        "prompt_per_second": 40.98321168958799,
+        "predicted_n": 53,
+        "predicted_ms": 2959.402,
+        "predicted_per_token_ms": 56.91157692307692,
+        "predicted_per_second": 17.571117408179084
+      },
+      "content": "{\n  \"1\": 2,\n  \"2\": 0,\n  \"3\": 1,\n  \"4\": 1,\n  \"5\": 0,\n  \"6\": 0\n}",
+      "finished_utc": "2026-11-14T20:34:48.685519+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 92,
+    "basis": "Text similarity",
+    "range": [
+      55,
+      130
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 105.13
+  },
+  "recovery_started_utc": "2026-11-14T20:34:17.086400+00:00",
+  "recovery_completed_utc": "2026-11-14T20:34:48.687588+00:00",
+  "recovery_elapsed_seconds": 31.576,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

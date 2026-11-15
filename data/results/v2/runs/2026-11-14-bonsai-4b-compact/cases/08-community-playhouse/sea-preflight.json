@@ -1,0 +1,193 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “Connecting the lobby screen changed the display order. The restore check caught it.”",
+      "sources": [
+        {
+          "task_id": "blue-relay",
+          "title": "Test the relay for the Blue House tour",
+          "origin": "Completion note",
+          "observation": "Connecting the lobby screen changed the display order. The restore check caught it."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.27×. Applied 100% of the adjustment. 30 min × 1.27 ≈ 38 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "6466c036a29471194faf4aa17107f1b968a9d66b8d6b423b91242c096f6089a3",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 55.889
+    },
+    {
+      "prompt_sha256": "dcaa961fe86e70659033457e27523e237a9f4d1189ebe9d0446d97ba6deb3aad",
+      "max_tokens": 120,
+      "seconds": 30.617,
+      "response": {
+        "1": 1,
+        "2": 2,
+        "3": 1,
+        "4": 0,
+        "5": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.16,
+      1.42
+    ],
+    "evidence_ids": [
+      "cabaret-load",
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+    "predicted_ratio": 1.2666666666666666,
+    "realized_ratio": 1.2333333333333334,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "audio-preflight",
+      "blue-relay",
+      "cabaret-load"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "08-community-playhouse",
+  "task": "sea-preflight",
+  "title": "Do the Sea Glass booth preflight",
+  "original": 30,
+  "category": 38,
+  "planner": 38,
+  "actual": 37,
+  "range": [
+    34,
+    42
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 86.506,
+  "latency_seconds": 86.526,
+  "evidence": [
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "estimate_min": 30,
+      "actual_min": 38.0,
+      "ratio": 1.2666666666666666,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "estimate_min": 35,
+      "actual_min": 43.0,
+      "ratio": 1.2285714285714286,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "cabaret-load",
+      "title": "Load the incoming booth file",
+      "estimate_min": 25,
+      "actual_min": 33.0,
+      "ratio": 1.32,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:54:20.506028+00:00",
+      "request_body_sha256": "bbf4809d74f1e9552b03784dabe0264b67a7710ae2e746dd7ac7365e0f703c17",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "audio-preflight",
+        "blue-relay",
+        "cabaret-load",
+        "usher-handback",
+        "grain-pickup"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1225,
+        "total_tokens": 1705,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1102,
+        "prompt_ms": 27506.68,
+        "prompt_per_token_ms": 24.960689655172413,
+        "prompt_per_second": 40.06299560688531,
+        "predicted_n": 480,
+        "predicted_ms": 27904.441,
+        "predicted_per_token_ms": 58.25561795407098,
+        "predicted_per_second": 17.165726416092696
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Matches the task 'Do the Sea Glass booth preflight' in both title and category (Booth prep). The description involves verifying both projector outputs, fixing broken paths, and returning house screens to standby — all directly aligned with the required actions. The observation that 'the loop still pointed at last week’s share' indicates a failure in the path fix, which aligns with the need to correct the broken path. This is a live work task requiring immediate physical and technical intervention. Obstacle: 1 (Failure to fix the loop path — the path still points to last week’s share, indicating a prior failure in path configuration).\", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"Matches the task 'Do the Sea Glass booth preflight' in both title and category (Booth prep). The description involves testing relay routes, verifying mirror displays, and restoring the house workspace — all relevant to the booth preflight process. The observation that 'connecting the lobby screen changed the display order' suggests a live issue that must be corrected during the preflight, which is a direct concern in the Sea Glass setup. This is a live work task requiring real-time troubleshooting. Obstacle: 1 (Failure to correct display order after lobby screen connection — the display order changed, indicating a prior misconfiguration or cable issue).\", \"flag\": 1 }, { \"slot\": 3, \"reason\": \"Does not match. While it involves booth file loading and font fixes, the task 'Do the Sea Glass booth preflight' specifically requires checking two projector routes, fixing broken paths, and returning house screens to standby. This slot focuses on font links and cue playback on the confidence monitor, which is a subset of the required actions and lacks the explicit path and screen handover requirements. It is a prep task, but not the same as the Sea Glass preflight. No direct match in deliverable, method, scope, or difficulty. No obstacle or off-task activity flagged.\", \"flag\": 0 }, { \"slot\": 4, \"reason\": \"No match. The task 'Hand over the foyer desk' is in the 'Front of house' category and involves float count and visitor handover — unrelated to booth preflight, projector routes, or house screen restoration",
+      "finished_utc": "2026-11-14T19:55:16.393634+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:36:20.345949+00:00",
+      "request_body_sha256": "ec87711d92f8d1e59478da5d5bb65002150a6cedc9284d3ab4400f7fd5f028cd",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "audio-preflight",
+        "blue-relay",
+        "cabaret-load",
+        "usher-handback",
+        "grain-pickup"
+      ],
+      "usage": {
+        "completion_tokens": 46,
+        "prompt_tokens": 1217,
+        "total_tokens": 1263,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 1102,
+        "prompt_ms": 27405.493,
+        "prompt_per_token_ms": 24.868868421052632,
+        "prompt_per_second": 40.210916840649425,
+        "predicted_n": 46,
+        "predicted_ms": 2992.848,
+        "predicted_per_token_ms": 66.50773333333333,
+        "predicted_per_second": 15.03584545556607
+      },
+      "content": "{\n  \"1\": 1,\n  \"2\": 2,\n  \"3\": 1,\n  \"4\": 0,\n  \"5\": 0\n}",
+      "finished_utc": "2026-11-14T20:36:50.960388+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 34,
+    "basis": "Category history",
+    "range": [
+      20,
+      48
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 55.898
+  },
+  "recovery_started_utc": "2026-11-14T20:36:20.321920+00:00",
+  "recovery_completed_utc": "2026-11-14T20:36:50.962426+00:00",
+  "recovery_elapsed_seconds": 30.628,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

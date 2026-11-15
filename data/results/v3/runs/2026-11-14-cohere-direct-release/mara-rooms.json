@@ -1,0 +1,90 @@
+{
+  "task": "Set the handover rota with Mara",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T21:01:23.510000+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "fc1ac1b810ac83b447b8df8da4aea4a15ef57840098a193c6ab51d270af91013",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "Based on the history of meetings with Mara Imani, which have ranged from 25 to 41 minutes, and the complexity of the task, which involves multiple decisions and coordination.",
+        "confidence_reason": "The history of meetings with Mara Imani provides a reasonable estimate, considering the need for detailed discussions and agreement on multiple points.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Similar meeting duration with Mara Imani, involving capacity review and decision-making."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Mara's punctuality may vary, so allow some flexibility in the schedule."
+          },
+          {
+            "observation_id": "S2.1",
+            "advice": "The meeting with Mara Imani may require additional time for discussion, especially with the need to propose three people for the overflow roster."
+          }
+        ]
+      },
+      "seconds": 6.846
+    }
+  ],
+  "forecast": {
+    "point_min": 30,
+    "low_min": 25,
+    "high_min": 35,
+    "confidence": "medium",
+    "confidence_reason": "The history of meetings with Mara Imani provides a reasonable estimate, considering the need for detailed discussions and agreement on multiple points.",
+    "model_rationale": "Based on the history of meetings with Mara Imani, which have ranged from 25 to 41 minutes, and the complexity of the task, which involves multiple decisions and coordination.",
+    "explanation": "Based on the history of meetings with Mara Imani, which have ranged from 25 to 41 minutes, and the complexity of the task, which involves multiple decisions and coordination.",
+    "evidence": [
+      {
+        "task_id": "mara-late-room",
+        "title": "Assign the late intake room with Mara",
+        "estimate_min": 30,
+        "actual_min": 39.0,
+        "ratio": 1.3,
+        "reason": "Similar meeting duration with Mara Imani, involving capacity review and decision-making.",
+        "reason_source": "model",
+        "model_rationale": "Similar meeting duration with Mara Imani, involving capacity review and decision-making.",
+        "source_quote": "Mara Imani and I need to pick a second appointment room, agree an owner, then send the signed-off rota."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Mara's punctuality may vary, so allow some flexibility in the schedule.",
+        "sources": [
+          {
+            "task_id": "mara-late-room",
+            "title": "Assign the late intake room with Mara",
+            "origin": "Completion note",
+            "observation": "Mara arrived six minutes after the start. She stayed until the owner confirmed."
+          }
+        ]
+      },
+      {
+        "advice": "The meeting with Mara Imani may require additional time for discussion, especially with the need to propose three people for the overflow roster.",
+        "sources": [
+          {
+            "task_id": "mara-capacity",
+            "title": "Work out the overflow roster with Mara",
+            "origin": "Completion note",
+            "observation": "Mara was nine minutes late. We still reviewed all three names and left at 18:11."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

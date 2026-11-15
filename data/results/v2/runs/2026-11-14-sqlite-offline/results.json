@@ -1,0 +1,1707 @@
+{
+  "configuration": {
+    "mode": "offline_fallback",
+    "model": null,
+    "endpoint": null,
+    "strict_model": false,
+    "history_activity_labels": "synthetic_annotations",
+    "started_at_utc": "2026-11-14T20:40:39.238314+00:00",
+    "ended_at_utc": "2026-11-14T20:40:39.927768+00:00",
+    "elapsed_seconds": 0.689,
+    "model_seconds": 0.0
+  },
+  "cases": [
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “Separate failure schedule for crash recovery; proofread before sending.”",
+          "sources": [
+            {
+              "task_id": "barrier-proof",
+              "title": "Prove a flush barrier across restart",
+              "origin": "Completion note",
+              "observation": "Separate failure schedule for crash recovery; proofread before sending."
+            }
+          ]
+        },
+        {
+          "advice": "On related work, you recorded “I needed a separate failure schedule for the recovery case.”",
+          "sources": [
+            {
+              "task_id": "lease-restart",
+              "title": "Prove the takeover rule survives a desk crash",
+              "origin": "Completion note",
+              "observation": "I needed a separate failure schedule for the recovery case."
+            }
+          ]
+        },
+        {
+          "advice": "On related work, you recorded “Writing out a separate failure schedule took another pass.”",
+          "sources": [
+            {
+              "task_id": "epoch-proof",
+              "title": "Prove one receipt per token after a leader change",
+              "origin": "Completion note",
+              "observation": "Writing out a separate failure schedule took another pass."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 5 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 50% of the adjustment. 75 min × 1.10 ≈ 82 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.14,
+          1.3
+        ],
+        "evidence_ids": [
+          "lease-restart",
+          "epoch-proof",
+          "barrier-proof"
+        ],
+        "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+        "expected_caution": {
+          "evidence_ids": [
+            "lease-restart",
+            "epoch-proof"
+          ],
+          "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+        },
+        "predicted_ratio": 1.0933333333333333,
+        "realized_ratio": 1.24,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "barrier-proof",
+          "epoch-proof",
+          "lease-restart"
+        ],
+        "selected_unlisted_ids": [
+          "ack-traces",
+          "clock-two"
+        ],
+        "caution_cites_expected_source": true,
+        "unknown_caution_source_ids": []
+      },
+      "history": "01-replica-proofs",
+      "task": "bridge-proof",
+      "title": "Solve part B of the bridge handout",
+      "original": 75,
+      "category": 90,
+      "planner": 82,
+      "actual": 93,
+      "range": [
+        49,
+        116
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.118,
+      "evidence": [
+        {
+          "task_id": "clock-two",
+          "title": "Reconstruct the ticket-desk ACK timeline",
+          "estimate_min": 35,
+          "actual_min": 26.0,
+          "ratio": 0.7428571428571429,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "lease-restart",
+          "title": "Prove the takeover rule survives a desk crash",
+          "estimate_min": 60,
+          "actual_min": 72.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Prove one receipt per token after a leader change",
+          "estimate_min": 80,
+          "actual_min": 100.0,
+          "ratio": 1.25,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ack-traces",
+          "title": "Label received and delayed ticket-desk acknowledgments",
+          "estimate_min": 30,
+          "actual_min": 24.0,
+          "ratio": 0.8,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove a flush barrier across restart",
+          "estimate_min": 75,
+          "actual_min": 90.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 5 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 50% of the adjustment. 30 min × 1.10 ≈ 33 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.7,
+          0.93
+        ],
+        "evidence_ids": [
+          "clock-two",
+          "ack-traces"
+        ],
+        "rationale": "Two bounded offline table replays finished ahead of budget.",
+        "predicted_ratio": 1.1,
+        "realized_ratio": 0.7666666666666667,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "ack-traces",
+          "clock-two"
+        ],
+        "selected_unlisted_ids": [
+          "barrier-proof",
+          "epoch-proof",
+          "lease-restart"
+        ],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "01-replica-proofs",
+      "task": "bridge-trace",
+      "title": "Fill the replay table in part A",
+      "original": 30,
+      "category": 36,
+      "planner": 33,
+      "actual": 23,
+      "range": [
+        19,
+        47
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.009,
+      "evidence": [
+        {
+          "task_id": "clock-two",
+          "title": "Reconstruct the ticket-desk ACK timeline",
+          "estimate_min": 35,
+          "actual_min": 26.0,
+          "ratio": 0.7428571428571429,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "lease-restart",
+          "title": "Prove the takeover rule survives a desk crash",
+          "estimate_min": 60,
+          "actual_min": 72.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "epoch-proof",
+          "title": "Prove one receipt per token after a leader change",
+          "estimate_min": 80,
+          "actual_min": 100.0,
+          "ratio": 1.25,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "ack-traces",
+          "title": "Label received and delayed ticket-desk acknowledgments",
+          "estimate_min": 30,
+          "actual_min": 24.0,
+          "ratio": 0.8,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "barrier-proof",
+          "title": "Prove a flush barrier across restart",
+          "estimate_min": 75,
+          "actual_min": 90.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Two bounded offline table replays finished ahead of budget."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 6 comparisons, the median ratio of actual to estimated time was 1.28×. Applied 50% of the adjustment. 85 min × 1.14 ≈ 97 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.34,
+          1.65
+        ],
+        "evidence_ids": [
+          "ring-port",
+          "trace-tool",
+          "boundary-debug"
+        ],
+        "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+        "expected_caution": {
+          "evidence_ids": [
+            "trace-tool",
+            "boundary-debug"
+          ],
+          "rationale": "The EOF regression fixture needed minimizing twice."
+        },
+        "predicted_ratio": 1.1411764705882352,
+        "realized_ratio": 1.6235294117647059,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "boundary-debug",
+          "ring-port",
+          "trace-tool"
+        ],
+        "selected_unlisted_ids": [
+          "codec-caption",
+          "replay-cases",
+          "suite-report"
+        ],
+        "caution_cites_expected_source": false,
+        "unknown_caution_source_ids": []
+      },
+      "history": "02-migration-lab",
+      "task": "patch-tool",
+      "title": "Implement first divergence for C and Rust traces",
+      "original": 85,
+      "category": 109,
+      "planner": 97,
+      "actual": 138,
+      "range": [
+        54,
+        136
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.014,
+      "evidence": [
+        {
+          "task_id": "ring-port",
+          "title": "Port the wraparound header reader",
+          "estimate_min": 90,
+          "actual_min": 137.0,
+          "ratio": 1.5222222222222221,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "trace-tool",
+          "title": "Implement the bounded mismatch reporter",
+          "estimate_min": 80,
+          "actual_min": 118.0,
+          "ratio": 1.475,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "suite-report",
+          "title": "Write up three saved replay transcripts",
+          "estimate_min": 45,
+          "actual_min": 29.0,
+          "ratio": 0.6444444444444445,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "boundary-debug",
+          "title": "Expose a ring cursor mismatch in the tool API",
+          "estimate_min": 85,
+          "actual_min": 132.0,
+          "ratio": 1.5529411764705883,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "codec-caption",
+          "title": "Annotate the saved decoder comparison",
+          "estimate_min": 40,
+          "actual_min": 27.0,
+          "ratio": 0.675,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "replay-cases",
+          "title": "Run the existing test pack",
+          "estimate_min": 35,
+          "actual_min": 38.0,
+          "ratio": 1.0857142857142856,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 0.64×. Applied 17% of the adjustment. 40 min × 0.94 ≈ 38 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.6,
+          0.84
+        ],
+        "evidence_ids": [
+          "suite-report",
+          "codec-caption"
+        ],
+        "rationale": "Two prior write-ups were quick when archived logs were already available.",
+        "predicted_ratio": 0.95,
+        "realized_ratio": 0.7,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "suite-report"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "02-migration-lab",
+      "task": "patch-note",
+      "title": "Explain the three saved replay transcripts",
+      "original": 40,
+      "category": 51,
+      "planner": 38,
+      "actual": 28,
+      "range": [
+        22,
+        53
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.011,
+      "evidence": [
+        {
+          "task_id": "suite-report",
+          "title": "Write up three saved replay transcripts",
+          "estimate_min": 45,
+          "actual_min": 29.0,
+          "ratio": 0.6444444444444445,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Two prior write-ups were quick when archived logs were already available."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “I had to expand the conditional expectation one event at a time.”",
+          "sources": [
+            {
+              "task_id": "derive-noise",
+              "title": "Rebuild the loss estimate under one audit coin",
+              "origin": "Completion note",
+              "observation": "I had to expand the conditional expectation one event at a time."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.73×. Applied 17% of the adjustment. 60 min × 1.12 ≈ 67 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.48,
+          1.86
+        ],
+        "evidence_ids": [
+          "derive-noise",
+          "bound-floor",
+          "check-jensen"
+        ],
+        "rationale": "Deriving a proof takes substantially longer than a figures-only reading.",
+        "predicted_ratio": 1.1166666666666667,
+        "realized_ratio": 1.75,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "derive-noise"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "03-reading-depth",
+      "task": "appendix-proof",
+      "title": "Prepare the appendix board derivation",
+      "original": 60,
+      "category": 75,
+      "planner": 67,
+      "actual": 105,
+      "range": [
+        40,
+        104
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.019,
+      "evidence": [
+        {
+          "task_id": "derive-noise",
+          "title": "Rebuild the loss estimate under one audit coin",
+          "estimate_min": 60,
+          "actual_min": 104.0,
+          "ratio": 1.7333333333333334,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Deriving a proof takes substantially longer than a figures-only reading."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 0.67×. Applied 17% of the adjustment. 45 min × 0.94 ≈ 42 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.6,
+          0.87
+        ],
+        "evidence_ids": [
+          "read-cache",
+          "read-queues",
+          "replica-figs"
+        ],
+        "rationale": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+        "predicted_ratio": 0.9333333333333333,
+        "realized_ratio": 0.6888888888888889,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "read-queues"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "03-reading-depth",
+      "task": "metrics-club",
+      "title": "Make one slide about the two ablations",
+      "original": 45,
+      "category": 56,
+      "planner": 42,
+      "actual": 31,
+      "range": [
+        25,
+        60
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.009,
+      "evidence": [
+        {
+          "task_id": "read-queues",
+          "title": "Prepare one slide about the delay experiment",
+          "estimate_min": 45,
+          "actual_min": 30.0,
+          "ratio": 0.6666666666666666,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Use previous empirical-reading tasks rather than proof tasks on the same subject."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “I lost time getting a GPU allocation after I had reduced the failure.”",
+          "sources": [
+            {
+              "task_id": "warp-tail",
+              "title": "Fix corruption on partial warp tails",
+              "origin": "Completion note",
+              "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.52×. Applied 17% of the adjustment. 85 min × 1.09 ≈ 92 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.38,
+          1.68
+        ],
+        "evidence_ids": [
+          "warp-tail",
+          "stride-kernel",
+          "race-repro"
+        ],
+        "rationale": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+        "predicted_ratio": 1.0823529411764705,
+        "realized_ratio": 1.5529411764705883,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "warp-tail"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "04-kernel-workbench",
+      "task": "async-flicker",
+      "title": "Fix nondeterministic segmented sums",
+      "original": 85,
+      "category": 108,
+      "planner": 92,
+      "actual": 132,
+      "range": [
+        55,
+        130
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.012,
+      "evidence": [
+        {
+          "task_id": "warp-tail",
+          "title": "Fix corruption on partial warp tails",
+          "estimate_min": 80,
+          "actual_min": 122.0,
+          "ratio": 1.525,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Prior debugging with odd shapes and poisoned padding needed about half again as much time."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 0.98×. Applied 17% of the adjustment. 60 min × 1.00 ≈ 60 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.9,
+          1.11
+        ],
+        "evidence_ids": [
+          "throughput-table",
+          "median-runs"
+        ],
+        "rationale": "The scripted sweeps are already well budgeted.",
+        "predicted_ratio": 1.0,
+        "realized_ratio": 1.0166666666666666,
+        "prediction_in_band": true,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "throughput-table"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "04-kernel-workbench",
+      "task": "sweep-again",
+      "title": "Rerun the validated reference sweep",
+      "original": 60,
+      "category": 76,
+      "planner": 60,
+      "actual": 61,
+      "range": [
+        35,
+        84
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.008,
+      "evidence": [
+        {
+          "task_id": "throughput-table",
+          "title": "Publish timing table from the reference branch",
+          "estimate_min": 60,
+          "actual_min": 59.0,
+          "ratio": 0.9833333333333333,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "The scripted sweeps are already well budgeted."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 5 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 50% of the adjustment. 50 min × 1.10 ≈ 55 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.13,
+          1.31
+        ],
+        "evidence_ids": [
+          "subarray-target",
+          "window-cost",
+          "two-targets"
+        ],
+        "rationale": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+        "predicted_ratio": 1.1,
+        "realized_ratio": 1.24,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "subarray-target",
+          "two-targets",
+          "window-cost"
+        ],
+        "selected_unlisted_ids": [
+          "retype-merge",
+          "retype-stack"
+        ],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "05-interview-practice",
+      "task": "shortest-window",
+      "title": "Solve a new shortest-window problem",
+      "original": 50,
+      "category": 60,
+      "planner": 55,
+      "actual": 62,
+      "range": [
+        33,
+        77
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.011,
+      "evidence": [
+        {
+          "task_id": "subarray-target",
+          "title": "LeetCode practice · subarray sum equals k",
+          "estimate_min": 45,
+          "actual_min": 54.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "window-cost",
+          "title": "Practice the longest window with bounded replacement",
+          "estimate_min": 40,
+          "actual_min": 50.0,
+          "ratio": 1.25,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "two-targets",
+          "title": "Practice two non-overlapping target ranges",
+          "estimate_min": 60,
+          "actual_min": 72.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "retype-merge",
+          "title": "Retype merge intervals from my notes",
+          "estimate_min": 25,
+          "actual_min": 17.0,
+          "ratio": 0.68,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "retype-stack",
+          "title": "Review the saved monotone stack solution",
+          "estimate_min": 30,
+          "actual_min": 21.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 5 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 50% of the adjustment. 25 min × 1.10 ≈ 28 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.6,
+          0.87
+        ],
+        "evidence_ids": [
+          "retype-merge",
+          "retype-stack"
+        ],
+        "rationale": "Review uses prior solution and is routinely shorter.",
+        "predicted_ratio": 1.12,
+        "realized_ratio": 0.76,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "retype-merge",
+          "retype-stack"
+        ],
+        "selected_unlisted_ids": [
+          "subarray-target",
+          "two-targets",
+          "window-cost"
+        ],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "05-interview-practice",
+      "task": "editorial-review",
+      "title": "Redo the saved interval merge after lunch",
+      "original": 25,
+      "category": 30,
+      "planner": 28,
+      "actual": 19,
+      "range": [
+        16,
+        39
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.006,
+      "evidence": [
+        {
+          "task_id": "subarray-target",
+          "title": "LeetCode practice · subarray sum equals k",
+          "estimate_min": 45,
+          "actual_min": 54.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "window-cost",
+          "title": "Practice the longest window with bounded replacement",
+          "estimate_min": 40,
+          "actual_min": 50.0,
+          "ratio": 1.25,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "two-targets",
+          "title": "Practice two non-overlapping target ranges",
+          "estimate_min": 60,
+          "actual_min": 72.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "retype-merge",
+          "title": "Retype merge intervals from my notes",
+          "estimate_min": 25,
+          "actual_min": 17.0,
+          "ratio": 0.68,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "retype-stack",
+          "title": "Review the saved monotone stack solution",
+          "estimate_min": 30,
+          "actual_min": 21.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Review uses prior solution and is routinely shorter."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “Mara arrived six minutes after the start. She stayed until the owner confirmed.”",
+          "sources": [
+            {
+              "task_id": "mara-late-room",
+              "title": "Assign the late intake room with Mara",
+              "origin": "Completion note",
+              "observation": "Mara arrived six minutes after the start. She stayed until the owner confirmed."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.30×. Applied 17% of the adjustment. 30 min × 1.05 ≈ 32 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.23,
+          1.44
+        ],
+        "evidence_ids": [
+          "mara-evening",
+          "mara-capacity",
+          "mara-late-room"
+        ],
+        "rationale": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison.",
+        "expected_caution": {
+          "evidence_ids": [
+            "mara-evening",
+            "mara-capacity",
+            "mara-late-room"
+          ],
+          "rationale": "Mention that Mara previously joined these capacity reviews late, attributing it to the coordinator’s notes."
+        },
+        "predicted_ratio": 1.0666666666666667,
+        "realized_ratio": 1.3666666666666667,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "mara-late-room"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": true,
+        "unknown_caution_source_ids": []
+      },
+      "history": "06-neighborhood-clinic",
+      "task": "mara-rooms",
+      "title": "Set the handover rota with Mara",
+      "original": 30,
+      "category": 32,
+      "planner": 32,
+      "actual": 41,
+      "range": [
+        18,
+        45
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.009,
+      "evidence": [
+        {
+          "task_id": "mara-late-room",
+          "title": "Assign the late intake room with Mara",
+          "estimate_min": 30,
+          "actual_min": 39.0,
+          "ratio": 1.3,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "The three earlier capacity meetings with Mara lasted 39–41 minutes on a 30-minute guess. The March handover finished in 41 minutes; a brief unrelated badge call is a poor comparison."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “Dev had already filtered the stock sheet. We finished before the end of the slot.”",
+          "sources": [
+            {
+              "task_id": "dev-stock",
+              "title": "Stock check with Dev",
+              "origin": "Completion note",
+              "observation": "Dev had already filtered the stock sheet. We finished before the end of the slot."
+            }
+          ]
+        },
+        {
+          "advice": "On related work, you recorded “Dev brought the marked-up order sheet. No backorders to discuss.”",
+          "sources": [
+            {
+              "task_id": "dev-packs",
+              "title": "Check replenishment list with Dev",
+              "origin": "Completion note",
+              "observation": "Dev brought the marked-up order sheet. No backorders to discuss."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 2 comparisons, the median ratio of actual to estimated time was 0.72×. Applied 33% of the adjustment. 20 min × 0.91 ≈ 18 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          0.66,
+          0.86
+        ],
+        "evidence_ids": [
+          "dev-stock",
+          "dev-packs",
+          "dev-receipts"
+        ],
+        "rationale": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+        "predicted_ratio": 0.9,
+        "realized_ratio": 0.75,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "dev-packs",
+          "dev-stock"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "06-neighborhood-clinic",
+      "task": "dev-april",
+      "title": "Run the supply check with Dev",
+      "original": 20,
+      "category": 21,
+      "planner": 18,
+      "actual": 15,
+      "range": [
+        10,
+        26
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.005,
+      "evidence": [
+        {
+          "task_id": "dev-stock",
+          "title": "Stock check with Dev",
+          "estimate_min": 20,
+          "actual_min": 15.0,
+          "ratio": 0.75,
+          "reason": "Similar wording in the task or document."
+        },
+        {
+          "task_id": "dev-packs",
+          "title": "Check replenishment list with Dev",
+          "estimate_min": 20,
+          "actual_min": 14.0,
+          "ratio": 0.7,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “The handles and lid had cooked-on chili. I dried the iron and cleared the sink before stopping.”",
+          "sources": [
+            {
+              "task_id": "chili-dishes",
+              "title": "Do the dishes after chili night",
+              "origin": "Completion note",
+              "observation": "The handles and lid had cooked-on chili. I dried the iron and cleared the sink before stopping."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.20×. Applied 17% of the adjustment. 30 min × 1.03 ≈ 31 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.15,
+          1.28
+        ],
+        "evidence_ids": [
+          "chili-dishes",
+          "pasta-dishes",
+          "stew-dishes"
+        ],
+        "rationale": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work.",
+        "predicted_ratio": 1.0333333333333334,
+        "realized_ratio": 1.2,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "chili-dishes"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "07-shared-apartment",
+      "task": "bake-dishes",
+      "title": "Do the dishes after the tray bake",
+      "original": 30,
+      "category": 28,
+      "planner": 31,
+      "actual": 36,
+      "range": [
+        18,
+        44
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.011,
+      "evidence": [
+        {
+          "task_id": "chili-dishes",
+          "title": "Do the dishes after chili night",
+          "estimate_min": 30,
+          "actual_min": 36.0,
+          "ratio": 1.2,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “The fitted sheet took a few tries. The machine ran while I went shopping.”",
+          "sources": [
+            {
+              "task_id": "sheets",
+              "title": "Wash the guest-room sheets",
+              "origin": "Completion note",
+              "observation": "The fitted sheet took a few tries. The machine ran while I went shopping."
+            }
+          ]
+        },
+        {
+          "advice": "On related work, you recorded “Stopped the timer during both machine cycles. The folding was straightforward.”",
+          "sources": [
+            {
+              "task_id": "towels-one",
+              "title": "Wash and fold the bath towels",
+              "origin": "Completion note",
+              "observation": "Stopped the timer during both machine cycles. The folding was straightforward."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 6 comparisons, the median ratio of actual to estimated time was 0.95×. Applied 50% of the adjustment. 30 min × 0.97 ≈ 29 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": null,
+        "evidence_ids": [],
+        "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+        "predicted_ratio": 0.9666666666666667,
+        "realized_ratio": 1.9333333333333333,
+        "prediction_in_band": null,
+        "realization_in_band": null,
+        "selected_expected_ids": [],
+        "selected_unlisted_ids": [
+          "chili-dishes",
+          "mugs",
+          "pasta-dishes",
+          "sheets",
+          "stew-dishes",
+          "towels-one"
+        ],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "07-shared-apartment",
+      "task": "duvet",
+      "title": "Wash the spare duvet cover",
+      "original": 30,
+      "category": 28,
+      "planner": 29,
+      "actual": 58,
+      "range": [
+        15,
+        41
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.008,
+      "evidence": [
+        {
+          "task_id": "chili-dishes",
+          "title": "Do the dishes after chili night",
+          "estimate_min": 30,
+          "actual_min": 36.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "towels-one",
+          "title": "Wash and fold the bath towels",
+          "estimate_min": 30,
+          "actual_min": 21.0,
+          "ratio": 0.7,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "pasta-dishes",
+          "title": "Clear up the pasta supper",
+          "estimate_min": 25,
+          "actual_min": 31.0,
+          "ratio": 1.24,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "sheets",
+          "title": "Wash the guest-room sheets",
+          "estimate_min": 35,
+          "actual_min": 23.0,
+          "ratio": 0.6571428571428571,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "stew-dishes",
+          "title": "Reset the kitchen after stew",
+          "estimate_min": 35,
+          "actual_min": 42.0,
+          "ratio": 1.2,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "mugs",
+          "title": "Rinse the two coffee mugs",
+          "estimate_min": 10,
+          "actual_min": 5.0,
+          "ratio": 0.5,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio."
+    },
+    {
+      "fixed_duration": true,
+      "cautions": [],
+      "explanation": "The scheduled duration is 75 minutes.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.0,
+          1.0
+        ],
+        "evidence_ids": [
+          "radio-cabaret",
+          "short-on-air",
+          "quiet-show"
+        ],
+        "rationale": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns.",
+        "predicted_ratio": 1.0,
+        "realized_ratio": 1.0,
+        "prediction_in_band": true,
+        "realization_in_band": true,
+        "selected_expected_ids": [],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "08-community-playhouse",
+      "task": "blue-show",
+      "title": "Operate captions for Sea Glass at 19:00",
+      "original": 75,
+      "category": 75,
+      "planner": 75,
+      "actual": 75,
+      "range": [
+        75,
+        75
+      ],
+      "covered": true,
+      "confidence": "fixed",
+      "basis": "Scheduled duration",
+      "model_status": "not_called",
+      "model_error": null,
+      "model_seconds": 0,
+      "latency_seconds": 0.0,
+      "evidence": [],
+      "check": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 3 comparisons, the median ratio of actual to estimated time was 1.27×. Applied 50% of the adjustment. 30 min × 1.13 ≈ 34 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.16,
+          1.42
+        ],
+        "evidence_ids": [
+          "cabaret-load",
+          "audio-preflight",
+          "blue-relay"
+        ],
+        "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+        "predicted_ratio": 1.1333333333333333,
+        "realized_ratio": 1.2333333333333334,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "audio-preflight",
+          "blue-relay",
+          "cabaret-load"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "08-community-playhouse",
+      "task": "sea-preflight",
+      "title": "Do the Sea Glass booth preflight",
+      "original": 30,
+      "category": 38,
+      "planner": 34,
+      "actual": 37,
+      "range": [
+        20,
+        48
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.01,
+      "evidence": [
+        {
+          "task_id": "cabaret-load",
+          "title": "Load the incoming booth file",
+          "estimate_min": 25,
+          "actual_min": 33.0,
+          "ratio": 1.32,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "audio-preflight",
+          "title": "Check the booth playback outputs",
+          "estimate_min": 30,
+          "actual_min": 38.0,
+          "ratio": 1.2666666666666666,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "blue-relay",
+          "title": "Test the relay for the Blue House tour",
+          "estimate_min": 35,
+          "actual_min": 43.0,
+          "ratio": 1.2285714285714286,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “Serial link dropped midway through the turn. Replugged USB, reselected the device and repeated the whole turn.”",
+          "sources": [
+            {
+              "task_id": "turntable",
+              "title": "Record a turning test on rover C",
+              "origin": "Completion note",
+              "observation": "Serial link dropped midway through the turn. Replugged USB, reselected the device and repeated the whole turn."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.54×. Applied 17% of the adjustment. 45 min × 1.09 ≈ 49 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.43,
+          1.68
+        ],
+        "evidence_ids": [
+          "hall-encoder",
+          "turntable",
+          "dock-trace"
+        ],
+        "rationale": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+        "expected_caution": {
+          "evidence_ids": [
+            "hall-encoder",
+            "turntable",
+            "dock-trace"
+          ],
+          "rationale": "Warn that the original USB bridge disconnected on earlier live captures; leave time to reconnect and repeat the affected run."
+        },
+        "predicted_ratio": 1.0888888888888888,
+        "realized_ratio": 1.5777777777777777,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "turntable"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": true,
+        "unknown_caution_source_ids": []
+      },
+      "history": "09-rover-night",
+      "task": "bump-crossing",
+      "title": "Record the cable-cover crossing on rover C",
+      "original": 45,
+      "category": 69,
+      "planner": 49,
+      "actual": 71,
+      "range": [
+        29,
+        70
+      ],
+      "covered": false,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.011,
+      "evidence": [
+        {
+          "task_id": "turntable",
+          "title": "Record a turning test on rover C",
+          "estimate_min": 50,
+          "actual_min": 77.0,
+          "ratio": 1.54,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “The saved timestamp list lined up with both crossings.”",
+          "sources": [
+            {
+              "task_id": "junction-replay",
+              "title": "Replay the line-junction bag",
+              "origin": "Completion note",
+              "observation": "The saved timestamp list lined up with both crossings."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 0.93×. Applied 17% of the adjustment. 40 min × 0.99 ≈ 40 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": [
+          0.85,
+          1.12
+        ],
+        "evidence_ids": [
+          "junction-replay",
+          "wheel-ticks"
+        ],
+        "rationale": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope.",
+        "predicted_ratio": 1.0,
+        "realized_ratio": 0.95,
+        "prediction_in_band": true,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "junction-replay"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "09-rover-night",
+      "task": "replay-ramp",
+      "title": "Plot the ramp trial from yesterday’s recording",
+      "original": 40,
+      "category": 62,
+      "planner": 40,
+      "actual": 38,
+      "range": [
+        23,
+        56
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.007,
+      "evidence": [
+        {
+          "task_id": "junction-replay",
+          "title": "Replay the line-junction bag",
+          "estimate_min": 45,
+          "actual_min": 42.0,
+          "ratio": 0.9333333333333333,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [
+        {
+          "advice": "On related work, you recorded “A recommended pottery short turned into a chain of clips. Lost my place and replayed the sign check.”",
+          "sources": [
+            {
+              "task_id": "symmetry-video",
+              "title": "Take notes on Fourier symmetry",
+              "origin": "Completion note",
+              "observation": "A recommended pottery short turned into a chain of clips. Lost my place and replayed the sign check."
+            }
+          ]
+        },
+        {
+          "advice": "Consider setting aside unrelated activity during this task. A past session recorded 11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation).",
+          "sources": [
+            {
+              "task_id": "symmetry-video",
+              "title": "Take notes on Fourier symmetry",
+              "origin": "ActivityWatch",
+              "observation": "11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation)."
+            }
+          ]
+        }
+      ],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 1 comparison, the median ratio of actual to estimated time was 1.34×. Applied 17% of the adjustment. 40 min × 1.06 ≈ 42 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "patterned",
+        "expected_ratio_range": [
+          1.25,
+          1.46
+        ],
+        "evidence_ids": [
+          "pulse-video",
+          "window-video",
+          "symmetry-video"
+        ],
+        "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+        "expected_caution": {
+          "evidence_ids": [
+            "pulse-video",
+            "window-video",
+            "symmetry-video"
+          ],
+          "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user’s past notes give specific evidence."
+        },
+        "predicted_ratio": 1.05,
+        "realized_ratio": 1.35,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "symmetry-video"
+        ],
+        "selected_unlisted_ids": [],
+        "caution_cites_expected_source": true,
+        "unknown_caution_source_ids": []
+      },
+      "history": "10-signal-study",
+      "task": "triangle-video",
+      "title": "Watch the triangular-wave Fourier lecture",
+      "original": 40,
+      "category": 54,
+      "planner": 42,
+      "actual": 54,
+      "range": [
+        25,
+        60
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Text similarity",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.025,
+      "evidence": [
+        {
+          "task_id": "symmetry-video",
+          "title": "Take notes on Fourier symmetry",
+          "estimate_min": 35,
+          "actual_min": 47.0,
+          "ratio": 1.3428571428571427,
+          "reason": "Similar wording in the task or document."
+        }
+      ],
+      "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact."
+    },
+    {
+      "fixed_duration": false,
+      "cautions": [],
+      "explanation": "Model comparison unavailable. Offline fixture run. Across 5 comparisons, the median ratio of actual to estimated time was 1.34×. Applied 50% of the adjustment. 45 min × 1.17 ≈ 53 min. The range includes the observed ratios and a 40% planning margin.",
+      "model_calls": [],
+      "evaluation": {
+        "kind": "control",
+        "expected_ratio_range": [
+          0.86,
+          1.13
+        ],
+        "evidence_ids": [
+          "phasor-paper",
+          "filter-exercise"
+        ],
+        "rationale": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+        "predicted_ratio": 1.1777777777777778,
+        "realized_ratio": 0.9777777777777777,
+        "prediction_in_band": false,
+        "realization_in_band": true,
+        "selected_expected_ids": [
+          "filter-exercise",
+          "phasor-paper"
+        ],
+        "selected_unlisted_ids": [
+          "pulse-video",
+          "symmetry-video",
+          "window-video"
+        ],
+        "caution_cites_expected_source": null,
+        "unknown_caution_source_ids": []
+      },
+      "history": "10-signal-study",
+      "task": "triangle-sheet",
+      "title": "Complete the triangle-wave practice problems",
+      "original": 45,
+      "category": 60,
+      "planner": 53,
+      "actual": 44,
+      "range": [
+        31,
+        74
+      ],
+      "covered": true,
+      "confidence": "low",
+      "basis": "Category history",
+      "model_status": "offline",
+      "model_error": null,
+      "model_seconds": 0.0,
+      "latency_seconds": 0.008,
+      "evidence": [
+        {
+          "task_id": "pulse-video",
+          "title": "Watch the Fourier pulse-train lecture",
+          "estimate_min": 40,
+          "actual_min": 55.0,
+          "ratio": 1.375,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "phasor-paper",
+          "title": "Do the complex exponential worksheet",
+          "estimate_min": 50,
+          "actual_min": 47.0,
+          "ratio": 0.94,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "window-video",
+          "title": "Work through the windowing video",
+          "estimate_min": 45,
+          "actual_min": 61.0,
+          "ratio": 1.3555555555555556,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "symmetry-video",
+          "title": "Take notes on Fourier symmetry",
+          "estimate_min": 35,
+          "actual_min": 47.0,
+          "ratio": 1.3428571428571427,
+          "reason": "Same category. The scope may differ."
+        },
+        {
+          "task_id": "filter-exercise",
+          "title": "Calculate the shelf filter gain",
+          "estimate_min": 40,
+          "actual_min": 43.0,
+          "ratio": 1.075,
+          "reason": "Same category. The scope may differ."
+        }
+      ],
+      "check": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction."
+    }
+  ],
+  "summary": {
+    "cases": 20,
+    "rubric_cases": 20,
+    "fixed_duration_cases": 1,
+    "model_eligible_cases": 19,
+    "model_eligible_patterned_cases": 16,
+    "model_eligible_patterned_hits": 1,
+    "patterned_cases": 17,
+    "patterned_cases_in_declared_band": {
+      "original": 2,
+      "category": 6,
+      "planner": 2,
+      "actual": 17
+    },
+    "control_cases": 3,
+    "cases_with_declared_comparables": 19,
+    "cases_selecting_a_declared_comparable": 18,
+    "expected_caution_cases": 5,
+    "cautions_citing_expected_source": 4,
+    "cases_with_unknown_caution_sources": 0,
+    "cases_with_cautions": 10,
+    "mae_on_patterned_minutes": 13.65,
+    "mae_minutes": {
+      "original": 15.75,
+      "category": 13.55,
+      "planner": 13.6
+    },
+    "ranges_covering_actual": 15,
+    "mean_range_width_minutes": 38.65,
+    "basis_counts": {
+      "Category history": 8,
+      "Text similarity": 11,
+      "Scheduled duration": 1
+    },
+    "model_status_counts": {
+      "offline": 19,
+      "not_called": 1
+    },
+    "mean_prediction_seconds": 0.016
+  }
+}

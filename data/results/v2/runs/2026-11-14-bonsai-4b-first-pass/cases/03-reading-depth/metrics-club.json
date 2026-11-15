@@ -1,0 +1,104 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Model comparison unavailable. ternary-bonsai-4b reached its response length limit. Across 1 comparison, the median ratio of actual to estimated time was 0.67×. Applied 17% of the adjustment. 45 min × 0.94 ≈ 42 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "711e1afec1846a95aa1c475354e5b871d667539bd593a7b990a85eb4383d409d",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 103.453
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.87
+    ],
+    "evidence_ids": [
+      "read-cache",
+      "read-queues",
+      "replica-figs"
+    ],
+    "rationale": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+    "predicted_ratio": 0.9333333333333333,
+    "realized_ratio": 0.6888888888888889,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "read-queues"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "metrics-club",
+  "title": "Make one slide about the two ablations",
+  "original": 45,
+  "category": 56,
+  "planner": 42,
+  "actual": 31,
+  "range": [
+    25,
+    60
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Text similarity",
+  "model_status": "unavailable",
+  "model_error": "ternary-bonsai-4b reached its response length limit.",
+  "model_seconds": 103.453,
+  "latency_seconds": 103.462,
+  "evidence": [
+    {
+      "task_id": "read-queues",
+      "title": "Prepare one slide about the delay experiment",
+      "estimate_min": 45,
+      "actual_min": 30.0,
+      "ratio": 0.6666666666666666,
+      "reason": "Similar wording in the task or document."
+    }
+  ],
+  "check": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+  "started_utc": "2026-11-14T19:38:16.809037+00:00",
+  "completed_utc": "2026-11-14T19:40:00.299108+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:38:16.847618+00:00",
+      "request_body_sha256": "42f1f4077f48a556ee7c2c1976c7d7ad3698101a9fca11793a4453d7b3333b33",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "read-queues",
+        "derive-noise",
+        "replica-figs",
+        "read-cache",
+        "bound-floor",
+        "dishes"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1256,
+        "total_tokens": 1736,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1133,
+        "prompt_ms": 55003.665,
+        "prompt_per_token_ms": 48.546924095322154,
+        "prompt_per_second": 20.598627382375337,
+        "predicted_n": 480,
+        "predicted_ms": 48161.994,
+        "predicted_per_token_ms": 100.54696033402922,
+        "predicted_per_second": 9.945601504788193
+      },
+      "content": "{\"matches\": [\n  {\n    \"slot\": 1,\n    \"reason\": \"The task 'Prepare one slide about the delay experiment' aligns with the new task 'Make one slide about the two ablations' in terms of deliverable (a slide), method (using experiments 1 and 2), scope (comparing reporting routines with ablation and control), and difficulty (requires understanding of loss tables and audit dynamics). However, it lacks the specific focus on ablation and confound identification, and instead focuses on delayed observations and inspection curves. The shared topic of 'delayed observations' is insufficient without the required structure of finding, control, and confound. The most applicable earlier obstacle is observation 1: 'Completion note: I had to expand the conditional expectation one event at a time.' This reflects the difficulty in handling conditional expectations and missing observations, which is central to the ablation task.\",\n    \"flag\": 1\n  },\n  {\n    \"slot\": 2,\n    \"reason\": \"The task 'Rebuild the loss estimate under one audit coin' involves deriving a conditional second moment and analyzing bias from ignoring missing observations — directly relevant to the ablation task. It matches the required method (using experiments 1 and 2), scope (comparing reporting routines), and difficulty (handling conditional expectations and missing data). The shared topic of 'ablation' and 'missing observations' is present, but the task is focused on derivation and bias, not slide preparation. The most applicable earlier obstacle is observation 2: 'Completion note: Expanding the conditional expectation before taking the variance fixed my algebra.' This indicates a struggle with algebraic manipulation in conditional expectations, which is a key technical barrier in the ablation analysis.\",\n    \"flag\": 2\n  },\n  {\n    \"slot\": 3,\n    \"reason\": \"The task 'Explain a simulator control at group meeting' involves reading the experiment and ablation, giving a headline, and a caveat — this matches the purpose of the new task (explaining findings, controls, and confounds) and the method (reading experiments). However, it is a live meeting activity (group discussion) and does not involve the specific structure of a slide with a finding, control, and confound. It lacks the required deliverable format and is not a standalone preparation. Thus",
+      "finished_utc": "2026-11-14T19:40:00.298888+00:00"
+    }
+  ]
+}

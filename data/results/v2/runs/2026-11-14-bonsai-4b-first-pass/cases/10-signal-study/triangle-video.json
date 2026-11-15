@@ -1,0 +1,124 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Model comparison unavailable. ternary-bonsai-4b reached its response length limit. Across 1 comparison, the median ratio of actual to estimated time was 1.34×. Applied 17% of the adjustment. 40 min × 1.06 ≈ 42 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "98621014906e8d174b5c1c7dffe1de643d1ede28962a3a5a0580a5269b6a511d",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 48.777
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.25,
+      1.46
+    ],
+    "evidence_ids": [
+      "pulse-video",
+      "window-video",
+      "symmetry-video"
+    ],
+    "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+    "expected_caution": {
+      "evidence_ids": [
+        "pulse-video",
+        "window-video",
+        "symmetry-video"
+      ],
+      "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user’s past notes give specific evidence."
+    },
+    "predicted_ratio": 1.05,
+    "realized_ratio": 1.35,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "symmetry-video"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "10-signal-study",
+  "task": "triangle-video",
+  "title": "Watch the triangular-wave Fourier lecture",
+  "original": 40,
+  "category": 54,
+  "planner": 42,
+  "actual": 54,
+  "range": [
+    25,
+    60
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Text similarity",
+  "model_status": "unavailable",
+  "model_error": "ternary-bonsai-4b reached its response length limit.",
+  "model_seconds": 48.777,
+  "latency_seconds": 48.786,
+  "evidence": [
+    {
+      "task_id": "symmetry-video",
+      "title": "Take notes on Fourier symmetry",
+      "estimate_min": 35,
+      "actual_min": 47.0,
+      "ratio": 1.3428571428571427,
+      "reason": "Similar wording in the task or document."
+    }
+  ],
+  "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+  "cpu_threads": 8,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "started_utc": "2026-11-14T19:57:10.265520+00:00",
+  "completed_utc": "2026-11-14T19:57:59.057383+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:57:10.281295+00:00",
+      "request_body_sha256": "67e082d58cf5a2d7ba2026a3e26e64f946138a4ebe95b0dc5c2a2806dad7d84f",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "symmetry-video",
+        "window-video",
+        "pulse-video",
+        "phasor-paper",
+        "filter-exercise",
+        "quiet-news"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1047,
+        "total_tokens": 1527,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 924,
+        "prompt_ms": 22457.952,
+        "prompt_per_token_ms": 24.305142857142858,
+        "prompt_per_second": 41.143555743640384,
+        "predicted_n": 480,
+        "predicted_ms": 25761.665,
+        "predicted_per_token_ms": 53.782181628392486,
+        "predicted_per_second": 18.593518703080722
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"The task 'Watch the triangular-wave Fourier lecture' involves watching a YouTube lecture and sketching series reconstructions, which aligns with the 'Take notes on Fourier symmetry' slot in terms of topic (Fourier series), method (watching lecture and sketching), and category (Signal study). Both require sketching examples from a course playlist and involve sign checks. The shared activity of sketching and working through symmetry is directly applicable. However, the 'Take notes on Fourier symmetry' slot includes a specific off-task distraction (replaying sign check due to lost place in notes), which is not present in the new task. The new task does not involve off-task distractions or sign checks in the same context. Thus, no direct match due to lack of shared obstacle or off-task activity. Observation 1: 'Lost my place and replayed the sign check' — this is a specific off-task distraction, not relevant to the new task. Observation 2: 'Cats chasing a printer cable / Commuter train bloopers' — unrelated to the new task. Therefore, no match. \", \"flag\": 0 }, { \"slot\": 2, \"reason\": \"The task 'Work through the windowing video' involves watching a YouTube lesson on windowing and drawing rectangular and Hann examples, which matches the 'Watch the windowing and leakage lesson' slot in terms of topic (windowing), method (watching and drawing), and category (Signal study). Both require drawing examples from a course playlist and involve sketching in study notes. The 'Work through the windowing video' slot has a specific off-task observation (watching a game highlight and van conversion) — these are unrelated to the new task. The new task has no such off-task activity. Thus, no match due to mismatched off-task distractions. Observation 1: 'Stayed on the course page at first, then watched a game highlight and part of a van conversion' — this is a clear off-task distraction. Observation 2: 'Final-minute hockey goals / Tiny van kitchen build' — unrelated. Therefore, no match. \", \"flag\": 0 }, { \"slot\": 3, \"reason\": \"The task 'Watch the Fourier pulse-train lecture' involves watching a recorded lesson and",
+      "finished_utc": "2026-11-14T19:57:59.057139+00:00"
+    }
+  ]
+}

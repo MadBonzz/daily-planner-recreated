@@ -1,0 +1,205 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “The EOF fixture needed trimming before the bug appeared reliably.”",
+      "sources": [
+        {
+          "task_id": "boundary-debug",
+          "title": "Expose a ring cursor mismatch in the tool API",
+          "origin": "Completion note",
+          "observation": "The EOF fixture needed trimming before the bug appeared reliably."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 4 comparisons, the median ratio of actual to estimated time was 1.30×. Applied 100% of the adjustment. 40 min × 1.30 ≈ 52 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "053968720f02f8d4b69b78abe773c9ecb31ea77c3e0035962d5aad2548261426",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 110.031
+    },
+    {
+      "prompt_sha256": "d36bc0518f9f0e6fc0b850428b07382ad695817eacdffe670bc41fb7ab47d08c",
+      "max_tokens": 120,
+      "seconds": 32.908,
+      "response": {
+        "1": 1,
+        "2": 0,
+        "3": 2,
+        "4": 1,
+        "5": 1,
+        "6": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.84
+    ],
+    "evidence_ids": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "rationale": "Two prior write-ups were quick when archived logs were already available.",
+    "predicted_ratio": 1.3,
+    "realized_ratio": 0.7,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "suite-report"
+    ],
+    "selected_unlisted_ids": [
+      "boundary-debug",
+      "replay-cases",
+      "ring-port"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-note",
+  "title": "Explain the three saved replay transcripts",
+  "original": 40,
+  "category": 51,
+  "planner": 52,
+  "actual": 28,
+  "range": [
+    25,
+    63
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 142.939,
+  "latency_seconds": 143.011,
+  "evidence": [
+    {
+      "task_id": "suite-report",
+      "title": "Write up three saved replay transcripts",
+      "estimate_min": 45,
+      "actual_min": 29.0,
+      "ratio": 0.6444444444444445,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "boundary-debug",
+      "title": "Expose a ring cursor mismatch in the tool API",
+      "estimate_min": 85,
+      "actual_min": 132.0,
+      "ratio": 1.5529411764705883,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "replay-cases",
+      "title": "Run the existing test pack",
+      "estimate_min": 35,
+      "actual_min": 38.0,
+      "ratio": 1.0857142857142856,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "ring-port",
+      "title": "Port the wraparound header reader",
+      "estimate_min": 90,
+      "actual_min": 137.0,
+      "ratio": 1.5222222222222221,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "Two prior write-ups were quick when archived logs were already available.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:34:34.737749+00:00",
+      "request_body_sha256": "ca1cebe349e3364d02900c1c96256d8ab07f18555fd6a6cfbefca2a13fa10dfa",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "suite-report",
+        "codec-caption",
+        "boundary-debug",
+        "replay-cases",
+        "ring-port",
+        "bins"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1257,
+        "total_tokens": 1737,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1134,
+        "prompt_ms": 59803.428,
+        "prompt_per_token_ms": 52.736708994709,
+        "prompt_per_second": 18.962123709697714,
+        "predicted_n": 480,
+        "predicted_ms": 49925.186,
+        "predicted_per_token_ms": 104.22794572025053,
+        "predicted_per_second": 9.594355842760406
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"The task 'Explain the three saved replay transcripts' requires a three-row comparison table and an explanation of a checksum collision or logical difference hidden by identical exit codes, which aligns with the 'Write up three saved replay transcripts' candidate. Both involve analyzing saved logs, comparing on-disk traces, and identifying discrepancies in behavior despite identical outputs. The shared focus on comparing before/after traces and explaining logical differences (e.g., exit codes masking divergence) makes this a direct match. Obstacle: Observation 1 — 'The EOF fixture needed trimming before the bug appeared reliably.' This indicates a prior issue with handling edge cases (EOF) in the test setup, which is relevant to the comparison of transcripts with potentially truncated or malformed payloads.\", \"flag\": 1 }, { \"slot\": 5, \"reason\": \"The task 'Explain a case where identical exit codes hid a logical difference' and the 'Port the wraparound header reader' both involve analyzing trace data, comparing state before and after reads, and explaining how empty events or payload length affect cursor behavior. The shared method (cursor movement, state verification, empty event handling) and scope (Rust/C decoder comparison, state consistency) are identical. The 'Port the wraparound header reader' explicitly mentions verifying state before and after each read and explaining why the successful return path advances by the encoded length even when it represents an empty event — this directly matches the explanation required in the 'Explain the three saved replay transcripts' task. Obstacle: Observation 1 — 'Had to minimize an EOF fixture before the Rust harness would reproduce it.' This is a specific, concrete obstacle related to handling empty events and payload truncation, which is central to the comparison and explanation in the new task.\", \"flag\": 1 }, { \"slot\": 4, \"reason\": \"The task 'Run the existing test pack' uses the same saved seed manifest and command-line interface as the 'Explain the three saved replay transcripts' task. Both require using the documented command with the saved seed manifest and producing a summary. However, 'Run the existing test pack' is a test execution task, while the new task involves deeper analysis and explanation of discrepancies. Thus, it does not match in purpose or deliverable. No match.\",",
+      "finished_utc": "2026-11-14T19:36:24.767074+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:32:34.560352+00:00",
+      "request_body_sha256": "86596d83f4b0126a8882aba5f173dd3f5c4d50dd61b83a79455e9a483770ddfd",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "suite-report",
+        "codec-caption",
+        "boundary-debug",
+        "replay-cases",
+        "ring-port",
+        "bins"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 1249,
+        "total_tokens": 1302,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 1134,
+        "prompt_ms": 28847.324,
+        "prompt_per_token_ms": 25.438557319223985,
+        "prompt_per_second": 39.31040536030309,
+        "predicted_n": 53,
+        "predicted_ms": 3967.935,
+        "predicted_per_token_ms": 76.30644230769231,
+        "predicted_per_second": 13.105053384191022
+      },
+      "content": "{\n  \"1\": 1,\n  \"2\": 0,\n  \"3\": 2,\n  \"4\": 1,\n  \"5\": 1,\n  \"6\": 0\n}",
+      "finished_utc": "2026-11-14T20:33:07.466072+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 38,
+    "basis": "Text similarity",
+    "range": [
+      22,
+      53
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 110.042
+  },
+  "recovery_started_utc": "2026-11-14T20:32:34.472967+00:00",
+  "recovery_completed_utc": "2026-11-14T20:33:07.468248+00:00",
+  "recovery_elapsed_seconds": 32.969,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

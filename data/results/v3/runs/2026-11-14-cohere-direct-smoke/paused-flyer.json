@@ -1,0 +1,58 @@
+{
+  "task": "Update the March opening-hours flyer",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T20:56:11.900385+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "5619dec60caa223de495251002eb443ac8a3393d75429a8551887b68718425cf",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 20,
+        "low_min": 15,
+        "high_min": 25,
+        "confidence": "medium",
+        "rationale": "The task involves updating a flyer, which is a similar task to replacing check-in direction signs, as both require printing and updating signage.",
+        "confidence_reason": "The user's estimate for the new task is within the range of the actual duration of the similar task, indicating a moderate level of confidence.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Both tasks involve printing and updating signage."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 5.693
+    }
+  ],
+  "forecast": {
+    "point_min": 20,
+    "low_min": 15,
+    "high_min": 25,
+    "confidence": "medium",
+    "confidence_reason": "The user's estimate for the new task is within the range of the actual duration of the similar task, indicating a moderate level of confidence.",
+    "model_rationale": "The task involves updating a flyer, which is a similar task to replacing check-in direction signs, as both require printing and updating signage.",
+    "explanation": "The task involves updating a flyer, which is a similar task to replacing check-in direction signs, as both require printing and updating signage.",
+    "evidence": [
+      {
+        "task_id": "campus-posters",
+        "title": "Replace two check-in direction signs",
+        "estimate_min": 35,
+        "actual_min": 34.0,
+        "ratio": 0.9714285714285714,
+        "reason": "Both tasks involve printing and updating signage.",
+        "model_rationale": "Both tasks involve printing and updating signage.",
+        "reason_source": "model",
+        "source_quote": "Move the paper arrows from the east entry to the temporary side door. Print one bilingual sign and leave tape at the desk."
+      }
+    ],
+    "cautions": [],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

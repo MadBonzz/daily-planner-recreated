@@ -1,0 +1,148 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 0.68×. Applied 100% of the adjustment. 85 min × 0.68 ≈ 57 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "e28663c0f42989c6b08828b83f7e3e8d25ee8b1bfdd12c393e1168e83e97813e",
+      "max_tokens": 480,
+      "seconds": 298.465,
+      "response": {
+        "matches": [
+          {
+            "slot": 4,
+            "reason": "Same deliverable (transcript analysis) and scope (replay lab), but different method (write-up vs. code implementation) and purpose (reporting vs. implementation).",
+            "flag": 0
+          },
+          {
+            "slot": 5,
+            "reason": "Same deliverable (comparison artifact) and scope (decoder traces), but different method (screenshots vs. streaming tool) and purpose (annotation vs. implementation).",
+            "flag": 0
+          },
+          {
+            "slot": 6,
+            "reason": "Same scope (existing test pack), but different deliverable (run vs. implement new tool) and purpose (verification vs. development).",
+            "flag": 0
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.34,
+      1.65
+    ],
+    "evidence_ids": [
+      "ring-port",
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+    "expected_caution": {
+      "evidence_ids": [
+        "trace-tool",
+        "boundary-debug"
+      ],
+      "rationale": "The EOF regression fixture needed minimizing twice."
+    },
+    "predicted_ratio": 0.6705882352941176,
+    "realized_ratio": 1.6235294117647059,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [
+      "codec-caption",
+      "replay-cases",
+      "suite-report"
+    ],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-tool",
+  "title": "Implement first divergence for C and Rust traces",
+  "original": 85,
+  "category": 109,
+  "planner": 57,
+  "actual": 138,
+  "range": [
+    51,
+    93
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 298.465,
+  "latency_seconds": 298.479,
+  "evidence": [
+    {
+      "task_id": "suite-report",
+      "title": "Write up three saved replay transcripts",
+      "estimate_min": 45,
+      "actual_min": 29.0,
+      "ratio": 0.6444444444444445,
+      "reason": "Same deliverable (transcript analysis) and scope (replay lab), but different method (write-up vs. code implementation) and purpose (reporting vs. implementation)."
+    },
+    {
+      "task_id": "codec-caption",
+      "title": "Annotate the saved decoder comparison",
+      "estimate_min": 40,
+      "actual_min": 27.0,
+      "ratio": 0.675,
+      "reason": "Same deliverable (comparison artifact) and scope (decoder traces), but different method (screenshots vs. streaming tool) and purpose (annotation vs. implementation)."
+    },
+    {
+      "task_id": "replay-cases",
+      "title": "Run the existing test pack",
+      "estimate_min": 35,
+      "actual_min": 38.0,
+      "ratio": 1.0857142857142856,
+      "reason": "Same scope (existing test pack), but different deliverable (run vs. implement new tool) and purpose (verification vs. development)."
+    }
+  ],
+  "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+  "start_utc": "2026-11-14T19:35:32.259834+00:00",
+  "end_utc": "2026-11-14T19:40:30.771508+00:00",
+  "cpu_threads": 4,
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:35:32.308331+00:00",
+      "request_body_sha256": "aafcfe50e98463037883e6c17ab4c74335be2762bdd666484d7583e7ceb381ca",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "trace-tool",
+        "ring-port",
+        "boundary-debug",
+        "suite-report",
+        "codec-caption",
+        "replay-cases"
+      ],
+      "usage": {
+        "completion_tokens": 151,
+        "prompt_tokens": 1288,
+        "total_tokens": 1439,
+        "prompt_tokens_details": {
+          "cached_tokens": 112
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 112,
+        "prompt_n": 1176,
+        "prompt_ms": 111576.85,
+        "prompt_per_token_ms": 94.87827380952382,
+        "prompt_per_second": 10.539820760310045,
+        "predicted_n": 151,
+        "predicted_ms": 186391.22,
+        "predicted_per_token_ms": 1242.6081333333334,
+        "predicted_per_second": 0.8047589366065634
+      },
+      "content": "{\"matches\": [{\"slot\": 4, \"reason\": \"Same deliverable (transcript analysis) and scope (replay lab), but different method (write-up vs. code implementation) and purpose (reporting vs. implementation).\", \"flag\": 0}, {\"slot\": 5, \"reason\": \"Same deliverable (comparison artifact) and scope (decoder traces), but different method (screenshots vs. streaming tool) and purpose (annotation vs. implementation).\", \"flag\": 0}, {\"slot\": 6, \"reason\": \"Same scope (existing test pack), but different deliverable (run vs. implement new tool) and purpose (verification vs. development).\", \"flag\": 0}]\n}",
+      "finish_utc": "2026-11-14T19:40:30.768559+00:00"
+    }
+  ]
+}

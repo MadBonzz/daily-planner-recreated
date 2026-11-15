@@ -1,0 +1,75 @@
+{
+  "task": "Watch the triangular-wave Fourier lecture",
+  "model": "command-r7b-12-2024",
+  "started_utc": "2026-11-14T21:00:08.576669+00:00",
+  "calls": [
+    {
+      "prompt_sha256": "ec5cdae52c98edfada4da38427d02e1b8ae842835555396acbca45761d33828b",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 40,
+        "high_min": 50,
+        "confidence": "medium",
+        "rationale": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+        "confidence_reason": "The user's actual time for similar tasks has been consistently higher than the estimated time, indicating a need for a more cautious estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The user's actual time for 'Take notes on Fourier symmetry' was 47 minutes, which is 2 minutes higher than the estimate, suggesting a need for a higher estimate for this task."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Be mindful of off-task activities during the lecture to stay focused on the task at hand."
+          }
+        ]
+      },
+      "seconds": 5.787
+    }
+  ],
+  "forecast": {
+    "point_min": 45,
+    "low_min": 40,
+    "high_min": 50,
+    "confidence": "medium",
+    "confidence_reason": "The user's actual time for similar tasks has been consistently higher than the estimated time, indicating a need for a more cautious estimate.",
+    "model_rationale": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+    "explanation": "Based on the user's past performance, the task is likely to take longer than the estimated 40 minutes, but it's difficult to predict the exact duration without more context.",
+    "evidence": [
+      {
+        "task_id": "symmetry-video",
+        "title": "Take notes on Fourier symmetry",
+        "estimate_min": 35,
+        "actual_min": 47.0,
+        "ratio": 1.3428571428571427,
+        "reason": "The user's actual time for 'Take notes on Fourier symmetry' was 47 minutes, which is 2 minutes higher than the estimate, suggesting a need for a higher estimate for this task.",
+        "reason_source": "model",
+        "model_rationale": "The user's actual time for 'Take notes on Fourier symmetry' was 47 minutes, which is 2 minutes higher than the estimate, suggesting a need for a higher estimate for this task.",
+        "source_quote": "Watch the course lecture on YouTube and sketch the odd-symmetry example. Work through the sign check before closing the notebook."
+      }
+    ],
+    "cautions": [
+      {
+        "advice": "Be mindful of off-task activities during the lecture to stay focused on the task at hand.",
+        "sources": [
+          {
+            "task_id": "symmetry-video",
+            "title": "Take notes on Fourier symmetry",
+            "origin": "ActivityWatch",
+            "observation": "11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation)."
+          }
+        ]
+      }
+    ],
+    "basis": "Model forecast",
+    "provenance": {
+      "provider": "Cohere",
+      "model": "command-r7b-12-2024",
+      "decision": "direct",
+      "minutes_by": "model"
+    }
+  },
+  "core_fields_equal_model_reply": true
+}

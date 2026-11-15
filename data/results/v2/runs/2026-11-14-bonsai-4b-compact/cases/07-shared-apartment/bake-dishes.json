@@ -1,0 +1,196 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Check whether this will affect today’s plan. You recorded “The last twelve minutes were pot, lid and drying space. Counted through the final wipe.”",
+      "sources": [
+        {
+          "task_id": "stew-dishes",
+          "title": "Reset the kitchen after stew",
+          "origin": "Completion note",
+          "observation": "The last twelve minutes were pot, lid and drying space. Counted through the final wipe."
+        }
+      ]
+    }
+  ],
+  "explanation": "Across 3 comparisons, the median ratio of actual to estimated time was 1.20×. Applied 100% of the adjustment. 30 min × 1.20 ≈ 36 min. The range includes the observed ratios and a 10% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "1a149b8477de2d75280e9cae8863398c252503c8a6104f61f9354a5a873748a1",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 42.073
+    },
+    {
+      "prompt_sha256": "e75a8ee77188baf8d77455b0381161af2699d8769fb5946b90e2030c43391dea",
+      "max_tokens": 120,
+      "seconds": 20.927,
+      "response": {
+        "1": 1,
+        "2": 2,
+        "3": 1,
+        "4": 0,
+        "5": 0,
+        "6": 0
+      }
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.15,
+      1.28
+    ],
+    "evidence_ids": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "rationale": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work.",
+    "predicted_ratio": 1.2,
+    "realized_ratio": 1.2,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "chili-dishes",
+      "pasta-dishes",
+      "stew-dishes"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "07-shared-apartment",
+  "task": "bake-dishes",
+  "title": "Do the dishes after the tray bake",
+  "original": 30,
+  "category": 28,
+  "planner": 36,
+  "actual": 36,
+  "range": [
+    32,
+    40
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model-selected tasks",
+  "model_status": "ok_after_retry",
+  "model_error": null,
+  "model_seconds": 63.0,
+  "latency_seconds": 63.019,
+  "evidence": [
+    {
+      "task_id": "chili-dishes",
+      "title": "Do the dishes after chili night",
+      "estimate_min": 30,
+      "actual_min": 36.0,
+      "ratio": 1.2,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "stew-dishes",
+      "title": "Reset the kitchen after stew",
+      "estimate_min": 35,
+      "actual_min": 42.0,
+      "ratio": 1.2,
+      "reason": "The model selected this task in the compact comparison."
+    },
+    {
+      "task_id": "pasta-dishes",
+      "title": "Clear up the pasta supper",
+      "estimate_min": 25,
+      "actual_min": 31.0,
+      "ratio": 1.24,
+      "reason": "The model selected this task in the compact comparison."
+    }
+  ],
+  "check": "The three previous full dinner cleanups took 36/30, 31/25 and 42/35 times their guesses. A similar dinner took 36/30. The five-minute coffee-mug rinse involves a different amount of work.",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:52:58.878000+00:00",
+      "request_body_sha256": "72f514665278748dcc66fb38b1b5ea28d1b805ccd8182f43cdb270e1cef367d4",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "chili-dishes",
+        "stew-dishes",
+        "pasta-dishes",
+        "sheets",
+        "towels-one",
+        "mugs"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 756,
+        "total_tokens": 1236,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 633,
+        "prompt_ms": 16047.345,
+        "prompt_per_token_ms": 25.351255924170616,
+        "prompt_per_second": 39.445777479078316,
+        "predicted_n": 480,
+        "predicted_ms": 25534.5,
+        "predicted_per_token_ms": 53.30793319415449,
+        "predicted_per_second": 18.75893399126672
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"Both tasks involve hand-washing dinner settings and cleaning a cast-iron pan (specifically the enameled tray and cast-iron pan from vegetables), with a shared sink and similar scope. The observation that 'handles and lid had cooked-on chili' and 'dried the iron and cleared the sink' directly aligns with the 'Do the dishes after the tray bake' task, indicating a similar cleanup sequence and physical effort. The difficulty and method are comparable, and the shared sink and hand-washing rack confirm the same operational context. Obstacle: Observation 1 (completion note: The handles and lid had cooked-on chili. I dried the iron and cleared the sink before stopping) — this indicates a prior task that required handling cooked-on food and cleaning the pan, which is a direct precursor to the current task. This shows a pattern of post-cooking cleanup with pan and sink involvement, making it a relevant earlier obstacle. \", \"flag\": 1 }, { \"slot\": 2, \"reason\": \"Both tasks involve washing a cast-iron Dutch oven and dinner place settings, drying the pan, and wiping the basin. The details mention a full rack and a heavy pot, which matches the 'Do the dishes after the tray bake' task's mention of a full rack and the enameled tray. The method and scope are identical, and the shared sink and hand-washing rack are consistent. Obstacle: Observation 2 (completion note: The last twelve minutes were pot, lid and drying space. Counted through the final wipe) — this shows a prior task that required a full cleanup sequence involving the pot, lid, and drying, indicating a similar workflow and timing. This is a concrete, specific obstacle from a prior task that mirrors the current one. \", \"flag\": 2 }, { \"slot\": 3, \"reason\": \"Both tasks involve hand-washing four plates, a skillet, and a serving dish, drying the cast-iron pan, and clearing a draining board. The shared sink and hand-washing rack are present in both. The observation that 'the skillet needed a second scrub' reflects a prior task that required extra scrubbing due to residue, which is a common issue in post-meal cleanup. This shows a similar method and scope",
+      "finished_utc": "2026-11-14T19:53:40.950359+00:00",
+      "served_from": "first_pass_http_receipt"
+    },
+    {
+      "start_utc": "2026-11-14T20:35:40.945630+00:00",
+      "request_body_sha256": "d1e5a9e39048e65feb72dc0e1d9653a358b9e1e4f06766ec353e150fb536b86f",
+      "max_tokens": 120,
+      "served_from": "live_compact_http",
+      "candidate_ids": [
+        "chili-dishes",
+        "stew-dishes",
+        "pasta-dishes",
+        "sheets",
+        "towels-one",
+        "mugs"
+      ],
+      "usage": {
+        "completion_tokens": 53,
+        "prompt_tokens": 748,
+        "total_tokens": 801,
+        "prompt_tokens_details": {
+          "cached_tokens": 115
+        }
+      },
+      "finish_reason": "stop",
+      "timings": {
+        "cache_n": 115,
+        "prompt_n": 633,
+        "prompt_ms": 17403.273,
+        "prompt_per_token_ms": 27.493322274881518,
+        "prompt_per_second": 36.37246855806951,
+        "predicted_n": 53,
+        "predicted_ms": 3398.642,
+        "predicted_per_token_ms": 65.35849999999999,
+        "predicted_per_second": 15.30022873841964
+      },
+      "content": "{\n  \"1\": 1,\n  \"2\": 2,\n  \"3\": 1,\n  \"4\": 0,\n  \"5\": 0,\n  \"6\": 0\n}",
+      "finished_utc": "2026-11-14T20:36:01.869568+00:00"
+    }
+  ],
+  "primary_score": {
+    "planner": 31,
+    "basis": "Text similarity",
+    "range": [
+      18,
+      44
+    ],
+    "model_status": "unavailable",
+    "latency_seconds": 42.082
+  },
+  "recovery_started_utc": "2026-11-14T20:35:40.933568+00:00",
+  "recovery_completed_utc": "2026-11-14T20:36:01.872151+00:00",
+  "recovery_elapsed_seconds": 20.937,
+  "latency_measurement": "Sum of the original production first attempt and separately executed recovery. Includes local estimator overhead in both stages; first model call replayed from receipt for recovery."
+}

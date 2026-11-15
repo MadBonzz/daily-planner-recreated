@@ -1,0 +1,103 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "Model comparison unavailable. ternary-bonsai-4b reached its response length limit. Across 1 comparison, the median ratio of actual to estimated time was 0.98×. Applied 17% of the adjustment. 60 min × 1.00 ≈ 60 min. The range includes the observed ratios and a 40% planning margin.",
+  "model_calls": [
+    {
+      "prompt_sha256": "ff64ee7643d4d944b1cf2e4ce7bd7af919d30c6d9bbd1d675e800db803134ee4",
+      "max_tokens": 480,
+      "error": "ternary-bonsai-4b reached its response length limit.",
+      "seconds": 486.319
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.9,
+      1.11
+    ],
+    "evidence_ids": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "rationale": "The scripted sweeps are already well budgeted.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.0166666666666666,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "throughput-table"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "sweep-again",
+  "title": "Rerun the validated reference sweep",
+  "original": 60,
+  "category": 76,
+  "planner": 60,
+  "actual": 61,
+  "range": [
+    35,
+    84
+  ],
+  "covered": true,
+  "confidence": "low",
+  "basis": "Text similarity",
+  "model_status": "unavailable",
+  "model_error": "ternary-bonsai-4b reached its response length limit.",
+  "model_seconds": 486.319,
+  "latency_seconds": 486.327,
+  "evidence": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "estimate_min": 60,
+      "actual_min": 59.0,
+      "ratio": 0.9833333333333333,
+      "reason": "Similar wording in the task or document."
+    }
+  ],
+  "check": "The scripted sweeps are already well budgeted.",
+  "started_utc": "2026-11-14T19:41:45.454782+00:00",
+  "completed_utc": "2026-11-14T19:49:51.806588+00:00",
+  "http_receipts": [
+    {
+      "start_utc": "2026-11-14T19:41:45.488514+00:00",
+      "request_body_sha256": "122edbdc17daab0a96bb1c98ca207f84a043827f65639c665fffa1c22b8738a4",
+      "max_tokens": 480,
+      "candidate_ids": [
+        "throughput-table",
+        "median-runs",
+        "warp-tail",
+        "stride-kernel",
+        "masked-add",
+        "race-repro"
+      ],
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1302,
+        "total_tokens": 1782,
+        "prompt_tokens_details": {
+          "cached_tokens": 123
+        }
+      },
+      "timings": {
+        "cache_n": 123,
+        "prompt_n": 1179,
+        "prompt_ms": 59830.302,
+        "prompt_per_token_ms": 50.7466513994911,
+        "prompt_per_second": 19.705733726699222,
+        "predicted_n": 480,
+        "predicted_ms": 426105.109,
+        "predicted_per_token_ms": 889.5722526096033,
+        "predicted_per_second": 1.1241357821879576
+      },
+      "content": "{ \"matches\": [ { \"slot\": 1, \"reason\": \"This task directly matches the validated reference sweep by requiring raw timing measurements and median/p90 reporting for specific row sizes (32, 33, 65, 257), which aligns with the description of rerunning the sweep to report medians and p90. It shares the same category (GPU lab), deliverable (raw timings and four medians), method (rerun validated sweep), scope (benchmarking with poison padding and host pre-filling), and difficulty (requires precise timing and verification under poison padding). The most applicable earlier obstacle is Observation 1: 'Completion note: I lost time getting a GPU allocation after I had reduced the failure.' This indicates a prior delay due to GPU allocation, which directly impacts the ability to rerun the sweep and collect accurate timing data.\", \"flag\": 1 }, { \"slot\": 3, \"reason\": \"This task involves debugging a segmented activity kernel with a poisoned tail to trace ownership and fix reduction issues, which matches the 'Fix the kernel and prove ownership' component of the new task. It shares the same category, deliverable (ownership trace and reduction fix), method (use poisoned tail to verify ownership), and scope (thread ownership in segmented kernels). The most applicable earlier obstacle is Observation 1: 'Completion note: I lost time getting a GPU allocation after I had reduced the failure.' This shows a prior failure in GPU allocation due to reduced kernel size, which could have caused the current difficulty in reproducing the segmented kernel with proper ownership verification.\", \"flag\": 1 }, { \"slot\": 4, \"reason\": \"This task addresses a mismatched pitch in a strided kernel, which is a related but distinct issue from the reference sweep. While it shares the same category and method (GPU lab, kernel debugging), the scope (strided kernel with non-contiguous input) and deliverable (fix pitch and run odd-width regression) differ from the reference sweep's focus on median/p90 reporting and row-specific cutoffs. No direct match in deliverable, method, or scope. No shared topic or concrete reason for overlap.\", \"flag\": 0 }, { \"slot\": 5, \"reason\": \"This task reviews a scalar fallback and checks against CPU output, which is",
+      "finished_utc": "2026-11-14T19:49:51.806267+00:00"
+    }
+  ]
+}
