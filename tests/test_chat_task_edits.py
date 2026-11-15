@@ -35,30 +35,6 @@ def test_literal_creation_keeps_effort_scope_day_and_explicit_file(tmp_path):
     assert task["day"] == "2026-11-16" and store.attachment_bytes(file["id"]) == b"assignment"
 
 
-def test_successful_bonsai_extraction_cannot_add_assignment_requirements(tmp_path, monkeypatch):
-    from datetime import datetime
-    from chat_tasks import apply_action
-    plan = {"now": datetime(2026, 11, 15), "selected_day": "2026-11-17"}
-    files = {"1": {"name": "assignment.txt", "kind": "text", "data": b"Exercises", "current": True}}
-    scope = "it has theoretical questions about consensus and Paxos"
-    question = ("Can you add a task for my computing assignment, I expect it will take 4 hours, "
-                + scope + ". Attach assignment.txt to this task.")
-    def successful_model(*_):
-        return {"action": "create", "title": "Assignment", "description": "Implement a Raft cluster.",
-                "details": "Run a benchmark after the proof.", "estimate_minutes": 4, "estimate_phrase": "4 hours",
-                "fixed_duration": True, "day": "2027-01-01", "when": "", "category": "Study", "file_ids": []}
-    monkeypatch.setattr(analytics, "chat_json", successful_model)
-    monkeypatch.setattr(analytics, "using_local_bonsai", lambda: True)
-    reply = analytics.ask_analytics(question, [], [], files=files, plan=plan, create_categories=["Study"])
-    store = PlannerStore(tmp_path)
-    result = apply_action(store, reply, files, "grounded-create")
-    task = store.get_task(result["affected_task_id"])
-    assert task["description"] == scope and task["details"] == ""
-    assert task["estimate_minutes"] == 240 and not task["fixed_duration"]
-    assert task["day"] == plan["selected_day"] and task["category"] == "Study"
-    assert [doc["name"] for doc in task["attachments"]] == ["assignment.txt"]
-
-
 @pytest.mark.parametrize("request_text", [
     "If I add a task for homework, it will take 4 hours, what happens?",
     "How do I add a task for homework, 4 hours?",

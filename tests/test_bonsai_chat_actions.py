@@ -42,7 +42,7 @@ def chat(tmp_path, monkeypatch):
     def response(request, *, timeout):
         if request.full_url == ORIGIN + "/api/v1/models":
             value = {"models": [{"key": MODEL, "type": "llm", "loaded_instances": [
-                {"id": INSTANCE, "config": {"context_length": 16384, "parallel": 1}}]}]}
+                {"id": INSTANCE, "config": {"context_length": 8192, "parallel": 1}}]}]}
         else:
             assert request.full_url == ORIGIN + "/v1/chat/completions"
             body = json.loads(request.data)

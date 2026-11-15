@@ -88,9 +88,7 @@ class BionicHandler(BaseHTTPRequestHandler):
             if server.fail_load:
                 server.fail_load = False
                 return self.reply({"error": {"message": "load failed"}}, 500)
-            if server.auto_evict and len(server.loaded) >= server.max_loaded:
-                server.loaded.pop(next(iter(server.loaded)))
-            if key not in MODELS or len(server.loaded) >= server.max_loaded:
+            if key not in MODELS or server.loaded:
                 return self.reply({"error": "unknown model or insufficient free memory"}, 400)
             # Exercise the native API's choice of an instance ID distinct from the installed key.
             instance_id = f"{key}:1"
@@ -144,8 +142,6 @@ class BionicHandler(BaseHTTPRequestHandler):
 def bionic(monkeypatch, tmp_path):
     server = ThreadingHTTPServer(("127.0.0.1", 0), BionicHandler)
     server.loaded = {}
-    server.max_loaded = 1
-    server.auto_evict = False
     server.events = []
     server.embedding_inputs = []
     server.truncated_inputs = []
@@ -170,7 +166,7 @@ def bionic(monkeypatch, tmp_path):
         "PLANNER_DATA_DIR": str(tmp_path),
     }
     monkeypatch.setattr(model_client, "ENV_FILE", tmp_path / ".env")
-    for name in ("PLANNER_KEEP_MODELS_LOADED", "PLANNER_EMBEDDING_MODEL_KEY", "PLANNER_DECISION_MODEL_KEY", "PLANNER_MODEL_KEY",
+    for name in ("PLANNER_EMBEDDING_MODEL_KEY", "PLANNER_DECISION_MODEL_KEY", "PLANNER_MODEL_KEY",
                  "PLANNER_EMBEDDING_CONTEXT_LENGTH", "PLANNER_DECISION_CONTEXT_LENGTH", "PLANNER_CHAT_CONTEXT_LENGTH"):
         monkeypatch.delenv(name, raising=False)
     for name, value in config.items():
@@ -202,9 +198,9 @@ def test_full_local_check_switches_once_per_role_and_reuses_bonsai(bionic, sdk_u
     assert "validated forecast of 20 min" in check("forecast")
     assert "validated forecast of 20 min" in check("forecast")
     assert bionic.events == [
-        ("load", QWEN, 4096), ("/v1/embeddings", QWEN + ":1"), ("unload", QWEN + ":1"),
+        ("load", QWEN, 2048), ("/v1/embeddings", QWEN + ":1"), ("unload", QWEN + ":1"),
         ("load", KEV, 4096), ("/v1/systemone", KEV + ":1"), ("unload", KEV + ":1"),
-        ("load", BONSAI, 16384), ("/v1/chat/completions", BONSAI + ":1"), ("/v1/chat/completions", BONSAI + ":1"),
+        ("load", BONSAI, 8192), ("/v1/chat/completions", BONSAI + ":1"), ("/v1/chat/completions", BONSAI + ":1"),
     ]
     assert [body.get("parallel") for body in bionic.load_requests] == [None, None, 1]
 
@@ -252,7 +248,7 @@ def test_background_forecast_waits_for_chat_before_switching_to_qwen(bionic, tmp
             assert bionic.chat_started.wait(5)
             forecast = pool.submit(estimator.predict, task, [prior], tmp_path / "vectors")
             assert forecast_waiting.wait(5)
-            assert bionic.events == [("load", BONSAI, 16384), ("/v1/chat/completions", BONSAI + ":1")]
+            assert bionic.events == [("load", BONSAI, 8192), ("/v1/chat/completions", BONSAI + ":1")]
         finally:
             bionic.release_chat.set()
         assert chat.result()["new_task"]["estimate_minutes"] == 240
@@ -261,7 +257,7 @@ def test_background_forecast_waits_for_chat_before_switching_to_qwen(bionic, tmp
 
 
 def test_regular_forecast_uses_both_qwen_queries_and_past_timing_without_sdk(bionic, sdk_unavailable, tmp_path):
-    task = {**check_local_models.TASK, "id": "new", "pdf_text": "Compare each checklist annotation. " * 1200}
+    task = {**check_local_models.TASK, "id": "new", "pdf_text": "Compare each checklist annotation. " * 800}
     prior = {**check_local_models.PRIOR, "id": "prior", "estimate_minutes": 20,
              "actual_seconds": 1500, "status": "completed"}
     result = estimator.predict(task, [prior], tmp_path / "index")
@@ -362,8 +358,7 @@ def test_missing_model_keeps_resident_instance(bionic, monkeypatch):
 
 
 @pytest.mark.parametrize("parallel", [4, None])
-def test_bonsai_single_slot_load_and_older_inventories(bionic, parallel, monkeypatch):
-    monkeypatch.setenv("PLANNER_CHAT_CONTEXT_LENGTH", "8192")
+def test_bonsai_single_slot_load_and_older_inventories(bionic, parallel):
     bionic.loaded["bonsai-running"] = BONSAI, 8192
     if parallel is not None:
         bionic.instance_options["bonsai-running"] = {"parallel": parallel}
@@ -414,7 +409,7 @@ def test_separate_worker_cannot_unload_an_inflight_forecast(bionic):
             assert ready.wait(8)
             worker.join(timeout=0.3)
             assert worker.is_alive()
-            assert bionic.events == [("load", BONSAI, 16384), ("/v1/chat/completions", BONSAI + ":1")]
+            assert bionic.events == [("load", BONSAI, 8192), ("/v1/chat/completions", BONSAI + ":1")]
         finally:
             bionic.release_chat.set()
             if worker.pid is not None:

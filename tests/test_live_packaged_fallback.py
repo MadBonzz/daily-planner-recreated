@@ -81,16 +81,6 @@ def test_nonmatching_keys_and_managed_explicit_key_do_not_confuse_models():
     assert not sample_retrieval.prefer_packaged("embedding", "qwen3-embedding-0.6b", settings)
 
 
-@pytest.mark.parametrize("role,model,saved", [("embedding", sample_retrieval.QWEN, [0.5]),
-                                             ("decision", sample_retrieval.KEV, False)])
-def test_managed_precomputed_mode_contacts_model_only_on_a_miss(role, model, saved):
-    config = {"PLANNER_SINGLE_MODEL": "1", "PLANNER_PREFER_PRECOMPUTED": "1"}
-    def unexpected():
-        pytest.fail("A packaged result should avoid a live request")
-    assert sample_retrieval.resolve(role, model, config, lambda _: saved, unexpected)[0] == saved
-    assert sample_retrieval.resolve(role, model, config, lambda _: None, lambda: "live") == ("live", model)
-
-
 def test_site_and_workspace_use_exact_fallback_before_another_forecast(monkeypatch):
     request = {"model": "kev-4b-live", "state": "task scope", "questions": {"relevant": {"type": "noul"}}}
     archived = {**request, "model": "kev-4b"}

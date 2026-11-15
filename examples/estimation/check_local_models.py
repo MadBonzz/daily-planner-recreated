@@ -7,7 +7,6 @@ from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit
 
 import estimator
-import local_model_runtime
 import retrieval
 from model_client import ModelUnavailable, model_settings, planner_settings
 
@@ -51,8 +50,8 @@ def check(component, config):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--component", choices=("all", "embedding", "decision", "forecast"), default="all")
-    selection = parser.parse_args().component
-    components = ("embedding", "decision", "forecast") if selection == "all" else (selection,)
+    component = parser.parse_args().component
+    components = ("embedding", "decision", "forecast") if component == "all" else (component,)
     config = planner_settings()
     failed = False
     for component in components:
@@ -60,13 +59,6 @@ def main():
             print(f"{component}: {check(component, config)}", flush=True)
         except (ModelUnavailable, ValueError) as error:
             print(f"{component}: {error}", file=sys.stderr, flush=True)
-            failed = True
-    if selection == "all" and config.get("PLANNER_KEEP_MODELS_LOADED") == "1":
-        try:
-            instances = local_model_runtime.check_residency(model_settings(config)[0], config)
-            print("Loaded together: " + ", ".join(instances), flush=True)
-        except (ModelUnavailable, ValueError) as error:
-            print(f"Residency check failed: {error}", file=sys.stderr, flush=True)
             failed = True
     return int(failed)
 

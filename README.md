@@ -58,32 +58,15 @@ Leave that Terminal and Bionic open. Visit <http://127.0.0.1:8501> and choose **
 
 **Check the setup separately.** From the repo, run `bash run-bionic-mac.sh --check`. It checks Qwen, Kev and Bonsai in sequence, prints a 1,024-dimensional embedding, a related/unrelated decision and a forecast in minutes, then exits. The normal launch command starts the app directly.
 
-**Faster Mac demo with precomputed Qwen and Kev.** Leave Bionic running on port 1235. Stop Streamlit with Ctrl+C, then run the following in the repository:
-
-```bash
-git pull --ff-only
-bash run-bionic-mac.sh --precomputed
-```
-
-Open the same editable Dev history. Exact matches use the bundled Qwen embeddings and Kev decisions immediately. Bonsai still generates fresh forecasts and chat replies locally. New or edited inputs without a bundled match use the local Qwen or Kev model as needed. To prefer live Qwen and Kev again, restart without `--precomputed`. Both launches use the same saved tasks and timers.
-
 | Stage | Bionic model key | ID used by the planner | Context requested |
 | --- | --- | --- | ---: |
-| Embed task text | `text-embedding-qwen3-embedding-0.6b` | `qwen3-embedding-0.6b-live` | 4,096 |
+| Embed task text | `text-embedding-qwen3-embedding-0.6b` | `qwen3-embedding-0.6b-live` | 2,048 |
 | Judge relevance | `kev-4b` | `kev-4b-live` | 4,096 |
-| Forecast and chat | `ternary-bonsai-2-4b-mlx` | `ternary-bonsai-2-4b-mlx` | 16,384 |
+| Forecast and chat | `ternary-bonsai-2-4b-mlx` | `ternary-bonsai-2-4b-mlx` | 8,192 |
 
-If Bonsai is already loaded at **87,040 tokens with 4 parallel predictions**, the launcher replaces that instance when it prepares the models. It requests 16,384 tokens and one parallel prediction slot for Bonsai. Older servers that reject the slot option use their own parallelism default.
+If Bonsai is already loaded at **87,040 tokens with 4 parallel predictions**, start the launcher as shown. The first Qwen request unloads that instance. When the chat stage runs, the planner requests an 8,192-token Bonsai context and one parallel prediction slot. Older servers that reject the slot option use their own parallelism default.
 
-Daily plan chat, analytics chat and forecasts share the same model loader. By default the planner waits for any active inference, unloads other models on the same server and sends each request to the instance Bionic returns. A compatible loaded instance is reused. General distraction rankings come directly from the activity records in the selected history and can be answered without loading a model.
-
-**Keep all three models in memory.** With Bionic running on port 1235, stop Streamlit with Ctrl+C and run this check on the Mac. It performs one inference with each model and checks the final server inventory for all three at the context sizes above. Download sizes alone do not tell you how much unified memory those contexts and their compute buffers need.
-
-```bash
-bash run-bionic-mac.sh --resident --check
-```
-
-If the check passes, run `bash run-bionic-mac.sh --resident`. The planner still processes one model request at a time, but can switch between loaded models without reloading their weights. If the check fails, `bash run-bionic-mac.sh` starts the usual one-model-at-a-time mode. Both modes use the same saved planner history.
+Daily plan chat, analytics chat and forecasts share the same model loader. A chat request that needs Bonsai waits for any active inference, unloads other models on the same server, and uses the Bonsai instance Bionic returns. A compatible loaded instance is reused. General distraction rankings come directly from the activity records in the selected history and can be answered without loading a model.
 
 **Switch between local and hosted runs.** The launcher sets `PLANNER_SINGLE_MODEL=1` and points all three inference endpoints to port 1235. Its two `-live` IDs try Qwen and Kev on your Mac first. If a live request fails, an exact match in the shipped examples can supply the missing embedding or decision. The task card shows when its history lookup used those precomputed results. New or edited inputs need a matching record or a working local model. The launcher uses `$HOME/Library/Application Support/Plan Smarter/lmstudio-live` for your planner database and vector index, so restarting preserves the live run. For a cold run in a separate folder, use `PLANNER_DATA_DIR="$HOME/Library/Application Support/Plan Smarter/lmstudio-live-fresh" bash run-bionic-mac.sh`. To return to the precomputed examples plus Cohere, stop Streamlit with Ctrl+C and launch `.venv/bin/python -m streamlit run app.py` from a fresh Terminal with your usual repo-root `.env` and Cohere key. The launcher leaves that file untouched.
 
@@ -91,7 +74,7 @@ If the check passes, run `bash run-bionic-mac.sh --resident`. The planner still 
 
 **If a model fails to load.** In Terminal, run `curl -fsS http://127.0.0.1:1235/api/v1/models | python3 -m json.tool`. Check that the inventory lists Qwen as an embedding model, Kev as a decision model and Bonsai as an LLM. The `key` identifies the downloaded weights. An empty `loaded_instances` list means the model is unloaded. In `lms ps`, `IDLE` means the instance is still in memory. If a GGUF is missing, check `lms ls --embedding`, `lms ls --decision` and the models directory in Bionic. Qwen and Kev use the llama.cpp runtime. If needed, install it with `lms runtime get llama.cpp --yes`. [Model inventory](https://lmstudio.ai/docs/developer/rest/list) · [Bionic model downloads](https://lmstudio.ai/docs/bionic/models/download-local-models)
 
-For Qwen on this Mac, an 8,192-token context previously caused the engine to request a 10,371 MiB compute buffer. If 4,096 is too large, `PLANNER_EMBEDDING_CONTEXT_LENGTH=2048 bash run-bionic-mac.sh` starts the planner at the previously working Qwen setting. That setting fits all 25 bundled Nora tasks, including the longest embedding input at 1,752 tokens. With a smaller context, Bionic can truncate a long input. The planner accepts the valid vector it returns. To inspect a load failure, run `lms log stream --source runtime` in a second Terminal and retry the check. [LM Studio server logs](https://lmstudio.ai/docs/cli/serve/log-stream)
+For Qwen on this Mac, an 8,192-token context previously caused the engine to request a 10,371 MiB compute buffer. The launcher's 2,048-token setting fits all 25 bundled Nora tasks, including the longest embedding input at 1,752 tokens. For a smaller diagnostic, try `PLANNER_EMBEDDING_CONTEXT_LENGTH=1024 bash run-bionic-mac.sh --check`. With a smaller context, Bionic can truncate a long input. The planner accepts the valid vector it returns. To inspect a load failure, run `lms log stream --source runtime` in a second Terminal and retry the check. [LM Studio server logs](https://lmstudio.ai/docs/cli/serve/log-stream)
 
 ## Run on Windows
 
