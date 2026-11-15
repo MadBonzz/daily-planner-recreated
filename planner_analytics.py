@@ -355,7 +355,8 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
                     if still_current is not None and not still_current():
                         return {"answer": "Your planner records changed. Please ask again."}
                     reply = handle_request(intent, question, history, files or {}, plan, create_categories or [],
-                                           _chat_reply, tasks=task_catalog)
+                                           _chat_reply, tasks=task_catalog,
+                                           ground_creation=intent == "create_task" and using_local_bonsai())
                     return {**result, "query_source": "model", "answer_source": "model", **reply}
         except ModelResponseInvalid as exc:
             if not using_local_bonsai():

@@ -1,4 +1,4 @@
-"""Serialize planner requests to a single resident model on a local LM Studio server."""
+"""Manage local LM Studio instances and serialize inference on the same server."""
 
 import json
 import os
@@ -33,9 +33,9 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 _ROLES = {
-    "embedding": ("PLANNER_EMBEDDING_MODEL_KEY", "PLANNER_EMBEDDING_CONTEXT_LENGTH", 2048),
+    "embedding": ("PLANNER_EMBEDDING_MODEL_KEY", "PLANNER_EMBEDDING_CONTEXT_LENGTH", 4096),
     "decision": ("PLANNER_DECISION_MODEL_KEY", "PLANNER_DECISION_CONTEXT_LENGTH", 4096),
-    "llm": ("PLANNER_MODEL_KEY", "PLANNER_CHAT_CONTEXT_LENGTH", 8192),
+    "llm": ("PLANNER_MODEL_KEY", "PLANNER_CHAT_CONTEXT_LENGTH", 16384),
 }
 _active = threading.local()
 
@@ -110,9 +110,7 @@ def _installed_model(models, requested, explicit_key, kind):
     return matches[0]
 
 
-def _prepare(origin, model, key, kind, context, timeout):
-    client = build_opener(ProxyHandler({}), NoRedirect())
-    url = origin + "/api/v1/models"
+def _inventory(client, url, timeout):
     inventory = _api(client, url, timeout)
     try:
         models = inventory["models"]
@@ -121,23 +119,82 @@ def _prepare(origin, model, key, kind, context, timeout):
         # Validate the inventory before changing it. Silently skipping a malformed
         # entry could leave an unknown model resident while a new one loads.
         for entry in models:
-            if not isinstance(entry["key"], str) or not isinstance(entry["loaded_instances"], list):
+            if (not isinstance(entry["key"], str) or not isinstance(entry["type"], str)
+                    or not isinstance(entry["loaded_instances"], list)):
                 raise TypeError
             for instance in entry["loaded_instances"]:
                 if not isinstance(instance["id"], str) or not instance["id"]:
                     raise TypeError
-        target = _installed_model(models, model, key, kind)
-        ready = []
-        for instance in target["loaded_instances"]:
-            settings = instance.get("config") or {}
-            if settings.get("context_length") == context and (kind != "llm" or settings.get("parallel", 1) == 1):
-                ready.append(instance["id"])
-        keep = model if model in ready else next(iter(ready), None)
-        resident = {i["id"] for entry in models for i in entry["loaded_instances"]}
+                if not isinstance(instance.get("config") or {}, dict):
+                    raise TypeError
+        return models
     except (KeyError, TypeError, AttributeError) as exc:
         raise ModelUnavailable(f"LM Studio returned an invalid model inventory at {url}.") from exc
 
-    for instance_id in sorted(resident - {keep}):
+
+def _role_config(config, kind, model=None):
+    key_setting, context_setting, default_context = _ROLES[kind]
+    try:
+        context = int(config.get(context_setting) or default_context)
+        if context < 1:
+            raise ValueError
+    except (TypeError, ValueError) as exc:
+        raise ModelUnavailable(f"{context_setting} must be a positive integer.") from exc
+    key = config.get(key_setting)
+    return kind, model or config.get(key_setting.removesuffix("_KEY")) or key, key, context
+
+
+def _compatible_instance(models, request):
+    kind, model, key, context = request
+    if not model:
+        raise ModelUnavailable(f"Set {_ROLES[kind][0]} for the managed {kind} model.")
+    target = _installed_model(models, model, key, kind)
+    ready = []
+    for instance in target["loaded_instances"]:
+        settings = instance.get("config") or {}
+        if settings.get("context_length") == context and (kind != "llm" or settings.get("parallel", 1) == 1):
+            ready.append(instance["id"])
+    return target, model if model in ready else next(iter(ready), None)
+
+
+def check_residency(endpoint, config):
+    """Confirm the three configured models are present together at their requested settings."""
+    if not is_managed(endpoint, config):
+        raise ModelUnavailable("Resident checks require managed local model endpoints.")
+    url = urlsplit(endpoint)
+    origin = f"{url.scheme}://{url.netloc}"
+    port = url.port or (443 if url.scheme == "https" else 80)
+    with _port_lock(port):
+        models = _inventory(build_opener(ProxyHandler({}), NoRedirect()), origin + "/api/v1/models",
+                            float(config.get("PLANNER_MODEL_TIMEOUT_SECONDS") or 90))
+        expected = set()
+        for kind in _ROLES:
+            request = _role_config(config, kind)
+            target, instance = _compatible_instance(models, request)
+            if instance is None:
+                raise ModelUnavailable(f"{target['key']} is no longer loaded at the requested settings. "
+                                       "Check Bionic's memory or auto-eviction settings, or use single-model mode.")
+            expected.add(instance)
+        resident = {i["id"] for entry in models for i in entry["loaded_instances"]}
+        if resident != expected:
+            raise ModelUnavailable("The native inventory contains extra loaded instances on the planner server.")
+        return sorted(expected)
+
+
+def _prepare(origin, request, config, timeout):
+    kind, _, _, context = request
+    client = build_opener(ProxyHandler({}), NoRedirect())
+    url = origin + "/api/v1/models"
+    models = _inventory(client, url, timeout)
+    target, keep = _compatible_instance(models, request)
+    retained = {keep}
+    if config.get("PLANNER_KEEP_MODELS_LOADED") == "1":
+        for other in _ROLES:
+            if other != kind:
+                _, instance = _compatible_instance(models, _role_config(config, other))
+                retained.add(instance)
+    resident = {i["id"] for entry in models for i in entry["loaded_instances"]}
+    for instance_id in sorted(resident - retained):
         _api(client, url + "/unload", timeout, {"instance_id": instance_id})
     if keep is not None:
         return keep
@@ -169,15 +226,7 @@ def managed_model(endpoint, model, config, *, kind, timeout):
     url = urlsplit(endpoint)
     origin = f"{url.scheme}://{url.netloc}"
     port = url.port or (443 if url.scheme == "https" else 80)
-    key_setting, context_setting, default_context = _ROLES[kind]
-    try:
-        context = int(config.get(context_setting) or default_context)
-        if context < 1:
-            raise ValueError
-    except (TypeError, ValueError) as exc:
-        raise ModelUnavailable(f"{context_setting} must be a positive integer.") from exc
-    key = config.get(key_setting)
-    request = (kind, model, key, context)
+    request = _role_config(config, kind, model)
     if not hasattr(_active, "servers"):
         _active.servers = {}
     if port in _active.servers:
@@ -188,7 +237,7 @@ def managed_model(endpoint, model, config, *, kind, timeout):
         return
 
     with _port_lock(port):
-        instance = _prepare(origin, model, key, kind, context, timeout)
+        instance = _prepare(origin, request, config, timeout)
         _active.servers[port] = request, instance
         try:
             yield instance

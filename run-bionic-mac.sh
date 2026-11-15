@@ -10,6 +10,7 @@ fi
 
 base_url=http://127.0.0.1:1235/v1
 export PLANNER_SINGLE_MODEL=1
+export PLANNER_KEEP_MODELS_LOADED=0
 export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
 export PLANNER_EMBEDDING_MODEL_KEY=text-embedding-qwen3-embedding-0.6b
 export PLANNER_EMBEDDING_ENDPOINT="$base_url/embeddings"
@@ -22,8 +23,15 @@ export PLANNER_MODEL_ENDPOINT="$base_url/chat/completions"
 export PLANNER_MODEL_TIMEOUT_SECONDS="${PLANNER_MODEL_TIMEOUT_SECONDS:-360}"
 export PLANNER_DATA_DIR="${PLANNER_DATA_DIR:-$HOME/Library/Application Support/Plan Smarter/lmstudio-live}"
 
-case "${1:-}" in
-    --check) exec .venv/bin/python -m examples.estimation.check_local_models ;;
-    "") exec .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 ;;
-    *) echo "Usage: bash run-bionic-mac.sh [--check]" >&2; exit 2 ;;
-esac
+check=0
+for option in "$@"; do
+    case "$option" in
+        --resident) export PLANNER_KEEP_MODELS_LOADED=1 ;;
+        --check) check=1 ;;
+        *) echo "Usage: bash run-bionic-mac.sh [--resident] [--check]" >&2; exit 2 ;;
+    esac
+done
+if [[ "$check" == 1 ]]; then
+    exec .venv/bin/python -m examples.estimation.check_local_models
+fi
+exec .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
