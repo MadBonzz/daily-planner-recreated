@@ -1,6 +1,6 @@
 # Local task relevance evaluation
 
-Plan Smarter enforces a **minimum cosine similarity of 0.70** for automatic retrieval. At that setting Qwen sent eight of the 72 held-out pairs to Kev. Kev accepted all six labeled matches in those eight and rejected both distractors. Across the 24 labeled matches in the held-out set, end-to-end **recall was 25% and precision was 100%**. The other 18 matches fell below the cosine cutoff. Five of the nine flexible validation tasks received no automatic candidates.
+This evaluation measured automatic retrieval at a **minimum cosine similarity of 0.70**. At that setting Qwen sent eight of the 72 held-out pairs to Kev. Kev accepted all six labeled matches in those eight and rejected both distractors. Across the 24 labeled matches in the held-out set, end-to-end **recall was 25% and precision was 100%**. The other 18 matches fell below the cosine cutoff. Five of the nine flexible validation tasks received no automatic candidates.
 
 The [operating point and eight individual Kev decisions](operating-point.json) were derived from saved model responses. The earlier experiment used a 0.45 cutoff, so it already included every candidate that clears 0.70. Rescoring used the original decisions for exactly those eight pairs.
 
@@ -9,7 +9,7 @@ The [operating point and eight individual Kev decisions](operating-point.json) w
 | 0.40 | 95.8% | 46.0% | 0.79 | 95.8% | 59.0% | 39 |
 | 0.45 (experimental F2 maximum) | 95.8% | 54.8% | 0.83 | 87.5% | 61.8% | 34 |
 | 0.50 | 87.5% | 55.3% | 0.78 | 79.2% | 76.0% | 25 |
-| **0.70 (app minimum)** | **29.2%** | **70.0%** | **0.33** | **25.0%** | **75.0%** | **8** |
+| **0.70 (evaluated minimum)** | **29.2%** | **70.0%** | **0.33** | **25.0%** | **75.0%** | **8** |
 | 0.80 | 8.3% | 50.0% | 0.10 | 8.3% | 50.0% | 4 |
 | 0.85 | 8.3% | 50.0% | 0.10 | 8.3% | 50.0% | 4 |
 | 0.90 | 8.3% | 66.7% | 0.10 | 4.2% | 100% | 1 |

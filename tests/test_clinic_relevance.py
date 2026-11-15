@@ -37,17 +37,17 @@ def test_unknown_decisions_stay_unknown(reply):
         retrieval.decide_related({"title": "Study"}, {"title": "Study"})
 
 
-@pytest.mark.parametrize("configured,expected", [(None, 0.70), ("0.45", 0.70), ("0.69", 0.70),
+@pytest.mark.parametrize("configured,expected", [(None, 0.50), ("0.45", 0.50), ("0.50", 0.50),
                                                 ("0.70", 0.70), ("0.85", 0.85), ("1", 1.0)])
 def test_retrieval_floor_including_older_settings(configured, expected):
     assert retrieval.relevance_threshold({"PLANNER_RELEVANCE_THRESHOLD": configured}) == expected
 
 
-def test_even_an_old_cutoff_cannot_admit_a_candidate_below_seventy_percent(tmp_path, monkeypatch):
+def test_even_an_old_cutoff_cannot_admit_a_candidate_below_the_half_cosine_floor(tmp_path, monkeypatch):
     import math
 
     target = {"id": "target", "title": "Fill a form", "estimate_minutes": 12}
-    rows = [{**target, "id": "below", "cosine": 0.69}, {**target, "id": "above", "cosine": 0.71}]
+    rows = [{**target, "id": "below", "cosine": 0.49}, {**target, "id": "above", "cosine": 0.51}]
     def embed(task, config):
         cosine = task.get("cosine", 1)
         return [cosine, math.sqrt(1 - cosine ** 2)]

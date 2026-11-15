@@ -26,7 +26,7 @@ LEGACY_COLLECTION = "planner_tasks_v1"
 INDEX_LOCK = threading.RLock()
 EMBEDDING_MODEL = "qwen3-embedding-0.6b"
 DECISION_MODEL = "kev-4b"
-MINIMUM_THRESHOLD = 0.70
+MINIMUM_THRESHOLD = 0.50
 _FIELDS = (("Title", "title"), ("Description", "description"), ("Details", "details"), ("Documents", "pdf_text"))
 
 
