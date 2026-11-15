@@ -1,0 +1,130 @@
+{
+  "all": {
+    "before": {
+      "tasks": 20,
+      "mae": 15.65,
+      "user_mae": 15.75,
+      "category_mae": 13.55,
+      "coverage": 5,
+      "mean_range_width": 11.65,
+      "keeps_user_budget": 12,
+      "flexible_with_timing_evidence": 19
+    },
+    "after": {
+      "tasks": 20,
+      "mae": 16.4,
+      "user_mae": 15.75,
+      "category_mae": 13.55,
+      "coverage": 5,
+      "mean_range_width": 11.1,
+      "keeps_user_budget": 8,
+      "flexible_with_timing_evidence": 9
+    },
+    "paired": {
+      "Same error": 11,
+      "Closer": 3,
+      "Further": 6
+    }
+  },
+  "flexible": {
+    "before": {
+      "tasks": 19,
+      "mae": 16.474,
+      "user_mae": 16.579,
+      "category_mae": 14.263,
+      "coverage": 4,
+      "mean_range_width": 12.263,
+      "keeps_user_budget": 11,
+      "flexible_with_timing_evidence": 19
+    },
+    "after": {
+      "tasks": 19,
+      "mae": 17.263,
+      "user_mae": 16.579,
+      "category_mae": 14.263,
+      "coverage": 4,
+      "mean_range_width": 11.684,
+      "keeps_user_budget": 7,
+      "flexible_with_timing_evidence": 9
+    },
+    "paired": {
+      "Same error": 10,
+      "Closer": 3,
+      "Further": 6
+    }
+  },
+  "retrieval_validation_profiles": {
+    "before": {
+      "tasks": 10,
+      "mae": 12.1,
+      "user_mae": 15.1,
+      "category_mae": 12.3,
+      "coverage": 4,
+      "mean_range_width": 10.4,
+      "keeps_user_budget": 7,
+      "flexible_with_timing_evidence": 9
+    },
+    "after": {
+      "tasks": 10,
+      "mae": 14,
+      "user_mae": 15.1,
+      "category_mae": 12.3,
+      "coverage": 2,
+      "mean_range_width": 10.1,
+      "keeps_user_budget": 5,
+      "flexible_with_timing_evidence": 4
+    },
+    "paired": {
+      "Same error": 6,
+      "Further": 4
+    }
+  },
+  "both_model": {
+    "before": {
+      "tasks": 18,
+      "mae": 16.778,
+      "user_mae": 16.722,
+      "category_mae": 13.667,
+      "coverage": 3,
+      "mean_range_width": 11,
+      "keeps_user_budget": 11,
+      "flexible_with_timing_evidence": 18
+    },
+    "after": {
+      "tasks": 18,
+      "mae": 17.444,
+      "user_mae": 16.722,
+      "category_mae": 13.667,
+      "coverage": 4,
+      "mean_range_width": 11.778,
+      "keeps_user_budget": 6,
+      "flexible_with_timing_evidence": 9
+    },
+    "paired": {
+      "Same error": 10,
+      "Closer": 3,
+      "Further": 5
+    }
+  },
+  "transport_retries": [
+    [
+      "before",
+      "metrics-club",
+      "unavailable",
+      "api.cohere.ai returned HTTP 500 for command-r7b-12-2024.",
+      null
+    ],
+    [
+      "before",
+      "bridge-trace",
+      "unavailable",
+      "api.cohere.ai returned HTTP 500 for command-r7b-12-2024.",
+      null
+    ]
+  ],
+  "shared_input_trees": {
+    "histories": "549b9649b98e4cfcf71c85fba2c7b92a1efc32b4",
+    "activitywatch": "a113b9db78920b8cfa77da4791be6cf7f1b1d50d",
+    "pdfs": "bcfd71d7d6c9046ff34cc8f6719933c6a89e9d18"
+  }
+}

@@ -4,6 +4,7 @@ Each suite has a report comparing the same held-out tasks across runs. Each run 
 
 | Suite | Cases | Reports and records |
 | --- | ---: | --- |
+| Held-out forecast quality before and after Qwen + Kev · Command R7B | 20 paired tasks in 10 histories | [Paired forecast report and case records](holdouts/2026-11-15-command-r7b-paired-070/) |
 | Chronological clinic replay · Cohere, Qwen3 and Kev | 40 actions, 9 completed tasks | [Run, forecast changes and accuracy](replay/2026-11-15-clinic-command-r7b-070/) |
 | Local task relevance · Qwen3 and Kev | 19 holdouts, 150 within-profile pairs | [Threshold calibration and held-out decisions](retrieval/2026-11-15-qwen06b-kev4b/) |
 | V3 · Model-generated point, range, confidence and warnings | 8 Cohere checks, 20 offline cases | [Report and run status](v3/README.md) · [Live Cohere checks](v3/runs/2026-11-14-cohere-direct-release/) |
