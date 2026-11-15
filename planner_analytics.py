@@ -500,7 +500,7 @@ def _explain_distractions(result, payload):
         observations.append(f"{row['device']} · {source} — {row['minutes']:g} min across {tasks} on {days}.")
     if not observations:
         return {**result, "answer": "The query found labeled distractions. Inspect the matching rows below."}
-    if result["query_source"] == "local records":
+    if result.get("query_source") == "local records":
         return {**result, "answer_source": "local records",
                 "answer": "Top recorded distractions by off-task time:\n\n" +
                           "\n".join("- " + finding for finding in observations[:5])}
@@ -544,7 +544,7 @@ def _explain_empty(result, payload, labels, tasks, logs):
                  f"These {len(tasks)} completed tasks have zero visible intervals classified as off-task."]
     else:
         facts = ["The selected data did not yield a matching result for this query."]
-    if result["query_source"] == "local records":
+    if result.get("query_source") == "local records":
         return {**result, "answer_source": "local records", "answer": facts[0]}
     guidance = ["Try a wider date range or another category.",
                 "Review the activity classifications on the completed tasks.",
