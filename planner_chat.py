@@ -226,10 +226,9 @@ def _priority_schema(rows):
 def _rank_plan(rows, data, chat_json, still_current=None):
     """Keep a valid ordered response. Repair a missing, duplicate or unknown task once."""
     payload = {"role": "user", "content": json.dumps(data, ensure_ascii=False)}
-    output_limit = max(900, min(3200, len(rows) * 42))
     try:
         reply = chat_json([{"role": "system", "content": _SEQUENCE_PROMPT}, payload],
-                          _ORDER_SCHEMA, max_tokens=output_limit)
+                          _ORDER_SCHEMA)
         order = reply["order"]
     except ModelResponseInvalid:
         order = []
@@ -250,7 +249,7 @@ def _rank_plan(rows, data, chat_json, still_current=None):
         return None
     try:
         reply = chat_json([{"role": "system", "content": _COVERAGE_PROMPT}, payload],
-                          _priority_schema(rows), max_tokens=output_limit)
+                          _priority_schema(rows))
         ranks = {}
         for row in rows:
             entry = reply["priorities"][str(row["id"])]

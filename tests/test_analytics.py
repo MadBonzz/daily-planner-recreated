@@ -216,3 +216,48 @@ def test_last_week_query_uses_local_calendar_and_preserves_date_constraint():
     messages, schema = model.call_args_list[0].args
     assert json.loads(messages[-1]["content"])["local_calendar"] == _local_calendar(date.today())
     assert schema["properties"]["tool"]["enum"] == ["custom_sql"]
+
+
+def test_nora_distraction_questions_use_the_filtered_records(tmp_path, monkeypatch):
+    from dev_workspace import open_dev_workspace
+    from model_client import ModelResponseTruncated
+    store = open_dev_workspace(tmp_path, "d1-systems-student")
+    tasks, logs = analytics_rows(store.completed_tasks(), [])
+    for question, tool in [
+        ("which websites do I use the most when I get distracted?", "distraction_websites"),
+        ("what are my biggest distractions when working?", "distraction_sources"),
+    ]:
+        def respond(messages, schema):
+            fields = schema["properties"]
+            if set(fields) == {"scope", "tool"}:
+                return {"scope": "all", "tool": tool}
+            raise ModelResponseTruncated("endpoint length limit")
+        monkeypatch.setattr("planner_analytics.chat_json", respond)
+        result = ask_analytics(question, tasks, logs)
+        assert result["rows"] and result["tool"] == tool
+        assert result["answer_source"] == result["query_source"] == "local records"
+        if tool == "distraction_websites":
+            from collections import Counter
+            seconds = Counter()
+            for row in logs:
+                if row["classification"] == "off_task" and row["domain"]:
+                    seconds[row["domain"].lower().removeprefix("www.")] += row["seconds"]
+            domain, duration = seconds.most_common(1)[0]
+            assert result["rows"][0]["website"] == domain and domain in result["answer"]
+            assert result["rows"][0]["minutes"] == round(duration / 60, 1)
+        else:
+            assert result["rows"][0]["minutes"] > 0 and "off-task time" in result["answer"]
+
+
+def test_provider_truncating_a_scoped_plan_retries_with_a_compact_metric_schema(monkeypatch):
+    from model_client import ModelResponseTruncated
+    tasks, logs = _records()
+    logs[0]["classification"] = "off_task"
+    def respond(messages, schema):
+        if "sql" in schema["properties"]:
+            raise ModelResponseTruncated("provider limit")
+        assert set(schema["properties"]) == {"scope", "tool"}
+        return {"scope": "category:Office", "tool": "distraction_websites"}
+    monkeypatch.setattr("planner_analytics.chat_json", respond)
+    result = ask_analytics("Which sites distract me during office work?", tasks, logs)
+    assert result["scope"]["mode"] == "category:Office" and result["rows"][0]["website"] == "docs.example"

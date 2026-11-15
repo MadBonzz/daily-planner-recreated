@@ -41,14 +41,20 @@ NEEDS_DOCUMENT = (
 
 def payload(task, config):
     fields = {k: (task.get(k) or "")[:900] for k in ("title", "description", "details")}
-    fields["attached_pdfs"] = bool(task.get("attachments"))
+    files = task.get("attachments") or []
+    fields["attached_pdfs"] = files if isinstance(files, bool) else any(f.get("kind", "pdf") == "pdf" for f in files)
+    has_text = isinstance(files, list) and any(f.get("kind") == "text" for f in files)
+    if has_text:
+        fields["attached_text_files"] = True
     examples = [{"deliverable": "Review the attached experiment and explain its limitations", "desk": True},
                 {"deliverable": "Draft a short response to a reviewer", "desk": True},
                 {"deliverable": "Clean the stovetop and dishwasher filter", "desk": False},
                 {"deliverable": "Use the attached instructions to time a program on the cluster", "desk": False}]
     questions = {"relevant": {"type": "noul", "instructions": INSTRUCTION},
                  "external": {"type": "noul", "instructions": EXTERNAL}}
-    if not fields["attached_pdfs"]:
+    if has_text:
+        questions["relevant"]["instructions"] += " The desk can also display and discuss the attached text."
+    if not fields["attached_pdfs"] and not has_text:
         # The PDF reader is unavailable here. Judge what the writing desk alone can do.
         questions["external"]["instructions"] = WRITING_EXTERNAL
         questions["needs_document"] = {"type": "noul", "instructions": NEEDS_DOCUMENT}
@@ -106,5 +112,5 @@ def decide(request, config):
                             "If essential material is elsewhere, or the deliverable requires a drawing, "
                             "an annotated image or running software, set eligible to false.")
             answer = chat_json([{"role": "system", "content": instructions},
-                                {"role": "user", "content": request["state"]}], schema, max_tokens=60)
+                                {"role": "user", "content": request["state"]}], schema)
         return answer["eligible"], source["model"]

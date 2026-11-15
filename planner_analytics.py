@@ -8,11 +8,14 @@ from math import isfinite
 import re
 import sqlite3
 import time
+from uuid import uuid4
 
 import streamlit as st
 
 from activity import LABEL_NAMES, device_label, exclusion_terms, visible_saved_event
-from model_client import chat_json, forecast_endpoint, ModelUnavailable
+from model_client import chat_json, forecast_endpoint, ModelResponseTruncated, ModelUnavailable
+from chat_tasks import apply_action, handle_request, route_request
+from task_files import document_text, upload_info
 from planner_chat import answer_plan, asks_what_fits, planning_context
 
 
@@ -162,7 +165,7 @@ def _response_schema(field):
 
 def _plan_schema(categories, *, needs_dates=False, planning=False):
     tools = ["custom_sql"] if needs_dates else [
-        "distraction_sources", "user_estimate_accuracy", "model_estimate_accuracy", "custom_sql"]
+        "distraction_sources", "distraction_websites", "user_estimate_accuracy", "model_estimate_accuracy", "custom_sql"]
     if planning:
         tools.append("plan_remaining")
     return {
@@ -196,6 +199,26 @@ GROUP BY device, site, CASE WHEN site = '' THEN app END,
 ORDER BY minutes DESC, days DESC, tasks DESC, domain, app, window, phone_app"""
 
 
+_DISTRACTION_WEBSITES_SQL = """SELECT
+       CASE WHEN domain LIKE 'www.%' THEN LOWER(SUBSTR(domain, 5)) ELSE LOWER(domain) END AS website,
+       ROUND(SUM(seconds) / 60.0, 1) AS minutes, COUNT(DISTINCT task_id) AS tasks
+FROM logs WHERE classification = 'off_task' AND domain != ''
+GROUP BY website ORDER BY SUM(seconds) DESC, website"""
+
+
+def _general_distraction_tool(question):
+    # These complete, unqualified questions rank the records already filtered on the page.
+    # Additional conditions (a category, date, device, etc.) go through the scoped planner.
+    question = " ".join(question.casefold().split()).strip(" ?!.")
+    if re.fullmatch(r"(?:what|which) (?:websites|sites|domains) (?:do i (?:use|visit) (?:the )?most "
+                    r"(?:when|while) (?:i (?:get|am) )?distracted|distract me (?:the )?most)", question):
+        return "distraction_websites"
+    if re.fullmatch(r"(?:what|which) are my (?:biggest|top|main|most common) distractions"
+                    r"(?: (?:when|while) (?:i(?:'m| am) )?working)?", question):
+        return "distraction_sources"
+    return None
+
+
 def _accuracy_sql(source):
     return f"""WITH errors AS (
   SELECT category, actual_minutes - {source} AS miss FROM tasks
@@ -218,14 +241,14 @@ _PLAN_INSTRUCTIONS = (
     "You select analytics tools for a personal planner. Interpret the question and choose the NARROWEST "
     "matching scope. Consider category_name_matches, and choose the matching subject when the question names one. Use category:<existing category> for questions about a kind of task, individual_tasks "
     "for particular tasks (list their IDs), all for workspace-wide questions, or no_match when no tasks "
-    "fit. IDs are ignored for category scopes. When a question spans several categories use all and write "
+    "fit. Return an empty task_ids array except for individual_tasks. Leave sql empty for built-in tools. When a question spans several categories use all and write "
     "a filtered custom query. A task catalog preview may be truncated; custom SQL can search all records. "
     "For common distractions (what distracted me, sources of off-task time, distractions to watch for "
     "on a type of task), choose tool=distraction_sources and leave sql empty. This tool ranks observed "
     "laptop windows, domains and phone apps by time and includes counts of tasks and days. "
     "For example, in a workspace with categories Chores, Lab work and Reading, 'What pulls me away from "
     "laboratory tasks?' uses scope=category:Lab work and tool=distraction_sources. "
-    "If the requested breakdown specifically limits distractors to websites, a particular device or a "
+    "Choose distraction_websites for the most-used distracting websites by off-task minutes. For a particular device or a "
     "particular time of day, use custom_sql and keep those restrictions. "
     "For questions about my own estimate accuracy, frequency or average size of my overestimates and "
     "underestimates, select user_estimate_accuracy. Use model_estimate_accuracy for the original planner "
@@ -282,9 +305,10 @@ def _local_calendar(today):
         "last_month_ends": last_month_end}.items()}
 
 
-def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan=None):
+def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan=None, files=None, create_categories=None, task_catalog=()):
     """Ask the configured LLM to select scope, query local data and interpret the evidence."""
-    catalog = _catalog(question, tasks)
+    general_tool = _general_distraction_tool(question)
+    catalog = [] if general_tool else _catalog(question, tasks)
     context = {
         "question": question,
         "previous_questions": [{"question": turn["question"], "sql": turn.get("sql", ""),
@@ -313,14 +337,54 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
         result = {"provider": endpoint["provider"], "model": endpoint["model"],
                   "query_source": "unavailable", "answer_source": "local status"}
         try:
-            planned = chat_json([{"role": "system", "content": instructions},
-                                 {"role": "user", "content": json.dumps(context, ensure_ascii=False)}],
-                                _plan_schema(context["categories"], needs_dates=needs_dates, planning=plan is not None), max_tokens=900)
+            if not general_tool and plan is not None and (create_categories is not None or files):
+                intent = route_request(question, history, files or {}, create_categories is not None, chat_json)
+                if intent != "plan_or_history":
+                    if still_current is not None and not still_current():
+                        return {"answer": "Your planner records changed. Please ask again."}
+                    reply = handle_request(intent, question, history, files or {}, plan, create_categories or [],
+                                           chat_json, tasks=task_catalog)
+                    return {**result, **reply, "query_source": "model", "answer_source": "model"}
+        except ModelUnavailable as exc:
+            return {**result, "answer": f"The model could not process this request. {exc}"}
+        try:
+            if general_tool:
+                planned = {"scope": "all", "tool": general_tool, "task_ids": [], "sql": ""}
+            else:
+                planned = chat_json([{"role": "system", "content": instructions},
+                                     {"role": "user", "content": json.dumps(context, ensure_ascii=False)}],
+                                    _plan_schema(context["categories"], needs_dates=needs_dates, planning=plan is not None))
+        except ModelResponseTruncated as exc:
+            # A provider can still truncate its own output. Retry common history metrics
+            # without asking it to generate SQL or enumerate a whole catalog of task IDs.
+            if still_current is not None and not still_current():
+                return {"answer": "Your analytics records changed. Ask again using the current data."}
+            if needs_dates:
+                return {**result, "answer": f"The model could not plan this query. {exc}"}
+            schema = _plan_schema(context["categories"])
+            schema["properties"] = {k: schema["properties"][k] for k in ("scope", "tool")}
+            schema["required"] = ["scope", "tool"]
+            schema["properties"]["scope"]["enum"].remove("individual_tasks")
+            schema["properties"]["tool"]["enum"].remove("custom_sql")
+            schema["properties"]["tool"]["enum"].append("unsupported")
+            try:
+                short = chat_json([{"role": "system", "content":
+                    "Select a metric for this history question. distraction_websites ranks only website domains "
+                    "by off-task time. distraction_sources includes websites, desktop activity, and phone apps. "
+                    "Use scope all unless the user asks for a specific category. Use unsupported for questions "
+                    "requiring additional filters, a specific task, a different metric or changes to the plan."},
+                    {"role": "user", "content": json.dumps({"question": question, "previous_questions":
+                     context["previous_questions"], "categories": context["categories"]})}], schema)
+            except ModelUnavailable as retry_error:
+                return {**result, "answer": f"The model could not plan this query. {retry_error}"}
+            if short["tool"] == "unsupported":
+                return {**result, "answer": f"The model could not plan this query. {exc}"}
+            planned = {**short, "task_ids": [], "sql": ""}
         except ModelUnavailable as exc:
             return {**result, "answer": f"The model could not plan this query. {exc}"}
         if still_current is not None and not still_current():
             return {"answer": "Your analytics records changed. Ask again using the current data."}
-        result["query_source"] = "model"
+        result["query_source"] = "local records" if general_tool else "model"
         explicit_fit = plan is not None and asks_what_fits(question, plan["now"].date())
         if plan is not None and (planned["tool"] == "plan_remaining" or explicit_fit):
             if planned["tool"] != "plan_remaining":
@@ -344,6 +408,8 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
         result["tool"] = tool
         if tool == "distraction_sources":
             sql = _DISTRACTION_SQL
+        elif tool == "distraction_websites":
+            sql = _DISTRACTION_WEBSITES_SQL
         elif tool in {"user_estimate_accuracy", "model_estimate_accuracy"}:
             source = "user_minutes" if tool == "user_estimate_accuracy" else "model_minutes"
             sql = _accuracy_sql(source)
@@ -399,6 +465,10 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
             return {"answer": "Your analytics records changed. Ask again using the current data."}
         if not evidence or all(value is None for row in evidence for value in row.values()):
             return _explain_empty(result, payload, labels, tasks, logs)
+        if tool == "distraction_websites":
+            answer = "Websites ranked by recorded off-task time:\n\n" + "\n".join(
+                f"- {row['website']} — {row['minutes']:g} min" for row in evidence)
+            return {**result, "answer_source": "local records", "answer": answer}
         if tool == "distraction_sources":
             return _explain_distractions(result, payload)
         try:
@@ -430,6 +500,10 @@ def _explain_distractions(result, payload):
         observations.append(f"{row['device']} · {source} — {row['minutes']:g} min across {tasks} on {days}.")
     if not observations:
         return {**result, "answer": "The query found labeled distractions. Inspect the matching rows below."}
+    if result["query_source"] == "local records":
+        return {**result, "answer_source": "local records",
+                "answer": "Top recorded distractions by off-task time:\n\n" +
+                          "\n".join("- " + finding for finding in observations[:5])}
     schema = {"type": "object", "additionalProperties": False, "required": ["finding_ids"],
               "properties": {"finding_ids": {"type": "array", "items": {"type": "integer"}}}}
     try:
@@ -440,6 +514,10 @@ def _explain_distractions(result, payload):
                                                     "available_findings": [{"id": i, "finding": text}
                                                                            for i, text in enumerate(observations, 1)]},
                                                    ensure_ascii=False)}], schema)
+    except ModelResponseTruncated:
+        return {**result, "answer_source": "local records",
+                "answer": "Top recorded distractions by off-task time:\n\n" +
+                          "\n".join("- " + finding for finding in observations[:5])}
     except ModelUnavailable as exc:
         return {**result, "answer": f"The model could not interpret these query results. {exc}"}
     indices = dict.fromkeys(map(int, response["finding_ids"]))
@@ -459,13 +537,15 @@ def _explain_empty(result, payload, labels, tasks, logs):
         facts = ["The model could not form a query for this question using the visible records."]
     elif result["rows"]:
         facts = ["The calculation returned no measured value for the selected records."]
-    elif not logs and result["tool"] == "distraction_sources":
+    elif not logs and result["tool"] in {"distraction_sources", "distraction_websites"}:
         facts = [f"{len(tasks)} completed tasks matched, but their visible activity logs contain no intervals."]
-    elif result["tool"] == "distraction_sources" and not labels["off_task"]:
+    elif result["tool"] in {"distraction_sources", "distraction_websites"} and not labels["off_task"]:
         facts = [f"None of the {len(logs)} visible intervals was labeled a distraction.",
                  f"These {len(tasks)} completed tasks have zero visible intervals classified as off-task."]
     else:
         facts = ["The selected data did not yield a matching result for this query."]
+    if result["query_source"] == "local records":
+        return {**result, "answer_source": "local records", "answer": facts[0]}
     guidance = ["Try a wider date range or another category.",
                 "Review the activity classifications on the completed tasks.",
                 "Inspect the query and current filters below."]
@@ -485,19 +565,23 @@ def _explain_empty(result, payload, labels, tasks, logs):
 def _show_turn(turn):
     with st.chat_message("user"):
         st.text(turn["question"])
+        if turn.get("uploaded_names"):
+            st.caption(" · ".join(turn["uploaded_names"]))
     with st.chat_message("assistant"):
         st.write(turn["answer"])
         if turn.get("provider"):
             model = f"{turn['provider']} · {turn['model']}"
-            query = model if turn.get("query_source") == "model" else "unavailable"
-            tool_name = {"distraction_sources": "distraction summary", "user_estimate_accuracy": "user accuracy summary",
+            query = model if turn.get("query_source") == "model" else turn.get("query_source", "unavailable")
+            tool_name = {"distraction_websites": "website ranking", "distraction_sources": "distraction summary", "user_estimate_accuracy": "user accuracy summary",
                          "model_estimate_accuracy": "model accuracy summary"}.get(turn.get("tool"))
             if tool_name:
                 query += f" (selected {tool_name})"
-            answer = model if turn.get("answer_source") == "model" else "local status"
+            answer = model if turn.get("answer_source") == "model" else turn.get("answer_source", "local status")
             if turn.get("tool") == "distraction_sources" and turn.get("answer_source") == "model":
                 answer += " (selected observed findings)"
-            if turn.get("tool") == "plan_remaining":
+            if turn.get("tool") in {"create_task", "edit_task", "postpone_task", "attachment_question"}:
+                st.caption(model)
+            elif turn.get("tool") == "plan_remaining":
                 route = model if not turn.get("model_proposed_tool") else f"open-plan scope check (model suggested {turn['model_proposed_tool']})"
                 if turn.get("ranking_source") == "model coverage repair":
                     answer += " (second request for missing or invalid ranks)"
@@ -741,10 +825,29 @@ def render_shared_chat(store, plan_day, *, tasks=None, logs=None):
         chat = st.session_state["planner_chat"] = {"scope": scope, "turns": []}
     for turn in chat["turns"]:
         _show_turn(turn)
-    question = st.chat_input("Ask what fits today, or explore your history", max_chars=1500, key="shared_planner_question")
-    if not question:
+    message = st.chat_input("Ask about your plan, add a task, or attach a file", max_chars=3000,
+                            accept_file="multiple", key="shared_planner_question")
+    # Keep file bytes in this conversation until the user assigns them to a task.
+    uploads = chat.setdefault("uploads", {})
+    if message:
+        question = message.text.strip() or "What is in the attached file?"
+        staged = {}
+        try:
+            for upload in message.files:
+                data = upload.getvalue()
+                name, kind = upload_info(upload.name, data)
+                staged[str(len(uploads) + len(staged) + 1)] = {
+                    "name": name, "kind": kind, "data": data, "text": document_text(kind, data)}
+        except ValueError as exc:
+            st.error(str(exc))
+            return
+        uploads.update(staged)
+        chat["pending"] = {"id": str(uuid4()), "question": question, "uploads": list(staged)}
+    pending = chat.get("pending")
+    if pending is None:
         return
-
+    question = pending["question"]
+    files = {key: {**item, "current": key in pending["uploads"]} for key, item in uploads.items()}
     def still_current():
         return (revision == store.get_setting("memory_revision", 0)
                 and exclusions == store.get_setting("exclusions", []))
@@ -755,13 +858,23 @@ def render_shared_chat(store, plan_day, *, tasks=None, logs=None):
             all_tasks, all_logs = analytics_rows(store.completed_tasks(), exclusions)
             tasks, logs = _filter_history(all_tasks, all_logs, filters)
         now = datetime.fromtimestamp(store.clock())
-        plan = planning_context(store.list_tasks(), plan_day, now)
+        task_catalog = store.list_tasks()
+        plan = planning_context(task_catalog, plan_day, now)
         try:
-            result = ask_analytics(question, tasks, logs, chat["turns"], still_current=still_current, plan=plan)
-        except ModelUnavailable as exc:
-            result = {"answer": f"The configured model is unavailable. {exc}"}
+            categories = None if store.get_setting("dev_replay_enabled", False) else store.list_categories()
+            result = ask_analytics(question, tasks, logs, chat["turns"], still_current=still_current, plan=plan,
+                                   files=files, create_categories=categories, task_catalog=task_catalog)
+            if not still_current():
+                st.rerun()
+            if categories is not None:
+                result = apply_action(store, result, files, pending["id"])
+        except (ModelUnavailable, ValueError, sqlite3.Error) as exc:
+            result = {"answer": f"I couldn’t complete that request. {exc}"}
     if not still_current():
         st.rerun()
-    turn = {"question": question, **result}
+    turn = {"question": question, **result, "uploaded_names": [files[k]["name"] for k in pending["uploads"]]}
     chat["turns"].append(turn)
+    chat.pop("pending", None)
+    if result.get("affected_task_id"):
+        st.rerun()
     _show_turn(turn)

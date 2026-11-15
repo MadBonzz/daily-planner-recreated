@@ -183,7 +183,7 @@ def evaluate(case, destination, model, *, integrated=False, solo=False):
     def record(messages, schema, **options):
         payload = {"messages": messages, "schema": schema, "options": options, "model": model}
         digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
-        receipt = {"request_sha256": digest, "max_tokens": options["max_tokens"]}
+        receipt = {"request_sha256": digest}
         receipts.append(receipt)
         start = time.monotonic()
         try:

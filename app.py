@@ -168,40 +168,58 @@ def show_prediction(prediction):
         st.caption("This saved forecast did not record the reason for its confidence rating.")
 
 
-@st.dialog("Add task", width="large")
-def new_task(store, day):
-    with st.form("new_task_form"):
-        title = st.text_input("Task name", required=True, placeholder="Read the optimization paper")
-        description = st.text_area("Description", required=True, placeholder="What do you want to finish?", height=86)
+def task_form(store, day, task=None):
+    values = task or {}
+    key = values.get("id", "new")
+    with st.form(f"task-fields-{key}"):
+        title = st.text_input("Task name", value=values.get("title", ""), required=True,
+                              placeholder="Read the optimization paper")
+        description = st.text_area("Description", value=values.get("description", ""), required=True,
+                                   placeholder="What do you want to finish?", height=86)
         left, right = st.columns(2)
-        estimate = left.number_input("Duration (minutes)", min_value=1, value=None, step=1,
-                                     required=True, placeholder="e.g. 30")
-        category = right.selectbox("Category", store.list_categories(), index=None, required=True,
-                                   placeholder="Choose a category",
-                                   help="Add categories in Planner settings.")
-        fixed = st.checkbox("Fixed duration", help="Use the scheduled length exactly, such as for a screening. Leave this off for meetings that can run over.")
-        details = st.text_area("More details (optional)", height=80,
-                               placeholder="Which sections matter? How familiar are you with this work?")
-        files = st.file_uploader("Attach PDFs (optional)", type=["pdf"], accept_multiple_files=True,
-                                 help="Readable text from the documents can inform the estimate.")
-        submitted = st.form_submit_button("Create task", type="primary")
+        estimate = left.number_input("Duration (minutes)", min_value=0.01, value=values.get("estimate_minutes"),
+                                     step=1.0, required=True, placeholder="e.g. 30")
+        categories = store.list_categories()
+        current = values.get("category")
+        category = right.selectbox("Category", categories, index=categories.index(current) if current in categories else None,
+                                   required=not task, placeholder="Choose a category", help="Add categories in Planner settings.")
+        fixed = st.checkbox("Fixed duration", value=values.get("fixed_duration", False),
+                            help="Use the scheduled length exactly, such as for a screening.")
+        details = st.text_area("More details (optional)", value=values.get("details", ""), height=80)
+        existing = {f["id"]: f["name"] for f in values.get("attachments", [])}
+        remove = st.multiselect("Remove existing files", list(existing), format_func=existing.get) if existing else []
+        files = st.file_uploader("Attach files", accept_multiple_files=True,
+                                 help="PDFs and UTF-8 text files can inform estimates. Other files are saved for download.")
+        submitted = st.form_submit_button("Save changes" if task else "Create task", type="primary")
     if not submitted:
         return
-    missing = [label for label, value in (("task name", title.strip()), ("description", description.strip()),
-                                          ("duration in minutes", estimate), ("category", category))
-               if not value]
-    if missing:
-        st.error("Fill in the required fields: " + ", ".join(missing) + ".")
-        return
-    attachments = [(file.name, file.getvalue()) for file in files]
+    fields = dict(title=title, description=description, details=details, category=category or "",
+                  estimate_minutes=estimate, fixed_duration=fixed, attachments=[(f.name, f.getvalue()) for f in files])
     try:
-        store.create_task(title=title.strip(), description=description.strip(), details=details.strip(),
-                          category=category, estimate_minutes=estimate, day=day, fixed_duration=fixed,
-                          attachments=attachments, prediction=None)
+        if task:
+            store.edit_task(key, **fields, expected_revision=task["edit_revision"], remove_ids=remove)
+        else:
+            store.create_task(**fields, day=day)
     except (ValueError, sqlite3.Error, OSError) as error:
         show_error(error)
         return
+    if task:
+        close_task_editor()
     st.rerun()
+
+
+@st.dialog("Add task", width="large")
+def new_task(store, day):
+    task_form(store, day)
+
+
+def close_task_editor():
+    st.session_state.pop("task_editor", None)
+
+
+@st.dialog("Edit task", width="large", on_dismiss=close_task_editor)
+def edit_task(store, task):
+    task_form(store, task["day"], task)
 
 
 def perform(store, task, action, **kwargs):
@@ -782,15 +800,15 @@ def render_task(store, index_dir, task, dev, *, replay=False):
             if task["details"]:
                 st.text(task["details"])
             for item in task["attachments"]:
-                st.download_button("Download PDF", store.attachment_bytes(item["id"]), item["name"],
-                                   mime="application/pdf", key=f"pdf-{item['id']}", on_click="ignore")
-                st.text(item["name"])
-            if not replay and status != "completed":
-                with st.form(f"reschedule-{key}"):
-                    new_day = st.date_input("Scheduled day", value=date.fromisoformat(task["day"]), key=f"date-{key}")
-                    if st.form_submit_button("Move task"):
-                        store.reschedule(key, new_day)
-                        st.rerun()
+                st.download_button(item["name"], store.attachment_bytes(item["id"]), item["name"],
+                                   mime="application/pdf" if item.get("kind") == "pdf" else "application/octet-stream",
+                                   key=f"pdf-{item['id']}", on_click="ignore")
+            if not replay:
+                if st.button("Edit task", key=f"edit-task-{key}"):
+                    st.session_state["task_editor"] = (str(store.path), task)
+                source, opened = st.session_state.get("task_editor", (None, {}))
+                if source == str(store.path) and opened.get("id") == key:
+                    edit_task(store, opened)
 
 
 def replay_controls(store, history_id):

@@ -64,7 +64,7 @@ PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions
 PLANNER_MODEL=command-r7b-12-2024
 ```
 
-The hosted configuration uses **Command R7B** for estimates and activity classification. Command R7B and LM Studio use the same OpenAI-compatible structured request. The client checks each reply against the requested JSON Schema. [Cohere Command R7B](https://docs.cohere.com/v2/docs/command-r7b)
+The hosted configuration uses **Command R7B** for estimates and activity classification. Command R7B and LM Studio use the same OpenAI-compatible structured request. The client checks each reply against the requested JSON Schema. The planner leaves the output-token limit unset for all model calls. The model endpoint controls its own output and context limits. [Cohere Command R7B](https://docs.cohere.com/v2/docs/command-r7b)
 
 After pulling this update, install the updated requirements using your existing virtual environment and restart Streamlit. In **Options → Planner settings**, check the model and host. Create a task and expand **Why this estimate?** to see its source and explanation. To see a forecast with personal timing evidence using only your Cohere key, choose **Dev → Editable history**, open **History details**, pick **Try a sample task** and click **Add sample task**. The package includes the PDFs, Qwen vectors and Kev decisions for those examples. Choose **Re-estimate** to request a fresh Cohere forecast.
 
@@ -203,6 +203,15 @@ On a task card, open **Websites to block during this task** to see the sites sug
 
 Pair the extension once per Chrome or Edge profile under **Options → Planner settings → Browser blocking**. This works within the browser and requires no administrator access. [Install, pair and test the extension](browser_extension/README.md)
 
+## Create and edit tasks in chat
+
+Use the chat at the bottom of **Daily plan** or **Analytics & logs**. For example, upload your assignment PDF and say “Add a task for tomorrow to review the replication protocol. I expect 45 minutes. Attach the assignment PDF.” The reply shows the saved task, date, estimate and attached filenames. If you leave out the estimate, you can supply it in the next message.
+
+- **Edit in chat.** Say “Change the description of Review replication to Compare leader election and recovery, and change my estimate to 60 minutes.” After creating or editing a task, you can also refer to it as “that task.”
+- **Add a file later.** Upload it and say “Attach trace.csv to Review replication.” You can also ask about a file first and then ask to attach it by name. PDFs with extractable text and UTF-8 text files support questions. Other file types can be saved and downloaded.
+- **Postpone in chat.** Say “Postpone Review replication to Friday” or give an exact date. If multiple tasks match, reply with the number from the list. A running task pauses and keeps its tracked time.
+- **Edit on the card.** Open **Task details → Edit task** to change the title, description, notes, category, estimate or fixed duration, and add or remove files. Use **Postpone** on the card to change its scheduled date.
+
 ## Daily review and postponing work
 
 On an unfinished task card, **Postpone** moves the task to tomorrow or a later date you choose. For a task already planned in the future, **Next day** means the day after its scheduled date. Postponing a running task pauses its timer immediately. You can resume it on its new date. Time already tracked remains visible on the days you worked, and the task keeps its estimate, attachments, and comparisons.
@@ -244,7 +253,7 @@ Use the trash icon on a card to remove it from the plan. The confirmation defaul
 * **Editable history** opens a populated calendar with dated tasks, descriptions, notes, PDFs and timer sessions. Go back a day with the arrow or choose a date under **History details**. The day shows tasks added to the plan and tasks worked on that day. Open a card to inspect the synthetic ActivityWatch intervals. Historical reports in this starting view use the fixture's reviewer labels. You can add tasks, finish work and revise classifications. Existing sample annotations refresh when you open a profile. **Reset sample history** restores the whole sample and discards edits in that copy.
 * **Chronological replay** starts a separate copy with an empty planner. **Apply next action** or **Run to end** advances the schedule through real task creation, timers, model forecasts, completion and report generation. Each task's forecast history shows the initial prediction and subsequent revisions, including the evidence the model had at that time. You can leave and resume a replay, or restart it without affecting the editable calendar.
 
-SQLite stores the tasks, attached PDFs, completion notes, work sessions, forecasts and activity reports. Qdrant stores the searchable local task index. Set `PLANNER_DATA_DIR` to choose a different data directory.
+SQLite stores the tasks, attached files, completion notes, work sessions, forecasts and activity reports. Qdrant stores the searchable local task index. Set `PLANNER_DATA_DIR` to choose a different data directory.
 
 ## Analytics & logs
 
@@ -254,7 +263,7 @@ Under **Activity logs**, explore activity by day and the sources of labeled dist
 
 The chat at the bottom of the page shares a conversation between **Daily plan** and **Analytics & logs**. Ask “What distracts me during GPU programming?” or “I have 40 minutes before class. What could I finish, and what should I postpone?” Both pages retain the selected history filters. Changing the filters or erasing a task clears the previous conversation.
 
-For analytics, the configured model selects a scoped metric or writes a read-only SQL query. It interprets the resulting records, including empty results. Expand the supporting data to see the model, scope, SQL and rows. For planning, the model ranks unfinished tasks using the selected date, task details and filtered historical accuracy. Python subtracts recorded progress from each estimate and checks the cumulative fit. You can specify available minutes or a local cutoff. Without an explicit budget, the answer shows the clock time up to midnight. Tasks that have already exhausted their estimate need a new remaining-time estimate. The suggestions leave the actual schedule in your control.
+Broad questions about top distractions or distracting websites rank the filtered activity logs directly by off-task minutes. For other analytics questions, the configured model selects a scoped metric or writes a read-only SQL query. It interprets the resulting records, including empty results. Expand the supporting data to see the model, scope, SQL and rows. For planning, the model ranks unfinished tasks using the selected date, task details and filtered historical accuracy. Python subtracts recorded progress from each estimate and checks the cumulative fit. You can specify available minutes or a local cutoff. Without an explicit budget, the answer shows the clock time up to midnight. Tasks that have already exhausted their estimate need a new remaining-time estimate. The suggestions leave the actual schedule in your control.
 
 ## Evaluate the models
 

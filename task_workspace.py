@@ -18,13 +18,13 @@ _LOCK = threading.Lock()
 _PENDING = set()
 
 
-def _record(store, task_id, fingerprint, allowed, source):
+def _record(store, task_id, fingerprint, allowed, source, *, revision=None):
     with store._db(write=True) as db:
         db.execute("""INSERT INTO task_workspaces(task_id,request_hash,eligible,source,token)
-                      SELECT id,?,?,?,? FROM tasks WHERE id=? AND archived=0
+                      SELECT id,?,?,?,? FROM tasks WHERE id=? AND archived=0 AND (? IS NULL OR edit_revision=?)
                       ON CONFLICT(task_id) DO UPDATE SET request_hash=excluded.request_hash,
                       eligible=excluded.eligible, source=excluded.source""",
-                   (fingerprint, allowed, source, str(uuid4()), task_id))
+                   (fingerprint, allowed, source, str(uuid4()), task_id, revision, revision))
 
 
 def _decide(store, task, request, fingerprint, config, key):
@@ -40,7 +40,7 @@ def _decide(store, task, request, fingerprint, config, key):
             allowed, source = eligibility.decide(request, config)
         except ModelUnavailable as exc:
             allowed, source = None, str(exc)
-        _record(store, task["id"], fingerprint, allowed, source)
+        _record(store, task["id"], fingerprint, allowed, source, revision=task.get("edit_revision", 0))
     finally:
         with _LOCK:
             _PENDING.discard(key)
@@ -61,7 +61,7 @@ def availability(store, task, *, retry=False):
         return dict(row)
     packaged = eligibility.packaged(fingerprint)
     if packaged is not None:
-        _record(store, task["id"], fingerprint, packaged, "Packaged " + request["model"])
+        _record(store, task["id"], fingerprint, packaged, "Packaged " + request["model"], revision=task.get("edit_revision", 0))
         with store._db() as db:
             row = db.execute("SELECT * FROM task_workspaces WHERE task_id=?", (task["id"],)).fetchone()
             return dict(row) if row else {"eligible": False}
@@ -88,7 +88,7 @@ def _chat_scope(db, token, document_id):
                                       WHERE s.task_id=t.id AND p.end IS NULL) AS run
                         FROM task_workspaces w JOIN tasks t ON t.id=w.task_id
                         WHERE w.token=? AND w.eligible=1 AND t.archived=0 AND
-                        ((?='task' AND NOT EXISTS(SELECT 1 FROM attachments a WHERE a.task_id=t.id))
+                        ((?='task' AND NOT EXISTS(SELECT 1 FROM attachments a WHERE a.task_id=t.id AND a.kind IN ('pdf','text')))
                          OR EXISTS(SELECT 1 FROM attachments a WHERE a.id=? AND a.task_id=t.id))""",
                      (token, document_id, document_id)).fetchone()
     if row is None:
@@ -238,7 +238,7 @@ def answer(task, question, *, document=None, text="", draft="", dialogue=()):
     with forecast_endpoint() as source:
         messages = [{"role": "system", "content": instruction}, {"role": "user", "content": json.dumps(body)}]
         for attempt in range(2):
-            result = chat_json(messages, schema, max_tokens=1250)
+            result = chat_json(messages, schema)
             if document is None:
                 return {**source, "answer": result["answer"], "sources": []}
             if not result["supported"]:

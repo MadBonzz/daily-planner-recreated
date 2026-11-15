@@ -8,7 +8,7 @@ import streamlit as st
 from dev_workspace import history_choices, open_dev_workspace
 from estimate_worker import schedule_pending
 from model_client import ModelUnavailable
-from pdf_reader import extract_pdf_text
+from task_files import document_text
 from planner_store import PlannerStore
 import task_workspace as desk
 
@@ -68,7 +68,7 @@ def _chat(store, task, token, filename, text, draft, doc_id):
         return
     st.subheader("Ask about this document" if filename else "Task chat")
     if filename and not text:
-        st.info("This PDF has no readable text for chat. You can still use the reader.")
+        st.info("This document has no readable text for chat. You can still use the reader.")
         return
     feed = st.container(height=470, border=False)
     def bubble(row):
@@ -200,17 +200,23 @@ def display(data_root, *, confirm_stop):
     text = ""
     doc_id = "task"
     with reader:
-        files = {item["id"]: item["name"] for item in task["attachments"]}
+        files = {item["id"]: item for item in task["attachments"] if item.get("kind", "pdf") in {"pdf", "text"}}
         if files:
-            doc_id = (st.selectbox("Document", list(files), format_func=files.get, key="desk-document:" + token)
+            doc_id = (st.selectbox("Document", list(files), format_func=lambda key: files[key]["name"], key="desk-document:" + token)
                       if len(files) > 1 else next(iter(files)))
-            filename = files[doc_id]
+            filename = files[doc_id]["name"]
+            kind = files[doc_id].get("kind", "pdf")
             data = store.attachment_bytes(doc_id)
             cache = "desk-text:" + token + ":" + doc_id
             if cache not in st.session_state:
-                st.session_state[cache] = extract_pdf_text(data)
+                st.session_state[cache] = document_text(kind, data)
             text = st.session_state[cache]
-            st.pdf(data, height=780, key="desk-pdf:" + token + ":" + doc_id, alt=filename)
+            if kind == "pdf":
+                st.pdf(data, height=780, key="desk-pdf:" + token + ":" + doc_id, alt=filename)
+            else:
+                st.text(text)
+                if text:
+                    text = "Page 1: " + " ".join(text.split())
         else:
             if task["details"]:
                 st.write(task["details"])

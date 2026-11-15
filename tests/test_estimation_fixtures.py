@@ -181,8 +181,8 @@ def test_recovered_result_preserves_each_real_response(tmp_path, monkeypatch):
     def exercise(fields, rows, index):
         args = ([{"role": "user", "content": "Synthetic prompt"}], {})
         with pytest.raises(run.ModelUnavailable):
-            run.estimator.chat_json(*args, max_tokens=480)
-        run.estimator.chat_json(*args, max_tokens=120)
+            run.estimator.chat_json(*args)
+        run.estimator.chat_json(*args)
         return {"point_min": 20, "low_min": 10, "high_min": 30,
                 "confidence": "low", "basis": "User estimate", "evidence": []}
     monkeypatch.setattr(run.estimator, "chat_json", response)

@@ -222,7 +222,7 @@ def _model_forecast(task, candidates, observations, timing_context):
     for attempt in range(2):
         try:
             retrieval.check_lease()
-            reply = chat_json(messages, schema, max_tokens=min(4000, max(950, 400 + 60 * len(history))))
+            reply = chat_json(messages, schema)
             return _read_forecast(reply, candidates, sources)
         except (ValueError, ModelResponseInvalid) as error:
             if attempt:

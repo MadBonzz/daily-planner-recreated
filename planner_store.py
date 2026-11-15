@@ -13,6 +13,7 @@ from relevance_feedback import (
     FEEDBACK_SCHEMA, comparison_options, forecast_feedback, related_ids, relevance_examples, save_choices,
 )
 from task_forecasts import scheduled_prediction
+from task_files import upload_info
 
 
 DEFAULT_CATEGORIES = ("Work", "Personal", "Study", "Health", "Creative")
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     id TEXT PRIMARY KEY,
     day TEXT NOT NULL,
     title TEXT NOT NULL,
+    edit_revision INTEGER NOT NULL DEFAULT 0,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
     details TEXT NOT NULL,
@@ -168,9 +170,14 @@ CREATE TABLE IF NOT EXISTS attachments (
     id TEXT PRIMARY KEY,
     task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
     name TEXT NOT NULL,
-    pdf BLOB NOT NULL
+    pdf BLOB NOT NULL,
+    kind TEXT NOT NULL DEFAULT 'pdf'
 );
 CREATE INDEX IF NOT EXISTS task_attachments ON attachments(task_id);
+CREATE TABLE IF NOT EXISTS chat_task_changes (
+    request_id TEXT PRIMARY KEY,
+    task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS vector_purges (task_id TEXT PRIMARY KEY);
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS categories (
@@ -398,6 +405,45 @@ def _correct_total(db, task, seconds, now):
     return seconds
 
 
+def _task_fields(title, description, estimate_minutes):
+    title = title.strip()
+    description = description.strip()
+    if not title or not description:
+        raise ValueError("Enter a task name and description.")
+    estimate_minutes = float(estimate_minutes)
+    if not math.isfinite(estimate_minutes) or estimate_minutes <= 0:
+        raise ValueError("The estimate must be a positive number of minutes.")
+    return title, description, estimate_minutes
+
+
+def _category(db, category):
+    category = (category or "").strip()
+    if category:
+        db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (category.casefold(), category))
+        category = db.execute("SELECT name FROM categories WHERE label_key=?",
+                              (category.casefold(),)).fetchone()[0]
+    return category
+
+
+def _repeat_chat_change(db, submission_id, task_id):
+    if not submission_id:
+        return False
+    inserted = db.execute("INSERT OR IGNORE INTO chat_task_changes VALUES (?,?)", (submission_id, task_id))
+    if not inserted.rowcount:
+        previous = db.execute("SELECT task_id FROM chat_task_changes WHERE request_id=?", (submission_id,)).fetchone()
+        if previous[0] != task_id:
+            raise ValueError("This chat request already changed a different task.")
+        return True
+    return False
+
+
+def _add_files(db, task_id, attachments):
+    for name, data in attachments:
+        name, kind = upload_info(name, data)
+        db.execute("INSERT INTO attachments(id, task_id, name, pdf, kind) VALUES (?,?,?,?,?)",
+                   (str(uuid4()), task_id, name, data, kind))
+
+
 class PlannerStore:
     def __init__(self, data_dir, *, clock=time.time):
         self.data_dir = Path(data_dir)
@@ -414,8 +460,11 @@ class PlannerStore:
             history_columns = {row["name"] for row in db.execute("PRAGMA table_info(prediction_history)")}
             if "snapshot" not in history_columns:
                 db.execute("ALTER TABLE prediction_history ADD COLUMN snapshot TEXT")
+            if "kind" not in {row["name"] for row in db.execute("PRAGMA table_info(attachments)")}:
+                db.execute("ALTER TABLE attachments ADD COLUMN kind TEXT NOT NULL DEFAULT 'pdf'")
             columns = {row["name"] for row in db.execute("PRAGMA table_info(tasks)")}
-            for name, declaration in (("time_edited_at", "REAL"),
+            for name, declaration in (("edit_revision", "INTEGER NOT NULL DEFAULT 0"),
+                                      ("time_edited_at", "REAL"),
                                       ("archived", "INTEGER NOT NULL DEFAULT 0"),
                                       ("pdf_text_version", "INTEGER NOT NULL DEFAULT 0"),
                                       ("fixed_duration", "INTEGER NOT NULL DEFAULT 0"),
@@ -490,7 +539,7 @@ class PlannerStore:
             task.pop("refresh_waiting")
             task["report"] = json.loads(task["report"]) if task["report"] else None
             task["attachments"] = [dict(a) for a in db.execute(
-                "SELECT id, name FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],)
+                "SELECT id, name, kind FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],)
             )]
             tasks.append(task)
         return tasks
@@ -538,26 +587,18 @@ class PlannerStore:
         return self._first_with_status("awaiting_finish")
 
     def create_task(self, *, title, description, estimate_minutes, day, prediction=None,
-                    category="", details="", attachments=(), pdf_text="", fixed_duration=False):
-        title = title.strip()
-        description = description.strip()
-        if not title or not description:
-            raise ValueError("Enter a task name and description.")
-        estimate_minutes = float(estimate_minutes)
-        if not math.isfinite(estimate_minutes) or estimate_minutes <= 0:
-            raise ValueError("The estimate must be a positive number of minutes.")
-        task_id = str(uuid4())
+                    category="", details="", attachments=(), pdf_text="", fixed_duration=False, submission_id=None):
+        title, description, estimate_minutes = _task_fields(title, description, estimate_minutes)
+        task_id = submission_id or str(uuid4())
         if fixed_duration:
             prediction = scheduled_prediction(estimate_minutes)
         queue_prediction = prediction is None
         if queue_prediction:
             prediction = {"status": "pending", "basis": "Pending", "evidence": []}
         with self._db(write=True) as db:
-            category = (category or "").strip()
-            if category:
-                db.execute("INSERT OR IGNORE INTO categories VALUES (?, ?)", (category.casefold(), category))
-                category = db.execute("SELECT name FROM categories WHERE label_key=?",
-                                      (category.casefold(),)).fetchone()[0]
+            if submission_id and db.execute("SELECT 1 FROM tasks WHERE id=?", (submission_id,)).fetchone():
+                return self._task(db, submission_id)
+            category = _category(db, category)
             db.execute("""
                 INSERT INTO tasks(id, day, title, description, category, details, pdf_text,
                                   estimate_minutes, prediction, created_at, fixed_duration, creation_prediction)
@@ -573,11 +614,72 @@ class PlannerStore:
                 _enqueue_prediction(db, task_id)
             elif prediction.get("point_min") is not None:
                 _record_replay_forecast(db, task_id, self.clock(), True, json.dumps(prediction, allow_nan=False))
-            for name, content in attachments:
-                if not isinstance(content, bytes) or b"%PDF-" not in content[:1024]:
-                    raise ValueError("Only PDF attachments are supported.")
-                db.execute("INSERT INTO attachments VALUES (?, ?, ?, ?)",
-                           (str(uuid4()), task_id, Path(name.replace("\\", "/")).name, content))
+            _add_files(db, task_id, attachments)
+            return self._task(db, task_id)
+
+    def edit_task(self, task_id, *, title, description, details, category, estimate_minutes,
+                  fixed_duration, expected_revision, attachments=(), remove_ids=(),
+                  submission_id=None, postpone_to=None, previous_day=None):
+        title, description, estimate_minutes = _task_fields(title, description, estimate_minutes)
+        with self._db(write=True) as db:
+            task = self._task(db, task_id)
+            if _repeat_chat_change(db, submission_id, task_id):
+                return task
+            if task["archived"] or task["edit_revision"] != expected_revision:
+                raise ValueError("This task changed. Reopen the editor to see the latest version.")
+            category = _category(db, category)
+            remove_ids = set(remove_ids)
+            if not remove_ids.issubset({doc["id"] for doc in task["attachments"]}):
+                raise ValueError("An attachment changed. Reopen the editor.")
+            fields = (title, description, details.strip(), category, estimate_minutes, bool(fixed_duration))
+            old = tuple(task[key] for key in ("title", "description", "details", "category", "estimate_minutes", "fixed_duration"))
+            documents_changed = bool(attachments or remove_ids)
+            if postpone_to:
+                self._postpone(db, task, postpone_to, previous_day)
+            if old == fields and not documents_changed:
+                return self._task(db, task_id)
+            db.execute("""UPDATE tasks SET title=?,description=?,details=?,category=?,estimate_minutes=?,
+                          fixed_duration=?,edit_revision=edit_revision+1 WHERE id=?""", (*fields, task_id))
+            if documents_changed:
+                db.executemany("DELETE FROM attachments WHERE id=? AND task_id=?", [(i, task_id) for i in remove_ids])
+                _add_files(db, task_id, attachments)
+                db.execute("UPDATE tasks SET pdf_text='',pdf_text_version=0 WHERE id=?", (task_id,))
+            scope_changed = old[:4] != fields[:4] or documents_changed
+            if scope_changed:
+                # An older worker must never publish a judgment for the previous scope.
+                db.execute("""UPDATE task_relations AS r SET related=NULL,token=NULL,lease_end=NULL,
+                              retry_at=0,failures=0,refresh_due=EXISTS (
+                                  SELECT 1 FROM tasks t WHERE t.id IN (r.left_id,r.right_id)
+                                  AND t.status='completed' AND t.actual_seconds>0)
+                              WHERE (left_id=? OR right_id=? OR (left_id,right_id) IN
+                                  (SELECT left_id,right_id FROM task_relation_sources WHERE source_id=?))
+                              AND NOT EXISTS (SELECT 1 FROM relevance_choices f
+                                  WHERE (f.target_id=r.left_id AND f.source_id=r.right_id)
+                                     OR (f.target_id=r.right_id AND f.source_id=r.left_id))
+                              AND EXISTS (SELECT 1 FROM tasks t WHERE t.id IN (r.left_id,r.right_id)
+                                          AND t.archived=0 AND t.status!='completed')""", (task_id, task_id, task_id))
+                db.execute("UPDATE task_workspaces SET eligible=NULL,request_hash='' WHERE task_id=?", (task_id,))
+                db.execute("DELETE FROM workspace_progress WHERE task_id=?", (task_id,))
+                # Earlier chat stays readable but its milestones belonged to the former scope.
+                db.execute("UPDATE workspace_messages SET workspace_run=NULL WHERE task_id=?", (task_id,))
+            if task["status"] == "completed":
+                # Preserve the historical forecast and timer. New scope can introduce a
+                # comparison even for a target that previously had no link to this task.
+                if task["creation_prediction"] is None:
+                    _enqueue_prediction(db, task_id)
+                if scope_changed:
+                    _enqueue_report(db, task_id)
+                if task["actual_seconds"]:
+                    for target in db.execute("""SELECT id FROM tasks WHERE status!='completed' AND archived=0
+                                                AND fixed_duration=0""").fetchall():
+                        _enqueue_prediction(db, target["id"])
+            elif fixed_duration:
+                db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
+                forecast = json.dumps(scheduled_prediction(estimate_minutes))
+                db.execute("""UPDATE tasks SET prediction=?,creation_prediction=coalesce(creation_prediction,?),
+                              refresh_waiting=0 WHERE id=?""", (forecast, forecast, task_id))
+            else:
+                _enqueue_prediction(db, task_id)
             return self._task(db, task_id)
 
     def retry_estimate(self, task_id):
@@ -653,13 +755,13 @@ class PlannerStore:
             # The job identifies which task created the cell, even if it already
             # finished. The worker chooses a stable model input order after loading PDFs.
             target, candidate = [dict(t) for t in db.execute("""
-                SELECT id,title,description,category,details,pdf_text,pdf_text_version FROM tasks WHERE id IN (?,?)
+                SELECT id,title,description,category,details,pdf_text,pdf_text_version,edit_revision FROM tasks WHERE id IN (?,?)
                 ORDER BY created_at DESC,rowid DESC""", pair)]
             for task in (target, candidate):
                 # Fixed-duration and legacy tasks can have uploads but no forecasting job to parse them.
                 if not task["pdf_text_version"]:
                     task["attachments"] = [dict(row) for row in db.execute(
-                        "SELECT id,name FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],))]
+                        "SELECT id,name,kind FROM attachments WHERE task_id=? ORDER BY rowid", (task["id"],))]
             return {"pair": pair, "target": target, "candidate": candidate, "token": token,
                     "examples": relevance_examples(db, target, candidate)}
 
@@ -758,7 +860,7 @@ class PlannerStore:
             # A task can finish before its forecast worker runs. Only information
             # available to the user at creation is a valid forecast input.
             inputs = {key: task[key] for key in ("id", "title", "description", "category", "details",
-                      "day", "estimate_minutes", "fixed_duration", "pdf_text", "pdf_text_version", "attachments")}
+                      "day", "estimate_minutes", "fixed_duration", "pdf_text", "pdf_text_version", "attachments", "edit_revision")}
             inputs.update(forecast_feedback(db, task_id))
             job = {"task": inputs, "history": history, "token": token,
                    "focus_verdicts": (task.get("prediction") or {}).get("focus_verdicts", {})}
@@ -1110,11 +1212,11 @@ class PlannerStore:
                 _refresh_related_estimates(db, task_id, corrected=True)
             return True
 
-    def cache_document_text(self, task_id, text):
+    def cache_document_text(self, task_id, text, *, expected_revision):
         """Upgrade legacy sampled excerpts once from the immutable original upload."""
         with self._db(write=True) as db:
-            db.execute("UPDATE tasks SET pdf_text=?,pdf_text_version=1 WHERE id=? AND pdf_text_version=0",
-                       (text, task_id))
+            db.execute("UPDATE tasks SET pdf_text=?,pdf_text_version=1 WHERE id=? AND pdf_text_version=0 AND edit_revision=?",
+                       (text, task_id, expected_revision))
 
     def attachment_bytes(self, attachment_id):
         with self._db() as db:
@@ -1131,34 +1233,41 @@ class PlannerStore:
                 raise ValueError("Only unfinished tasks can be rescheduled.")
             return self._task(db, task_id)
 
-    def postpone(self, task_id, day, *, previous_day):
+    def postpone(self, task_id, day, *, previous_day, submission_id=None, expected_revision=None):
         """Move unfinished work to a later day and leave its existing session paused."""
-        day = _day(day)
         with self._db(write=True) as db:
             task = self._task(db, task_id)
-            if task["archived"] or task["status"] == "completed":
-                raise ValueError("Only unfinished tasks can be postponed.")
-            if task["day"] != _day(previous_day):
-                raise ValueError("This task was already moved. Open its current plan to postpone it again.")
-            now = self.clock()
-            if day <= task["day"] or day < date.fromtimestamp(now).isoformat():
-                raise ValueError("Choose a later plan date that is today or in the future.")
-            state = task["status"]
-            if state == "running":
-                session = db.execute("SELECT id FROM sessions WHERE task_id=? AND stopped_at IS NULL",
-                                     (task_id,)).fetchone()
-                run = _close_period(db, session["id"], now)
-                self._workspace_pause(db, task_id, run, now)
-                state = "paused"
-            elif state == "awaiting_finish":
-                period = _stopped_workspace_period(db, task_id)
-                if period:
-                    self._workspace_pause(db, task_id, period["workspace_run"], period["stopped_at"])
-                db.execute("UPDATE sessions SET stopped_at=NULL WHERE id=(SELECT max(id) FROM sessions WHERE task_id=?)",
-                           (task_id,))
-                state = "paused"
-            db.execute("UPDATE tasks SET day=?, status=? WHERE id=?", (day, state, task_id))
+            if not _repeat_chat_change(db, submission_id, task_id):
+                if expected_revision is not None and task["edit_revision"] != expected_revision:
+                    raise ValueError("This task changed. Check its current details and try again.")
+                self._postpone(db, task, day, previous_day)
             return self._task(db, task_id)
+
+    def _postpone(self, db, task, day, previous_day):
+        task_id = task["id"]
+        day = _day(day)
+        if task["archived"] or task["status"] == "completed":
+            raise ValueError("Only unfinished tasks can be postponed.")
+        if task["day"] != _day(previous_day):
+            raise ValueError("This task was already moved. Open its current plan to postpone it again.")
+        now = self.clock()
+        if day <= task["day"] or day < date.fromtimestamp(now).isoformat():
+            raise ValueError("Choose a later plan date that is today or in the future.")
+        state = task["status"]
+        if state == "running":
+            session = db.execute("SELECT id FROM sessions WHERE task_id=? AND stopped_at IS NULL",
+                                 (task_id,)).fetchone()
+            run = _close_period(db, session["id"], now)
+            self._workspace_pause(db, task_id, run, now)
+            state = "paused"
+        elif state == "awaiting_finish":
+            period = _stopped_workspace_period(db, task_id)
+            if period:
+                self._workspace_pause(db, task_id, period["workspace_run"], period["stopped_at"])
+            db.execute("UPDATE sessions SET stopped_at=NULL WHERE id=(SELECT max(id) FROM sessions WHERE task_id=?)",
+                       (task_id,))
+            state = "paused"
+        db.execute("UPDATE tasks SET day=?, status=? WHERE id=?", (day, state, task_id))
 
     def archived_tasks(self):
         with self._db() as db:

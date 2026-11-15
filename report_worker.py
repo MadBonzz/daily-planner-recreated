@@ -9,7 +9,7 @@ import portalocker
 import activity
 from dev_workspace import dev_activity_report
 from estimate_worker import schedule_pending
-from pdf_reader import extract_pdf_text
+from task_files import document_text
 
 
 _LOG = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ def _process(store, dev, job, wake_forecasts):
         report = activity.revise_report(task["report"], overrides)
     else:
         if not task["pdf_text"] and task["attachments"]:
-            pdf_text = "\n".join(extract_pdf_text(store.attachment_bytes(doc["id"]))
+            pdf_text = "\n".join(document_text(doc.get("kind", "pdf"), store.attachment_bytes(doc["id"]))
                                  for doc in task["attachments"])
             task["pdf_text"] = pdf_text
         if dev:

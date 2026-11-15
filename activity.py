@@ -517,7 +517,7 @@ def _classify(task, rows, warnings, reviewed_label=None, *, examples=(), overrid
         schema = {"type": "object", "properties": contracts, "required": list(contracts),
                   "additionalProperties": False}
         try:
-            labels = chat_json(messages, schema, max_tokens=600)
+            labels = chat_json(messages, schema)
         except ModelResponseTruncated:
             # Keep completed batches. Split only the reply that exceeded the
             # generation budget; later, unrelated intervals can still be labeled.

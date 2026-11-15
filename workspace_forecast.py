@@ -217,7 +217,7 @@ def revise(task, baseline, progress, *, refreshed_history=False):
             for attempt in range(2):
                 check_lease()
                 try:
-                    reply = chat_json(messages, contract, max_tokens=900)
+                    reply = chat_json(messages, contract)
                     if attempt and isinstance(reply.get("evidence"), dict):
                         reply = {**reply, "evidence": [reply["evidence"]]}
                     return _assessment(reply, records, baseline, progress, endpoint)

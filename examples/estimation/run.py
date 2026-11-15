@@ -217,7 +217,7 @@ def record_calls(request, calls, *, classification=False):
     """Collect validated responses and failure receipts without saving request text."""
     def observed(messages, schema, **kwargs):
         prompt = json.dumps(messages, ensure_ascii=False, sort_keys=True).encode("utf-8")
-        receipt = {"prompt_sha256": hashlib.sha256(prompt).hexdigest(), "max_tokens": kwargs.get("max_tokens")}
+        receipt = {"prompt_sha256": hashlib.sha256(prompt).hexdigest()}
         if classification:
             submitted = json.loads(messages[-1]["content"])
             receipt["task_title"] = submitted["task"]["title"]

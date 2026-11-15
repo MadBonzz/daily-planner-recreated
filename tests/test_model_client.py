@@ -39,6 +39,7 @@ class ModelClientTests(unittest.TestCase):
         self.assertEqual(request.full_url, API_URL)
         body = json.loads(request.data)
         self.assertEqual(body["model"], MODEL_ID)
+        self.assertTrue({"max_tokens", "max_completion_tokens", "max_output_tokens"}.isdisjoint(body))
         self.assertEqual(body["response_format"]["json_schema"]["schema"], self.schema)
 
     @patch("model_client.build_opener")
@@ -97,6 +98,7 @@ class ModelClientTests(unittest.TestCase):
         self.assertEqual(req.get_header("Authorization"), "Bearer test-token")
         payload = json.loads(req.data)
         self.assertEqual(payload["model"], "c4ai-aya-expanse-32b")
+        self.assertTrue({"max_tokens", "max_completion_tokens", "max_output_tokens"}.isdisjoint(payload))
         self.assertEqual(payload["messages"][1], messages[1])
         self.assertIn(messages[0]["content"], payload["messages"][0]["content"])
         self.assertIn(json.dumps(self.schema), payload["messages"][0]["content"])
@@ -115,6 +117,7 @@ class ModelClientTests(unittest.TestCase):
         request = opener.return_value.open.call_args.args[0]
         payload = json.loads(request.data)
         self.assertEqual(payload["model"], "command-r7b-12-2024")
+        self.assertTrue({"max_tokens", "max_completion_tokens", "max_output_tokens"}.isdisjoint(payload))
         self.assertEqual(payload["response_format"], {
             "type": "json_schema",
             "json_schema": {"name": "planner_response", "strict": True, "schema": self.schema},

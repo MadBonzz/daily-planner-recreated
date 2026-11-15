@@ -127,7 +127,7 @@ def _canonical_integers(value, schema):
     return value
 
 
-def chat_json(messages, schema, *, max_tokens=512):
+def chat_json(messages, schema):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
     config = _forecast_config.get() or planner_settings()
     endpoint, model = model_settings(config)
@@ -148,7 +148,7 @@ def chat_json(messages, schema, *, max_tokens=512):
     except ValueError:
         raise ModelUnavailable("Invalid PLANNER_MODEL_ENDPOINT. Use the chat completions URL.") from None
 
-    payload = {"model": model, "messages": messages, "temperature": 0, "max_tokens": max_tokens}
+    payload = {"model": model, "messages": messages, "temperature": 0}
     if cohere:
         if model in {"c4ai-aya-expanse-8b", "c4ai-aya-vision-8b"}:
             raise ModelUnavailable(f"Cohere retired {model} on April 4, 2026. Choose a hosted model in .env.")
@@ -183,7 +183,7 @@ def chat_json(messages, schema, *, max_tokens=512):
             completion = json.load(response)
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":
-            raise ModelResponseTruncated(f"{model} reached its response length limit.")
+            raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.")
         content = choice["message"]["content"].strip()
         if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
             content = content.split("\n", 1)[1][:-3].strip()

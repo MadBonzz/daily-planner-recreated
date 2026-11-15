@@ -14,6 +14,7 @@ import retrieval
 import workspace_forecast
 from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
+from task_files import document_text
 
 
 _LOG = logging.getLogger(__name__)
@@ -127,7 +128,11 @@ def _read_documents(store, task):
         return None, []
     pages, unreadable = [], []
     for document in task["attachments"]:
-        text = extract_pdf_text(store.attachment_bytes(document["id"]))
+        kind = document.get("kind", "pdf")
+        if kind == "file":
+            continue
+        data = store.attachment_bytes(document["id"])
+        text = extract_pdf_text(data) if kind == "pdf" else document_text(kind, data)
         if text:
             pages.append(text)
         else:
@@ -135,7 +140,7 @@ def _read_documents(store, task):
     extracted = "\n".join(pages)
     task["pdf_text"] = extracted
     if not unreadable:
-        store.cache_document_text(task["id"], extracted)
+        store.cache_document_text(task["id"], extracted, expected_revision=task["edit_revision"])
         task["pdf_text_version"] = 1
     return extracted, unreadable
 
