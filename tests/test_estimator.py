@@ -36,7 +36,7 @@ def test_first_estimate_uses_only_task_scope_and_keeps_model_decisions(tmp_path)
     assert record["category"] == "Reading" and record["details"] == task["details"]
     assert "concentration bound" in record["document_excerpt"]
     assert "TARGET OUTCOME" not in str(payload) and "actual_seconds" not in record
-    assert set(schema["required"]) == set(output)
+    assert set(schema["required"]) == set(output) - {"warnings", "comparisons"}
     assert all(prediction[key] == output[key] for key in ("low_min", "point_min", "high_min", "confidence", "confidence_reason"))
     assert prediction["model_rationale"] == output["rationale"]
     assert prediction["evidence"] == [] and prediction["cautions"] == []

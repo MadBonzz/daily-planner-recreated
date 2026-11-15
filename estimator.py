@@ -332,16 +332,25 @@ def _object(properties):
     return {"type": "object", "properties": properties, "required": list(properties), "additionalProperties": False}
 
 
-def _forecast_schema():
+def _forecast_schema(history, sources):
     number = {"type": "integer"}
     string = {"type": "string"}
-    return _object({
+    slots = {"type": "integer", "enum": [record["slot"] for record in history]} if history else number
+    ids = {"type": "string", "enum": list(sources)} if sources else string
+    comparisons = {"type": "array", "items": _object({"slot": slots, "reason": string})}
+    warnings = {"type": "array", "items": _object({"observation_id": ids, "advice": string})}
+    # A model cannot cite an unavailable source. Omit the wire field when
+    # there are no options; the persisted forecast always exposes both lists.
+    fields = {
         "point_min": number, "low_min": number, "high_min": number,
         "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
         "rationale": string, "confidence_reason": string,
-        "comparisons": {"type": "array", "items": _object({"slot": number, "reason": string})},
-        "warnings": {"type": "array", "items": _object({"observation_id": string, "advice": string})},
-    })
+    }
+    if history:
+        fields["comparisons"] = comparisons
+    if sources:
+        fields["warnings"] = warnings
+    return _object(fields)
 
 
 def _evidence_row(row, fields):
@@ -363,7 +372,7 @@ def _read_forecast(reply, task, candidates, sources):
         raise ValueError("Explain the workload and why the confidence rating fits the evidence.")
     evidence = []
     used = set()
-    for match in reply["comparisons"]:
+    for match in reply.get("comparisons", []):
         slot = match["slot"]
         if type(slot) is not int or not 1 <= slot <= len(candidates):
             raise ValueError("A comparison cited an unknown slot. Include only supplied history slots.")
@@ -377,7 +386,7 @@ def _read_forecast(reply, task, candidates, sources):
         used.add(slot)
     cautions = []
     cited = set()
-    for warning in reply["warnings"]:
+    for warning in reply.get("warnings", []):
         source_id = warning["observation_id"]
         advice = warning["advice"].strip()
         if source_id not in sources or not advice:
@@ -432,9 +441,14 @@ def _model_forecast(task, candidates, observations, recurring):
                                               "observation": source["observation"]})
     messages = [{"role": "system", "content": _FORECAST_INSTRUCTIONS},
                 {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
+    if not history:
+        messages[0]["content"] += " No historical timing comparisons are available. Omit comparisons."
+    if not sources:
+        messages[0]["content"] += " No observations were supplied. Omit warnings."
+    schema = _forecast_schema(history, sources)
     for attempt in range(2):
         try:
-            reply = chat_json(messages, _forecast_schema(), max_tokens=950)
+            reply = chat_json(messages, schema, max_tokens=950)
             return _read_forecast(reply, task, candidates, sources)
         except (ValueError, ModelResponseTruncated) as error:
             if attempt:
