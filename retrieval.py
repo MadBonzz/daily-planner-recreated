@@ -17,6 +17,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 
 from qdrant_client import QdrantClient, models
 
+import local_model_runtime
 from model_client import ModelUnavailable, _NoRedirect, planner_settings
 from pdf_reader import assigned_section_text, document_excerpt
 import sample_retrieval
@@ -62,7 +63,7 @@ class DocumentTooLong(ModelUnavailable):
     """The full task cannot fit into the loaded embedding context."""
 
 
-def _check_embedding_context(url, payload, client, timeout):
+def _check_embedding_context(url, payload, client, timeout, *, loaded_only=False):
     """LM Studio's compatibility route silently truncates long inputs; its SDK counts them exactly."""
     origin = f"{url.scheme}://{url.netloc}"
     try:
@@ -96,8 +97,10 @@ def _check_embedding_context(url, payload, client, timeout):
     env = {k: v for k, v in os.environ.items() if not k.lower().endswith("_proxy")}
     env["NO_PROXY"] = "*"
     try:
-        counted = subprocess.run([sys.executable, str(Path(__file__).with_name("embedding_context.py")),
-                                  url.netloc, model], input=document, capture_output=True, check=True,
+        command = [sys.executable, str(Path(__file__).with_name("embedding_context.py")), url.netloc, model]
+        if loaded_only:
+            command.append("--loaded-only")
+        counted = subprocess.run(command, input=document, capture_output=True, check=True,
                                  timeout=timeout, env=env)
         tokens, capacity = json.loads(counted.stdout)
     except (subprocess.SubprocessError, OSError, ValueError) as exc:
@@ -116,12 +119,17 @@ def _local_post(endpoint, payload, config):
         if (url.scheme not in {"http", "https"} or url.hostname not in {"127.0.0.1", "::1", "localhost"}
                 or url.username or url.password or not math.isfinite(timeout) or timeout <= 0):
             raise ValueError
-        request = Request(endpoint, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
         client = build_opener(ProxyHandler({}), _NoRedirect())
-        if "input" in payload:
-            _check_embedding_context(url, payload, client, timeout)
-        with client.open(request, timeout=timeout) as response:
-            return json.load(response)
+        kind = "embedding" if "input" in payload else "decision"
+        with local_model_runtime.managed_model(endpoint, payload["model"], config, kind=kind, timeout=timeout) as instance:
+            # Keep the logical model ID in the original payload for sample hashes and saved decisions.
+            wire_payload = {**payload, "model": instance}
+            if kind == "embedding":
+                _check_embedding_context(url, wire_payload, client, timeout,
+                                         loaded_only=local_model_runtime.is_managed(endpoint, config))
+            request = Request(endpoint, data=json.dumps(wire_payload).encode(), headers={"Content-Type": "application/json"})
+            with client.open(request, timeout=timeout) as response:
+                return json.load(response)
     except HTTPError as exc:
         if exc.code == 400:
             try:

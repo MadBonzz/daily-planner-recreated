@@ -9,7 +9,10 @@ from contextvars import ContextVar
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
-from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+from urllib.request import ProxyHandler, Request, build_opener
+
+import local_model_runtime
+from local_model_runtime import ModelUnavailable, NoRedirect as _NoRedirect
 
 try:
     from dotenv import dotenv_values
@@ -31,11 +34,9 @@ SETTING_NAMES = {
     "PLANNER_DECISION_ENDPOINT", "PLANNER_RELEVANCE_THRESHOLD",
     "PLANNER_MODEL_TIMEOUT_SECONDS", "PLANNER_ACTIVITYWATCH_HOSTNAME",
     "PLANNER_ACTIVITYWATCH_DB", "PLANNER_ACTIVITYWATCH_PHONE_DB",
+    "PLANNER_SINGLE_MODEL", "PLANNER_MODEL_KEY", "PLANNER_DECISION_MODEL_KEY", "PLANNER_EMBEDDING_MODEL_KEY",
+    "PLANNER_CHAT_CONTEXT_LENGTH", "PLANNER_DECISION_CONTEXT_LENGTH", "PLANNER_EMBEDDING_CONTEXT_LENGTH",
 }
-
-
-class ModelUnavailable(RuntimeError):
-    """The configured endpoint could not produce a usable response."""
 
 
 class ModelContextExceeded(ModelUnavailable):
@@ -48,11 +49,6 @@ class ModelResponseInvalid(ModelUnavailable):
 
 class ModelResponseTruncated(ModelResponseInvalid):
     """The endpoint explicitly reported that generation exhausted the response budget."""
-
-
-class _NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        return None
 
 
 def _file_settings():
@@ -171,7 +167,6 @@ def chat_json(messages, schema):
             "json_schema": {"name": "planner_response", "strict": True, "schema": schema},
         }
 
-    request = Request(endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
     # Only the explicitly configured endpoint receives the prompt. Loopback
     # traffic bypasses system web proxies; hosted requests honor HTTPS_PROXY.
     handlers = [_NoRedirect()]
@@ -179,8 +174,11 @@ def chat_json(messages, schema):
         handlers.append(ProxyHandler({}))
     client = build_opener(*handlers)
     try:
-        with client.open(request, timeout=timeout) as response:
-            completion = json.load(response)
+        with local_model_runtime.managed_model(endpoint, model, config, kind="llm", timeout=timeout) as instance:
+            payload["model"] = instance
+            request = Request(endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
+            with client.open(request, timeout=timeout) as response:
+                completion = json.load(response)
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":
             raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.")
