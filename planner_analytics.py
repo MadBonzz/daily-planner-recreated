@@ -344,7 +344,7 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
                         return {"answer": "Your planner records changed. Please ask again."}
                     reply = handle_request(intent, question, history, files or {}, plan, create_categories or [],
                                            chat_json, tasks=task_catalog)
-                    return {**result, **reply, "query_source": "model", "answer_source": "model"}
+                    return {**result, "query_source": "model", "answer_source": "model", **reply}
         except ModelUnavailable as exc:
             return {**result, "answer": f"The model could not process this request. {exc}"}
         try:
@@ -580,7 +580,7 @@ def _show_turn(turn):
             if turn.get("tool") == "distraction_sources" and turn.get("answer_source") == "model":
                 answer += " (selected observed findings)"
             if turn.get("tool") in {"create_task", "edit_task", "postpone_task", "attachment_question"}:
-                st.caption(model)
+                st.caption("Local task command" if turn.get("query_source") == "local task command" else model)
             elif turn.get("tool") == "plan_remaining":
                 route = model if not turn.get("model_proposed_tool") else f"open-plan scope check (model suggested {turn['model_proposed_tool']})"
                 if turn.get("ranking_source") == "model coverage repair":

@@ -189,10 +189,11 @@ def test_chat_grounds_tomorrow_and_explicit_pronouns_even_if_model_misreads_them
     proposed = handle_request("create_task", "Add a task for tomorrow to compare steps, half an hour",
                               [], {}, plan, [], lambda *_: extracted)
     assert proposed["new_task"]["day"] == (date.today() + timedelta(days=1)).isoformat()
-    edit = {"target": "Compare two step sizes", "when": "", "day": "", "file_ids": [], "remove_names": [],
+    edit = {"target": "Compare two step sizes", "when": "", "day": "", "file_ids": ["1"], "remove_names": ["grocery.txt"],
             "edits": [{"field": "description", "value": "Compare two step sizes"}]}
     previous = [{"question": "Add a task", "answer": "Added", "tool": "create_task", "affected_task_id": task["id"]}]
     result = handle_request("edit_task", "Edit that task and change its description to Compare two step sizes",
-                            previous, {}, plan, [], lambda *_: edit, [task])
+                            previous, {"1": {"name": "grocery.txt"}}, plan, [], lambda *_: edit, [task])
     assert result["task_change"]["task_id"] == task["id"]
     assert result["task_change"]["fields"]["description"] == "Compare two step sizes"
+    assert result["file_ids"] == result["task_change"]["remove_ids"] == []
