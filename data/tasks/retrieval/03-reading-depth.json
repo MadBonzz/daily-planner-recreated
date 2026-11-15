@@ -1,0 +1,279 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "017fc65235b1a3f0553f5b0e5c4cef874a2a31aae84322d998935e7572a1fd23": {
+      "candidate": "bound-floor",
+      "related": false,
+      "target": "read-queues"
+    },
+    "090b8b7e48139069f6ddb7a7fbf852fe3d77d9f11cc5d29320ae64af7fb3a71d": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "audit-card"
+    },
+    "0decca172286ff41860db903d33a5d4a09827975f49ccf40d2a454ccc72d5404": {
+      "candidate": "bound-floor",
+      "related": true,
+      "target": "appendix-proof"
+    },
+    "12b191c1721bcd4935d10c39f3837cb086d662484686154332e28e9ffb024f1d": {
+      "candidate": "audit-card",
+      "related": false,
+      "target": "appendix-proof"
+    },
+    "184f85d4fe8792e41d21bd4a32da30510c97a76e33af58bdadde4a4be0258753": {
+      "candidate": "derive-noise",
+      "related": false,
+      "target": "read-cache"
+    },
+    "232a8752128977199392e17fcc07ba6aee4c60754c3c24e41c965264f7961430": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "appendix-proof"
+    },
+    "2b97a4583908bfe10e7398f2508f9c0cff2d2eba843ed5669c41c608f7d18c46": {
+      "candidate": "audit-card",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "302f02b79b29d4cb9a40f930496abf8538a037cda70b134d1d6c6a3dd47402bb": {
+      "candidate": "read-queues",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "39fe49297c1279dd6cf3c0474e92b35b05984d62a6962af6599914394f129e71": {
+      "candidate": "derive-noise",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "3a73b32ad21819f8a29c40d7d5ba434b13cbf7760295ac6c603921e94dd4db9c": {
+      "candidate": "metrics-club",
+      "related": true,
+      "target": "metrics-club"
+    },
+    "3a95745d3cce48bcddab89743cbf88b997bfde562cd326202e95d75bbed88041": {
+      "candidate": "bound-floor",
+      "related": false,
+      "target": "dishes"
+    },
+    "3c16ec83b932586d8239483e865c59a3571b236f8fdd85a033fbac40ae0dbd1b": {
+      "candidate": "bound-floor",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "47c78da93af22f2e82afd030732f6d3b51df6a3877ec854caa689502feaff598": {
+      "candidate": "read-queues",
+      "related": true,
+      "target": "audit-card"
+    },
+    "64de068f941cc5e82d72c00cac9e101e76536eef3905dc1769be0f8829f6bf2a": {
+      "candidate": "derive-noise",
+      "related": true,
+      "target": "appendix-proof"
+    },
+    "724b224cb1258d5e23090a5994a3cfd7d81385c7a0ec53c03214cbab4a512c7f": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "dishes"
+    },
+    "81876d07878c3c14e795974522f693f70d9be88a49d3302d81c350a5790e14d4": {
+      "candidate": "read-queues",
+      "related": false,
+      "target": "check-jensen"
+    },
+    "81b6bcd84c7f7cdb0c7233aa07b5b86bfd3cb7f11e6690ac347f3bcf84a496ad": {
+      "candidate": "appendix-proof",
+      "related": true,
+      "target": "appendix-proof"
+    },
+    "8409877d800dfaebb447019315d21cbcc858986b63d6aae66cf940762c11927c": {
+      "candidate": "appendix-proof",
+      "related": false,
+      "target": "audit-card"
+    },
+    "93bb7c7b7689f55d70c416b13af492211fe54b194e0eb0d412e82b01929b3423": {
+      "candidate": "bound-floor",
+      "related": true,
+      "target": "audit-card"
+    },
+    "9781ea76abdb8bf638800f5a5ae2f567a49b7da6bfb3ef00ce7fe6806655f0f1": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "derive-noise"
+    },
+    "9e17c20633b0e8cac52ec3da8d63e79579f5fb5c32e7cbebbfc0304b3ae6015c": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "b03889224819326f39c3c238a38c6601b401e0bc09b3c5676f237940a7ac5d42": {
+      "candidate": "replica-figs",
+      "related": false,
+      "target": "audit-card"
+    },
+    "b5e40c7df410c3eea8cf0cf25aeba6c9e519b20d3a240397389cb1e2c6f848b7": {
+      "candidate": "read-cache",
+      "related": false,
+      "target": "bound-floor"
+    },
+    "b776edb39b598004c7f2ae1ef20da410374dba2decd7e4d47c13c0b1d03b4436": {
+      "candidate": "potluck",
+      "related": false,
+      "target": "audit-card"
+    },
+    "b824b76ef8ddadc307f5387bb7ce4e25aec2b184d781ca974a8ad9e04a1790c6": {
+      "candidate": "appendix-proof",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "bd3484c620d76cc00c6104061d25487e8190545da4b61322ab0a111793027eb5": {
+      "candidate": "replica-figs",
+      "related": false,
+      "target": "potluck"
+    },
+    "be9cf7bd3a6ab7d9e415a1b410f537a33521f2c92b1be04b7299f0586d51d7d5": {
+      "candidate": "derive-noise",
+      "related": false,
+      "target": "audit-card"
+    },
+    "bea3ffc0bb659b7168d2510c5dccb2751da903be9e2c4bed507136d3489f447c": {
+      "candidate": "metrics-club",
+      "related": false,
+      "target": "audit-card"
+    },
+    "bef625172327ba2ddeee2735eb38fbf34f28e73c184287296e4fb7feaf37af69": {
+      "candidate": "check-jensen",
+      "related": true,
+      "target": "appendix-proof"
+    },
+    "c318cf2e83514e5bc64836f56639f3819bd2906c3f944e5e92dc863d63fcff1b": {
+      "candidate": "potluck",
+      "related": false,
+      "target": "metrics-club"
+    },
+    "d80b5482fb98e309c708ee51f68b75498cfd8ad366d9abfa7b7f99a413874408": {
+      "candidate": "read-queues",
+      "related": false,
+      "target": "appendix-proof"
+    },
+    "dbce120a31e63ca7deccd307c0cbb15b8802f8c148c15a9fb6996d1fb90aa417": {
+      "candidate": "potluck",
+      "related": false,
+      "target": "appendix-proof"
+    },
+    "eba663398cdc203458cf44bae821af3cff874b5cef281062ed47b6dc7877b163": {
+      "candidate": "bound-floor",
+      "related": true,
+      "target": "check-jensen"
+    },
+    "fccbe5d1d1783c48058f69cf9afc4bd66d7bf5da29e3ad28d202cc98f0df5371": {
+      "candidate": "metrics-club",
+      "related": false,
+      "target": "appendix-proof"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "03-reading-depth",
+  "public_sources": {
+    "files_sha256": {
+      "histories/03-reading-depth.json": "f793cec3eeec5e16bce553b479b1001f42daa0658eb7bfda90b1d899e027c7ed",
+      "pdfs/03-reading-depth/derive-noise.pdf": "ea3448f1e516f7b880bd4ed6fb58fa4ed5f82a9202e8ed3d83acf6452884f58c",
+      "schedules/03-reading-depth.json": "b396ade4de2e58f15c78429811c51e981fd0075c035e59a7b4b2e737a058d916"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "appendix-proof": {
+      "document": {
+        "input_sha256": "034502ea7882c766fe424d3a3bee3434050c6c2cf06d5fe742501b2d902d190c"
+      },
+      "query": {
+        "input_sha256": "50986d6a392fde9f56fc8c7a432293bc2c32fe792dd2fb1e958b1d161a86802e"
+      }
+    },
+    "audit-card": {
+      "document": {
+        "input_sha256": "c88e9d3000eb723cfae18983f64940071f79c1568e33e2083099a4ca9755d57e"
+      },
+      "query": {
+        "input_sha256": "93bda0cef020b55ed7595edc200aa9c227a4d8e8a929f455f883e07dfc83f67b"
+      }
+    },
+    "bound-floor": {
+      "document": {
+        "input_sha256": "09047e0bb19b758072f7498de646462390cfb28ede23cc641c920c863d0c31a6"
+      },
+      "query": {
+        "input_sha256": "3e9a12b14e6e965dd6597069510776741649ee6c24ca2be2adf08ed42649b373"
+      }
+    },
+    "check-jensen": {
+      "document": {
+        "input_sha256": "b8117b8895ea4df27a7276d491fc6ea083732041a94d3a9be8b8ffe362dcdfb4"
+      },
+      "query": {
+        "input_sha256": "9e77716c8b781c577f89c795e52e75814e32ed6de2789d8c639bb553694fbc4e"
+      }
+    },
+    "derive-noise": {
+      "document": {
+        "input_sha256": "8aef819191701a5543bb8ba235870a07da08c7efae8105f264702853c13b2abe"
+      },
+      "query": {
+        "input_sha256": "5b42e0a25f756f198d875c1097002178b1f280591cd0427978234f54737f67ee"
+      }
+    },
+    "dishes": {
+      "document": {
+        "input_sha256": "ed59583879e1707d5670320dae185f608b6d053057ddfdb92cf8299885402e84"
+      },
+      "query": {
+        "input_sha256": "3412b9e6c9bfcfc2eb1d2cd560f05290c56cdfd0c5d30cf649da1dff9d760bfc"
+      }
+    },
+    "metrics-club": {
+      "document": {
+        "input_sha256": "4060f94ad3902fbf88c9df830b0a0b968d6ee5064230ca7727dda0849b13447e"
+      },
+      "query": {
+        "input_sha256": "6ed901d1e88ba92134b354dec042dccff659a55138252268ca62b6a2f249735a"
+      }
+    },
+    "potluck": {
+      "document": {
+        "input_sha256": "e5f45b34be2ca64bb12dea6b412a59487e378e4ce34c923c192b643b5d258cdd"
+      },
+      "query": {
+        "input_sha256": "f7a584de5d07818c4bf45ee638a4f92b85d8d512ef72c2286ea6492ba1ec214c"
+      }
+    },
+    "read-cache": {
+      "document": {
+        "input_sha256": "4fcd3b09386b813c7c4ec9e359ad4b0bafa936f8237912292c0b5b1c5d18bc69"
+      },
+      "query": {
+        "input_sha256": "258a43f152b30a268f86db9a821acbe4c6104ed2265575fddb98396adc32c9aa"
+      }
+    },
+    "read-queues": {
+      "document": {
+        "input_sha256": "d1682d3d27fde698d5a71675b21b66138ad89a04a0d786d7b1e177e113ca203c"
+      },
+      "query": {
+        "input_sha256": "7bfe6e3e73f76b2072fce718c8dd85bbbed17af0eda41b763e22d4606e2e953d"
+      }
+    },
+    "replica-figs": {
+      "document": {
+        "input_sha256": "6bb288756315d5acac16d5e5d8ff8c04049d5e40974dfc0b97abbece2adbf2f3"
+      },
+      "query": {
+        "input_sha256": "cdde436b5f903db977eb12e04587474ac983d4095baddca749b77c57e69c3d91"
+      }
+    }
+  }
+}

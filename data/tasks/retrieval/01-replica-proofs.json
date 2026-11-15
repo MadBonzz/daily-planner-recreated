@@ -1,0 +1,365 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "019d2c1b571539bf980ee76d7aea846fe338d5f682789d7f87fefae795264220": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "0200f2a50f4b0a991b267f4b833dbfb20a5b6765e6b07fc03df5e645ec1d06a9": {
+      "candidate": "fix-proof",
+      "related": false,
+      "target": "soap"
+    },
+    "0e97c39affe2dd77d57f347c7e767165a3c289167436c454c0c7189b1207a370": {
+      "candidate": "bus-pass",
+      "related": false,
+      "target": "soap"
+    },
+    "118b832be63e9fff76163b747c3ea5c48c2542ef083c237e76e02a4422c9fd08": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "lease-restart"
+    },
+    "1a837c99d30f2a6a526bc18f9013a0a10ff8f5f529c74e52b43976f56dbe4b64": {
+      "candidate": "soap",
+      "related": false,
+      "target": "bus-pass"
+    },
+    "232f271aa42d468e382b163eb294cbac099302b62d575b4914dae0e4ae1eddf4": {
+      "candidate": "bridge-proof",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "31bfa87f7f28580d1fa62dad2f577b430eaa110714fa80b982e324fba7fa11f4": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "34f3b1f1df959ccabc0ccd84ae234ea080bfc1775bdcb6a98c4148373fa4ff9b": {
+      "candidate": "bus-pass",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "3933930928f94f4a43419fca9ddef0b4f86737a5193d3339cd2d067358780476": {
+      "candidate": "barrier-proof",
+      "related": false,
+      "target": "bus-pass"
+    },
+    "3d1138243dd980d07e7d34f8b0ed3e91794d69b9e28343453dda77fccc51a20c": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "ack-traces"
+    },
+    "3f766d285ddd7676f89b4721fded053cc164ecd231541c2e3013961808f3c79b": {
+      "candidate": "bridge-trace",
+      "related": true,
+      "target": "bridge-trace"
+    },
+    "40242e9f70eec1f094a2a0561138c409a371cc22b1dd7e59fafb72eba636146a": {
+      "candidate": "barrier-proof",
+      "related": true,
+      "target": "bridge-proof"
+    },
+    "470ed3a07ff4edeb7063f4682949f90171f878fab64ed1967876fb0759ecaea0": {
+      "candidate": "ack-traces",
+      "related": false,
+      "target": "barrier-proof"
+    },
+    "4722688154a7683d014effcf60769ffe0756dbcaec4e4fba214eb97265e9d14e": {
+      "candidate": "barrier-proof",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "482f4464542aeac49e26f31497865cb041d6fe7191f9a987babaab6dcd599474": {
+      "candidate": "barrier-proof",
+      "related": false,
+      "target": "epoch-proof"
+    },
+    "4ae7be8a68421979ba6491a6665f1e533b93ad91a78db12a7b365fc675121dab": {
+      "candidate": "lease-restart",
+      "related": true,
+      "target": "epoch-proof"
+    },
+    "4ea93b060cc3b0e39a588fcdb08b4455b2804eddc49fda121e298b00b4e8915b": {
+      "candidate": "clock-two",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "50cb1c487a2518c87d4adc2361acc2e25fe97460e4fd6a45c5991a3dfd04a961": {
+      "candidate": "soap",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "56b7575166033ca0a4459962ed1a21a71b706ec17ac8ca8354d9964acf0ca0c6": {
+      "candidate": "fix-proof",
+      "related": false,
+      "target": "bus-pass"
+    },
+    "67465ad6750b2ea273080c43a290b70be36587b00a1910fbf387905c9a540343": {
+      "candidate": "bridge-trace",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "67b32a168dddf750bd305e36ba65abd915f4a8f64c0fc14814e032cd6d142bad": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "dish-rack"
+    },
+    "67dd111442a2dc97a8d87c00f0a6d750635488ba0c74fb896f0987ddc8a0aa93": {
+      "candidate": "clock-two",
+      "related": false,
+      "target": "ack-traces"
+    },
+    "69caf760e69ab7cb13dd2dbd26c6df3f810cc1b3d7fb2925d36d9c14618c3598": {
+      "candidate": "fix-proof",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "6a7fdce2c27fb87ea5d217a7c0eb4c74042f2392e3eda383e82748d012d1fb91": {
+      "candidate": "soap",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "6b37354398ffffb3fd9344017cff9b48bb16d398bc50b66923778b105a075497": {
+      "candidate": "dish-rack",
+      "related": false,
+      "target": "lease-restart"
+    },
+    "6dcc5f7a05cdc5496632a4dba50d11dbcf42323bd3ab75098f62e23fecf247d8": {
+      "candidate": "bridge-proof",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "7ba82736fa00073deb1812ad7b614e62dd0122f8e4c16a63efc579ca812dd0c9": {
+      "candidate": "barrier-proof",
+      "related": false,
+      "target": "ack-traces"
+    },
+    "7cebca9d1684f7ff8b6ee7552efbc263e2338895bac1d5869674bb5251809a95": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "barrier-proof"
+    },
+    "856b25f33b33d746d58ca572a3ea43f2264da81ddfd323f2433327d496ec14a7": {
+      "candidate": "bridge-trace",
+      "related": false,
+      "target": "soap"
+    },
+    "8fd0e41fab5e474c2bb4261bdb02961f3e043716fccae00b25e2a5549b2c58d1": {
+      "candidate": "barrier-proof",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "90b7c63b957d38c2f7fbdf79eadaf793e892bb19fafd33b0c4037570c1f912a8": {
+      "candidate": "bridge-proof",
+      "related": false,
+      "target": "soap"
+    },
+    "9101012f7d71d64ef2e842a346b0c446e0fa29bbcbe304df46bf4773fb81cc74": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "clock-two"
+    },
+    "948a9c357b56783afe4674e298f52826abf830c8d28a1b08df2921cc02e28b36": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "97d120217231f93c2c9a7327ac6393c783d02e14d23bb774e64bae49099e525d": {
+      "candidate": "ack-traces",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "984782982810da826c1efca747344d0672a02a4e9b4d1ded581c61514b8251c0": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "9d1e192e81deb0a10f75c8f3b63346eef4a350df069e9b1cf35a7352055e8ea3": {
+      "candidate": "fix-proof",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "a90eface01f6b68aa2c35b275bc2f814b3c9423a88bcd2ec02f058df64346046": {
+      "candidate": "clock-two",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "b74261d47401852380d3e1ae6e055bb3c73e0939aec6b0b63d47f7981044f5d6": {
+      "candidate": "ack-traces",
+      "related": false,
+      "target": "epoch-proof"
+    },
+    "c3582054f390e93b517d2c727560fdc4c67944072b0f1c8d61bf6b07d5048a73": {
+      "candidate": "clock-two",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "cad9bf5efa1e20ad57191dca8c1c108ff9208b3b164150410e3324e0f599f44a": {
+      "candidate": "bus-pass",
+      "related": false,
+      "target": "barrier-proof"
+    },
+    "cf49cbfae87fbfda22085cfd60707af4e8ae9d625f8d7d7ca1245b9170ef7cd1": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "ack-traces"
+    },
+    "d01552be3e892d03958c0b3f75048bf77c38420ebd786ea547ae7477bf9c16ec": {
+      "candidate": "clock-two",
+      "related": true,
+      "target": "epoch-proof"
+    },
+    "d2236b760ceea20cc5f18bc07d9aa7ae71e3fbf8304ae3a3dbf7cf8fea33fe3b": {
+      "candidate": "epoch-proof",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "d81d7a2f0a3b6beedcf812eff225b254e13afe239b99dc4260cc94b4ec83302c": {
+      "candidate": "ack-traces",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "dcef4a90e1606e7f47763b4c7993908d382c922a95ad5924fafc8e5772e8d275": {
+      "candidate": "bridge-trace",
+      "related": false,
+      "target": "fix-proof"
+    },
+    "e6f0c289017843e8a0e0e93d1f88ec97da75374cb7ba74e1b9bd6ab4c00e5434": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "bridge-trace"
+    },
+    "ede22e681e078c0a93d1691f62b93e14ce21835a9a5eeffa41402524ffa86001": {
+      "candidate": "clock-two",
+      "related": false,
+      "target": "lease-restart"
+    },
+    "edff3c1dc042b47104de1f62d555abb12441656a76acf308472035b99accef60": {
+      "candidate": "bridge-proof",
+      "related": true,
+      "target": "bridge-proof"
+    },
+    "ef635f86e0075f96c0402127838d4c2f1afffa5d66aedf54178677613bfe3a64": {
+      "candidate": "lease-restart",
+      "related": false,
+      "target": "barrier-proof"
+    },
+    "f0d7e3fe92dc90cbb211c6f37ae04b64fae12e21503db866c32ff617d14b6acb": {
+      "candidate": "soap",
+      "related": false,
+      "target": "bridge-proof"
+    },
+    "fa556718c2dbb7847e64dc6b2615c9b6146f8e440cf0b6abc133d26a47f1c7af": {
+      "candidate": "ack-traces",
+      "related": false,
+      "target": "fix-proof"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "01-replica-proofs",
+  "public_sources": {
+    "files_sha256": {
+      "histories/01-replica-proofs.json": "37d0224bd0cd2eef7178cd4fa25bd60452117d855c1ca6b65744b5f6050f95e4",
+      "pdfs/01-replica-proofs/bridge-proof.pdf": "a6c48772e27634122c743e7096a9b54ab4d6221ab0ed02d3e30a68cb97e8ff92",
+      "pdfs/01-replica-proofs/clock-two.pdf": "0120f4b5415c84a899fe7f88e9ecc357583725a7c9e8719657ed0b8ea5b36133",
+      "schedules/01-replica-proofs.json": "217f3d81223ed66eb3aae54e34f3b9d547c4afe19e6ce4ed6bfb1452aee96d22"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "ack-traces": {
+      "document": {
+        "input_sha256": "bbbc6f9811cea3f4b36ee97a2e9bc23e74842254e96a8c4c074bb6f678a5315b"
+      },
+      "query": {
+        "input_sha256": "d2d3575f8f6acce2e49705ae3728101247600bf733d5733a17102e7c2c438055"
+      }
+    },
+    "barrier-proof": {
+      "document": {
+        "input_sha256": "aabe80c9db3c90b6c13899ea742eb365c1eb2f7a8714bb3911ad13a20e0d8e7e"
+      },
+      "query": {
+        "input_sha256": "7c858c109f83636c82d4b61fedb6c0e389067685b7fc0c92d37290da995142da"
+      }
+    },
+    "bridge-proof": {
+      "document": {
+        "input_sha256": "42f64216dcd95edfa4bf6fc6b411aea809c16e07b9f34f2e7c1f46844a22afbb"
+      },
+      "query": {
+        "input_sha256": "f3b976641022e569e01ec3192530a6d2edb8630a011cbbb65a32ca620d17db35"
+      }
+    },
+    "bridge-trace": {
+      "document": {
+        "input_sha256": "4172d9d19236c9bd9b8ff8e051a020c7a54f940d093e69523cef5eba800d7540"
+      },
+      "query": {
+        "input_sha256": "e91d95d8544a13ac0eeecf4b837c05f77347120fa141a4f97ed3eb36def00ee9"
+      }
+    },
+    "bus-pass": {
+      "document": {
+        "input_sha256": "798d0c9e1a33649768db50f8f46f489b40ffcb513bda3603374d0d56a3a2b65c"
+      },
+      "query": {
+        "input_sha256": "2734f8217e484222699998c43b2599554567818d82a50a335fb20236c032a8a9"
+      }
+    },
+    "clock-two": {
+      "document": {
+        "input_sha256": "34c53fa9ad30572082051dc5c734b88c1bf34bdf862b814feb70ac383f789c73"
+      },
+      "query": {
+        "input_sha256": "ad320776be786ab520a89e6d00be90ee653321e8866ef25e5cfe11a637cd15b7"
+      }
+    },
+    "dish-rack": {
+      "document": {
+        "input_sha256": "a89a6d0c13e8a0479eabf0bc0efef57f7fa6b5309afb95f59bd659c45bdf8f71"
+      },
+      "query": {
+        "input_sha256": "bccc7d37c5e374cd91b03cc7275f3bb5d18fa2232b4b99cae4807ff2dada47ed"
+      }
+    },
+    "epoch-proof": {
+      "document": {
+        "input_sha256": "dbe740da5e2536831945bb70c73a041e39b2cf56c3e01dc50fba8024b02f20a5"
+      },
+      "query": {
+        "input_sha256": "53270cd6384d6710d665448411229f7080f02181af0f422e48304a8b523ec12f"
+      }
+    },
+    "fix-proof": {
+      "document": {
+        "input_sha256": "a21a1447cf846977a7ae9a974e5219596bdc2627d691e73d0cfb434504aa130b"
+      },
+      "query": {
+        "input_sha256": "98f4a2f20f9add91463b1140ede10beae87c2ba9d88354a370084b5995f0b89b"
+      }
+    },
+    "lease-restart": {
+      "document": {
+        "input_sha256": "db5e5bac2a8bc3880c7886fee5cb10d817b9f47d080f2d635483c307ec30925b"
+      },
+      "query": {
+        "input_sha256": "c8e152306a60961b01a6b105d9e7c2ab88cb631c95d57b97961c39792295e0c2"
+      }
+    },
+    "soap": {
+      "document": {
+        "input_sha256": "23842f26681850e21cc67a4a725a48cf02c27266983b76cd15ae1b25d512fe4f"
+      },
+      "query": {
+        "input_sha256": "1af3384e260aadfea6d5c3487217b579206731c5582c436bff8bf7e3c185c975"
+      }
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "17e8e8a3cc40d21f2deb005982b3a26cbc7ca7fbe4e144f5a1aa702a6c51deb4": {
+      "candidate": "sea-preflight",
+      "related": true,
+      "target": "blue-show"
+    },
+    "3ad6d6f757d16537f9006f7339962371fc564f9971736f4ce20eb3c7860dfaf5": {
+      "candidate": "blue-relay",
+      "related": false,
+      "target": "run-foyer"
+    },
+    "3bc422268787fc854d43cd762f8ce7b0f4ce5dfd9032bef4f8d77db91ffeb129": {
+      "candidate": "audio-preflight",
+      "related": true,
+      "target": "blue-relay"
+    },
+    "4efd9adbbeacaef70f5da35e25fe052e8d64be3d7aacf123b90d0249611a7787": {
+      "candidate": "run-foyer",
+      "related": false,
+      "target": "sea-preflight"
+    },
+    "5b5ec61c8ce3d4003d95fc79b429db1eefd9394d98e4c93dcad31266a081489c": {
+      "candidate": "cabaret-load",
+      "related": true,
+      "target": "blue-relay"
+    },
+    "64ed817237a0f6e01e9c34f69c0428ffde8df9f5d8d1825717d354cc0b5d1e92": {
+      "candidate": "usher-handback",
+      "related": false,
+      "target": "run-foyer"
+    },
+    "76cf925ed93f517a14882544ebffb253d4c2dc3eb2e929c38949cf36513e6bea": {
+      "candidate": "ready-ribbons",
+      "related": false,
+      "target": "run-foyer"
+    },
+    "8418958694ab2736223feec2317951b71c2e35b361c4d6f9c9652d9a1937a35c": {
+      "candidate": "radio-cabaret",
+      "related": false,
+      "target": "cabaret-load"
+    },
+    "878901c991f562913e0e3ec00ffdc4443db7199ee0c2c2aa1f64e513e063614b": {
+      "candidate": "blue-show",
+      "related": false,
+      "target": "sea-preflight"
+    },
+    "879e17fee11bc1e37b8370e2e26681f2827a3461ffc0cbe78a95f05f4f7d2770": {
+      "candidate": "short-on-air",
+      "related": false,
+      "target": "audio-preflight"
+    },
+    "9f5118fff5a2ff646f5ecd03066787b7e0a3c3e2e65955325b73f7262acef000": {
+      "candidate": "blue-relay",
+      "related": true,
+      "target": "sea-preflight"
+    },
+    "a9db64ae3825aaac51536d7e8014a2becfb640578703cc2209207808a8423c8a": {
+      "candidate": "radio-cabaret",
+      "related": false,
+      "target": "usher-handback"
+    },
+    "b06d7b9d1adc88230aba69ad48f3f03f675971aa43f844ce48810b9d449e926a": {
+      "candidate": "quiet-show",
+      "related": false,
+      "target": "grain-pickup"
+    },
+    "b1652cfa6b1e8917b31482b706e9b9d1e33b12168aaa210188a3294a40c93e64": {
+      "candidate": "sea-preflight",
+      "related": true,
+      "target": "sea-preflight"
+    },
+    "b271c426f256116892f4543c651b50a45154e36344c4c25fdcbe8bfe6b322e88": {
+      "candidate": "run-foyer",
+      "related": false,
+      "target": "blue-show"
+    },
+    "b5a2d2e9dbc08c66aaa7ac1310f342852bc41b9d9146fa8f035fc5b6d0c0f270": {
+      "candidate": "cabaret-load",
+      "related": false,
+      "target": "usher-handback"
+    },
+    "bdfadea29f81eed7266745f756ada99ae5f7b32f6a14402ac72e7028bf8d16f4": {
+      "candidate": "blue-show",
+      "related": true,
+      "target": "blue-show"
+    },
+    "be7e1dfa693e977dcd61c8ef87f4e9482b7ae20ec8f89e20467761e154194c99": {
+      "candidate": "audio-preflight",
+      "related": true,
+      "target": "sea-preflight"
+    },
+    "c5a9a5a7bef62615ea54163a634e581f70a8fba505672fe26d65ddf85031a5f6": {
+      "candidate": "ready-ribbons",
+      "related": false,
+      "target": "sea-preflight"
+    },
+    "cbaabfe49f06862db6f43865692fffd7834cf6767a56ad1a02df65a283d14e00": {
+      "candidate": "blue-relay",
+      "related": false,
+      "target": "ready-ribbons"
+    },
+    "e12d554a2ff070cd3db83c7a366495d51f10bf8bf29788e99b85c0968a27b8a3": {
+      "candidate": "cabaret-load",
+      "related": true,
+      "target": "audio-preflight"
+    },
+    "fb73b976e9825d0493fb96dbea46a256a50d43ec7edcf3c4eec36005cbc72cf0": {
+      "candidate": "ready-ribbons",
+      "related": false,
+      "target": "blue-show"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "08-community-playhouse",
+  "public_sources": {
+    "files_sha256": {
+      "histories/08-community-playhouse.json": "d16bf2bfd58b974830e0ff358d2058c180e84efe8ee63a148de5af45d6aa003e",
+      "pdfs/08-community-playhouse/blue-relay.pdf": "4edb3e8787b6fa2e65829db6a9ccff4b5062eecf5693106920c3a1f4c81b26c2",
+      "pdfs/08-community-playhouse/sea-preflight.pdf": "f40af9e7bfebf0faf14ad3a59118193e1e13c796780f98983eb0aaed0566a16d",
+      "schedules/08-community-playhouse.json": "ae5bafb12d747604f9c68b58aff2faf52f36fbd3b69e02ed6f3ad691634eaa62"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "audio-preflight": {
+      "document": {
+        "input_sha256": "f16a4838674f42a89a0f90663569ea866cc437c7f9bebdb0fd6b7b9c82714aff"
+      },
+      "query": {
+        "input_sha256": "7ae964af8370293904fc7019a7649c76887c57342284795ea753d34b3b567f9b"
+      }
+    },
+    "blue-relay": {
+      "document": {
+        "input_sha256": "dd6aad352abf74ab2fa96810d29d0207ddbd6cc21fc6978f283b9a962991fd59"
+      },
+      "query": {
+        "input_sha256": "d41573ad1f71c5d0d7ff147849965de64203d4d300445cece8db49eb15c46ef0"
+      }
+    },
+    "blue-show": {
+      "document": {
+        "input_sha256": "ce45aa06aa0d202ffc546ba958df5c5aa2dd30fd43b0b5ffcd643aa2e0180fa4"
+      },
+      "query": {
+        "input_sha256": "dc57239c39f9f4016e4d0ac84e7bd4de9e8ecda567f20a108d496af12628477d"
+      }
+    },
+    "cabaret-load": {
+      "document": {
+        "input_sha256": "9b4d665c1b3a4dd56969fb6c82637f05e973e3524f8fb126949ddd477cbcce56"
+      },
+      "query": {
+        "input_sha256": "957fa09529494f201ab6ff7104a32cf4c6da22a2e1aee4a8c23f9fc5dea28e9d"
+      }
+    },
+    "grain-pickup": {
+      "document": {
+        "input_sha256": "72e8b44760b5ee8d0b6be7def3da1fd4950e2eb0c9062740df392a50e9229b69"
+      },
+      "query": {
+        "input_sha256": "00672fba429dad26b2937631308bbb367269d556a8f8d006ed9398876c78a982"
+      }
+    },
+    "quiet-show": {
+      "document": {
+        "input_sha256": "d46989489ac24856ff5fbeeea37aa98ece71598e4b0d4c60f62cafa8314b2824"
+      },
+      "query": {
+        "input_sha256": "f44db26c8cdc454a296c433197272c3fcef506beead8ead4b41fde155382f67f"
+      }
+    },
+    "radio-cabaret": {
+      "document": {
+        "input_sha256": "0cd138ae2c7625976e6b8209abac8c0746e8212e76218dea66c991f5c297ee34"
+      },
+      "query": {
+        "input_sha256": "ae3174c54d6a595e3aa0108dba495e18783f362b7438abd82de456082bd57a8e"
+      }
+    },
+    "ready-ribbons": {
+      "document": {
+        "input_sha256": "a67c939dde4c21cf28ca8bb26fb6d6fafdc6873f35926255076f02d4d455ae5e"
+      },
+      "query": {
+        "input_sha256": "e3e7d970d05667f4de249adf2b0186e778deea9417e655dc185c6bb184a9736e"
+      }
+    },
+    "run-foyer": {
+      "document": {
+        "input_sha256": "0e9cda392f26b27b88941db49d7514b5ac29f473d0f995669a7efe42b14935b6"
+      },
+      "query": {
+        "input_sha256": "246c8cdfd1150b32127287c7558a52ab9a6a5a978142ca09736a3191f938558b"
+      }
+    },
+    "sea-preflight": {
+      "document": {
+        "input_sha256": "b9438efc5364713cd1c7f11b7501a03f2636772261ecd87683f5639608c257df"
+      },
+      "query": {
+        "input_sha256": "9ae2448d559de4f2b34a08c7f9f9dbe8e919522323c4dae2ec652d0ebd244b9f"
+      }
+    },
+    "short-on-air": {
+      "document": {
+        "input_sha256": "5de260696db9c52520088616ae6dfc363dd16fbe5196fe785cf1ca243a8c7095"
+      },
+      "query": {
+        "input_sha256": "0d2bb8c39bd0c78dd3991f6db16ecde85367585bd7ac6b151abe90cc4dfecfd3"
+      }
+    },
+    "usher-handback": {
+      "document": {
+        "input_sha256": "8b753ffea1c6b35993e062fc9dce6ae6b2bc314d1f4d2b4b2f1227198937e40e"
+      },
+      "query": {
+        "input_sha256": "d07306b3a0a4b92790d8ab4b2f4afd0042eed4bc62c5719f10aae4fe654b2d0b"
+      }
+    }
+  }
+}

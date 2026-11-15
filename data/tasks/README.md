@@ -28,6 +28,8 @@ python -m examples.estimation.run list
 python -m examples.estimation.run open 02
 ```
 
+The [packaged retrieval data](retrieval/) includes a CSV for each of the 119 public sample tasks. Its 1,024 rows hold the document and query embeddings. The profile JSON records the two model-input hashes, the public source files and Kev’s pair decisions. Final forecasts are generated using the endpoint you configure.
+
 ## Score a chronological replay
 
 Run a single profile from its first creation through its last timer event. Choose a new output directory for each run. You can stop at an event count or pass a specific local date for day zero.

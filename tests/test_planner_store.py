@@ -289,6 +289,19 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(self.store.get_task(target["id"])["prediction"], self.budget)
         self.assertFalse(self.store.has_pending_predictions())
 
+    def test_delayed_matrix_job_keeps_newer_task_as_target_after_it_finishes(self):
+        # A burst can insert both tasks within one clock tick.
+        earlier = self.task("Earlier")["id"]
+        newer = self.task("Newer")["id"]
+        self.store.transition(newer, "start")
+        self.now += 120
+        self.store.transition(newer, "stop")
+        self.store.transition(newer, "finish")
+        job = self.store.claim_relation()
+        self.assertEqual((job["target"]["id"], job["candidate"]["id"]), (newer, earlier))
+        self.assertTrue(self.store.resolve_relation(job["pair"], job["token"], True))
+        self.assertEqual(self.store.claim_prediction()["task"]["id"], earlier)
+
     def test_refreshes_only_related_tasks_in_other_days_and_timer_states(self):
         ready, paused, running = (self.task(title) for title in ("Tuesday", "Paused", "Active"))
         self.store.reschedule(ready["id"], "2026-11-15")

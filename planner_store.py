@@ -597,11 +597,11 @@ class PlannerStore:
             pair = tuple(row)
             db.execute("""UPDATE task_relations SET token=?,lease_end=?
                           WHERE left_id=? AND right_id=?""", (token, now + lease_seconds, *pair))
-            # Use the unfinished/newer task as the forecast target. Pair judging
-            # needs task scope only, including the already-extracted document.
+            # The new task that created the matrix cell stays its target, even
+            # if it finishes before judging. Row insertion order breaks clock ties.
             target, candidate = [dict(t) for t in db.execute("""
                 SELECT id,title,description,category,details,pdf_text,pdf_text_version FROM tasks WHERE id IN (?,?)
-                ORDER BY status='completed',created_at DESC,rowid DESC""", pair)]
+                ORDER BY created_at DESC,rowid DESC""", pair)]
             for task in (target, candidate):
                 # Fixed-duration and legacy tasks can have uploads but no forecasting job to parse them.
                 if not task["pdf_text_version"]:

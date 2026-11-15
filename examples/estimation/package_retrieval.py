@@ -1,12 +1,13 @@
 """Build the portable Qwen and Kev results for the ten public Dev histories."""
 
 import argparse
-from itertools import combinations
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 from examples.estimation.calibrate_retrieval import cosine
-from examples.estimation.run import DATASET, histories, task_inputs
+from examples.estimation.run import DATASET, REPO, histories, task_inputs, valid_id
 import retrieval
 import sample_retrieval as cache
 
@@ -16,23 +17,62 @@ def inputs(history):
             for group in ("tasks", "open_tasks", "holdouts") for row in history[group]}
 
 
+def public_revision(ref):
+    remote = subprocess.check_output(["git", "-C", REPO, "config", "--get", "remote.origin.url"], text=True)
+    remote = remote.strip().lower().rstrip("/").removesuffix(".git")
+    if remote not in {"https://github.com/madbonzz/daily-planner-recreated",
+                      "git@github.com:madbonzz/daily-planner-recreated",
+                      "ssh://git@github.com/madbonzz/daily-planner-recreated"}:
+        raise ValueError("Check out the published daily-planner-recreated repository before exporting sample inputs.")
+    revision = subprocess.check_output(
+        ["git", "-C", REPO, "rev-parse", "--verify", "--end-of-options", ref + "^{commit}"], text=True).strip()
+    subprocess.run(["git", "-C", REPO, "merge-base", "--is-ancestor", revision, "origin/main"], check=True)
+    return revision
+
+
+def public_sources(history, revision):
+    """Require inputs to match blobs from the published sample tree before embedding or exporting."""
+    name = history["id"]
+    if not valid_id(name):
+        raise ValueError("Invalid sample history ID")
+    paths = {f"histories/{name}.json", f"schedules/{name}.json"}
+    for group in ("tasks", "open_tasks", "holdouts"):
+        for task in history[group]:
+            if not valid_id(task["id"]):
+                raise ValueError("Invalid sample task ID")
+            pdf = task.get("pdf")
+            if pdf:
+                stem = pdf if isinstance(pdf, str) else task["id"]
+                if not valid_id(stem):
+                    raise ValueError("Invalid sample PDF reference")
+                paths.add(f"pdfs/{name}/{stem}.pdf")
+    files = {}
+    for path in sorted(paths):
+        file = DATASET / path
+        if not file.resolve().is_relative_to(DATASET.resolve()) or file.is_symlink():
+            raise ValueError(f"Invalid sample input path: {path}")
+        committed = subprocess.check_output(["git", "-C", REPO, "show", f"{revision}:data/tasks/{path}"])
+        if file.read_bytes() != committed:
+            raise ValueError(f"Sample input differs from published revision {revision}: {path}")
+        files[path] = hashlib.sha256(committed).hexdigest()
+    if history != json.loads((DATASET / "histories" / (name + ".json")).read_text(encoding="utf-8")):
+        raise ValueError("In-memory input differs from the public history.")
+    return {"repository": "MadBonzz/daily-planner-recreated", "revision": revision, "files_sha256": files}
+
+
 def matrix_pairs(history):
     events = json.loads((DATASET / "schedules" / (history["id"] + ".json")).read_text(encoding="utf-8"))
     active, pairs = set(), set()
     for event in events:
         task = event["task"]
         if event["action"] == "create":
-            for other in active:
-                # A finish before the matrix job can swap the unfinished task into first position.
-                pairs.update(((task, other), (other, task)))
+            pairs.update((task, other) for other in active)
             active.add(task)
         elif event["action"] == "finish":
             active.remove(task)
     holdouts = {task["id"] for task in history["holdouts"]}
-    # Users can add the same sample twice. Distinct runtime IDs still need a real pair decision.
-    pairs.update((task, task) for task in holdouts)
-    for first, second in combinations(active | holdouts, 2):
-        pairs.update(((first, second), (second, first)))
+    # Either holdout can be added first, and two copies can have distinct runtime IDs.
+    pairs.update((task, earlier) for task in holdouts for earlier in active | holdouts)
     return pairs
 
 
@@ -60,10 +100,10 @@ def needed_pairs(history, vectors):
     return pairs
 
 
-def empty_bundle(history):
+def empty_bundle(history, sources):
     return {"format": cache.FORMAT, "history": history["id"], "embedding_model": retrieval.EMBEDDING_MODEL,
             "decision_model": retrieval.DECISION_MODEL, "query_instruction": retrieval.QUERY_INSTRUCTION,
-            "cosine_floor": retrieval.MINIMUM_THRESHOLD, "vectors": {}, "decisions": {}}
+            "cosine_floor": retrieval.MINIMUM_THRESHOLD, "public_sources": sources, "vectors": {}, "decisions": {}}
 
 
 def save(path, bundle):
@@ -72,20 +112,19 @@ def save(path, bundle):
     temp.replace(path)
 
 
-def build_vectors(tasks, bundle):
+def build_vectors(tasks, bundle, path):
     for task_id, task in tasks.items():
-        roles = {}
-        for role in ("query", "document"):
-            query = role == "query"
-            text = retrieval.embedding_input(task, query)
-            vector = retrieval._live_vector(text, retrieval.EMBEDDING_MODEL, retrieval.planner_settings())
-            roles[role] = {"input_sha256": cache.text_hash(text), "f32le_base64": cache.packed_vector(vector)}
-        bundle["vectors"][task_id] = roles
+        vectors, hashes = {}, {}
+        for role in cache.ROLES:
+            text = retrieval.embedding_input(task, role == "query")
+            vectors[role] = retrieval._live_vector(text, retrieval.EMBEDDING_MODEL, retrieval.planner_settings())
+            hashes[role] = {"input_sha256": cache.text_hash(text)}
+        cache.write_vectors(cache.csv_path(path, task_id), vectors)
+        bundle["vectors"][task_id] = hashes
 
 
 def build_decisions(history, tasks, bundle, path):
-    vectors = {key: {role: cache.unpack_vector(v["f32le_base64"]) for role, v in roles.items()}
-               for key, roles in bundle["vectors"].items()}
+    vectors = {key: cache.read_vectors(path, key) for key in bundle["vectors"]}
     holdouts = {row["id"] for row in history["holdouts"]}
     pairs = sorted(needed_pairs(history, vectors), key=lambda pair: (pair[0] not in holdouts, *pair))
     for position, (target, candidate) in enumerate(pairs, 1):
@@ -100,32 +139,62 @@ def build_decisions(history, tasks, bundle, path):
         print(f"{history['id']} {position}/{len(pairs)} task pairs", flush=True)
 
 
+def verify_index(path, history, tasks, bundle, sources, *, complete):
+    expected = empty_bundle(history, sources)
+    if set(bundle) != set(expected) or any(
+            bundle[field] != value for field, value in expected.items() if field not in {"decisions", "vectors"}):
+        raise ValueError(f"Invalid or stale fixture/model metadata in {path.name}")
+    if set(bundle["vectors"]) != set(tasks):
+        raise ValueError(f"Unexpected task IDs in {path.name}")
+    directory = path.parent / path.stem
+    if {p.name for p in directory.iterdir()} != {key + ".csv" for key in tasks}:
+        raise ValueError(f"The numeric files do not match the public task IDs for {path.stem}")
+    vectors = {}
+    for task_id, task in tasks.items():
+        hashes = {role: {"input_sha256": cache.text_hash(retrieval.embedding_input(task, role == "query"))}
+                  for role in cache.ROLES}
+        if bundle["vectors"][task_id] != hashes:
+            raise ValueError(f"Unexpected embedding input in {path.stem}/{task_id}")
+        vectors[task_id] = cache.read_vectors(path, task_id)
+    pairs = set()
+    for digest, row in bundle["decisions"].items():
+        if set(row) != {"target", "candidate", "related"} or type(row["related"]) is not bool:
+            raise ValueError("Expected two public task IDs and a boolean Kev decision.")
+        target, candidate = row["target"], row["candidate"]
+        if target not in tasks or candidate not in tasks:
+            raise ValueError("Unknown task ID in a Kev decision.")
+        payload = retrieval.decision_payload(tasks[target], tasks[candidate], [], retrieval.DECISION_MODEL)
+        if cache.decision_hash(payload) != digest:
+            raise ValueError(f"Stale Kev decision for {target} and {candidate}")
+        pairs.add((target, candidate))
+    if complete and (missing := needed_pairs(history, vectors) - pairs):
+        raise ValueError(f"Missing {len(missing)} required Kev decisions for {path.stem}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--stage", choices=["vectors", "decisions"], required=True)
+    parser.add_argument("--stage", choices=["vectors", "decisions", "verify"], required=True)
+    parser.add_argument("--public-revision", default="origin/main", help="Published commit containing the sample inputs")
     args = parser.parse_args()
+    revision = public_revision(args.public_revision)
     args.output.mkdir(exist_ok=True, parents=True)
     config = retrieval.planner_settings()
-    if (config.get("PLANNER_DECISION_MODEL") or retrieval.DECISION_MODEL) != retrieval.DECISION_MODEL:
+    if args.stage == "decisions" and (config.get("PLANNER_DECISION_MODEL") or retrieval.DECISION_MODEL) != retrieval.DECISION_MODEL:
         parser.error("Select Kev-4B to build the packaged decisions.")
     for history in histories(None):
         path = args.output / (history["id"] + ".json")
+        sources = public_sources(history, revision)
         tasks = inputs(history)
         if args.stage == "vectors":
-            bundle = empty_bundle(history)
-            build_vectors(tasks, bundle)
+            bundle = empty_bundle(history, sources)
+            build_vectors(tasks, bundle, path)
             save(path, bundle)
         else:
             bundle = json.loads(path.read_text(encoding="utf-8"))
-            if set(bundle["vectors"]) != set(tasks):
-                parser.error("Run the vector stage again after adding or removing sample tasks.")
-            for task_id, task in tasks.items():
-                for role in ("query", "document"):
-                    expected = cache.text_hash(retrieval.embedding_input(task, role == "query"))
-                    if bundle["vectors"].get(task_id, {}).get(role, {}).get("input_sha256") != expected:
-                        parser.error("Run the vector stage again after changing tasks or instructions.")
-            build_decisions(history, tasks, bundle, path)
+            verify_index(path, history, tasks, bundle, sources, complete=args.stage == "verify")
+            if args.stage == "decisions":
+                build_decisions(history, tasks, bundle, path)
         print(history["id"], len(bundle["vectors"]), "tasks,", len(bundle["decisions"]), "decisions", flush=True)
 
 

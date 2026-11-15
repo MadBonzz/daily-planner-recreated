@@ -35,7 +35,8 @@ def verified_pairs(profiles):
     """Inspect exact bundled inputs and require a Kev response for each cross-arm candidate."""
     pairs = []
     for history in profiles:
-        bundle = json.loads((sample_retrieval.DIRECTORY / (history['id'] + '.json')).read_text())
+        index_path = sample_retrieval.DIRECTORY / (history['id'] + '.json')
+        bundle = json.loads(index_path.read_text())
         rows = {r['id']: r for r in history['tasks'] + history['holdouts'] if not r.get('fixed_duration')}
         tasks = {key: run.task_inputs(row, history['id'], run.DATASET)[0] for key, row in rows.items()}
         vectors = {}
@@ -46,7 +47,7 @@ def verified_pairs(profiles):
                 text = retrieval.embedding_input(task, role == 'query')
                 if sample_retrieval.text_hash(text) != record['input_sha256']:
                     raise ValueError(f"Stale {role} for {key}")
-                vectors[key][role] = sample_retrieval.unpack_vector(record['f32le_base64'])
+                vectors[key][role] = sample_retrieval.read_vectors(index_path, key)[role]
         for target in history['holdouts']:
             if target.get('fixed_duration'):
                 continue

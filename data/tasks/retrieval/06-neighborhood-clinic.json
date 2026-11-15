@@ -1,0 +1,355 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "07f0a3aab6fed5d716a81f271080677a3af873f347a2da50482c9a86744487da": {
+      "candidate": "mara-evening",
+      "related": true,
+      "target": "mara-late-room"
+    },
+    "0885fde0a4c667e75da427e547f41ae8adfc44428c0e170fc232d17c1a1d853d": {
+      "candidate": "mara-evening",
+      "related": true,
+      "target": "mara-capacity"
+    },
+    "09e1263aef8a2e0cb990079565db788aa4162834c1c1707787e12842763b195b": {
+      "candidate": "dev-stock",
+      "related": false,
+      "target": "mara-capacity"
+    },
+    "0b48092d72187c31eb7cbdfeb1efcef5312b9a611445d85b6912bcfbfbc4286c": {
+      "candidate": "dev-stock",
+      "related": false,
+      "target": "campus-posters"
+    },
+    "0ebe9d2a8790db8adb4953ed2ca257b0dbfd4a36a79882f2d3af9e56e5b2aed4": {
+      "candidate": "dev-april",
+      "related": false,
+      "target": "mara-rooms"
+    },
+    "0ee0d01ecefc444640aa7dd4308e399e534e9a89d57a3948e333441812afa4cc": {
+      "candidate": "mara-evening",
+      "related": false,
+      "target": "dev-stock"
+    },
+    "1897a669c7eeaf1752d96c1df3b29e49416410da6346a3e8ac1ae0842483d554": {
+      "candidate": "dev-receipts",
+      "related": false,
+      "target": "paused-flyer"
+    },
+    "1a4ca216e4ba43f5fb732f6e0497a4fe33f4dc76a92ee9d6d88e09b882fba631": {
+      "candidate": "dev-stock",
+      "related": true,
+      "target": "dev-packs"
+    },
+    "24d6fb1b7fffe9f931449ee3f1967c2b8bffe18444960e34c8e630d67486c577": {
+      "candidate": "mara-late-room",
+      "related": true,
+      "target": "mara-rooms"
+    },
+    "2c4b4ba109acac52139c70f3d487a8dea63df6f43db224ea98be58851ae14cd8": {
+      "candidate": "mara-capacity",
+      "related": true,
+      "target": "mara-evening"
+    },
+    "2c8c6a5c9761b6d4a1670327accafea6acdc48a2a8d21e60a4dc94e2dafb96d2": {
+      "candidate": "mara-capacity",
+      "related": false,
+      "target": "campus-posters"
+    },
+    "30d2d2f17e185894ef7d865e975e520c42e8619aa255e781025ba3afd9c2a4d6": {
+      "candidate": "mara-evening",
+      "related": false,
+      "target": "mara-dropoff"
+    },
+    "3ba98f079d7fb7e65e1f01d9053f63b3d24dbfc4d1b755fd796b230283821f95": {
+      "candidate": "mara-rooms",
+      "related": true,
+      "target": "mara-rooms"
+    },
+    "3cc1dd8e8ced75ac096d7df5fb0f7174435089b8ba8e91e245100200681054c6": {
+      "candidate": "dev-receipts",
+      "related": true,
+      "target": "dev-april"
+    },
+    "4715d49b0a0ca77f7c0b2d5c5fc2a783bb2f7e7df06f4601c55da46a82774a48": {
+      "candidate": "paused-flyer",
+      "related": false,
+      "target": "mara-rooms"
+    },
+    "48f7fd06d27161c042f97fe25a301d2a7ce6fa4a740f909056e059fc6d383f09": {
+      "candidate": "paused-flyer",
+      "related": false,
+      "target": "dev-april"
+    },
+    "4d6d0c5670f2ef2feba6453f8e02400aa3ca2bcc5d7b862470e4721cca633b0e": {
+      "candidate": "mara-evening",
+      "related": false,
+      "target": "paused-flyer"
+    },
+    "4d878141909ed21d8eacbb1cc29f4045f748f7737e6414d70294961612654545": {
+      "candidate": "dev-stock",
+      "related": true,
+      "target": "dev-april"
+    },
+    "543139ea339093184b34059c1e20c2a83d06914d7ad662bf48d858bb132cc0ff": {
+      "candidate": "dev-packs",
+      "related": true,
+      "target": "dev-april"
+    },
+    "5d8beecac968ede2708e06cedaf98d102b93ef99b523688fe592f82ad9eb18b1": {
+      "candidate": "mara-late-room",
+      "related": false,
+      "target": "mara-dropoff"
+    },
+    "5f17901346d2be4ade62cf8895fe93e1dc8b8dbda24c6683e6de9aade7a99468": {
+      "candidate": "mara-late-room",
+      "related": false,
+      "target": "dev-receipts"
+    },
+    "6a06e1f696c57b681fa1610819a9bf2fe50a2f3bbe3f7fd02eb628fe2430aad1": {
+      "candidate": "dev-receipts",
+      "related": false,
+      "target": "mara-dropoff"
+    },
+    "6fec6fc0aca85b26c9c28343f32d23964b17404025ee1d94ef0dd15b27ea41f1": {
+      "candidate": "mara-late-room",
+      "related": false,
+      "target": "dev-packs"
+    },
+    "7a005d10577ecc28c60403eed987eb5d087f5520a6227a72e02df3ff16becd6e": {
+      "candidate": "dev-receipts",
+      "related": false,
+      "target": "bus-pass"
+    },
+    "81cd52104e68131aacff66ace8b90144b3f2a0d0407b235848d10f045f7c821a": {
+      "candidate": "dev-stock",
+      "related": true,
+      "target": "dev-receipts"
+    },
+    "86867e33bb88f98b4f8d78a77c995d776fde6feebd70862dd118aa1110462ebe": {
+      "candidate": "mara-evening",
+      "related": true,
+      "target": "mara-rooms"
+    },
+    "8faeca589e282779ada4859071a013d73e713c31940f52e3bf4cb37684149d30": {
+      "candidate": "dev-april",
+      "related": false,
+      "target": "paused-flyer"
+    },
+    "93638e979ae8a5d0128ff21881d7f6c6e36550f66199d089e242cae7b72792e7": {
+      "candidate": "dev-april",
+      "related": true,
+      "target": "dev-april"
+    },
+    "9457198633ad5d886e74c8cf8e83562fc68c66cdd8bfe85875cc25a150e0094a": {
+      "candidate": "mara-late-room",
+      "related": false,
+      "target": "bus-pass"
+    },
+    "95570eefd18e5b3c911dca9ea3135c164a8e8f8de29a85154f96b09047da114d": {
+      "candidate": "dev-packs",
+      "related": false,
+      "target": "campus-posters"
+    },
+    "a80396d1bdde3503942ec5f1e17bcb53c4760fd146edf46fc0ff84b1349295ac": {
+      "candidate": "dev-receipts",
+      "related": false,
+      "target": "mara-rooms"
+    },
+    "b6fd50496282c974ba863ed4c0140eabd6c8c562468196838c9e1f7051eb1459": {
+      "candidate": "dev-stock",
+      "related": false,
+      "target": "mara-dropoff"
+    },
+    "b71c7a93c737bc841d8cd682fe05e222fab55a718fcc9242341818e1ea8c495b": {
+      "candidate": "campus-posters",
+      "related": false,
+      "target": "paused-flyer"
+    },
+    "c6ed69f5ef7831a8588bd5c41fe2e9c66172846e2be43cc1dd2dea211122b474": {
+      "candidate": "dev-packs",
+      "related": false,
+      "target": "mara-late-room"
+    },
+    "c70500b8a889c3c79e5619d1ee1aae8bca9786224135f913580f7001ebce0f95": {
+      "candidate": "ready-door",
+      "related": false,
+      "target": "dev-april"
+    },
+    "c8f6306329cde67ca5c90c41b9b76d62eea08d3ac8b923b2288eac23aa745360": {
+      "candidate": "dev-receipts",
+      "related": false,
+      "target": "ready-door"
+    },
+    "cc1c2787647b114c99670eb8edb32b2520a8e2171f6774d0df443b92bef1455f": {
+      "candidate": "mara-capacity",
+      "related": true,
+      "target": "mara-rooms"
+    },
+    "d3b9edb019f2a08343f3af8fc938d36c7f4627f85d8400546fe40e9125937d3b": {
+      "candidate": "mara-evening",
+      "related": false,
+      "target": "dev-april"
+    },
+    "d48fc1756b455206a1f4e54dded2041123874f31e9ea12d196b018039320663c": {
+      "candidate": "mara-capacity",
+      "related": false,
+      "target": "dev-packs"
+    },
+    "de9f25deda13c4a916197989cf83c436fac460367243e1b876e40fac774ec50c": {
+      "candidate": "mara-capacity",
+      "related": true,
+      "target": "mara-late-room"
+    },
+    "e3ad4a9028a67f84af4369662328b3392489cf2db1e122bdebda60099f4a324e": {
+      "candidate": "mara-rooms",
+      "related": false,
+      "target": "dev-april"
+    },
+    "e83cdacb2d3dc9e556979f7d7cde03bd6d083b09f2470898c215beeb9e165779": {
+      "candidate": "campus-posters",
+      "related": false,
+      "target": "dev-packs"
+    },
+    "f3803ea728c98f9ebfd467ab79398a002fd85808853998d0506ec170e3607626": {
+      "candidate": "dev-packs",
+      "related": true,
+      "target": "dev-receipts"
+    },
+    "f999169ed6ee3d5b64e2a50ac4bcdd18e80d3488e6c4231f647583a9030c74d1": {
+      "candidate": "mara-late-room",
+      "related": true,
+      "target": "mara-capacity"
+    },
+    "faa2634a6fb0022d021f3121a11cc637b0ec62a3edc770d4418f303ea8d06ed0": {
+      "candidate": "ready-door",
+      "related": false,
+      "target": "mara-rooms"
+    },
+    "fff50688f21a734df7059c12a95598a2dc5620b983c37f17a001a6620929f9fe": {
+      "candidate": "ready-door",
+      "related": false,
+      "target": "paused-flyer"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "06-neighborhood-clinic",
+  "public_sources": {
+    "files_sha256": {
+      "histories/06-neighborhood-clinic.json": "72edfd13b532352a161a95a094b96f2076895e080c7a5cbb286cba87d9fdfe3a",
+      "pdfs/06-neighborhood-clinic/mara-rooms.pdf": "d6129730f550a9943e48c2b64af43e0e6f42a93700a31edd987f6705692f076c",
+      "schedules/06-neighborhood-clinic.json": "e9e1a246821e78de21fdfa09c1b05dcb3dc1ad3860788cc8d688d2d155d03a62"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "bus-pass": {
+      "document": {
+        "input_sha256": "0d476be94d05ed1ffdd47a8273b55e5ce09e0d3fbf2fd63dbf851c905b22edd7"
+      },
+      "query": {
+        "input_sha256": "65ea1ee3a1467fd9a95418e33bc152b9a526639d271c07eb8ba2658e38586418"
+      }
+    },
+    "campus-posters": {
+      "document": {
+        "input_sha256": "de451fc248dffafe096db923ddeefbe49337b009ea532f4ebac02db809722858"
+      },
+      "query": {
+        "input_sha256": "cec5ed9ae9319b6c2cc3a2fd0e2d452789059f7478a0875c09f2f6e2cf4c37ac"
+      }
+    },
+    "dev-april": {
+      "document": {
+        "input_sha256": "87d0bb739c41bf9cb1e9195953c1dc25ec71ea01c1dd2f19072850c713a53a5b"
+      },
+      "query": {
+        "input_sha256": "466c176adfad73a1232758c03ff3b0a04fbde88a8758c918d1111933c5a4f95e"
+      }
+    },
+    "dev-packs": {
+      "document": {
+        "input_sha256": "7d1e8d97fd0d528ecf9a518904a518f8ab7190813f87eb98be3bad9164116ea4"
+      },
+      "query": {
+        "input_sha256": "5c9b3009af8c3c61b44805f606fd74bd217f7dbeb6a78a7be6226a25f136aaff"
+      }
+    },
+    "dev-receipts": {
+      "document": {
+        "input_sha256": "e0bc393c6f691a5a48534b8848bff23082a7d363abc9c99420687843eb993231"
+      },
+      "query": {
+        "input_sha256": "f1bcd9e6bf2b978740c42569a93bee983325164f1b94541f184e68bfa427c9e5"
+      }
+    },
+    "dev-stock": {
+      "document": {
+        "input_sha256": "b2b8e193fc08a14ae22735ecbb40eba4c6ac570a091368795c74d0803d77ff0e"
+      },
+      "query": {
+        "input_sha256": "8f6314dc513005c1eb552ba436d1ed468288df1a52823834da9c3eaa474912d6"
+      }
+    },
+    "mara-capacity": {
+      "document": {
+        "input_sha256": "29b9e3b7b21e814aedc48dbd190ad02776f210fc7c2234ae3a45ebcf9121b8ca"
+      },
+      "query": {
+        "input_sha256": "322626a0bcdbe20476fff85aabc16f0f243b2429da97ce83633d321335e00781"
+      }
+    },
+    "mara-dropoff": {
+      "document": {
+        "input_sha256": "93502455e07d85369b39a0f35768432c0f8c0042323afbb109623f7a1158fa60"
+      },
+      "query": {
+        "input_sha256": "21d75f090df4fd711b24a9a37c8645a7d80f4126014bb4c76ba5d9c79887f6c8"
+      }
+    },
+    "mara-evening": {
+      "document": {
+        "input_sha256": "5b15f1a1b57c9e0d7b9b51ea9477fe686e84557ca2430714c65c2c5758d58e76"
+      },
+      "query": {
+        "input_sha256": "255c96c5331b3cf18f36601faadefb3542d19b825d3db4b2fe312ede87a66d21"
+      }
+    },
+    "mara-late-room": {
+      "document": {
+        "input_sha256": "bca196ff58bd2d2617a0a94571a92b3f52961309dfcd96558ce8d53e583c5177"
+      },
+      "query": {
+        "input_sha256": "64c959f6df57fc5bd12179898e2adfbd006b98b123124f449951cc19e84a8aad"
+      }
+    },
+    "mara-rooms": {
+      "document": {
+        "input_sha256": "f69d706687c46428dd44b6b4ab3a765e0589e77fd22eb6af7c3590f6329b7626"
+      },
+      "query": {
+        "input_sha256": "f0fb5cb56476df9182f966423dbe596d6870f1b6d1521affd4ea7cf082c5f198"
+      }
+    },
+    "paused-flyer": {
+      "document": {
+        "input_sha256": "39ce850428c7f85b5d1027ad8ee4b2046881ced9098610c1c7be74ccec5170fe"
+      },
+      "query": {
+        "input_sha256": "a02873d843d0de9aea6b0a54c27caa4efe657e7ac6c7fcce2af21aeb4a56f118"
+      }
+    },
+    "ready-door": {
+      "document": {
+        "input_sha256": "cf1652de6d685cd4f87167db927f8769a6f059e67c351be445e07f7d387f0f0d"
+      },
+      "query": {
+        "input_sha256": "d50247c24d1b6f3810e4f96200ea4625177c3e21359296983fc6c494df8be167"
+      }
+    }
+  }
+}

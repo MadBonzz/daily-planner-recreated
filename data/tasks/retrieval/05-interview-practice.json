@@ -1,0 +1,312 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "04bc4c9eab70c479d831562fe2c5db87a440bcd4ceae05cd365f40310bac3d55": {
+      "candidate": "retype-merge",
+      "related": true,
+      "target": "editorial-review"
+    },
+    "075f4e79834d4dca19ea96068693d9d06637d55aab3b33d4137f5b6f6d8b6b93": {
+      "candidate": "shortest-window",
+      "related": true,
+      "target": "shortest-window"
+    },
+    "15ee43b3fef505fdf7a543186547e98ddaa0226fccbaa3f8eb81be7afbbd46df": {
+      "candidate": "two-targets",
+      "related": false,
+      "target": "queue-drill"
+    },
+    "225637733f50b4287fe0322d1e9cd94a064db76c19672f1e2e506af75598a74d": {
+      "candidate": "queue-drill",
+      "related": false,
+      "target": "shortest-window"
+    },
+    "29d2728551d5b4f405519a785714cacf26a18ad44153af708b8b3b3ce3a56628": {
+      "candidate": "retype-stack",
+      "related": false,
+      "target": "queue-drill"
+    },
+    "2b9a729d3841383bec6137af0203c4f494fb7e05be038cd3c29d745d7e38656a": {
+      "candidate": "analysis-extension",
+      "related": false,
+      "target": "rubric"
+    },
+    "2fc3c11296c250286a04fd18eb8b4dcc572a10da5dce11548baed18d9307edef": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "two-targets"
+    },
+    "41086f2203818a685d329a830be7b35598207e57c489374e82a4b173a5a0f705": {
+      "candidate": "retype-stack",
+      "related": true,
+      "target": "editorial-review"
+    },
+    "531c15fc4ae8a1be56fe25acb225dc9227df1098469d3a4ad6fae75f34dfeea3": {
+      "candidate": "queue-drill",
+      "related": false,
+      "target": "editorial-review"
+    },
+    "63bf03911281f34ef5284d39e56bff12fa6b9532453361c53415c586dcdabba8": {
+      "candidate": "subarray-target",
+      "related": true,
+      "target": "queue-drill"
+    },
+    "64e4b6ee144ba167019393bfc5d0e17d1f3fbb0c49c489b4219add123b71d076": {
+      "candidate": "cfg-paper",
+      "related": false,
+      "target": "analysis-extension"
+    },
+    "692de700ba82c22709f89e9e7a9a26aefc6037b648a87e96a462f0123027433b": {
+      "candidate": "two-targets",
+      "related": false,
+      "target": "retype-merge"
+    },
+    "6c5796138ee7da9b2fa5d161cff3d0ca6e922859a8080cfd26b5e89362447911": {
+      "candidate": "editorial-review",
+      "related": true,
+      "target": "shortest-window"
+    },
+    "6fc908377bd73bbac49451536ec00ebd4049eada3d64ee0fdcb4e786c779d962": {
+      "candidate": "analysis-extension",
+      "related": false,
+      "target": "shortest-window"
+    },
+    "71dbf01c092ec3194edcaf8469afd911b5f75202f7e9afaa738ff5a388e50fee": {
+      "candidate": "two-targets",
+      "related": false,
+      "target": "window-cost"
+    },
+    "72727ecd0a0c57ca4c5b92fe495d9e9701a24e55f04f8dd6c55028e3a947f119": {
+      "candidate": "two-targets",
+      "related": false,
+      "target": "rubric"
+    },
+    "7a62a2b8ef947efed3003e8701f19f1dcbceac8b565a1409ed65fdcbdf782203": {
+      "candidate": "rubric",
+      "related": false,
+      "target": "analysis-extension"
+    },
+    "7b5236d23a0b66606d1505c604fa92cb86c8b992fde7bdd6b787d14271281df1": {
+      "candidate": "rubric",
+      "related": false,
+      "target": "cutlery"
+    },
+    "7c94ad6ab201e4b2b1b858a7e4d17b6af2e875b31a140f27c28c7dcb818bf676": {
+      "candidate": "subarray-target",
+      "related": true,
+      "target": "shortest-window"
+    },
+    "8052f4558544e99df4acc24e0adaab39885377ae831d2ee0ae754fc1cb53bf3b": {
+      "candidate": "two-targets",
+      "related": false,
+      "target": "cutlery"
+    },
+    "98987991208daf08906f3fef992e8195e9b7f2fa1e47ae166469477919dd6553": {
+      "candidate": "analysis-extension",
+      "related": false,
+      "target": "editorial-review"
+    },
+    "9901b9a87c0cb93577aec47bde55c21a302cf0bfa33efb33147cfb7e4a906c54": {
+      "candidate": "editorial-review",
+      "related": false,
+      "target": "queue-drill"
+    },
+    "99a0fde74e5651f22d31f991b6b8d069c105fcf4404c2e8617a61860760d2e82": {
+      "candidate": "retype-merge",
+      "related": false,
+      "target": "cutlery"
+    },
+    "9eb307954959fc19c2a8686cf0f956cba56a5b8cc44472eeb67e02d929d5b391": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "queue-drill"
+    },
+    "a5a6e04e88eb0cf2ab7819ae87f67a47589076b52eed7386170e6f0f2b299ef5": {
+      "candidate": "shortest-window",
+      "related": false,
+      "target": "editorial-review"
+    },
+    "ab72fb325f621cfe541cbffb0b4bb3006e96c6fe2431ca0359f137263391faa2": {
+      "candidate": "cfg-paper",
+      "related": false,
+      "target": "two-targets"
+    },
+    "adabb55bd400da8b673b016df4133b421dbc1133906701d1879d3ed0a89a0125": {
+      "candidate": "editorial-review",
+      "related": true,
+      "target": "editorial-review"
+    },
+    "b4102a069f5328b0b0d9a55c66b0396bed5ab815d5265bafb45a37aac7fce600": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "cfg-paper"
+    },
+    "c4ac60ec7dc38fbb307b76fcbdc665f34915cfe4efcd4e73e4081aabcc46a373": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "retype-merge"
+    },
+    "c8f06beb2d75fe302c5a4b8ab9708cccf5ba8412dd5f771aa266db1241238407": {
+      "candidate": "rubric",
+      "related": false,
+      "target": "queue-drill"
+    },
+    "d2248779d02e80886159c8ce58466967035b06ce326f4828289b1bf7f5f605ba": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "shortest-window"
+    },
+    "d3383ed8a5a1de52e19ee70bc5701c570d1576f4b3f72fb94f7a73b2c2d0e5f2": {
+      "candidate": "window-cost",
+      "related": false,
+      "target": "editorial-review"
+    },
+    "d689bbc73f9c0a3b389217dfc2f6d49d135d91fd89c3af09934d3c2e8478b586": {
+      "candidate": "queue-drill",
+      "related": false,
+      "target": "analysis-extension"
+    },
+    "da255c2f0e4093845a56769f68bc1fcab17ed304b4170a11b239c1c9d3f400c1": {
+      "candidate": "cfg-paper",
+      "related": false,
+      "target": "rubric"
+    },
+    "db0319a12fb813ca68c204fe21546ab382ea6f8e04d72da1183427c21c84f056": {
+      "candidate": "subarray-target",
+      "related": false,
+      "target": "window-cost"
+    },
+    "dba332c4bc8e2726d9db9f8fd85ac3df952b2d37afb67bcde1843dd0a1901c20": {
+      "candidate": "rubric",
+      "related": false,
+      "target": "retype-merge"
+    },
+    "df071669c2d38cbccd26006b63547ea9598b1f353e6a3d68ae57a62efb84d782": {
+      "candidate": "subarray-target",
+      "related": false,
+      "target": "two-targets"
+    },
+    "e797a5de9c71e77160501e4c15233d7b1fe1cfff72b2968f1a0e450621f350f4": {
+      "candidate": "rubric",
+      "related": false,
+      "target": "retype-stack"
+    },
+    "fe0c8c5fab91b006c0fdf7f95836183351590819e158b9547de09824312cc806": {
+      "candidate": "two-targets",
+      "related": true,
+      "target": "shortest-window"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "05-interview-practice",
+  "public_sources": {
+    "files_sha256": {
+      "histories/05-interview-practice.json": "688fd04661567a5b1abf40f443b383c2db6e84519c6f375cc4117f942babd7c7",
+      "pdfs/05-interview-practice/cfg-paper.pdf": "4a1bde752c1d27468b5cc08cf0da12dd59ce1356c716d6d34da5c0f8d8eb6950",
+      "schedules/05-interview-practice.json": "de9e42f1d5956706e1bf3c6c438cd686761e4a7070e2e33c51b7422db0180ea6"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "analysis-extension": {
+      "document": {
+        "input_sha256": "d862bdef735b96c232abf3ffa96de1eddb47fbdfbaba31a375ae5c128bc41bf6"
+      },
+      "query": {
+        "input_sha256": "a8fdef44e664f8d0c5ebdbad4d2afc306d1f36c07754d326ae6402193f25c816"
+      }
+    },
+    "cfg-paper": {
+      "document": {
+        "input_sha256": "e1a6584938ca063d761fe8da7c9e856182a755d6271494cea241a50420946be6"
+      },
+      "query": {
+        "input_sha256": "875d875ab57c67835cec7bf19de291ff318da3cc3f8c9262eac172e5539b7380"
+      }
+    },
+    "cutlery": {
+      "document": {
+        "input_sha256": "a858cd199bd0b0dc54b16360d9630e7ac7e11904d2116959572da8f6bb8e3323"
+      },
+      "query": {
+        "input_sha256": "2d473c276c5afd24d58a8bca617c1c11c108fa6098e56fb9f5b4c051d11ae65d"
+      }
+    },
+    "editorial-review": {
+      "document": {
+        "input_sha256": "d1d1452bbe9241c574c2d807b60cc7f3b913a286bc582811c57c521a83fc55c1"
+      },
+      "query": {
+        "input_sha256": "c5e9bba502a1d82b9ff86d6679f3900e6a127c965c03ad7eb7b2cbb57f0190a7"
+      }
+    },
+    "queue-drill": {
+      "document": {
+        "input_sha256": "8dd16dcdb89a63550578d889863217db365694835426863f11802f4043d640af"
+      },
+      "query": {
+        "input_sha256": "e73589a751b25f2bb7a703187a9282e54e5ffef6efcef2215abe6140f8ac9bca"
+      }
+    },
+    "retype-merge": {
+      "document": {
+        "input_sha256": "17dcdf286b6f227382d178e5145c2f41f9e02170906e604e8a1f01fc75c8860c"
+      },
+      "query": {
+        "input_sha256": "bd992a1e1d0470422b468f5d478153fb1e5201e0271ba1f34153ee8ab9f7d92c"
+      }
+    },
+    "retype-stack": {
+      "document": {
+        "input_sha256": "9bc556856bfd254c68d5d0d2536722bded8384934feadd6c2c15a51baa3d849d"
+      },
+      "query": {
+        "input_sha256": "61a36f56198a9a441bb166998cac49819ef8ed00898b809ba36bebf4977f2fc5"
+      }
+    },
+    "rubric": {
+      "document": {
+        "input_sha256": "cc60f57a8b396530d49a94c147b83ccb7f280a4d4fd3212c6c78f9235a57ee2e"
+      },
+      "query": {
+        "input_sha256": "030f0f95719ef14c7e03a88888d2c003d9b00f0541b0e45c55bb93f3cccc0338"
+      }
+    },
+    "shortest-window": {
+      "document": {
+        "input_sha256": "29d48ee1f18d4582309e644f4a48ecbb8deb8c8b266ba9174d08ec8f38041cf9"
+      },
+      "query": {
+        "input_sha256": "2248e5593ff7b4525d3e735c0cc9239b4921e72ef3c1f374cabdc4102e84330e"
+      }
+    },
+    "subarray-target": {
+      "document": {
+        "input_sha256": "c217549bd5fa5a23b20b882f5c7a13539e2a24801dffd203dd230fa8e5c5f178"
+      },
+      "query": {
+        "input_sha256": "474d039efc2d0c9dc5fee1228f463138cfcb7ff5f62cac0a926ed920e82054f3"
+      }
+    },
+    "two-targets": {
+      "document": {
+        "input_sha256": "c1a19ec8077e279f0d5e5c1831f42c22d5f9254df52f1f3dc10617ea8388dc06"
+      },
+      "query": {
+        "input_sha256": "1ba15191d9ce04ba6aebf6d8a9a4bba70d3067916de5583771708f393eda0390"
+      }
+    },
+    "window-cost": {
+      "document": {
+        "input_sha256": "e327926e2bcb8eb823ae196066c0c5d2d51fa2fde61f23612a93eb88fdd0bea6"
+      },
+      "query": {
+        "input_sha256": "8246575bee41cf18039c93592555a7370e4e2de107fd7b9eba60c80f9c60fbc8"
+      }
+    }
+  }
+}

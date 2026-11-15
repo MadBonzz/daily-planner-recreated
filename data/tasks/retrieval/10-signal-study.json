@@ -1,0 +1,291 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "03b0ba2937850e8dc53a9165857430f3b1ce74c39a046cda2832db15f50b3e68": {
+      "candidate": "stream-shift",
+      "related": false,
+      "target": "voice-repair"
+    },
+    "04c42e01e46cfcc4f9419dc62610ea97988229e14f253186c0582bfd2e9f9b4c": {
+      "candidate": "voice-repair",
+      "related": false,
+      "target": "quiet-news"
+    },
+    "0ccb4505b4b4778347c04267c21b00993eed64d973d072c2feaafbcdcbbe5faf": {
+      "candidate": "window-video",
+      "related": false,
+      "target": "venue-mic"
+    },
+    "176344c24ea629f78e7d6667824bf5d840994ff88879ae7da4f1368fc9558409": {
+      "candidate": "voice-repair",
+      "related": false,
+      "target": "filter-exercise"
+    },
+    "215a42d3a368b06af3e875eb22e3cf23308d9b201a9bdaa90fa31813733a1b49": {
+      "candidate": "pulse-video",
+      "related": true,
+      "target": "triangle-video"
+    },
+    "37393fe7e18ea69cbc303ffdb63c43a0dfdbdf98f69b8f9d42108844389ea1e1": {
+      "candidate": "run-edit",
+      "related": false,
+      "target": "triangle-sheet"
+    },
+    "3fbd4f4b3254d17bf15cc95a0796c1ed5f23c2f0ab1058945db47b296aee77b6": {
+      "candidate": "pulse-video",
+      "related": false,
+      "target": "triangle-sheet"
+    },
+    "409874df6b137d8cc5b62810a3b6d6bf06cb67306f83e47a4e7d327819614b1f": {
+      "candidate": "quiet-news",
+      "related": false,
+      "target": "ready-headphone"
+    },
+    "44446bbecb13d21fd273958d8382acd3d7446a2a59e406b393035a23db9dd9a5": {
+      "candidate": "run-edit",
+      "related": false,
+      "target": "triangle-video"
+    },
+    "495318adc2f8e3d44dfe5e63ebd29a4f9b584c1a8f38e39c419e50d1246d660e": {
+      "candidate": "triangle-video",
+      "related": true,
+      "target": "triangle-video"
+    },
+    "55ac191d9c9610ffb93213f079450de10476755f5eb4a7e761f2730487cac16c": {
+      "candidate": "window-video",
+      "related": false,
+      "target": "voice-repair"
+    },
+    "574d5407dabaa4acb6a18419e56fe26870d45d2ed7e92d41c0d421864d56ee91": {
+      "candidate": "run-edit",
+      "related": false,
+      "target": "quiet-news"
+    },
+    "6ace694fdc6f49d0fc4bfd7e1feb54b177ea2b182379272929e6d9315db2c9ee": {
+      "candidate": "stream-shift",
+      "related": false,
+      "target": "symmetry-video"
+    },
+    "73078041ac69b512a1e84f4ea0cfbced01588104a561ecb0aa7155a08eb78a3c": {
+      "candidate": "pulse-video",
+      "related": true,
+      "target": "symmetry-video"
+    },
+    "79a7d7914c11a24628bd74edfec05cfcd0acdc28a02f794a5296f5547655237e": {
+      "candidate": "symmetry-video",
+      "related": false,
+      "target": "filter-exercise"
+    },
+    "7bfc5e6448911fbdd85bcf91abe0ca4be6980c462933e1607eabd7d9036161f1": {
+      "candidate": "quiet-news",
+      "related": false,
+      "target": "run-edit"
+    },
+    "81092787c89507d24ca30f2071ce066a0cb59c7b366e0cf05f1bd7075e8f1738": {
+      "candidate": "pulse-video",
+      "related": false,
+      "target": "phasor-paper"
+    },
+    "826f67c8cbcb8d304c9b8dfad800b3d82d04a608178adc55ce9b123730a3c2a3": {
+      "candidate": "voice-repair",
+      "related": false,
+      "target": "run-edit"
+    },
+    "852c8c8b4137bff10b984efc33cdfdbf58853173a46193296651fad0ed3811c2": {
+      "candidate": "triangle-sheet",
+      "related": true,
+      "target": "triangle-video"
+    },
+    "89d3055585c6e2d40b7c77572c7cf13a02b4fd057fd5aaa1fce9a007d8a8f6d1": {
+      "candidate": "symmetry-video",
+      "related": true,
+      "target": "triangle-video"
+    },
+    "8b6fdc312dcf816c73dd9bcec106f6f19195f4021aa3f3482c0227960f623280": {
+      "candidate": "stream-shift",
+      "related": false,
+      "target": "filter-exercise"
+    },
+    "8e451d20dbf470390fb8d23cdcaadd85c34e84a8abf517999cd6a8806e1b49b2": {
+      "candidate": "ready-headphone",
+      "related": false,
+      "target": "triangle-video"
+    },
+    "8ed73ac01a42820b7df879a79de2fde19e376310e6d286ecb0563ef0da82dbe4": {
+      "candidate": "pulse-video",
+      "related": true,
+      "target": "window-video"
+    },
+    "9d1854ede2c4a87eb5ad8498e15004918a879719089ee23e20339d3b50212751": {
+      "candidate": "triangle-sheet",
+      "related": true,
+      "target": "triangle-sheet"
+    },
+    "a1683181f726610c3da358ac5bf1c7bc1c673f6bbc883c02dc6b420062f3d786": {
+      "candidate": "ready-headphone",
+      "related": false,
+      "target": "triangle-sheet"
+    },
+    "ac35e4c54161bc0dee63ab42d966d716e3a81691684a99ebd0e709a0b9ecd121": {
+      "candidate": "ready-headphone",
+      "related": false,
+      "target": "run-edit"
+    },
+    "ad24fee839cd63ec2f2450f3465ec87029cba2e5ddc2a295d7cdf267574d80df": {
+      "candidate": "phasor-paper",
+      "related": false,
+      "target": "venue-mic"
+    },
+    "b45c4730e30c112fe3f67b02c840828477079e094aa080529764dc986309a3ac": {
+      "candidate": "voice-repair",
+      "related": false,
+      "target": "symmetry-video"
+    },
+    "b4b41ea2d241484a0320caaf27e11a8aa44584481cbcf710b9bd1660f3127467": {
+      "candidate": "window-video",
+      "related": true,
+      "target": "symmetry-video"
+    },
+    "b6c22957c93c21ae60aae5164a5262f978ef83221f66f53b64bec7101b8ffffd": {
+      "candidate": "triangle-video",
+      "related": false,
+      "target": "triangle-sheet"
+    },
+    "d891c4db37ea681b0d57f01eab36ebafd4ac41a94486e27ca0ad6788b4e19e50": {
+      "candidate": "window-video",
+      "related": true,
+      "target": "stream-shift"
+    },
+    "df3472d46036759a4930771fe6218503922af7b6bbfcff2d5fa3741fad2e2b4b": {
+      "candidate": "window-video",
+      "related": true,
+      "target": "triangle-video"
+    },
+    "fcf8deb3dc7f6e78adc5f86b4d5e9836c7df87f59eec3da716d1b4e393803892": {
+      "candidate": "phasor-paper",
+      "related": false,
+      "target": "window-video"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "10-signal-study",
+  "public_sources": {
+    "files_sha256": {
+      "histories/10-signal-study.json": "87f660ccd16a00bfab5bdb807709b2d494ff0f4d11ede3c40ce632f0f679c973",
+      "pdfs/10-signal-study/filter-exercise.pdf": "b4e78485f1f584907f53e1671bd11a02511aa66bef33b6f097b01c9f803f5e14",
+      "pdfs/10-signal-study/triangle-sheet.pdf": "3e6abb6ea55c7f9f5c981c24836d88597801d8da84ee734a746a32ddc514aca5",
+      "schedules/10-signal-study.json": "8b081008c6a8dc52a33e1ce274d3c944389ad41cf7532e389966e64b2259cf7d"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "filter-exercise": {
+      "document": {
+        "input_sha256": "488dccf8faf0dc1e94eca41fe3a5d5f8d01d0e56e23080e791919e32f25111c1"
+      },
+      "query": {
+        "input_sha256": "5b211cdf0b2c8c4ab9d4e440da02a522f27429696e4c8684245dda7e0542d25b"
+      }
+    },
+    "phasor-paper": {
+      "document": {
+        "input_sha256": "097ff588325bff1755e8203c3b1a38a1c3a12a4125834e91cdd979b1aee55b4c"
+      },
+      "query": {
+        "input_sha256": "bf16e6fe8c3c3b3f9cff1090cb9b503f8915145ed07c30482706a357f75f24d3"
+      }
+    },
+    "pulse-video": {
+      "document": {
+        "input_sha256": "8d475ab166b3f79b89ed9ef91c209c751ec8580544b6d0ebe3ca40785a5341df"
+      },
+      "query": {
+        "input_sha256": "aac11cdf35c53c4093c86d660b15cc1c18eec3e7d56f07e91dd4e54eb48a7e5a"
+      }
+    },
+    "quiet-news": {
+      "document": {
+        "input_sha256": "316cb75c0aa048108b00e66ad5aa0002cf73a62d7a0da5c4cb2ab054e301d52a"
+      },
+      "query": {
+        "input_sha256": "298690f7dabb04728dec0e7abc70a4fb3cd68e3eb3425fb79f871f2286032d22"
+      }
+    },
+    "ready-headphone": {
+      "document": {
+        "input_sha256": "f454aa6d8eb4c749ddd55deedfa98772a788f9e45391842f2f8cbc9e262993da"
+      },
+      "query": {
+        "input_sha256": "062fa5c31f0a05ef592669b14e03018c1acd75da4e58f071e785ae0447b9f299"
+      }
+    },
+    "run-edit": {
+      "document": {
+        "input_sha256": "c04481ac46fa6a96d074712bf52b739769eda966c9c1b1b6e21db28eda49d6e4"
+      },
+      "query": {
+        "input_sha256": "9d94872cd016b0bbaa7ae6cb6f63f5b0dde18647eb7f1c095b0816dc7a091127"
+      }
+    },
+    "stream-shift": {
+      "document": {
+        "input_sha256": "e152d06ca73cbbdd2b7c5cdbe07231444f5c742aa44fb71cf78c633b78ebf8ab"
+      },
+      "query": {
+        "input_sha256": "bafd6ae169c49a20643a0f5ece491bc5cc6349e69a1e7db08ec2a9a3e937e15a"
+      }
+    },
+    "symmetry-video": {
+      "document": {
+        "input_sha256": "fe17bde6ec5740b3fbc3bb5bb1da688aba810fa4466d99dba02430a784f10243"
+      },
+      "query": {
+        "input_sha256": "742bb31134210694905d526356cb8cbb6daf1f2dbf39b8e9aa53231a394704ed"
+      }
+    },
+    "triangle-sheet": {
+      "document": {
+        "input_sha256": "30e2c25efbdc4409fe01ca8423843ed49cad703fbc0304baa9538526aab95f3b"
+      },
+      "query": {
+        "input_sha256": "9a59ecdc7b8f332c241fc562da5abfd265ac2997da372f0861071bb16fe1e5d6"
+      }
+    },
+    "triangle-video": {
+      "document": {
+        "input_sha256": "072f50ab0ad076fb110bbe70b8771e0f3aee15d09a093c4a1b7c257eb08b3ad2"
+      },
+      "query": {
+        "input_sha256": "1f5c19ad7fe016a9f87d95602ee674bee9587f8a8e0a557b0d465d5d1657be2c"
+      }
+    },
+    "venue-mic": {
+      "document": {
+        "input_sha256": "1d4885fe196e690e57d9f2bb46b7f9330514562270cd8994d271cf62e343f5a2"
+      },
+      "query": {
+        "input_sha256": "c48d55ebb5ed416e0305e9d45408d1acbcb13053cfb51e443299edcddf2d2be3"
+      }
+    },
+    "voice-repair": {
+      "document": {
+        "input_sha256": "093b9cdb29d342d17ce8b8e606eed1188209c3916ee867ce5aca0a49eb2b049a"
+      },
+      "query": {
+        "input_sha256": "00af063441a1b80d39822816fff8331e45a26f20056b37c1559a241529918175"
+      }
+    },
+    "window-video": {
+      "document": {
+        "input_sha256": "59f0dd569a4a2fa17d10c9616bf4998bfd0f3ed17ce59bae1e90d3c42b90e7e5"
+      },
+      "query": {
+        "input_sha256": "30368c8acbe1ae09ff3280f0979cb24aa05c496c648f4c35625a2281014a49f2"
+      }
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "03166100b038dc7c657fd2c1d1238a75eb9e25c4a81a16845f13a3204756ac2a": {
+      "candidate": "replay-ramp",
+      "related": true,
+      "target": "replay-ramp"
+    },
+    "0349538d798565cb7615dd73530cf43ec95a520b506d265b57a8d144a3febc97": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "dock-trace"
+    },
+    "0365c248c67b9443e04adbc228b49df3fc4aa7fcffaedd32de3efde7dac74fab": {
+      "candidate": "ready-washers",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "08506336d8ae9d3bd6747105c2bb1ddb6b97f674632c7cf7c3c50326fb22b583": {
+      "candidate": "replay-ramp",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "0d1d03fe911f7a550f644616519f42a3cdae5cbfce4e804d7522c7263c888c97": {
+      "candidate": "hall-encoder",
+      "related": true,
+      "target": "dock-trace"
+    },
+    "189664d2f43a20845ba71db399c75fbf9c279eb9439662cc44c2afa2c6a9ac1c": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "bicycle"
+    },
+    "256f70555a855fba110ebb169d67ef30dca3c0ba9f23b30e478b53f038ab6ae3": {
+      "candidate": "junction-replay",
+      "related": false,
+      "target": "turntable"
+    },
+    "27c92faea74420f286003ecfb058b25b7122e56983e8a724da14cb6226259bd1": {
+      "candidate": "hall-encoder",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "3799d32908bc9565e7e713f0c89dfcd516cbcad99997eb345d6572565110a57f": {
+      "candidate": "turntable",
+      "related": true,
+      "target": "hall-encoder"
+    },
+    "44e1db8181ac6aa15e548640501874076092a6e544665d881c09eabacd2b17da": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "club-shift"
+    },
+    "530f331723bd88dc67def45ca68c0f5b013668efed09345b188e609827c729d1": {
+      "candidate": "dock-trace",
+      "related": false,
+      "target": "wheel-ticks"
+    },
+    "57bcb6c905194042eadd495a19a1f9d2ec4a936d7ed38efd61fdea2c6eb8abb3": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "5e114e66afc532a45058c10291e6254437171857ff84ae7cf6beeed53d124019": {
+      "candidate": "ready-washers",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "6172ca619d970327837eb380c29ddf82e312c35dc903a3bddf5712148723174b": {
+      "candidate": "bump-crossing",
+      "related": true,
+      "target": "bump-crossing"
+    },
+    "74804f2df0a2b22a1839ad1255573ca1479f6b6cfe29223b9b12a6a407f16ef3": {
+      "candidate": "grant-email",
+      "related": false,
+      "target": "ready-washers"
+    },
+    "78e569114d91398e8e4ca544be52e996f5ed7b4d7202a4fd52f7815bfe777835": {
+      "candidate": "ready-washers",
+      "related": false,
+      "target": "paused-frames"
+    },
+    "7906c211aca85048e1e6e623f6996ee15bad2c85bfa79a2de2b28fdf2c2197d6": {
+      "candidate": "dock-trace",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "82446e0a13166f8989a9c1b7f8116509a38ac72d5fd17a523d0a9a9c5cc62438": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "8d376a05d5ae6b6fe321a53785f1a6a2a3f06fad3aa17aa91ce5543e12c7e042": {
+      "candidate": "hall-encoder",
+      "related": true,
+      "target": "turntable"
+    },
+    "97e0bde250439c34a52f3d98c862601ac2a76750247d94224e8e2a641872581f": {
+      "candidate": "junction-replay",
+      "related": true,
+      "target": "wheel-ticks"
+    },
+    "98bb8b761fb872744e24c67f72e9e9216e536542187808c247c348c8d03fc5b7": {
+      "candidate": "grant-email",
+      "related": false,
+      "target": "paused-frames"
+    },
+    "9b08163828b6a4f7c960bfe494b4cb79d645b7c181cca039339a7feb847e64ab": {
+      "candidate": "bump-crossing",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "9dfa542cf5191da0ea536683a0b172034fee68a724ab06d94522f9aa5b3624d4": {
+      "candidate": "wheel-ticks",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "9f0cb64bd325d998df4357bd36691be60a607998ad7a3adbda5451f003e76485": {
+      "candidate": "junction-replay",
+      "related": false,
+      "target": "hall-encoder"
+    },
+    "a9b243bfd07ade20ad62984e4b42f344022057dad9d26b71fd0d99f865bfb277": {
+      "candidate": "junction-replay",
+      "related": false,
+      "target": "dock-trace"
+    },
+    "b40ca26efb4006516ecc996462bde1de6c69f1a38b0faa0d6208548c3285e6c0": {
+      "candidate": "paused-frames",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "beb3782be2a530ca5aae3f7515d3659c07ff92670561949d1dd719d5fee94075": {
+      "candidate": "dock-trace",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "bfe36f6a303bdccf7e19d016e61e4533634f6b0c6991d185304546f8ed07b4cb": {
+      "candidate": "wheel-ticks",
+      "related": false,
+      "target": "grant-email"
+    },
+    "c320515f1783b467027fa510e2a0dc65c26e46d4cf07a5c3c9277fd0868b642b": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "frame-drawing"
+    },
+    "c38a2c8629a258b3dfc4686b57a77cda6d5d78a5035802f6dc58d952240cc271": {
+      "candidate": "paused-frames",
+      "related": false,
+      "target": "replay-ramp"
+    },
+    "c3d2d3e7caf4bfd3b187fb089d9f5d878d3639584de32055a267c2710becada6": {
+      "candidate": "club-shift",
+      "related": false,
+      "target": "dock-trace"
+    },
+    "c5e9206ab292ca2214e3a026f4940c3c4a5a458435fbd3736aa89dae3f685ff7": {
+      "candidate": "club-shift",
+      "related": false,
+      "target": "frame-drawing"
+    },
+    "d9028ccfdab829cd84dc40f3398db9f6853b6b989c8ec08a4688829e99abed78": {
+      "candidate": "club-shift",
+      "related": false,
+      "target": "bicycle"
+    },
+    "d957ba0f6978e0f01953c2cf39e1df25b3439b1c74ea68121286ec14528af874": {
+      "candidate": "hall-encoder",
+      "related": false,
+      "target": "junction-replay"
+    },
+    "db13b11149a54f7b0663fb78cfeea95b9b7c6c41a8d20a54a0a4f77ff8feb2a4": {
+      "candidate": "frame-drawing",
+      "related": false,
+      "target": "paused-frames"
+    },
+    "e73bd7f1959f91a07bd7bb1690ed8ac24cdb51f05499e56cc3e3fa3503d523ec": {
+      "candidate": "wheel-ticks",
+      "related": true,
+      "target": "replay-ramp"
+    },
+    "ed99669cbf02b8035f5cc1d349ff82ba90e58ec04c07ff637a9996a965927830": {
+      "candidate": "frame-drawing",
+      "related": false,
+      "target": "dock-trace"
+    },
+    "f0703b926e08125612032f62d7f5d3af37008329fce181401267232ade98c295": {
+      "candidate": "hall-encoder",
+      "related": false,
+      "target": "bump-crossing"
+    },
+    "f8a4542e81a83be8dc2c27b39d4f17577df917749028db5fe5c439a88b15d9f5": {
+      "candidate": "junction-replay",
+      "related": true,
+      "target": "replay-ramp"
+    },
+    "fadad5050e86d0877531c8b54212f8908d39409640807c1b73dec34e51c7fbff": {
+      "candidate": "turntable",
+      "related": false,
+      "target": "wheel-ticks"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "09-rover-night",
+  "public_sources": {
+    "files_sha256": {
+      "histories/09-rover-night.json": "12c513b8a3a82ac32988848e69908da8c5f6451ee72bda0add6f9427f59dbc93",
+      "pdfs/09-rover-night/bump-crossing.pdf": "958e93906e8d3b5c7fbbcb1614e317cc4debf7280b79468a0a1ba046f07a8945",
+      "pdfs/09-rover-night/dock-trace.pdf": "b0b02da2c8f588ec70bd282a715b7babe2f930d380d4e2943c503833fae3ba69",
+      "pdfs/09-rover-night/frame-drawing.pdf": "739c5a4f3ae75e01e77baafcf4ccdaa0fa45423af80383022e34f0caefbd8ff4",
+      "pdfs/09-rover-night/replay-ramp.pdf": "784b47ea3e53af95c89b9a354837740fe44a3242f07e98073fc179d5e348b15a",
+      "schedules/09-rover-night.json": "7594557da898943dedfc32480642468ee29fdc6d260e2f8c230947201aa21c31"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "bicycle": {
+      "document": {
+        "input_sha256": "75bf73071745e493536514c64c6051be63ce1a0bd169fdce4bf83c6ee4068a88"
+      },
+      "query": {
+        "input_sha256": "c71bfc93d2d30dccd06a87779c748cc0ea682c72eb65d201baa1c3c3a81d30e8"
+      }
+    },
+    "bump-crossing": {
+      "document": {
+        "input_sha256": "bee45646d37749b89e72da5b85475b03d641da52d4840a4b3446db2b65390205"
+      },
+      "query": {
+        "input_sha256": "b02432352eef0cfd15e52561f61fa59784d980a5ec2f3bc090ea16288e7e5959"
+      }
+    },
+    "club-shift": {
+      "document": {
+        "input_sha256": "16d0ee6e8c80da60113e0c6891d4cdef9a5b7aac777101bb58044735a36cfdf9"
+      },
+      "query": {
+        "input_sha256": "2d96e3bacada4f48727ac6af082483720feb330de7bc4e091764ddc1b5e75a05"
+      }
+    },
+    "dock-trace": {
+      "document": {
+        "input_sha256": "ada40af3110284895006a607787d123371ad162947a157f8427ce4c0e83b1580"
+      },
+      "query": {
+        "input_sha256": "4e2e7b7e871cea297c194ef237329c3aeeb1228f0e687276de0f51959d76733d"
+      }
+    },
+    "frame-drawing": {
+      "document": {
+        "input_sha256": "f7896af39bec62eb34d03cd2a8a57bdcd7461fd1a62f3a3746ce46095423b667"
+      },
+      "query": {
+        "input_sha256": "7aab0dae31f53cb3cf8cdae3fc95ec32d6613c0c2b2831c5019d3d6e6c27bcc8"
+      }
+    },
+    "grant-email": {
+      "document": {
+        "input_sha256": "10ca268b71e1ae1097f5004e261d6bbc3a6093bb9da0520b316fd571ae9f8d5d"
+      },
+      "query": {
+        "input_sha256": "c286b2cd1f7c82b8209b945f1b0f98c5f410616d1ad2503e0da356c3507ab506"
+      }
+    },
+    "hall-encoder": {
+      "document": {
+        "input_sha256": "752f6717ea9ac0816531f41fb2d798c622bbcdd7d478623e9671206671199a4d"
+      },
+      "query": {
+        "input_sha256": "c68aaea8bbca014acf5c2d28dcb9933b1391515c68b93afa33dcda949e394b3b"
+      }
+    },
+    "junction-replay": {
+      "document": {
+        "input_sha256": "fbeab25ec953405afaacbde56e4aa7a57cb3ead16db9fb0d0d40fff900a62691"
+      },
+      "query": {
+        "input_sha256": "a7fbf7a26ad2baf411de4a7108b5a45dd86e65898ce5a258c19f8bd4fbbb2257"
+      }
+    },
+    "paused-frames": {
+      "document": {
+        "input_sha256": "d4cfc104d7ed69bc0295375aeca77f715553edd654b8c52703fc923c2d7a0837"
+      },
+      "query": {
+        "input_sha256": "e230df13005b5bcd998faaf6b637244b78d51178b99036d2f0fb73fff41cc212"
+      }
+    },
+    "ready-washers": {
+      "document": {
+        "input_sha256": "a905f84645ab4e9237fc7769df636185d369705738ad647615493e9998d0ee07"
+      },
+      "query": {
+        "input_sha256": "f4c2871c3ff4d37b15201cec669fd83b08dc3ad6b5d8c29bab6dd27ec04829d6"
+      }
+    },
+    "replay-ramp": {
+      "document": {
+        "input_sha256": "4e85069dc31f84dbb8d034b3eea90641dbc92ae55ad18db8e49568b3402e3dff"
+      },
+      "query": {
+        "input_sha256": "934e4404d68efa561c8f63bb0d67a3366b4b934505d0517ab0270bd6d35fc338"
+      }
+    },
+    "turntable": {
+      "document": {
+        "input_sha256": "29678f800847886ff9197d1b97188fa2a3335e2e89d0892150ea8c7c178c6edd"
+      },
+      "query": {
+        "input_sha256": "2b79401d1ac3eac0d0384299564f83f1541af2818d458e39429c1fab3d41f81f"
+      }
+    },
+    "wheel-ticks": {
+      "document": {
+        "input_sha256": "b6b93a767e1c9c370a21dca815f40e612e02722ed09374ef619ded3815ae1d51"
+      },
+      "query": {
+        "input_sha256": "8a9501aca7a31b07cf2c04f4cae715564e1a07edf54bcbb1a56ee35596720c87"
+      }
+    }
+  }
+}

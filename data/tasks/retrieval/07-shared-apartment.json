@@ -1,0 +1,266 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "012990c5a6c51c4fbc60a78d431ca027c3e7a12f222d058d026a781d02473811": {
+      "candidate": "mugs",
+      "related": false,
+      "target": "ready-rice"
+    },
+    "07ba557ded878fc2f65016e72dc62da8362d380726c875ce045c012a0f27fb65": {
+      "candidate": "duvet",
+      "related": false,
+      "target": "paused-blue-load"
+    },
+    "0b4d8d1e0ff9a4d044bfa4e6c9852be5f50e514406e41973b589c55ed6cd0c1c": {
+      "candidate": "paused-blue-load",
+      "related": false,
+      "target": "ready-rice"
+    },
+    "106396e9b09217cd210953c97bb3eff33b768c9f62820abc361bc9b9c26111de": {
+      "candidate": "mugs",
+      "related": false,
+      "target": "duvet"
+    },
+    "133b14faec2f94f0dbb7fb11db262ea635fcf45369842d34033e047c3eb47746": {
+      "candidate": "towels-one",
+      "related": false,
+      "target": "filter-renewal"
+    },
+    "17709a7f59174a46e18ef77694660367cee6a4bd1cf3862c57452eafa8836b0f": {
+      "candidate": "pasta-dishes",
+      "related": true,
+      "target": "stew-dishes"
+    },
+    "1a55626ea34006f33103c227ae81661efa9d5876b5cb4b0e080ccdf5b9c620c8": {
+      "candidate": "chili-dishes",
+      "related": true,
+      "target": "pasta-dishes"
+    },
+    "1f4a100381612e5dbb03b0bb4dafef0cf1120cf13610afddce20fd8abf1606d0": {
+      "candidate": "bike-box",
+      "related": false,
+      "target": "stew-dishes"
+    },
+    "206712f8a4ee27e27b186788ebbc1586fc92cacd2ae7518f07f5daf9891e34a7": {
+      "candidate": "chili-dishes",
+      "related": false,
+      "target": "mugs"
+    },
+    "2765204cd17b200eac887076af47f1f12c017630d5ca7160a584fa895b14fe8a": {
+      "candidate": "duvet",
+      "related": false,
+      "target": "bake-dishes"
+    },
+    "30db902c7b1e6d40577da1683eaf4a39a5161a91031a16374bab13a998c1578e": {
+      "candidate": "pasta-dishes",
+      "related": false,
+      "target": "mugs"
+    },
+    "36fe4e34830f62f7d778a9ccc02ff1e21e7aeeb9ebeb03fc81bbc5fe49851966": {
+      "candidate": "duvet",
+      "related": true,
+      "target": "duvet"
+    },
+    "3a49ebe6359f7e041f0c47c6dfb9ad4926f8157bb85560e2b227ff0227fd5bec": {
+      "candidate": "stew-dishes",
+      "related": false,
+      "target": "mugs"
+    },
+    "3e1cfdf027860a23f1157881fc291de6e8c68c241e91be2b2b040214e4f93330": {
+      "candidate": "sheets",
+      "related": true,
+      "target": "duvet"
+    },
+    "4d5fe594ac53950117b5a8441eff9ccf5d0693eb3a11120b3e2ab7061b0adce5": {
+      "candidate": "stew-dishes",
+      "related": true,
+      "target": "bake-dishes"
+    },
+    "57da3004ab3b7e6aa9089e1bf5d029c14fcf49c4b0691284570564d18e418d55": {
+      "candidate": "bake-dishes",
+      "related": false,
+      "target": "duvet"
+    },
+    "5b795889a74fc784175d6d855d2ff165b297c5c0270d9d2069e4641b79d9a3db": {
+      "candidate": "mugs",
+      "related": false,
+      "target": "paused-blue-load"
+    },
+    "64e23770529f9446b54061d8482ff65dbad137d86223bd900efd462efe88aab1": {
+      "candidate": "chili-dishes",
+      "related": true,
+      "target": "bake-dishes"
+    },
+    "65f05739021bcfbc368e3347e568e89dde518865d8db72035a9919b3fb051a48": {
+      "candidate": "ready-rice",
+      "related": false,
+      "target": "bake-dishes"
+    },
+    "73d4bab7ac42247606a60c15a0627ba77f71a52d1adaa7bb72bd38b76adb3f5c": {
+      "candidate": "ready-rice",
+      "related": false,
+      "target": "duvet"
+    },
+    "8696bf8414f6f0bc1f358b378e1ad20085f50e2930f9440c20cd76cedaf900e0": {
+      "candidate": "sheets",
+      "related": false,
+      "target": "paused-blue-load"
+    },
+    "8c56e0f95ec3e4daa76ccf00d5bbc7720a24b21f1c4c82c46c59c103d9c8f943": {
+      "candidate": "paused-blue-load",
+      "related": false,
+      "target": "bake-dishes"
+    },
+    "8d2bbb5c22b09022c0b6d117e99590368214c6d5906be6f2590d35e1b188a233": {
+      "candidate": "towels-one",
+      "related": false,
+      "target": "sheets"
+    },
+    "8e0111437fd02db41aec61a79975332f7996eb1e566031edbd9047dd1199c909": {
+      "candidate": "towels-one",
+      "related": false,
+      "target": "duvet"
+    },
+    "a9d3aad846684a99c8ef3991fdcd78f71b9aa3df34024bfc479ecd1de901e94a": {
+      "candidate": "paused-blue-load",
+      "related": false,
+      "target": "duvet"
+    },
+    "b4a217d8ecce6ef0d78f34758f6f79187fb8288a61c23afd1c274df35be3fda3": {
+      "candidate": "mugs",
+      "related": false,
+      "target": "bake-dishes"
+    },
+    "c15cccef0ed614917dec1f7cd72d779c7a13ceca095f2b8bdb6b1842f6a84191": {
+      "candidate": "pasta-dishes",
+      "related": true,
+      "target": "bake-dishes"
+    },
+    "c78ee04953d39ae5853d837c44c985696eff7ffe35c3347f1029c602268fff28": {
+      "candidate": "bake-dishes",
+      "related": true,
+      "target": "bake-dishes"
+    },
+    "cf5f3fd5bd6f989451f5705d7dbb458c3608814eff5bd2f047784d2e959b78f3": {
+      "candidate": "chili-dishes",
+      "related": true,
+      "target": "stew-dishes"
+    },
+    "e0ed416673e3b007297bdc1ed78a26ce4c7ec69c150920e71e2de3a1bb7ab801": {
+      "candidate": "towels-one",
+      "related": false,
+      "target": "paused-blue-load"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "07-shared-apartment",
+  "public_sources": {
+    "files_sha256": {
+      "histories/07-shared-apartment.json": "2e2278a75cee2492bdb0b714eff5e2977186ead796b016156cf7f38e761e9190",
+      "schedules/07-shared-apartment.json": "8e945d633061e9cbb2ef5a3678c2c2d950db85c3d6127a62f4d0ab804ec3abb1"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "bake-dishes": {
+      "document": {
+        "input_sha256": "0e12c08f6823787109a268e5fede1abd0c642300bce32893085704636b4ccffc"
+      },
+      "query": {
+        "input_sha256": "98e86c73d71a5f6f28c261560f05a44e7711264bd63cb781f38c4cee589fe976"
+      }
+    },
+    "bike-box": {
+      "document": {
+        "input_sha256": "d193248ca4058bd336d2d360234e6f146661d5f5cf6dbc0419e67d4ed2f467d5"
+      },
+      "query": {
+        "input_sha256": "14e4ae61bde6f4f901d59e14be1c67d179f71f5bca0308b7fbcc90689b002cc4"
+      }
+    },
+    "chili-dishes": {
+      "document": {
+        "input_sha256": "82c8cc126781fc49b4c750f34481e079767f6f36d7d032100202ffb8b3d13918"
+      },
+      "query": {
+        "input_sha256": "19ced0a497121df065eb50b886af408960c562fcae9a939e0ea81f79de5915f5"
+      }
+    },
+    "duvet": {
+      "document": {
+        "input_sha256": "1f9b4b24c45490bb61177c95fb1b8ba04d4c4b5965a6654cc6dff0a2d720b136"
+      },
+      "query": {
+        "input_sha256": "6d56d9b0530eeaf3868947792aca3ea5760db6c322830880ab23c0dde8aedfba"
+      }
+    },
+    "filter-renewal": {
+      "document": {
+        "input_sha256": "85d38d285ea93427ac9fe3a64a11152477d5dff2c84f821cc855aa4678a80a3f"
+      },
+      "query": {
+        "input_sha256": "af093c8ea25be48a77bc149ef3fb6249d6288602da345b9afd4534b735e0d5f7"
+      }
+    },
+    "mugs": {
+      "document": {
+        "input_sha256": "4f890f2a8b3ca5a177d559d6b99805dd04a73ce87c1648bf34414ce21bd2a710"
+      },
+      "query": {
+        "input_sha256": "47dc7ca115fc0b26c6e198de4a1a05f59525afa5b1b46ede0b3450833508952a"
+      }
+    },
+    "pasta-dishes": {
+      "document": {
+        "input_sha256": "c86dd829d1473ecd12197d7b3329413016a8759ff1a0c051e37c4e86aeae443d"
+      },
+      "query": {
+        "input_sha256": "d66c3e7f34a98b29f7464d13e638a607c8f45e61bb5bc104f85946e36cf1453a"
+      }
+    },
+    "paused-blue-load": {
+      "document": {
+        "input_sha256": "9887b4150f4480f0c5c32e0c5a77d9393e66401043002a500f3e5b8dfb52d640"
+      },
+      "query": {
+        "input_sha256": "a8bf13f87c1c4753f87a92d49396e3e6b23828b7387749984701bdcd1b418150"
+      }
+    },
+    "ready-rice": {
+      "document": {
+        "input_sha256": "b6a3676de9c99dc19c0a596e4c49ee9d59a4a7ee547a16e00b27f067b53cb197"
+      },
+      "query": {
+        "input_sha256": "25e4fb8c03cd1aebf09830b5ad5568df558365302d1fa3988c1c129db0246434"
+      }
+    },
+    "sheets": {
+      "document": {
+        "input_sha256": "3fa3dfafa11c02dfddb48d4636ae17928a9ea5fbf56e5d64117626de654754e7"
+      },
+      "query": {
+        "input_sha256": "8088779819385cb6ac49a7ffcae6bcd056cd581df68923b920a5d30816ab2084"
+      }
+    },
+    "stew-dishes": {
+      "document": {
+        "input_sha256": "ce073216ec01e6ed20b0b3e21d0bd7f2321b73d5cdd820975d556c37df57ed33"
+      },
+      "query": {
+        "input_sha256": "ffac46c8958fa731e63fed738976ea871b5485d752457a1b6bbbf47964583e13"
+      }
+    },
+    "towels-one": {
+      "document": {
+        "input_sha256": "5f23498a76a9edeee76ac7fc01ab857d17b46e4a965e9df58a2de913df597829"
+      },
+      "query": {
+        "input_sha256": "ce347096a31da40fa4d2b27f3a3c039a2efa008a8593e8c28ca1e66bf6e30c5c"
+      }
+    }
+  }
+}

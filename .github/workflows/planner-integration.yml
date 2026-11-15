@@ -1,32 +1,30 @@
 name: Planner integration
 on:
   push:
-    paths:
-      - 'browser_extension/**'
-      - 'focus_*.py'
-      - 'tests/browser/**'
-      - 'app.py'
-      - '*workspace*.py'
-      - 'requirements.txt'
-      - 'data/tasks/workspace-decisions.json'
-      - 'daily_review.py'
-      - 'tests/test_daily_review.py'
-      - '.github/workflows/planner-integration.yml'
+    paths-ignore:
+      - 'data/results/**'
+      - '**/*.md'
   pull_request:
-    paths:
-      - 'browser_extension/**'
-      - 'focus_*.py'
-      - 'tests/browser/**'
-      - 'app.py'
-      - '*workspace*.py'
-      - 'requirements.txt'
-      - 'data/tasks/workspace-decisions.json'
-      - 'daily_review.py'
-      - 'tests/test_daily_review.py'
-      - '.github/workflows/planner-integration.yml'
+    paths-ignore:
+      - 'data/results/**'
+      - '**/*.md'
 permissions:
   contents: read
 jobs:
+  planner-scenarios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt pytest
+      - run: python -m pytest -q
+      - run: node --test tests/browser_rules.test.mjs
+
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 12

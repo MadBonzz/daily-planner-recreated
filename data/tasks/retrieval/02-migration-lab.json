@@ -1,0 +1,320 @@
+{
+  "cosine_floor": 0.5,
+  "decision_model": "kev-4b",
+  "decisions": {
+    "1089494a46bf7a8c55d417adf6839d6ecb8d54207870c2c14c21af3662e2a239": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "trace-tool"
+    },
+    "1ab416a174cb5d115c05ec8091d2fec68021e7b93548449c2dc119694dc067e9": {
+      "candidate": "patch-tool",
+      "related": false,
+      "target": "patch-note"
+    },
+    "25394b003f61c7cf780df3bd1d4500aa136c14d2602d17157b50560fdcfa0f74": {
+      "candidate": "pickup",
+      "related": false,
+      "target": "held-seed"
+    },
+    "363955663c7096368e8adcf48ab41d89e723255e4572cf3d6e090d9a75a45a5f": {
+      "candidate": "codec-caption",
+      "related": false,
+      "target": "patch-note"
+    },
+    "3a98aea82f51be53242faa8f4743ea4805057cccd28e91e38507342dbf0fffb6": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "held-seed"
+    },
+    "3f196847c9a36a63eb8b95fb644cd96834e01c0a016a13e9120fcd05c51fc1e6": {
+      "candidate": "trace-tool",
+      "related": true,
+      "target": "patch-tool"
+    },
+    "415b1f4c36597e4c3746747ffa7011162dbfe78850ff58a9982b13ce6c532875": {
+      "candidate": "boundary-debug",
+      "related": false,
+      "target": "suite-report"
+    },
+    "41fd8e22b525465769accdb051ee66df0513845ba8a8d132285e9b60dec6a5b9": {
+      "candidate": "pickup",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "486d71b7df79b9976226573d175937f4f84ca31796b61d913669acc61450a5c8": {
+      "candidate": "held-seed",
+      "related": false,
+      "target": "pickup"
+    },
+    "50adc6cae11528ff74eb4cb2a5e57cc42dc9994449876587126ad083e8ac40ab": {
+      "candidate": "pickup",
+      "related": false,
+      "target": "replay-cases"
+    },
+    "50d1b880e59cc8e0dc6f46076d112954203cdc675890da04b92c184d49edf546": {
+      "candidate": "trace-tool",
+      "related": false,
+      "target": "suite-report"
+    },
+    "531887156c048f6d8c0fb052d38be8fef7efb53a016f7e3e7c0a8ea0b3195393": {
+      "candidate": "trace-tool",
+      "related": false,
+      "target": "ring-port"
+    },
+    "532347fe7235fcb495e8d7ba443c3a14d01a3e65436853874a560822ea9c5289": {
+      "candidate": "patch-note",
+      "related": false,
+      "target": "held-seed"
+    },
+    "5612bed33b408032eadff31ca0c8d84dd9d4af442cfda59447b46bd86a5f2451": {
+      "candidate": "bins",
+      "related": false,
+      "target": "boundary-debug"
+    },
+    "56d2bc90f110c6df94321b76c98e0d67a0c93c42344bd2984d6017068e42c129": {
+      "candidate": "patch-note",
+      "related": false,
+      "target": "pickup"
+    },
+    "5e6e460ab649a11c38f64a379f546bff88d36f87b4b6237f544d890bac487447": {
+      "candidate": "trace-tool",
+      "related": false,
+      "target": "held-seed"
+    },
+    "6707c594cd8260d85d8b2c09639967c2c1e9030dc836e926158e9c5214a8501c": {
+      "candidate": "held-seed",
+      "related": false,
+      "target": "patch-note"
+    },
+    "6a1342199a989d0c78a34e7230e855f27289101e9e44b2922b1e3116a5feb8d6": {
+      "candidate": "replay-cases",
+      "related": false,
+      "target": "pickup"
+    },
+    "7211975904ddeaca48b7b146ef500e2b6f481c26544c84f32bbb864f9aa265a0": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "patch-note"
+    },
+    "724cd99d5a7161cd72992abcadb1033b574a1d35b6769a53f6a247284de809cc": {
+      "candidate": "patch-note",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "7aa601397b846a43eab17f48b021f548a58379c8eaab18c99e823ab1edfa8b85": {
+      "candidate": "patch-note",
+      "related": true,
+      "target": "patch-note"
+    },
+    "83ed393a1179d7aa75fece52b915b476715dfa310663d80b21b9d0991cbfc47a": {
+      "candidate": "pickup",
+      "related": false,
+      "target": "patch-note"
+    },
+    "883625827c8b7d3efc5ef4aa7ea452339728213a93efdabcb98dde427555f0af": {
+      "candidate": "patch-tool",
+      "related": false,
+      "target": "pickup"
+    },
+    "894b28af25943bbd2a0e475255d8e0305b2cf388d0c89f0e0ac0a26cce7690ba": {
+      "candidate": "replay-cases",
+      "related": false,
+      "target": "held-seed"
+    },
+    "944e793311808909d137903cd4d4430f8682853e9ff31747a50ee06f47763568": {
+      "candidate": "boundary-debug",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "a318c8f0a98fed31154d63aad7c203988dd4685c09b29051fb69642224d1af70": {
+      "candidate": "trace-tool",
+      "related": false,
+      "target": "patch-note"
+    },
+    "b169f801ef4fdc56245411c26854f23faf82fe6fd0d6ffbfbd4bdd7e2af4cc2f": {
+      "candidate": "held-seed",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "ba96dd0421bda0eb038f9d4c4b0fe70fbe649f6c7d66e489c70cbabc36fb79e9": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "bb4e992982baab27687c1d9710f89b818c2df1ffc1f852bd8730f8ac19965cf4": {
+      "candidate": "boundary-debug",
+      "related": false,
+      "target": "codec-caption"
+    },
+    "c7688cf438584d848da3f7b4d915f7f6900f2baca35f580e7f8e7aa3053d66f5": {
+      "candidate": "boundary-debug",
+      "related": false,
+      "target": "bins"
+    },
+    "cc852ee7f6f4cd270d1901a265df9cab08e2b80f3a1ec78f794fb84f01c144f8": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "bins"
+    },
+    "cf20b85eeff2312e3f5a94f60eff28ee89fc3e84b3cdc74491207f87d23e39e8": {
+      "candidate": "held-seed",
+      "related": false,
+      "target": "replay-cases"
+    },
+    "d03fd1f84c7803c3dd60cf3d2f3524f31b7b6f54591daa047ebec8dbf0303753": {
+      "candidate": "suite-report",
+      "related": false,
+      "target": "boundary-debug"
+    },
+    "d17b1589244178be5a90b7941d4b6f15f07c7890af0941f48ae3e2f2f7853b4f": {
+      "candidate": "patch-tool",
+      "related": true,
+      "target": "patch-tool"
+    },
+    "d1be30e3570ee71920b3545c4d6ba73a6ec849983b68cf486e3063f6f6a1b681": {
+      "candidate": "ring-port",
+      "related": false,
+      "target": "patch-tool"
+    },
+    "d1dd58bb97c8d92820ca2a8f0bfb46cd77b5fdc524d6134dee0f1f0e1dedd281": {
+      "candidate": "codec-caption",
+      "related": false,
+      "target": "boundary-debug"
+    },
+    "d757f64adf3dec66a2ef1d4bf565af33694638b3453f17d5f1675acf41d630be": {
+      "candidate": "patch-tool",
+      "related": false,
+      "target": "held-seed"
+    },
+    "d93a88c298b74a222e024ca0f50d117884ea9d80b5de28ab031eb29af0e1bd55": {
+      "candidate": "ring-port",
+      "related": true,
+      "target": "trace-tool"
+    },
+    "de274f6879a55e26e0a1d1c63e3cf87c5378542078ba327745c3a10e6ed92b84": {
+      "candidate": "ring-port",
+      "related": false,
+      "target": "suite-report"
+    },
+    "e2c8a1b0bc798cb24af3ba7d7aa286b90d4f3563e5111d05755cf5f567d615e3": {
+      "candidate": "bins",
+      "related": false,
+      "target": "suite-report"
+    },
+    "e8aa6c12c952d74a20c5bff60dae64bd0b18cade9e08ac25dc98b1002da36f99": {
+      "candidate": "ring-port",
+      "related": true,
+      "target": "held-seed"
+    },
+    "f7b7d9366d24697578176cef05bbf6fd008c2a6ad28dd12cccb3e2498aa318e6": {
+      "candidate": "trace-tool",
+      "related": true,
+      "target": "boundary-debug"
+    }
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "format": 2,
+  "history": "02-migration-lab",
+  "public_sources": {
+    "files_sha256": {
+      "histories/02-migration-lab.json": "c79c7d82806390bfa8c8eda6ebb21cecd49ee7f35767e65c30ff8ba7de085d86",
+      "pdfs/02-migration-lab/patch-tool.pdf": "28759067b264956e60f61610d86d5d314c9f09cb86e62228344c6948f54616ef",
+      "pdfs/02-migration-lab/ring-port.pdf": "8c62db54d2852f6d09f271b86115524f82c6c411fa562e3d87893a0e88c0c59a",
+      "schedules/02-migration-lab.json": "6415ab36ee376354e77562e307390541cfead1a8a4652fdc12e848ee0a7a6785"
+    },
+    "repository": "MadBonzz/daily-planner-recreated",
+    "revision": "2a0eda84ca4a3725933373b28f296cf50335f5dd"
+  },
+  "query_instruction": "Retrieve past tasks whose work, methods, and scope are comparable and whose durations could help estimate this task.",
+  "vectors": {
+    "bins": {
+      "document": {
+        "input_sha256": "1a330182383ccb233ff724fb1df1841a224e2af9eb678592d2a6efdd42fb4e3f"
+      },
+      "query": {
+        "input_sha256": "5031045174a1ad1817f8d62adaeb57f161a23c3e10a96def2d5f1430bb80a145"
+      }
+    },
+    "boundary-debug": {
+      "document": {
+        "input_sha256": "00bbdad353a5fb08ef2e3f7d15e517c098383f7b18c0e76f5a7d3950487363c0"
+      },
+      "query": {
+        "input_sha256": "86af7085c9b489ed8e11b1b911de593215a8e06096059cb6d38f2c8421366181"
+      }
+    },
+    "codec-caption": {
+      "document": {
+        "input_sha256": "ff634e352616bfaeabc40fc38b9ca1321442838e1bb80b1ac0d9a3f882c523eb"
+      },
+      "query": {
+        "input_sha256": "17453e666b5481c5302c5bd8b7f87cfe22192e86c677cf7b673eec09e6fe7996"
+      }
+    },
+    "held-seed": {
+      "document": {
+        "input_sha256": "dba4446771cecc9fa6a16974af674076ed314d585217d95f51ae0bef8d2d7a0f"
+      },
+      "query": {
+        "input_sha256": "f489f4c879c5db9b943d94912c7b0edd4a5464d418df162602770d4e51e6bedb"
+      }
+    },
+    "patch-note": {
+      "document": {
+        "input_sha256": "768ef218f9af4351da7a68525a7caa557f5d3a8752399a77383908e8d7ff24c8"
+      },
+      "query": {
+        "input_sha256": "d3b76f6a6c90a13fc00d5682ec2b36d4a210aa3bd90c9eba52351e22b096606f"
+      }
+    },
+    "patch-tool": {
+      "document": {
+        "input_sha256": "223fc3257fd71acadcc9e8368e32e59a9509b426a8a67793e05602e900005969"
+      },
+      "query": {
+        "input_sha256": "18af745b35f181131165f5df45ed0038bba208d973fa6b27d466c64056a2fbe7"
+      }
+    },
+    "pickup": {
+      "document": {
+        "input_sha256": "68172497624219c55d5fe9ce420719e18c7d7117c0d08ae55c72e9e0057e0323"
+      },
+      "query": {
+        "input_sha256": "70653bf3d42e13cd80334faa7997714e2d5d83551783dcf3dc98c41378664041"
+      }
+    },
+    "replay-cases": {
+      "document": {
+        "input_sha256": "9a8cd7946a67a09de33a033c382b7287416de842aa5db42f678925d77df0d3a7"
+      },
+      "query": {
+        "input_sha256": "b5132bca05d8ed76a2dedf8ddea71b884bea3162aa604662593775b208f0ea31"
+      }
+    },
+    "ring-port": {
+      "document": {
+        "input_sha256": "8f6ff62c0c9cd476ca8362635247352f02a516b416b7a089ba421e50466310fb"
+      },
+      "query": {
+        "input_sha256": "a30cc6f112cac172eea266f1252e366a81acfa49d2ab1e39923d046036a098e7"
+      }
+    },
+    "suite-report": {
+      "document": {
+        "input_sha256": "1c73d2cb0bcd9143b460b9bd049e33b42eac0f0c6cb755e307eeae7509abb6bc"
+      },
+      "query": {
+        "input_sha256": "4af91b7ae2c07918898e1a97da9268401264a184fd17feae300dbeaa8563e2cf"
+      }
+    },
+    "trace-tool": {
+      "document": {
+        "input_sha256": "397f4f2d5a7c36f48d85e0095c057ac40a578b2fc8d7011bd6b596c806292fc5"
+      },
+      "query": {
+        "input_sha256": "5d4283af8f0d0bd829a260e9c32b12c18ab8de3c3ec4509fc1a3ac795ef34937"
+      }
+    }
+  }
+}

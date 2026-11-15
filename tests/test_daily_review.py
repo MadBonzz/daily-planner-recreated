@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta
 import hashlib
 import os
-from pathlib import Path
 import sys
 
 import pytest
@@ -106,6 +105,24 @@ def test_postponing_preserves_task_evidence_and_stops_running_clock(tmp_path, st
         assert store.transition(task, "resume")["status"] == "running"
         with store._db() as db:
             assert db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0] == 1
+
+
+def test_postpone_during_the_first_estimate_keeps_the_claim_and_recorded_period(tmp_path):
+    now = [datetime(2026, 11, 14, 16).timestamp()]
+    store = PlannerStore(tmp_path, clock=lambda: now[0])
+    task = store.create_task(day="2026-11-14", title="Read the proof", description="Annotate the induction step.",
+                             category="Reading", estimate_minutes=25)
+    job = store.claim_prediction(lease_seconds=1800)
+    assert job["task"]["id"] == task["id"]
+    store.transition(task["id"], "start")
+    now[0] += 600
+    moved = store.postpone(task["id"], "2026-11-16", previous_day=task["day"])
+    assert moved["estimate_updating"] and moved["status"] == "paused"
+    prediction = {"point_min": 28, "explanation": "Estimated while the card was moving."}
+    assert store.resolve_prediction(task["id"], job["token"], prediction)
+    result = store.list_tasks("2026-11-16")[0]
+    assert result["creation_prediction"] == result["prediction"] == prediction
+    assert result["actual_seconds"] == 600 and not store.has_pending_predictions()
 
 
 def test_postpone_and_daily_review_controls(tmp_path):
