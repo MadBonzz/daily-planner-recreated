@@ -65,33 +65,38 @@ for m in json.load(sys.stdin)["models"]:
 
 #### Test the Qwen load on port 1235
 
-**2. Load Qwen and check one embedding.** If `lms ls --embedding` lists Qwen, `lms ls --decision` lists Kev, and `lms runtime ls` shows a selected llama.cpp GGUF runtime, skip the downloads and imports. If Qwen is unloaded, run the command below on the Mac. Substitute its key from step 1 if it differs. This asks Bionic to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
+**2. Load Qwen and check one embedding.** If `lms ls --embedding` lists Qwen, `lms ls --decision` lists Kev, and `lms runtime ls` shows a selected llama.cpp GGUF runtime, skip the downloads and imports. Start with a 2,048-token Qwen context so more memory is available for Kev and Bonsai. Run this in the planner folder with `.venv` active. Skip the load line if `lms ps` already shows that live alias at the desired context.
 
 ```sh
-curl -sS -i http://127.0.0.1:1235/api/v1/models/load \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"text-embedding-qwen3-embedding-0.6b"}'
-```
-
-On success, use the returned `instance_id` as `PLANNER_EMBEDDING_MODEL`. The usual value for this download is shown below. This ID differs from the bundled vector ID (`qwen3-embedding-0.6b`), so the Dev histories request fresh embeddings. If your instance has the bundled ID, load Qwen with `lms load <installed-key> --identifier qwen3-embedding-0.6b-live` and use that alias instead.
-
-```sh
-export PLANNER_EMBEDDING_MODEL=text-embedding-qwen3-embedding-0.6b
+lms load text-embedding-qwen3-embedding-0.6b --context-length 2048 --identifier qwen3-embedding-0.6b-live --yes
+export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
 export PLANNER_EMBEDDING_ENDPOINT=http://127.0.0.1:1235/v1/embeddings
 python -m examples.estimation.check_local_models --component embedding
 ```
 
-Expect `returned 1024 dimensions`. The project’s Apple Silicon test loaded the Qwen Q8_0 GGUF and returned all 1,024 dimensions using llama.cpp. [Mac test run](https://github.com/MadBonzz/daily-planner-recreated/actions/runs/43709790621/job/132798710539) · [Model load API](https://lmstudio.ai/docs/developer/rest/load)
+Expect `returned 1024 dimensions`. The live alias bypasses the packaged Qwen vectors for the Dev histories. Both embedding forms of all 25 bundled Nora tasks fit 2,048 tokens, including extracted PDF text. The longest takes 1,752 tokens including the end token. Next, [load Kev and launch the planner](#after-qwen-loads-on-the-mac).
+
+**If the runtime log says `out of memory`**
+
+At an 8,192-token context, Bionic’s embedding engine has been observed raising the batch from 2,048 to 8,192 and requesting a single 10,371 MiB compute buffer. The smaller context above addresses that allocation. If 2,048 still fails with the same error, retry the load line with `--context-length 1024`. A shorter context limits how much task and PDF text fits in one embedding. The planner reports when the full input exceeds that limit. If another model is idle while you test, `lms ps` shows its identifier. For example, `lms unload ternary-bonsai-2-4b-mlx` releases its memory. Before launching the planner, reload Bonsai with `lms load ternary-bonsai-2-4b-mlx --context-length 8192 --parallel 1 --yes`.
 
 | If the Qwen load fails | Next step |
 | --- | --- |
-| Runtime error or `Exit code: null` | Run `lms runtime ls`. If the Mac has only the MLX runtime, install the GGUF runtime with `lms runtime get llama.cpp --yes`, then retry the HTTP load above. |
+| Runtime error or `Exit code: null` | Run `lms runtime ls`. If the Mac has only the MLX runtime, install the GGUF runtime with `lms runtime get llama.cpp --yes`, then retry the load. |
 | Unknown model | Run `curl -sS http://127.0.0.1:1235/api/v1/models \| python -m json.tool`. Use the Qwen embedding entry’s `key` in the load request. |
-| The runtime is selected but the cause is still unclear | In a second Terminal, run `lms log stream --source runtime`. Repeat the HTTP load in the first Terminal and capture its response body and the first engine error. If your CLI does not recognize the runtime log source, use `lms log stream --source server`. |
+| The runtime is selected but the cause is still unclear | In a second Terminal, run `lms log stream --source runtime`. Repeat the failed load in the first Terminal and capture its output and the first engine error. If your CLI does not recognize the runtime log source, use `lms log stream --source server`. |
 
 ##### HTTP 500 model_load_failed on the Mac
 
-If the response says `Failed to load embedding model` and repeats `Error loading model`, Bionic received the request and recognized Qwen. The response leaves the engine failure unspecified. In Terminal, press **⌘N** and start the log stream in the new window:
+For the HTTP status and JSON details of a failed load, send the same context size directly to Bionic. On success the response shows the applied context length. To use that running instance, export its returned `instance_id` as `PLANNER_EMBEDDING_MODEL` and run the embedding check above. The usual ID for this download, `text-embedding-qwen3-embedding-0.6b`, also differs from the bundled vector ID `qwen3-embedding-0.6b`. [Model load API](https://lmstudio.ai/docs/developer/rest/load)
+
+```sh
+curl -sS -i http://127.0.0.1:1235/api/v1/models/load \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"text-embedding-qwen3-embedding-0.6b","context_length":2048,"echo_load_config":true}'
+```
+
+If the response says `Failed to load embedding model` and repeats `Error loading model`, press **⌘N** and start the log stream in the new Terminal window:
 
 ```sh
 lms log stream --source runtime
@@ -111,23 +116,16 @@ This changes the selected GGUF runtime for subsequent loads. If Qwen loads, run 
 lms runtime select 'llama.cpp-mac-arm64-apple-metal-advsimd@2.73.0'
 ```
 
-**3. Load Kev.** Look for a `decision` entry for Kev in step 1. If present, use its key in the load command below. The `-live` alias makes the demo request fresh relevance decisions through `/v1/systemone`. [Kev decision endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
+#### After Qwen loads on the Mac
 
-If Downloads already shows **ggml-org · Kev 4B GGUF Q4_K_M** as completed but the native inventory has no Kev entry, run `lms ls --decision`. Click the folder icon beside the completed download and compare the file’s location in Finder with **My Models → Models directory**.
-
-- **File outside the configured folder.** Type `lms import` followed by a space in Terminal. Drag the GGUF from Finder into Terminal to insert its path, then append ` --user-repo ggml-org/Kev-4B-GGUF --copy --yes` and press Return. This imports the existing file. [Import options](https://lmstudio.ai/docs/cli/local-models/import)
-- **File already in the configured folder.** Check the llama.cpp runtime as in step 2 and check your Bionic version. Bionic 1.1.10 added embedding and decision models to its catalog. If you use an older version, update Bionic and rerun step 1. [Bionic release notes](https://lmstudio.ai/changelog/bionic-v1.1.10)
-- **First-time download.** Select `Kev-4B-Q4_K_M.gguf` from `ggml-org/Kev-4B-GGUF`. [Kev file](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/main/Kev-4B-Q4_K_M.gguf)
+**3. Load Kev, check all three models, and launch the planner.** Use the Terminal in the planner folder with `.venv` active. This block assumes Qwen is loaded as `qwen3-embedding-0.6b-live`, `lms ls --decision` lists `kev-4b`, and your 4B Bonsai ID is `ternary-bonsai-2-4b-mlx`. If you loaded Qwen through the HTTP API, use its returned instance ID on the embedding model line. If Kev already appears in `lms ps` as `kev-4b-live`, skip the first line. The separate data directory and the live Qwen and Kev IDs keep this run separate from the precomputed demo. [Kev decision endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
 
 ```sh
-lms load kev-4b --identifier kev-4b-live --yes
+lms load kev-4b --context-length 4096 --identifier kev-4b-live --yes
+export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
+export PLANNER_EMBEDDING_ENDPOINT=http://127.0.0.1:1235/v1/embeddings
 export PLANNER_DECISION_MODEL=kev-4b-live
 export PLANNER_DECISION_ENDPOINT=http://127.0.0.1:1235/v1/systemone
-```
-
-**4. Use the loaded Bonsai and launch.** Use the exact 4B ID from your API list. Bionic’s Bonsai 2 4B MLX has the ID shown below. If you installed the project’s original 4B GGUF, use `ternary-bonsai-4b`. The separate data directory keeps this local demo available on later runs.
-
-```sh
 export PLANNER_MODEL=ternary-bonsai-2-4b-mlx
 export PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1235/v1/chat/completions
 export PLANNER_MODEL_TIMEOUT_SECONDS=360
@@ -137,7 +135,13 @@ python -m examples.estimation.check_local_models && \
   python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
-The check prints a 1,024-dimensional Qwen embedding, a Kev relevance decision and a Bonsai forecast in minutes. Once Streamlit starts, open <http://127.0.0.1:8501>. For the demo, select **Dev → Nora · distributed systems lab → Editable history**. In a new Terminal, activate `.venv`, repeat the exports in steps 2–4, load any models missing from `lms ps`, and run the launch command.
+The check prints a 1,024-dimensional Qwen embedding, a Kev relevance decision and a Bonsai forecast in minutes. Once Streamlit starts, open <http://127.0.0.1:8501>. For the demo, select **Dev → Nora · distributed systems lab → Editable history**. In a new Terminal, activate `.venv`, load any missing models, and repeat the exports and launch command above.
+
+If Downloads already shows **ggml-org · Kev 4B GGUF Q4_K_M** as completed but the native inventory has no Kev entry, run `lms ls --decision`. Click the folder icon beside the completed download and compare the file’s location in Finder with **My Models → Models directory**.
+
+- **File outside the configured folder.** Type `lms import` followed by a space in Terminal. Drag the GGUF from Finder into Terminal to insert its path, then append ` --user-repo ggml-org/Kev-4B-GGUF --copy --yes` and press Return. This imports the existing file. [Import options](https://lmstudio.ai/docs/cli/local-models/import)
+- **File already in the configured folder.** Check the llama.cpp runtime as in step 2 and check your Bionic version. Bionic 1.1.10 added embedding and decision models to its catalog. If you use an older version, update Bionic and rerun step 1. [Bionic release notes](https://lmstudio.ai/changelog/bionic-v1.1.10)
+- **First-time download.** Select `Kev-4B-Q4_K_M.gguf` from `ggml-org/Kev-4B-GGUF`. [Kev file](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/main/Kev-4B-Q4_K_M.gguf)
 
 ## Run on Windows
 
@@ -205,14 +209,14 @@ lms ls
 **3. Load the models and start the local server.** Keep the two `-live` identifiers exactly as shown. The planner keys its bundled Qwen vectors by model ID and input text. Every saved Kev request also includes the model ID. Giving the same weights new identifiers makes even an exact demo input go to LM Studio. The first argument of each load command is the model key on disk. If your key differs, find the matching file and its `modelKey` in `lms ls --json` and change only that first argument. [Model identifiers and load options](https://lmstudio.ai/docs/cli/local-models/load)
 
 ```sh
-lms load text-embedding-qwen3-embedding-0.6b --identifier qwen3-embedding-0.6b-live --context-length 8192 --gpu off --yes
+lms load text-embedding-qwen3-embedding-0.6b --identifier qwen3-embedding-0.6b-live --context-length 2048 --gpu off --yes
 lms load kev-4b --identifier kev-4b-live --context-length 4096 --gpu off --yes
 lms load ternary-bonsai-4b --identifier ternary-bonsai-4b --context-length 8192 --gpu off --yes
 lms server start --bind 127.0.0.1 --port 1234
 lms ps
 ```
 
-`lms ps` should show all three identifiers. These commands select CPU inference, including for the experimental Bonsai GGUF. You can try LM Studio’s default device selection by omitting `--gpu off` when loading a model and rerunning the check in step 5. To preview memory use, append `--estimate-only` to a load command. If the local server is already listening on port 1234, continue with that server.
+`lms ps` should show all three identifiers. These commands request CPU inference. The embedding engine can still allocate Metal compute buffers, so reduce Qwen’s context if the runtime reports an allocation failure. For automatic device selection, omit `--gpu off` and rerun the check in step 5. To preview memory use, append `--estimate-only` to a load command. If the local server is already listening on port 1234, continue with that server.
 
 **4. Save a reusable local profile.** Paste the block below into Terminal once. It creates a shell settings file for this run mode. Sourcing it overrides any hosted settings in the repository’s `.env` for this Terminal. `PLANNER_DATA_DIR` selects a separate location for the planner database and vector index. Start with a new directory so previously stored task relationships or forecasts cannot be reused from a bundled demo run.
 
