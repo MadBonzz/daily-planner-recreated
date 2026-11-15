@@ -49,17 +49,21 @@ Use this on your Mac when LM Studio Bionic is already serving `http://localhost:
 
 Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal throughout.
 
-**1. Update the planner, activate its virtual environment and check the server.** With just-in-time loading enabled, the API can list downloaded models before they are loaded. In `lms ps`, an `IDLE` model is loaded and waiting for a request.
+**1. Update the planner, activate its virtual environment and check the server.** Downloads shows completed transfers. Bionic’s native model inventory shows the key and type the server recognizes, including embedding and decision models. The last column below shows the running instance IDs or `unloaded`. A chat picker or the My Models screen alone cannot tell you whether these two models can serve requests. [Bionic local models](https://lmstudio.ai/docs/bionic/models/download-local-models) · [Model inventory API](https://lmstudio.ai/docs/developer/rest/list)
 
 ```sh
 git pull --ff-only
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-curl -fsS http://127.0.0.1:1235/v1/models | python -m json.tool
-lms ps
+curl -fsS http://127.0.0.1:1235/api/v1/models | python -c '
+import json, sys
+for m in json.load(sys.stdin)["models"]:
+    instances = ", ".join(i["id"] for i in m.get("loaded_instances", []))
+    print(m["type"], m["key"], instances or "unloaded", sep="  ")
+'
 ```
 
-**2. Load Qwen and check one embedding.** If Qwen appears in the API list as `text-embedding-qwen3-embedding-0.6b` but is missing from `lms ps`, run this on the Mac. It asks Bionic on port 1235 to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
+**2. Load Qwen and check one embedding.** If Qwen appears as `embedding` and `unloaded`, run this on the Mac. Substitute its key from step 1 if it differs. This asks Bionic on port 1235 to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
 
 ```sh
 curl -sS -i http://127.0.0.1:1235/api/v1/models/load \
@@ -83,7 +87,13 @@ Expect `returned 1024 dimensions`. The project’s Apple Silicon test loaded the
 | Unknown model | Run `curl -sS http://127.0.0.1:1235/api/v1/models \| python -m json.tool`. Use the Qwen embedding entry’s `key` in the load request. |
 | The cause is still unclear | In a second Terminal, run `lms log stream --source server`. Repeat the HTTP load in the first Terminal and capture its response body and the corresponding error line. |
 
-**3. Load Kev.** If Kev is missing from the API list, open Bionic’s model search and download `Kev-4B-Q4_K_M.gguf` from `ggml-org/Kev-4B-GGUF`. Check `lms ls` for the installed key and substitute it for `kev-4b` below if needed. Run the load once, keeping the `-live` alias so the demo requests fresh relevance decisions. [Kev download](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/main/Kev-4B-Q4_K_M.gguf)
+**3. Load Kev.** Look for a `decision` entry for Kev in step 1. If present, use its key in the load command below. The `-live` alias makes the demo request fresh relevance decisions through `/v1/systemone`. [Kev decision endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
+
+If Downloads already shows **ggml-org · Kev 4B GGUF Q4_K_M** as completed but the native inventory has no Kev entry, run `lms ls --decision`. Click the folder icon beside the completed download and compare the file’s location in Finder with **My Models → Models directory**.
+
+- **File outside the configured folder.** Type `lms import` followed by a space in Terminal. Drag the GGUF from Finder into Terminal to insert its path, then append ` --user-repo ggml-org/Kev-4B-GGUF --copy --yes` and press Return. This imports the existing file. [Import options](https://lmstudio.ai/docs/cli/local-models/import)
+- **File already in the configured folder.** Check the llama.cpp runtime as in step 2 and check your Bionic version. Bionic 1.1.10 added embedding and decision models to its catalog. If you use an older version, update Bionic and rerun step 1. [Bionic release notes](https://lmstudio.ai/changelog/bionic-v1.1.10)
+- **First-time download.** Select `Kev-4B-Q4_K_M.gguf` from `ggml-org/Kev-4B-GGUF`. [Kev file](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/main/Kev-4B-Q4_K_M.gguf)
 
 ```sh
 lms load kev-4b --identifier kev-4b-live --yes
