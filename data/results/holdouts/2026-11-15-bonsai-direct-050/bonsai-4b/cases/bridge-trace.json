@@ -1,0 +1,139 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires labeling six given exchanges and documenting the durable state after each, including writing the generation attached to each acknowledgment. This involves parsing a sequence of events, identifying the generation and sequence number for each packet, and tracking the effect journal entries. The step that drives time is reconstructing the controller's durable state and externally visible effects after each event, which requires careful alignment of packet sequences and journal entries. Since the task is focused on a specific distributed system scenario involving packet retransmissions, reordering, and journaling, and no prior comparable task exists in the history, the estimate is based on the structural complexity of the event log and the need for accurate, sequential labeling. The deliverable is a state table for bridge A and a separate one for the controller, with each entry requiring precise matching of sequence numbers and generations. No shared work or recurring budget error is observed in the provided context, so the estimate is derived solely from the task description and standard step durations for such event-based reconstruction tasks. The absence of comparable timing data limits the precision of the range, but the task's clarity and structure suggest a moderate effort. The user's budget of 30 minutes is reasonable given the scope and the need for verification of each event's effect. The task does not involve dynamic adjustments or rework, so no additional time is assumed beyond the required labeling and state tracking.",
+  "model_calls": [
+    {
+      "prompt_sha256": "5ddba428791a6aabad1fa139d2a5e648f633e00ccd9f42778910f650595bc9a3",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 40,
+        "confidence": "medium",
+        "rationale": "The task requires labeling six given exchanges and documenting the durable state after each, including writing the generation attached to each acknowledgment. This involves parsing a sequence of events, identifying the generation and sequence number for each packet, and tracking the effect journal entries. The step that drives time is reconstructing the controller's durable state and externally visible effects after each event, which requires careful alignment of packet sequences and journal entries. Since the task is focused on a specific distributed system scenario involving packet retransmissions, reordering, and journaling, and no prior comparable task exists in the history, the estimate is based on the structural complexity of the event log and the need for accurate, sequential labeling. The deliverable is a state table for bridge A and a separate one for the controller, with each entry requiring precise matching of sequence numbers and generations. No shared work or recurring budget error is observed in the provided context, so the estimate is derived solely from the task description and standard step durations for such event-based reconstruction tasks. The absence of comparable timing data limits the precision of the range, but the task's clarity and structure suggest a moderate effort. The user's budget of 30 minutes is reasonable given the scope and the need for verification of each event's effect. The task does not involve dynamic adjustments or rework, so no additional time is assumed beyond the required labeling and state tracking.",
+        "confidence_reason": "The task involves a fixed number of exchanges (six) and requires precise labeling of each with generation and sequence number, followed by documenting the durable state. There is no variation in scope or complexity that would justify a wide range. The step of reconstructing the durable state after each event is the primary driver of time, and while no prior task has been timed, the structure of the event log and the need for accurate generation tracking align with typical reconstruction work in distributed systems. The lack of comparable timing data means the confidence is medium, and the range reflects the uncertainty in absence of historical benchmarks. The task does not involve rework, delays, or additional assumptions beyond the provided event sequence and journaling rules. No personal habits or distractions are cited, so the estimate is grounded solely in the task's requirements and standard step durations for such labeling and state reconstruction. The slot for this task is not directly comparable to any prior task due to the absence of historical timing data, so no specific reference to a prior task's duration is available. The user's budget of 30 minutes is justified as it covers the necessary labeling and state documentation without overestimating the effort due to lack of prior benchmarks."
+      },
+      "seconds": 237.285
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.7,
+      0.93
+    ],
+    "evidence_ids": [
+      "clock-two",
+      "ack-traces"
+    ],
+    "rationale": "Two bounded offline table replays finished ahead of budget.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.7666666666666667,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-trace",
+  "title": "Fill the replay table in part A",
+  "original": 30,
+  "category": 36,
+  "planner": 30,
+  "actual": 23,
+  "range": [
+    25,
+    40
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires labeling six given exchanges and documenting the durable state after each, including writing the generation attached to each acknowledgment. This involves parsing a sequence of events, identifying the generation and sequence number for each packet, and tracking the effect journal entries. The step that drives time is reconstructing the controller's durable state and externally visible effects after each event, which requires careful alignment of packet sequences and journal entries. Since the task is focused on a specific distributed system scenario involving packet retransmissions, reordering, and journaling, and no prior comparable task exists in the history, the estimate is based on the structural complexity of the event log and the need for accurate, sequential labeling. The deliverable is a state table for bridge A and a separate one for the controller, with each entry requiring precise matching of sequence numbers and generations. No shared work or recurring budget error is observed in the provided context, so the estimate is derived solely from the task description and standard step durations for such event-based reconstruction tasks. The absence of comparable timing data limits the precision of the range, but the task's clarity and structure suggest a moderate effort. The user's budget of 30 minutes is reasonable given the scope and the need for verification of each event's effect. The task does not involve dynamic adjustments or rework, so no additional time is assumed beyond the required labeling and state tracking.",
+  "confidence_reason": "The task involves a fixed number of exchanges (six) and requires precise labeling of each with generation and sequence number, followed by documenting the durable state. There is no variation in scope or complexity that would justify a wide range. The step of reconstructing the durable state after each event is the primary driver of time, and while no prior task has been timed, the structure of the event log and the need for accurate generation tracking align with typical reconstruction work in distributed systems. The lack of comparable timing data means the confidence is medium, and the range reflects the uncertainty in absence of historical benchmarks. The task does not involve rework, delays, or additional assumptions beyond the provided event sequence and journaling rules. No personal habits or distractions are cited, so the estimate is grounded solely in the task's requirements and standard step durations for such labeling and state reconstruction. The slot for this task is not directly comparable to any prior task due to the absence of historical timing data, so no specific reference to a prior task's duration is available. The user's budget of 30 minutes is justified as it covers the necessary labeling and state documentation without overestimating the effort due to lack of prior benchmarks.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 237.285,
+  "latency_seconds": 237.335,
+  "evidence": [],
+  "check": "Two bounded offline table replays finished ahead of budget.",
+  "qwen_candidates": [
+    {
+      "candidate": "barrier-proof",
+      "cosine": 0.6112410200129549,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "lease-restart",
+      "cosine": 0.587921826718671,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "clock-two",
+      "cosine": 0.5748296104721469,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "ack-traces",
+      "cosine": 0.558770683237982,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "epoch-proof",
+      "cosine": 0.5501965956327528,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "c3f714eae2c85b56338a6bde1f860d18b5f4dbde405fcdc176ee6f41ce9a5b56",
+      "same_input_cohere_id": "66513579f20370e80772faa226a78c3702ca3dad58a89a7e25d3ffbad5b2022f"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "c3f714eae2c85b56338a6bde1f860d18b5f4dbde405fcdc176ee6f41ce9a5b56",
+      "started_utc": "2026-11-15T04:32:28.677373+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "c4a329a18541efc2fcbfbb7731f6966b550df8fe293e1257a420c9c1b6d00467",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 557,
+        "prompt_tokens": 958,
+        "total_tokens": 1515,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 958,
+        "prompt_ms": 73963.672,
+        "prompt_per_token_ms": 77.20633820459291,
+        "prompt_per_second": 12.952304477257428,
+        "predicted_n": 557,
+        "predicted_ms": 141440.299,
+        "predicted_per_token_ms": 254.38902697841726,
+        "predicted_per_second": 3.930987165121872
+      },
+      "content_sha256": "bbef117e6d607ede49b9d32d7a92cea675b4ebb7c4e13b0e0784dd28331cc6a0",
+      "ended_utc": "2026-11-15T04:36:25.961673+00:00",
+      "seconds": 237.284
+    }
+  ],
+  "started_utc": "2026-11-15T04:32:28.579476+00:00",
+  "ended_utc": "2026-11-15T04:36:25.962368+00:00",
+  "wall_model_seconds": 237.284
+}

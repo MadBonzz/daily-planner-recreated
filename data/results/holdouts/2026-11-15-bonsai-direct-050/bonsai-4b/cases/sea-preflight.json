@@ -1,0 +1,175 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves verifying two projector routes in the Sea Glass booth, ensuring the correct cue is routed to the house screens, and confirming the playback manifest and filename integrity. Based on the history of similar booth prep tasks—such as the Blue House relay test (35 minutes actual, 30 minutes estimated) and the general booth output check (38 minutes actual, 30 minutes estimated)—the time required is reasonable. The key step driving time is confirming the correct cue and path to the house welcome screen, which requires manual verification of the playback manifest and cable routing. The handover documentation specifies that the route that failed must be identified, the action taken, and the grey card output confirmed, which aligns with the observed need for precise file matching and path validation. The actual time for the Blue House task (43 minutes) was slightly above the estimate due to a cable path misalignment that was caught during the restore check (observation_id: S1.1), indicating that a similar oversight could occur here. The Sea Glass task shares the same core workflow: route testing, media verification, and handover documentation. While the current task is slightly less complex than the Blue House test (which involved a full relink and media rebind), it still requires manual path correction and screen verification. The user's budget assumes the touring media is already available and that the house screens are in standby, which is supported by the task description. No additional assumptions are made beyond the documented procedures and the need to validate the playback manifest. The timing is comparable to the Blue House task, which took 43 minutes despite a 35-minute estimate, suggesting that a similar level of manual verification and troubleshooting is expected. This supports a medium confidence range, with a reasonable estimate of 30 minutes, though a small buffer is needed for unexpected cable issues or media path changes.",
+  "model_calls": [
+    {
+      "prompt_sha256": "26c3dda49ac7e2edc11008452b0fc7ac70020b0e366c2f1e5efadf498ab61f29",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 40,
+        "confidence": "medium",
+        "rationale": "The task involves verifying two projector routes in the Sea Glass booth, ensuring the correct cue is routed to the house screens, and confirming the playback manifest and filename integrity. Based on the history of similar booth prep tasks—such as the Blue House relay test (35 minutes actual, 30 minutes estimated) and the general booth output check (38 minutes actual, 30 minutes estimated)—the time required is reasonable. The key step driving time is confirming the correct cue and path to the house welcome screen, which requires manual verification of the playback manifest and cable routing. The handover documentation specifies that the route that failed must be identified, the action taken, and the grey card output confirmed, which aligns with the observed need for precise file matching and path validation. The actual time for the Blue House task (43 minutes) was slightly above the estimate due to a cable path misalignment that was caught during the restore check (observation_id: S1.1), indicating that a similar oversight could occur here. The Sea Glass task shares the same core workflow: route testing, media verification, and handover documentation. While the current task is slightly less complex than the Blue House test (which involved a full relink and media rebind), it still requires manual path correction and screen verification. The user's budget assumes the touring media is already available and that the house screens are in standby, which is supported by the task description. No additional assumptions are made beyond the documented procedures and the need to validate the playback manifest. The timing is comparable to the Blue House task, which took 43 minutes despite a 35-minute estimate, suggesting that a similar level of manual verification and troubleshooting is expected. This supports a medium confidence range, with a reasonable estimate of 30 minutes, though a small buffer is needed for unexpected cable issues or media path changes.",
+        "confidence_reason": "The task involves verifying two projector outputs and ensuring the correct cue is routed to the house welcome screen, which requires checking the playback manifest and confirming the filename remains relative after saving. This mirrors the Blue House task (actual: 43 minutes, estimated: 35 minutes), where a cable path misalignment was caught during restore (observation_id: S1.1). The current task is more focused on two specific outputs and a direct handover to the house screens, with no indication of media rebind or complex relinking. The actual time for the Blue House task was 43 minutes, which is 1.23 times the budget, suggesting that similar tasks may take slightly longer due to unforeseen path issues. The Sea Glass task does not involve additional media assets or off-task activities, so the time is expected to be within the 30-minute budget. However, the slight increase in required time due to the Blue House task’s cable misalignment implies that a small margin of error (up to 5 minutes) is plausible. Therefore, the low end (25 minutes) accounts for a minor delay due to a potential cable or path issue, while the high end (40 minutes) includes a conservative buffer for unexpected delays or verification steps. The lack of direct comparable timing for Sea Glass specifically limits precision, but the shared workflow and documented procedures provide a solid basis for estimation.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The Blue House task (35 minutes estimated, 43 minutes actual) required manual cable tracing and media rebinding, which caught a display order change (observation_id: S1.1). This suggests that path verification and media integrity checks are non-trivial and may take longer than expected in a similar setup."
+          },
+          {
+            "slot": 2,
+            "reason": "The Sea Glass task shares the same core workflow: route testing, playback manifest validation, and cue routing to the house screens. The Blue House task took 43 minutes despite a 30-minute budget, indicating that similar tasks may require more time due to hidden path issues or media inconsistencies."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 753.624
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.16,
+      1.42
+    ],
+    "evidence_ids": [
+      "cabaret-load",
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.2333333333333334,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "08-community-playhouse",
+  "task": "sea-preflight",
+  "title": "Do the Sea Glass booth preflight",
+  "original": 30,
+  "category": 38,
+  "planner": 30,
+  "actual": 37,
+  "range": [
+    25,
+    40
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "source": "decision model",
+      "score": 0.6364931422001361
+    },
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "source": "decision model",
+      "score": 0.6327198999749959
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves verifying two projector routes in the Sea Glass booth, ensuring the correct cue is routed to the house screens, and confirming the playback manifest and filename integrity. Based on the history of similar booth prep tasks—such as the Blue House relay test (35 minutes actual, 30 minutes estimated) and the general booth output check (38 minutes actual, 30 minutes estimated)—the time required is reasonable. The key step driving time is confirming the correct cue and path to the house welcome screen, which requires manual verification of the playback manifest and cable routing. The handover documentation specifies that the route that failed must be identified, the action taken, and the grey card output confirmed, which aligns with the observed need for precise file matching and path validation. The actual time for the Blue House task (43 minutes) was slightly above the estimate due to a cable path misalignment that was caught during the restore check (observation_id: S1.1), indicating that a similar oversight could occur here. The Sea Glass task shares the same core workflow: route testing, media verification, and handover documentation. While the current task is slightly less complex than the Blue House test (which involved a full relink and media rebind), it still requires manual path correction and screen verification. The user's budget assumes the touring media is already available and that the house screens are in standby, which is supported by the task description. No additional assumptions are made beyond the documented procedures and the need to validate the playback manifest. The timing is comparable to the Blue House task, which took 43 minutes despite a 35-minute estimate, suggesting that a similar level of manual verification and troubleshooting is expected. This supports a medium confidence range, with a reasonable estimate of 30 minutes, though a small buffer is needed for unexpected cable issues or media path changes.",
+  "confidence_reason": "The task involves verifying two projector outputs and ensuring the correct cue is routed to the house welcome screen, which requires checking the playback manifest and confirming the filename remains relative after saving. This mirrors the Blue House task (actual: 43 minutes, estimated: 35 minutes), where a cable path misalignment was caught during restore (observation_id: S1.1). The current task is more focused on two specific outputs and a direct handover to the house screens, with no indication of media rebind or complex relinking. The actual time for the Blue House task was 43 minutes, which is 1.23 times the budget, suggesting that similar tasks may take slightly longer due to unforeseen path issues. The Sea Glass task does not involve additional media assets or off-task activities, so the time is expected to be within the 30-minute budget. However, the slight increase in required time due to the Blue House task’s cable misalignment implies that a small margin of error (up to 5 minutes) is plausible. Therefore, the low end (25 minutes) accounts for a minor delay due to a potential cable or path issue, while the high end (40 minutes) includes a conservative buffer for unexpected delays or verification steps. The lack of direct comparable timing for Sea Glass specifically limits precision, but the shared workflow and documented procedures provide a solid basis for estimation.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 753.624,
+  "latency_seconds": 753.681,
+  "evidence": [
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "estimate_min": 35,
+      "actual_min": 43.0,
+      "ratio": 1.2285714285714286,
+      "reason": "The Blue House task (35 minutes estimated, 43 minutes actual) required manual cable tracing and media rebinding, which caught a display order change (observation_id: S1.1). This suggests that path verification and media integrity checks are non-trivial and may take longer than expected in a similar setup.",
+      "reason_source": "model",
+      "model_rationale": "The Blue House task (35 minutes estimated, 43 minutes actual) required manual cable tracing and media rebinding, which caught a display order change (observation_id: S1.1). This suggests that path verification and media integrity checks are non-trivial and may take longer than expected in a similar setup.",
+      "source_quote": "Follow the visiting crew’s booth changeover sheet. Verify the mirror display and restore the house workspace when the test is finished."
+    },
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "estimate_min": 30,
+      "actual_min": 38.0,
+      "ratio": 1.2666666666666666,
+      "reason": "The Sea Glass task shares the same core workflow: route testing, playback manifest validation, and cue routing to the house screens. The Blue House task took 43 minutes despite a 30-minute budget, indicating that similar tasks may require more time due to hidden path issues or media inconsistencies.",
+      "reason_source": "model",
+      "model_rationale": "The Sea Glass task shares the same core workflow: route testing, playback manifest validation, and cue routing to the house screens. The Blue House task took 43 minutes despite a 30-minute budget, indicating that similar tasks may require more time due to hidden path issues or media inconsistencies.",
+      "source_quote": "Open the touring workspace, verify both projector outputs and fix the path to the house loop before doors."
+    }
+  ],
+  "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+  "qwen_candidates": [
+    {
+      "candidate": "blue-relay",
+      "cosine": 0.6364931422001361,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "audio-preflight",
+      "cosine": 0.6327198999749959,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "f8fd80df917948807c9e0625bbce844f238fe6e6e5ab759408371b8bd881bc38",
+      "same_input_cohere_id": "091471897ca46ff289ca595651cf7c67b6d05b95b62d37c913ee0709475ceec2"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "f8fd80df917948807c9e0625bbce844f238fe6e6e5ab759408371b8bd881bc38",
+      "started_utc": "2026-11-15T04:47:00.694824+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "5d0dd8a09edd6e86f7398f409b489a304b24db35caad62d70c2338d62fc0ed8e",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 855,
+        "prompt_tokens": 1492,
+        "total_tokens": 2347,
+        "prompt_tokens_details": {
+          "cached_tokens": 454
+        }
+      },
+      "timings": {
+        "cache_n": 454,
+        "prompt_n": 1038,
+        "prompt_ms": 27900.032,
+        "prompt_per_token_ms": 26.87864354527938,
+        "prompt_per_second": 37.20425840371796,
+        "predicted_n": 855,
+        "predicted_ms": 724100.475,
+        "predicted_per_token_ms": 847.8928278688525,
+        "predicted_per_second": 1.1793943375054408
+      },
+      "content_sha256": "7ece1fe34504cef7b106bdaa203ac46b2dd653cf17bdbef0063dc234b64068f5",
+      "ended_utc": "2026-11-15T04:59:34.316026+00:00",
+      "seconds": 753.621
+    }
+  ],
+  "started_utc": "2026-11-15T04:47:00.616217+00:00",
+  "ended_utc": "2026-11-15T04:59:34.321048+00:00",
+  "wall_model_seconds": 753.621
+}

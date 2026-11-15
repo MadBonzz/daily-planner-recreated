@@ -1,0 +1,129 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires analyzing three saved replay transcripts (from C and Rust sides) and explaining a checksum collision where identical exit codes masked a logical difference. The core step is comparing on-disk trace lines to identify divergent operations, which involves parsing JSON lines and detecting discrepancies in sequence counts or operation types. Since the transcripts already include compiler versions, invocation details, and classifications, the primary work is in extracting and comparing the relevant operation data. The task specifies that only the Python tool and its registration need to be changed, and the comparison table must be three rows long. Given that the data structure must track predecessor eviction and demonstrate bounded peak memory (k + 1 current records per side), this adds a layer of complexity to the parsing and comparison logic. While no prior comparable task exists in the history, the structure of the problem—identifying logical differences through identical exit codes—is similar to tasks involving trace analysis or memory consistency in systems software. The time estimate of 40 minutes accounts for parsing, comparison logic, and writing the table, with a reasonable assumption that the checksum collision case is well-defined and the data is consistent enough to extract without ambiguity. The task does not require refitting or modifying the manifest, so no additional time is needed for those steps. The assumption that the input data is clean and the checksum table is correctly provided supports the medium confidence. No observable past delays or distractions are available to inform a warning or adjustment.",
+  "model_calls": [
+    {
+      "prompt_sha256": "d3ab7242320b5e9a7fabe5db1601b0c7b918cf538548b1185a28f14e50b6c24a",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 40,
+        "low_min": 35,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The task requires analyzing three saved replay transcripts (from C and Rust sides) and explaining a checksum collision where identical exit codes masked a logical difference. The core step is comparing on-disk trace lines to identify divergent operations, which involves parsing JSON lines and detecting discrepancies in sequence counts or operation types. Since the transcripts already include compiler versions, invocation details, and classifications, the primary work is in extracting and comparing the relevant operation data. The task specifies that only the Python tool and its registration need to be changed, and the comparison table must be three rows long. Given that the data structure must track predecessor eviction and demonstrate bounded peak memory (k + 1 current records per side), this adds a layer of complexity to the parsing and comparison logic. While no prior comparable task exists in the history, the structure of the problem—identifying logical differences through identical exit codes—is similar to tasks involving trace analysis or memory consistency in systems software. The time estimate of 40 minutes accounts for parsing, comparison logic, and writing the table, with a reasonable assumption that the checksum collision case is well-defined and the data is consistent enough to extract without ambiguity. The task does not require refitting or modifying the manifest, so no additional time is needed for those steps. The assumption that the input data is clean and the checksum table is correctly provided supports the medium confidence. No observable past delays or distractions are available to inform a warning or adjustment.",
+        "confidence_reason": "The task involves a clear, structured comparison of three on-disk trace lines with a defined logical difference hidden by identical exit codes. The data structure requirements (tracking predecessor eviction and peak memory bounded by k+1) are specific but do not require extensive computation. No prior comparable task exists in the history, so no direct timing comparison is available. However, the task's scope is comparable to a trace analysis exercise in systems software, which typically takes 35–45 minutes depending on data size and complexity. The absence of a prior comparable task limits the ability to refine the estimate with historical data, but the task's structure and constraints are well-defined and do not involve unstructured or ambiguous inputs. Therefore, the estimate is based on the provided details and standard assumptions for such a software engineering task, with no significant scope differences or recurring budget errors to justify deviation. The time range reflects typical effort for a similar task in the software engineering domain, with no personal habits or unverified assumptions introduced."
+      },
+      "seconds": 204.225
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.84
+    ],
+    "evidence_ids": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "rationale": "Two prior write-ups were quick when archived logs were already available.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.7,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-note",
+  "title": "Explain the three saved replay transcripts",
+  "original": 40,
+  "category": 51,
+  "planner": 40,
+  "actual": 28,
+  "range": [
+    35,
+    45
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires analyzing three saved replay transcripts (from C and Rust sides) and explaining a checksum collision where identical exit codes masked a logical difference. The core step is comparing on-disk trace lines to identify divergent operations, which involves parsing JSON lines and detecting discrepancies in sequence counts or operation types. Since the transcripts already include compiler versions, invocation details, and classifications, the primary work is in extracting and comparing the relevant operation data. The task specifies that only the Python tool and its registration need to be changed, and the comparison table must be three rows long. Given that the data structure must track predecessor eviction and demonstrate bounded peak memory (k + 1 current records per side), this adds a layer of complexity to the parsing and comparison logic. While no prior comparable task exists in the history, the structure of the problem—identifying logical differences through identical exit codes—is similar to tasks involving trace analysis or memory consistency in systems software. The time estimate of 40 minutes accounts for parsing, comparison logic, and writing the table, with a reasonable assumption that the checksum collision case is well-defined and the data is consistent enough to extract without ambiguity. The task does not require refitting or modifying the manifest, so no additional time is needed for those steps. The assumption that the input data is clean and the checksum table is correctly provided supports the medium confidence. No observable past delays or distractions are available to inform a warning or adjustment.",
+  "confidence_reason": "The task involves a clear, structured comparison of three on-disk trace lines with a defined logical difference hidden by identical exit codes. The data structure requirements (tracking predecessor eviction and peak memory bounded by k+1) are specific but do not require extensive computation. No prior comparable task exists in the history, so no direct timing comparison is available. However, the task's scope is comparable to a trace analysis exercise in systems software, which typically takes 35–45 minutes depending on data size and complexity. The absence of a prior comparable task limits the ability to refine the estimate with historical data, but the task's structure and constraints are well-defined and do not involve unstructured or ambiguous inputs. Therefore, the estimate is based on the provided details and standard assumptions for such a software engineering task, with no significant scope differences or recurring budget errors to justify deviation. The time range reflects typical effort for a similar task in the software engineering domain, with no personal habits or unverified assumptions introduced.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 204.225,
+  "latency_seconds": 204.277,
+  "evidence": [],
+  "check": "Two prior write-ups were quick when archived logs were already available.",
+  "qwen_candidates": [
+    {
+      "candidate": "trace-tool",
+      "cosine": 0.5970860192185168,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "suite-report",
+      "cosine": 0.5725500606319619,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "codec-caption",
+      "cosine": 0.5665055731449896,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "577383ee3dcfa5095209e5500779da3282a8734f2b8cebeba4a5b3aaa29abe68",
+      "same_input_cohere_id": "7ae7c3fed05c81192ef86993124d3e6b940c4e3e14317f13d17bf6219cacbd4b"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "577383ee3dcfa5095209e5500779da3282a8734f2b8cebeba4a5b3aaa29abe68",
+      "started_utc": "2026-11-15T04:32:28.671005+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "e4c70e536fb4107af6e1303bda1cb9832216dd5dd94500aabdb5e5cafb77d27c",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 530,
+        "prompt_tokens": 919,
+        "total_tokens": 1449,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 919,
+        "prompt_ms": 21873.932,
+        "prompt_per_token_ms": 23.801884657236126,
+        "prompt_per_second": 42.01347978955041,
+        "predicted_n": 530,
+        "predicted_ms": 182318.198,
+        "predicted_per_token_ms": 344.6468771266541,
+        "predicted_per_second": 2.901520560224054
+      },
+      "content_sha256": "2e35f66b39a5b1a770ec0cd9933d55ea74a0ab3446c635210466a9a8c26e7220",
+      "ended_utc": "2026-11-15T04:35:52.895327+00:00",
+      "seconds": 204.224
+    }
+  ],
+  "started_utc": "2026-11-15T04:32:28.579591+00:00",
+  "ended_utc": "2026-11-15T04:35:52.896607+00:00",
+  "wall_model_seconds": 204.224
+}

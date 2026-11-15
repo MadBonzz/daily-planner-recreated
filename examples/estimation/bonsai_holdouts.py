@@ -139,6 +139,27 @@ def evaluate_case(history, task, directory, preflight=False):
     return name, row['model_status'], row['planner']
 
 
+def verify_launch(directory, model, weights):
+    """Check declared launch flags when the local Linux server shares the benchmark's PID namespace."""
+    settings = directory / 'runtime.json'
+    if not settings.is_file() or not Path('/proc/self/cmdline').exists():
+        return
+    declared = json.loads(settings.read_text())['server_args']
+    expected = [str(weights.resolve()) if value == '<GGUF>' else value for value in declared]
+    for command in Path('/proc').glob('[0-9]*/cmdline'):
+        try:
+            argv = os.fsdecode(command.read_bytes()).rstrip('\0').split('\0')
+        except OSError:
+            continue
+        if not argv or Path(argv[0]).name != 'llama-server' or '--alias' not in argv:
+            continue
+        if argv[argv.index('--alias') + 1:][:1] == [model]:
+            if expected != argv[1:]:
+                raise RuntimeError('The local llama-server arguments differ from runtime.json; '
+                                   'restart it with the documented configuration before collecting evidence.')
+            return
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('directory', type=Path)
@@ -150,8 +171,9 @@ def main():
     args = parser.parse_args()
     if urlsplit(args.endpoint).hostname not in {'127.0.0.1', 'localhost', '::1'}:
         parser.error('This benchmark expects a loopback model server.')
+    timeout_seconds = 3600 if args.model == 'ternary-bonsai-2-9b' else 900
     os.environ.update(PLANNER_MODEL=args.model, PLANNER_MODEL_ENDPOINT=args.endpoint,
-                      PLANNER_RELEVANCE_THRESHOLD='0.50', PLANNER_MODEL_TIMEOUT_SECONDS='900')
+                      PLANNER_RELEVANCE_THRESHOLD='0.50', PLANNER_MODEL_TIMEOUT_SECONDS=str(timeout_seconds))
     with args.weights.open('rb') as file:
         digest = hashlib.file_digest(file, 'sha256').hexdigest()
     if digest != WEIGHTS[args.model]:
@@ -168,6 +190,7 @@ def main():
             evaluate_case(h, t, directory, True)
         print('Verified 20 reference cases, first forecast prompts and exact Qwen/Kev selections.', flush=True)
         return
+    verify_launch(directory, args.model, args.weights)
     (directory / 'cases').mkdir(parents=True, exist_ok=True)
     props_url = args.endpoint.removesuffix('/v1/chat/completions') + '/props'
     with build_opener(ProxyHandler({})).open(props_url) as response:
@@ -178,7 +201,7 @@ def main():
                 'prompt_parity': 'SHA256 of messages, schema, temperature and token budget against the instructed Cohere primary request',
                 'client_processes': args.slots, 'server_slots': props['total_slots'],
                 'context_per_slot': props['default_generation_settings']['n_ctx'],
-                'endpoint': args.endpoint, 'http_timeout_seconds': 900,
+                'endpoint': args.endpoint, 'http_timeout_seconds': timeout_seconds,
                 'implementation_sha256': {name: hashlib.sha256((run.REPO / name).read_bytes()).hexdigest() for name in (
                     'estimator.py','model_client.py','retrieval.py','examples/estimation/run.py','examples/estimation/bonsai_holdouts.py')}}
     marker = directory / 'manifest.json'

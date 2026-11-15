@@ -1,0 +1,207 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task 'Run the supply check with Dev' is a recurring stock call that follows a consistent structure: reviewing the April reorder sheet, agreeing on two quantities for the buyer, and completing within a 20-minute slot. Past observations show that similar tasks, such as 'Stock check with Dev' (slot 1), 'Check replenishment list with Dev' (slot 2), and 'Close the supply list with Dev' (slot 3), have averaged between 15 and 16 minutes, with actual durations closely matching the budget. The step that drives time is the review and agreement on reorder quantities, which is explicitly documented as a two-quantity decision and completed within the 20-minute slot. The handout specifies that stock calls are standard and typically take 20 minutes, with no indication of variability in the quantity agreement or filtering process. The recurring nature of the task and the fact that Dev has already filtered the sheet (as noted in observation S1.1) suggest that the actual time is constrained by the need for minimal discussion and verification. No additional steps or assumptions beyond the task description are required. The user's budget assumes a standard stock call with no delays or backorders, which aligns with the observed actual times. This task should take approximately 20 minutes, consistent with the documented recurring pattern and the absence of complexity or unanticipated items.",
+  "model_calls": [
+    {
+      "prompt_sha256": "30e7e26c6503d3c1ab988866177e7c6738f9b8a696f8b850fe9baeb82a8a62b9",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 20,
+        "low_min": 15,
+        "high_min": 25,
+        "confidence": "high",
+        "rationale": "The task 'Run the supply check with Dev' is a recurring stock call that follows a consistent structure: reviewing the April reorder sheet, agreeing on two quantities for the buyer, and completing within a 20-minute slot. Past observations show that similar tasks, such as 'Stock check with Dev' (slot 1), 'Check replenishment list with Dev' (slot 2), and 'Close the supply list with Dev' (slot 3), have averaged between 15 and 16 minutes, with actual durations closely matching the budget. The step that drives time is the review and agreement on reorder quantities, which is explicitly documented as a two-quantity decision and completed within the 20-minute slot. The handout specifies that stock calls are standard and typically take 20 minutes, with no indication of variability in the quantity agreement or filtering process. The recurring nature of the task and the fact that Dev has already filtered the sheet (as noted in observation S1.1) suggest that the actual time is constrained by the need for minimal discussion and verification. No additional steps or assumptions beyond the task description are required. The user's budget assumes a standard stock call with no delays or backorders, which aligns with the observed actual times. This task should take approximately 20 minutes, consistent with the documented recurring pattern and the absence of complexity or unanticipated items.",
+        "confidence_reason": "The task is a standard stock check with a clear, predefined outcome: agreeing on two quantities. Past tasks in the same category (slot 1, 2, 3) show actual times between 15 and 16 minutes, which are within the 20-minute budget. Observation S1.1 confirms that Dev had already filtered the sheet, reducing the need for extensive review. The task does not involve new data collection, refitting, or replacement fitting, so no additional time is needed. The budget assumes the reorder sheet is ready and counts are accurate, which is supported by the completion notes. There is no evidence of scope expansion or personal distractions. The timing is well-supported by historical data and explicit task structure.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The 'Stock check with Dev' (slot 1) took 15.0 minutes, which is within the 20-minute budget and shows a similar structure to the new task. The step of reviewing and agreeing on quantities is identical, and Dev had already filtered the sheet, reducing discussion time."
+          },
+          {
+            "slot": 2,
+            "reason": "The 'Check replenishment list with Dev' (slot 2) took 14.0 minutes, indicating that the task is efficient and focused on a small number of items. The step of selecting three packing supplies and cross-off two received items is straightforward and does not require extended discussion or verification."
+          },
+          {
+            "slot": 3,
+            "reason": "The 'Close the supply list with Dev' (slot 3) took 16.0 minutes, which is slightly above the average but still within the 20-minute slot. The step of verifying counts and handing over the order list is consistent with the new task, and the observation that counts matched shows no delays or errors."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 326.324
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.66,
+      0.86
+    ],
+    "evidence_ids": [
+      "dev-stock",
+      "dev-packs",
+      "dev-receipts"
+    ],
+    "rationale": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.75,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "dev-packs",
+      "dev-receipts",
+      "dev-stock"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "06-neighborhood-clinic",
+  "task": "dev-april",
+  "title": "Run the supply check with Dev",
+  "original": 20,
+  "category": 21,
+  "planner": 20,
+  "actual": 15,
+  "range": [
+    15,
+    25
+  ],
+  "covered": true,
+  "confidence": "high",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "dev-stock",
+      "title": "Stock check with Dev",
+      "source": "decision model",
+      "score": 0.7680068978106029
+    },
+    {
+      "task_id": "dev-packs",
+      "title": "Check replenishment list with Dev",
+      "source": "decision model",
+      "score": 0.7036435876326517
+    },
+    {
+      "task_id": "dev-receipts",
+      "title": "Close the supply list with Dev",
+      "source": "decision model",
+      "score": 0.6805588778472098
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task 'Run the supply check with Dev' is a recurring stock call that follows a consistent structure: reviewing the April reorder sheet, agreeing on two quantities for the buyer, and completing within a 20-minute slot. Past observations show that similar tasks, such as 'Stock check with Dev' (slot 1), 'Check replenishment list with Dev' (slot 2), and 'Close the supply list with Dev' (slot 3), have averaged between 15 and 16 minutes, with actual durations closely matching the budget. The step that drives time is the review and agreement on reorder quantities, which is explicitly documented as a two-quantity decision and completed within the 20-minute slot. The handout specifies that stock calls are standard and typically take 20 minutes, with no indication of variability in the quantity agreement or filtering process. The recurring nature of the task and the fact that Dev has already filtered the sheet (as noted in observation S1.1) suggest that the actual time is constrained by the need for minimal discussion and verification. No additional steps or assumptions beyond the task description are required. The user's budget assumes a standard stock call with no delays or backorders, which aligns with the observed actual times. This task should take approximately 20 minutes, consistent with the documented recurring pattern and the absence of complexity or unanticipated items.",
+  "confidence_reason": "The task is a standard stock check with a clear, predefined outcome: agreeing on two quantities. Past tasks in the same category (slot 1, 2, 3) show actual times between 15 and 16 minutes, which are within the 20-minute budget. Observation S1.1 confirms that Dev had already filtered the sheet, reducing the need for extensive review. The task does not involve new data collection, refitting, or replacement fitting, so no additional time is needed. The budget assumes the reorder sheet is ready and counts are accurate, which is supported by the completion notes. There is no evidence of scope expansion or personal distractions. The timing is well-supported by historical data and explicit task structure.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 326.324,
+  "latency_seconds": 326.38,
+  "evidence": [
+    {
+      "task_id": "dev-stock",
+      "title": "Stock check with Dev",
+      "estimate_min": 20,
+      "actual_min": 15.0,
+      "ratio": 0.75,
+      "reason": "The 'Stock check with Dev' (slot 1) took 15.0 minutes, which is within the 20-minute budget and shows a similar structure to the new task. The step of reviewing and agreeing on quantities is identical, and Dev had already filtered the sheet, reducing discussion time.",
+      "reason_source": "model",
+      "model_rationale": "The 'Stock check with Dev' (slot 1) took 15.0 minutes, which is within the 20-minute budget and shows a similar structure to the new task. The step of reviewing and agreeing on quantities is identical, and Dev had already filtered the sheet, reducing discussion time.",
+      "source_quote": "Run through the gloves and badge sleeves that need reordering with Dev Patel. He has the counts in his sheet."
+    },
+    {
+      "task_id": "dev-packs",
+      "title": "Check replenishment list with Dev",
+      "estimate_min": 20,
+      "actual_min": 14.0,
+      "ratio": 0.7,
+      "reason": "The 'Check replenishment list with Dev' (slot 2) took 14.0 minutes, indicating that the task is efficient and focused on a small number of items. The step of selecting three packing supplies and cross-off two received items is straightforward and does not require extended discussion or verification.",
+      "reason_source": "model",
+      "model_rationale": "The 'Check replenishment list with Dev' (slot 2) took 14.0 minutes, indicating that the task is efficient and focused on a small number of items. The step of selecting three packing supplies and cross-off two received items is straightforward and does not require extended discussion or verification.",
+      "source_quote": "Ask Dev Patel which three packing supplies to add to Friday’s order and cross off two received items."
+    },
+    {
+      "task_id": "dev-receipts",
+      "title": "Close the supply list with Dev",
+      "estimate_min": 20,
+      "actual_min": 16.0,
+      "ratio": 0.8,
+      "reason": "The 'Close the supply list with Dev' (slot 3) took 16.0 minutes, which is slightly above the average but still within the 20-minute slot. The step of verifying counts and handing over the order list is consistent with the new task, and the observation that counts matched shows no delays or errors.",
+      "reason_source": "model",
+      "model_rationale": "The 'Close the supply list with Dev' (slot 3) took 16.0 minutes, which is slightly above the average but still within the 20-minute slot. The step of verifying counts and handing over the order list is consistent with the new task, and the observation that counts matched shows no delays or errors.",
+      "source_quote": "Check the masks and envelope counts with Dev Patel and hand his order list to reception."
+    }
+  ],
+  "check": "Dev’s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+  "qwen_candidates": [
+    {
+      "candidate": "dev-stock",
+      "cosine": 0.7680068978106029,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dev-packs",
+      "cosine": 0.7036435876326517,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dev-receipts",
+      "cosine": 0.6805588778472098,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "mara-evening",
+      "cosine": 0.5040106458941553,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "706fbc9fa2f09ccc57b6a8873ab788d2ef53d21cf28586f6a58432df5f725796",
+      "same_input_cohere_id": "2af2537fdd4f0f761c295c4c6798946813ee5c9b5ef6400acd8472ca5d0229ed"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "706fbc9fa2f09ccc57b6a8873ab788d2ef53d21cf28586f6a58432df5f725796",
+      "started_utc": "2026-11-15T04:41:34.271642+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "aebc30dcf35d46b02dac4996236518caadf9ef076eeee9361d637ce5403c542f",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 703,
+        "prompt_tokens": 968,
+        "total_tokens": 1671,
+        "prompt_tokens_details": {
+          "cached_tokens": 454
+        }
+      },
+      "timings": {
+        "cache_n": 454,
+        "prompt_n": 514,
+        "prompt_ms": 12264.041,
+        "prompt_per_token_ms": 23.86000194552529,
+        "prompt_per_second": 41.91114494806402,
+        "predicted_n": 703,
+        "predicted_ms": 313580.78,
+        "predicted_per_token_ms": 446.6962678062678,
+        "predicted_per_second": 2.2386576116048946
+      },
+      "content_sha256": "5c7c45c42ef5b50c6b05dfd6e5a9e6aed387b3e334659d9a5876d76ecbfb5a91",
+      "ended_utc": "2026-11-15T04:47:00.593629+00:00",
+      "seconds": 326.322
+    }
+  ],
+  "started_utc": "2026-11-15T04:41:34.205878+00:00",
+  "ended_utc": "2026-11-15T04:47:00.596602+00:00",
+  "wall_model_seconds": 326.322
+}

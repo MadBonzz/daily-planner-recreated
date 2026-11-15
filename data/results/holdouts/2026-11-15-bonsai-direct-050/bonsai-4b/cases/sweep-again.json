@@ -1,0 +1,168 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves rerunning a validated reference sweep to report raw timings and four medians for row sizes 32, 33, 65, and 257. This is a direct continuation of a previously completed task (slot 1) that also required timing measurements and verification under poison padding. The step that drives time is the collection and reporting of median and p90 values across multiple row sizes, which aligns with the documented harness behavior of warming kernels for 20 iterations before timing 60 launches. The user's budget of 60 minutes is justified by the similarity in scope and timing structure to the prior task, which took 59.0 minutes (actual) and was within 0.98 of the budget. The task does not require implementation or additional work beyond the existing validated reference branch, and the timing is consistent with the harness's design—specifically, the requirement to wait for outstanding events before reading elapsed time. No new assumptions are made beyond the provided task description and historical data. The comparison to the prior task (slot 1) supports the estimate, as both involve kernel timing under identical conditions (warm-up, launch count, verification). The budget is maintained despite a slight overrun in the prior task because the scope remains identical and the work is fully contained within the validated reference branch. The slot-based timing comparison (slot 1) is the most informative, as it shares the same kernel structure, warm-up protocol, and verification method. The task does not introduce new complexity or require refitting or re-allocating data, so the time is directly comparable.",
+  "model_calls": [
+    {
+      "prompt_sha256": "41c6ca97db41da1b9b56b92ce1d2ea63565147f8c88b839eea729173067e87c3",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 59,
+        "low_min": 55,
+        "high_min": 65,
+        "confidence": "high",
+        "rationale": "The task involves rerunning a validated reference sweep to report raw timings and four medians for row sizes 32, 33, 65, and 257. This is a direct continuation of a previously completed task (slot 1) that also required timing measurements and verification under poison padding. The step that drives time is the collection and reporting of median and p90 values across multiple row sizes, which aligns with the documented harness behavior of warming kernels for 20 iterations before timing 60 launches. The user's budget of 60 minutes is justified by the similarity in scope and timing structure to the prior task, which took 59.0 minutes (actual) and was within 0.98 of the budget. The task does not require implementation or additional work beyond the existing validated reference branch, and the timing is consistent with the harness's design—specifically, the requirement to wait for outstanding events before reading elapsed time. No new assumptions are made beyond the provided task description and historical data. The comparison to the prior task (slot 1) supports the estimate, as both involve kernel timing under identical conditions (warm-up, launch count, verification). The budget is maintained despite a slight overrun in the prior task because the scope remains identical and the work is fully contained within the validated reference branch. The slot-based timing comparison (slot 1) is the most informative, as it shares the same kernel structure, warm-up protocol, and verification method. The task does not introduce new complexity or require refitting or re-allocating data, so the time is directly comparable.",
+        "confidence_reason": "The task is a direct replication of the validated reference sweep, which was previously completed in slot 1 (actual: 59.0 minutes). The timing structure—warm-up, 60 launches, median and p90 reporting—is identical. The requirement to verify output under poison padding and to report raw launch measurements is explicitly stated in the task description and matches the prior task's observed workflow. Personal evidence from the observation (id: S1.1) shows that the prior task had a minor off-task distraction (3.0 min), but this does not affect the core timing of the sweep. Since the task does not involve new kernel design, implementation, or data collection beyond the validated branch, the time remains tightly aligned with the prior task. The confidence is high because the task is functionally and structurally equivalent, and the historical data provides a clear benchmark. The range is narrow due to the absence of variability in the task's core mechanics, and the only deviation is the minor distraction noted in the observation, which is not relevant to the actual time spent on the sweep itself.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task mirrors the timing and verification process of the prior task (slot 1), which involved 60 launches, warm-up, and median/p90 reporting for the same row sizes. The harness behavior is explicitly described in the document, and the requirement to wait for events before reading time is consistent. This provides a strong basis for the estimate."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 202.099
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.9,
+      1.11
+    ],
+    "evidence_ids": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "rationale": "The scripted sweeps are already well budgeted.",
+    "predicted_ratio": 0.9833333333333333,
+    "realized_ratio": 1.0166666666666666,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "throughput-table"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "sweep-again",
+  "title": "Rerun the validated reference sweep",
+  "original": 60,
+  "category": 76,
+  "planner": 59,
+  "actual": 61,
+  "range": [
+    55,
+    65
+  ],
+  "covered": true,
+  "confidence": "high",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "source": "decision model",
+      "score": 0.9278558517939999
+    },
+    {
+      "task_id": "median-runs",
+      "title": "Repeat the archived shape sweep",
+      "source": "decision model",
+      "score": 0.5223119062118731
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves rerunning a validated reference sweep to report raw timings and four medians for row sizes 32, 33, 65, and 257. This is a direct continuation of a previously completed task (slot 1) that also required timing measurements and verification under poison padding. The step that drives time is the collection and reporting of median and p90 values across multiple row sizes, which aligns with the documented harness behavior of warming kernels for 20 iterations before timing 60 launches. The user's budget of 60 minutes is justified by the similarity in scope and timing structure to the prior task, which took 59.0 minutes (actual) and was within 0.98 of the budget. The task does not require implementation or additional work beyond the existing validated reference branch, and the timing is consistent with the harness's design—specifically, the requirement to wait for outstanding events before reading elapsed time. No new assumptions are made beyond the provided task description and historical data. The comparison to the prior task (slot 1) supports the estimate, as both involve kernel timing under identical conditions (warm-up, launch count, verification). The budget is maintained despite a slight overrun in the prior task because the scope remains identical and the work is fully contained within the validated reference branch. The slot-based timing comparison (slot 1) is the most informative, as it shares the same kernel structure, warm-up protocol, and verification method. The task does not introduce new complexity or require refitting or re-allocating data, so the time is directly comparable.",
+  "confidence_reason": "The task is a direct replication of the validated reference sweep, which was previously completed in slot 1 (actual: 59.0 minutes). The timing structure—warm-up, 60 launches, median and p90 reporting—is identical. The requirement to verify output under poison padding and to report raw launch measurements is explicitly stated in the task description and matches the prior task's observed workflow. Personal evidence from the observation (id: S1.1) shows that the prior task had a minor off-task distraction (3.0 min), but this does not affect the core timing of the sweep. Since the task does not involve new kernel design, implementation, or data collection beyond the validated branch, the time remains tightly aligned with the prior task. The confidence is high because the task is functionally and structurally equivalent, and the historical data provides a clear benchmark. The range is narrow due to the absence of variability in the task's core mechanics, and the only deviation is the minor distraction noted in the observation, which is not relevant to the actual time spent on the sweep itself.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 202.099,
+  "latency_seconds": 202.149,
+  "evidence": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "estimate_min": 60,
+      "actual_min": 59.0,
+      "ratio": 0.9833333333333333,
+      "reason": "The task mirrors the timing and verification process of the prior task (slot 1), which involved 60 launches, warm-up, and median/p90 reporting for the same row sizes. The harness behavior is explicitly described in the document, and the requirement to wait for events before reading time is consistent. This provides a strong basis for the estimate.",
+      "reason_source": "model",
+      "model_rationale": "The task mirrors the timing and verification process of the prior task (slot 1), which involved 60 launches, warm-up, and median/p90 reporting for the same row sizes. The harness behavior is explicitly described in the document, and the requirement to wait for events before reading time is consistent. This provides a strong basis for the estimate.",
+      "source_quote": "Run the existing sweep, copy four medians and list compiler/driver."
+    }
+  ],
+  "check": "The scripted sweeps are already well budgeted.",
+  "qwen_candidates": [
+    {
+      "candidate": "throughput-table",
+      "cosine": 0.9278558517939999,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "warp-tail",
+      "cosine": 0.7904929986012179,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "stride-kernel",
+      "cosine": 0.5520953769016745,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "median-runs",
+      "cosine": 0.5223119062118731,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "370f91b5ce2975ef2a4b17d8eb8321b5b50cf583ae48401c448f1a4ffea9b389",
+      "same_input_cohere_id": "2c66fa2012dc7f157b9da84eebbbc1c9ea1c96171c979965a429ef6772f2d496"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "370f91b5ce2975ef2a4b17d8eb8321b5b50cf583ae48401c448f1a4ffea9b389",
+      "started_utc": "2026-11-15T04:37:36.380250+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "50b55cf391bd665e378707ca51d46f374a09444cb934c818a25a6d08867c3ea8",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 682,
+        "prompt_tokens": 1325,
+        "total_tokens": 2007,
+        "prompt_tokens_details": {
+          "cached_tokens": 454
+        }
+      },
+      "timings": {
+        "cache_n": 454,
+        "prompt_n": 871,
+        "prompt_ms": 20713.915,
+        "prompt_per_token_ms": 23.781762342135476,
+        "prompt_per_second": 42.049028394680576,
+        "predicted_n": 682,
+        "predicted_ms": 180550.339,
+        "predicted_per_token_ms": 265.1253142437592,
+        "predicted_per_second": 3.7718012814143758
+      },
+      "content_sha256": "68eec27d40eb38503f8711376c4d29cb71ef078c51d5f15db7018a3653adba78",
+      "ended_utc": "2026-11-15T04:40:58.477676+00:00",
+      "seconds": 202.097
+    }
+  ],
+  "started_utc": "2026-11-15T04:37:36.132013+00:00",
+  "ended_utc": "2026-11-15T04:40:58.479306+00:00",
+  "wall_model_seconds": 202.097
+}

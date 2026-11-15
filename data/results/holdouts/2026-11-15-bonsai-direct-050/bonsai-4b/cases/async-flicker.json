@@ -1,0 +1,164 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves fixing a segmented reduction kernel in CUDA, ensuring correct thread ownership and handling of non-power-of-two row lengths. The primary step is mapping row and tile indices to block and thread coordinates, which requires careful analysis of the thread schedule and visibility assumptions. This step is directly tied to the ownership rule and the reduction logic in segmented.cu. A prior comparable task—'Fix corruption on partial warp tails'—took 122 minutes, with a budget of 80 minutes, indicating a significant time overrun due to GPU allocation delays and off-task distractions. The current task shares the same kernel structure and reduction logic, but adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work. The user's budget assumes a ready replacement fitting and that the input data includes edge cases like empty rows and varying pitches, which are already covered in the prior task. The actual time for the prior task was 122 minutes, with 6.0 minutes lost to off-task activity (observation_id: S1.1), and 5.0 minutes to YouTube off-task (observation_id: S2.2). These observations support the assumption that the user's budget is conservative and that the current task will not exceed it significantly. The added regression and ownership proof are incremental and do not introduce new complexity beyond the baseline reduction. Therefore, the estimated time of 85 minutes is reasonable, as it accounts for the core mapping and reduction logic while including a small buffer for regression testing and debugging. The task is similar in scope to the prior one, with shared data structures and the same input constraints, and the time required is driven by the need to correctly define thread ownership and validate reduction behavior under edge cases. The low and high bounds reflect the range of possible thread scheduling and visibility assumptions, which are well-documented in the handout. The current task does not require additional shared memory steps or complex tile management, as the baseline already supports one block per row or multiple tiles in a block. The time is not inflated by recurring budget errors, as the prior task's overrun was due to external delays (GPU allocation, off-task time), not scope expansion. The task is not significantly larger than the prior one in complexity, and the regression is minimal, requiring only one failure fixture and a results table. Thus, the estimate of 85 minutes is justified by the task's structure and the observed time for a similar prior effort.",
+  "model_calls": [
+    {
+      "prompt_sha256": "3296c20d2dba1c08ed91b0fd0badab40383ac458f279ef6b9ea6a8e640195e2e",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 80,
+        "low_min": 70,
+        "high_min": 90,
+        "confidence": "high",
+        "rationale": "The task involves fixing a segmented reduction kernel in CUDA, ensuring correct thread ownership and handling of non-power-of-two row lengths. The primary step is mapping row and tile indices to block and thread coordinates, which requires careful analysis of the thread schedule and visibility assumptions. This step is directly tied to the ownership rule and the reduction logic in segmented.cu. A prior comparable task—'Fix corruption on partial warp tails'—took 122 minutes, with a budget of 80 minutes, indicating a significant time overrun due to GPU allocation delays and off-task distractions. The current task shares the same kernel structure and reduction logic, but adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work. The user's budget assumes a ready replacement fitting and that the input data includes edge cases like empty rows and varying pitches, which are already covered in the prior task. The actual time for the prior task was 122 minutes, with 6.0 minutes lost to off-task activity (observation_id: S1.1), and 5.0 minutes to YouTube off-task (observation_id: S2.2). These observations support the assumption that the user's budget is conservative and that the current task will not exceed it significantly. The added regression and ownership proof are incremental and do not introduce new complexity beyond the baseline reduction. Therefore, the estimated time of 85 minutes is reasonable, as it accounts for the core mapping and reduction logic while including a small buffer for regression testing and debugging. The task is similar in scope to the prior one, with shared data structures and the same input constraints, and the time required is driven by the need to correctly define thread ownership and validate reduction behavior under edge cases. The low and high bounds reflect the range of possible thread scheduling and visibility assumptions, which are well-documented in the handout. The current task does not require additional shared memory steps or complex tile management, as the baseline already supports one block per row or multiple tiles in a block. The time is not inflated by recurring budget errors, as the prior task's overrun was due to external delays (GPU allocation, off-task time), not scope expansion. The task is not significantly larger than the prior one in complexity, and the regression is minimal, requiring only one failure fixture and a results table. Thus, the estimate of 85 minutes is justified by the task's structure and the observed time for a similar prior effort.",
+        "confidence_reason": "The task is directly comparable to 'Fix corruption on partial warp tails' (slot 1), which took 122 minutes and had a budget of 80 minutes. The observed delays (6.0 min off-task, 5.0 min off-task) are consistent with the user's prior behavior and are not indicative of a new complexity. The current task adds a regression to reproduce an intermittent failure, which is a standard practice in such lab exercises and does not increase the core computational effort. The handout specifies that the baseline permits either one block per row or multiple tiles in a block, and the task does not require changes to that structure. The thread schedule and visibility assumptions are explicitly mentioned in the handout and are the driving factors in the time required. The user's budget is based on a realistic expectation of task completion, and the actual time for the prior task was 1.52 times the budget, indicating a manageable overrun. The current task is not larger in scope or more complex than the prior one, and the regression is a standard, one-time addition. Therefore, the estimate of 85 minutes is supported by both the task's requirements and the user's historical performance. The low confidence is not applicable here due to clear comparability and documented requirements.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The prior task involved similar kernel ownership and reduction logic, with a budget of 80 minutes and actual time of 122 minutes. The current task adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work and does not increase the core computational complexity. The thread schedule and visibility assumptions are the same, so the time required is comparable."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 294.364
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.38,
+      1.68
+    ],
+    "evidence_ids": [
+      "warp-tail",
+      "stride-kernel",
+      "race-repro"
+    ],
+    "rationale": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+    "predicted_ratio": 0.9411764705882353,
+    "realized_ratio": 1.5529411764705883,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "warp-tail"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "async-flicker",
+  "title": "Fix nondeterministic segmented sums",
+  "original": 85,
+  "category": 108,
+  "planner": 80,
+  "actual": 132,
+  "range": [
+    70,
+    90
+  ],
+  "covered": false,
+  "confidence": "high",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "source": "decision model",
+      "score": 0.8254453068630736
+    },
+    {
+      "task_id": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "source": "decision model",
+      "score": 0.5704855097598562
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves fixing a segmented reduction kernel in CUDA, ensuring correct thread ownership and handling of non-power-of-two row lengths. The primary step is mapping row and tile indices to block and thread coordinates, which requires careful analysis of the thread schedule and visibility assumptions. This step is directly tied to the ownership rule and the reduction logic in segmented.cu. A prior comparable task—'Fix corruption on partial warp tails'—took 122 minutes, with a budget of 80 minutes, indicating a significant time overrun due to GPU allocation delays and off-task distractions. The current task shares the same kernel structure and reduction logic, but adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work. The user's budget assumes a ready replacement fitting and that the input data includes edge cases like empty rows and varying pitches, which are already covered in the prior task. The actual time for the prior task was 122 minutes, with 6.0 minutes lost to off-task activity (observation_id: S1.1), and 5.0 minutes to YouTube off-task (observation_id: S2.2). These observations support the assumption that the user's budget is conservative and that the current task will not exceed it significantly. The added regression and ownership proof are incremental and do not introduce new complexity beyond the baseline reduction. Therefore, the estimated time of 85 minutes is reasonable, as it accounts for the core mapping and reduction logic while including a small buffer for regression testing and debugging. The task is similar in scope to the prior one, with shared data structures and the same input constraints, and the time required is driven by the need to correctly define thread ownership and validate reduction behavior under edge cases. The low and high bounds reflect the range of possible thread scheduling and visibility assumptions, which are well-documented in the handout. The current task does not require additional shared memory steps or complex tile management, as the baseline already supports one block per row or multiple tiles in a block. The time is not inflated by recurring budget errors, as the prior task's overrun was due to external delays (GPU allocation, off-task time), not scope expansion. The task is not significantly larger than the prior one in complexity, and the regression is minimal, requiring only one failure fixture and a results table. Thus, the estimate of 85 minutes is justified by the task's structure and the observed time for a similar prior effort.",
+  "confidence_reason": "The task is directly comparable to 'Fix corruption on partial warp tails' (slot 1), which took 122 minutes and had a budget of 80 minutes. The observed delays (6.0 min off-task, 5.0 min off-task) are consistent with the user's prior behavior and are not indicative of a new complexity. The current task adds a regression to reproduce an intermittent failure, which is a standard practice in such lab exercises and does not increase the core computational effort. The handout specifies that the baseline permits either one block per row or multiple tiles in a block, and the task does not require changes to that structure. The thread schedule and visibility assumptions are explicitly mentioned in the handout and are the driving factors in the time required. The user's budget is based on a realistic expectation of task completion, and the actual time for the prior task was 1.52 times the budget, indicating a manageable overrun. The current task is not larger in scope or more complex than the prior one, and the regression is a standard, one-time addition. Therefore, the estimate of 85 minutes is supported by both the task's requirements and the user's historical performance. The low confidence is not applicable here due to clear comparability and documented requirements.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 294.364,
+  "latency_seconds": 294.428,
+  "evidence": [
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "estimate_min": 80,
+      "actual_min": 122.0,
+      "ratio": 1.525,
+      "reason": "The prior task involved similar kernel ownership and reduction logic, with a budget of 80 minutes and actual time of 122 minutes. The current task adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work and does not increase the core computational complexity. The thread schedule and visibility assumptions are the same, so the time required is comparable.",
+      "reason_source": "model",
+      "model_rationale": "The prior task involved similar kernel ownership and reduction logic, with a budget of 80 minutes and actual time of 122 minutes. The current task adds a regression to reproduce an intermittent failure, which is a minor extension of the prior work and does not increase the core computational complexity. The thread schedule and visibility assumptions are the same, so the time required is comparable.",
+      "source_quote": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression."
+    }
+  ],
+  "check": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+  "qwen_candidates": [
+    {
+      "candidate": "throughput-table",
+      "cosine": 0.8757681196667587,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "warp-tail",
+      "cosine": 0.8254453068630736,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "stride-kernel",
+      "cosine": 0.5704855097598562,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "086be938bc3075b851c95387dc74c4017e69b5bf725434012ba7f0efedfb1b05",
+      "same_input_cohere_id": "dacea9400032b67dcc575df1f71f2d05f612bcd2ead7f9d8738497a39d55ba59"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "086be938bc3075b851c95387dc74c4017e69b5bf725434012ba7f0efedfb1b05",
+      "started_utc": "2026-11-15T04:36:39.840844+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "abe0f5b490e21f0dbadd3047904db98edaee48931673339862977b47b2a56180",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 895,
+        "prompt_tokens": 1399,
+        "total_tokens": 2294,
+        "prompt_tokens_details": {
+          "cached_tokens": 454
+        }
+      },
+      "timings": {
+        "cache_n": 454,
+        "prompt_n": 945,
+        "prompt_ms": 21662.086,
+        "prompt_per_token_ms": 22.92284232804233,
+        "prompt_per_second": 43.62460752856396,
+        "predicted_n": 895,
+        "predicted_ms": 271912.465,
+        "predicted_per_token_ms": 304.1526454138703,
+        "predicted_per_second": 3.287822792529941
+      },
+      "content_sha256": "f2d1c5094167d428b9b2db3f5343fec01d77d61f89abc477262e7093d56b5227",
+      "ended_utc": "2026-11-15T04:41:34.203988+00:00",
+      "seconds": 294.363
+    }
+  ],
+  "started_utc": "2026-11-15T04:36:39.603719+00:00",
+  "ended_utc": "2026-11-15T04:41:34.204761+00:00",
+  "wall_model_seconds": 294.363
+}

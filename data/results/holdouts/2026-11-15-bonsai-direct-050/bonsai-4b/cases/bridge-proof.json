@@ -1,0 +1,175 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task requires a formal proof of the retirement invariant or a legal failure schedule in the bridge system, including analysis of crash and replay scenarios. The deliverable is a submission-ready argument that must include a quantified invariant, initialization conditions, and a repair scenario that rules out a legal failure. The step that drives time is the analysis of the stable cursor state and the handling of delayed DRAINED events across generations, which involves tracing event sequences and verifying invariants under adversarial conditions. This aligns with the prior task of proving a flush barrier across restart, which also required detailed event tracing and formal reasoning. Both tasks involve similar logical depth and structural analysis of the system's state transitions. The user's budget of 75 minutes is justified by the task's requirement to establish a legal failure schedule and include a repair that rules out a failure, which mirrors the complexity of the prior task. The actual time for the prior task was 90 minutes, indicating a reasonable variance due to proofreading and clarification. The current task is comparable in scope and logical structure, so the estimated time of 75 minutes is supported by the task's structure and the requirement to include a repair and adversarial trace. The timing context includes one past task with measurable duration, and the comparison is directly relevant due to shared system model and failure analysis focus.",
+  "model_calls": [
+    {
+      "prompt_sha256": "86ab4e3ec135bb8180f46b289087451c184b37f8d5acf7ca638f1033ca6eb2e7",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 75,
+        "low_min": 60,
+        "high_min": 90,
+        "confidence": "high",
+        "rationale": "The task requires a formal proof of the retirement invariant or a legal failure schedule in the bridge system, including analysis of crash and replay scenarios. The deliverable is a submission-ready argument that must include a quantified invariant, initialization conditions, and a repair scenario that rules out a legal failure. The step that drives time is the analysis of the stable cursor state and the handling of delayed DRAINED events across generations, which involves tracing event sequences and verifying invariants under adversarial conditions. This aligns with the prior task of proving a flush barrier across restart, which also required detailed event tracing and formal reasoning. Both tasks involve similar logical depth and structural analysis of the system's state transitions. The user's budget of 75 minutes is justified by the task's requirement to establish a legal failure schedule and include a repair that rules out a failure, which mirrors the complexity of the prior task. The actual time for the prior task was 90 minutes, indicating a reasonable variance due to proofreading and clarification. The current task is comparable in scope and logical structure, so the estimated time of 75 minutes is supported by the task's structure and the requirement to include a repair and adversarial trace. The timing context includes one past task with measurable duration, and the comparison is directly relevant due to shared system model and failure analysis focus.",
+        "confidence_reason": "The task involves a formal analysis of the retirement invariant and a repair scenario under adversarial conditions, which requires tracing event sequences and verifying invariants. The prior task of proving a flush barrier across restart (slot 1) took 90 minutes, with a 1.2 ratio to the budget, indicating that the time is reasonable given the complexity of the system model and the need for formal reasoning. The current task is structurally similar, with the same failure model and event sequence references. The user's budget assumes a stable system state and a clear protocol, which are consistent with the task's requirements. There is no indication of scope expansion or additional complexity beyond the prior task. The confidence is high because the task's logical structure and required components (invariant, initialization, repair, adversarial trace) are directly comparable to the prior task, and the user's budget is based on a realistic estimate of the time needed for such a proof.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task requires a similar level of formal reasoning and event tracing as the prior task, which involved analyzing the stable cursor and crash recovery. Both tasks require a quantified invariant and a repair scenario that rules out failure, with the same system model and event references."
+          }
+        ],
+        "warnings": []
+      },
+      "seconds": 250.924
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.14,
+      1.3
+    ],
+    "evidence_ids": [
+      "lease-restart",
+      "epoch-proof",
+      "barrier-proof"
+    ],
+    "rationale": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+    "expected_caution": {
+      "evidence_ids": [
+        "lease-restart",
+        "epoch-proof"
+      ],
+      "rationale": "Both notes recorded extra work constructing a separate failure schedule."
+    },
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.24,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "barrier-proof"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "01-replica-proofs",
+  "task": "bridge-proof",
+  "title": "Solve part B of the bridge handout",
+  "original": 75,
+  "category": 90,
+  "planner": 75,
+  "actual": 93,
+  "range": [
+    60,
+    90
+  ],
+  "covered": false,
+  "confidence": "high",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "source": "decision model",
+      "score": 0.6438314738415435
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Local endpoint",
+    "model": "ternary-bonsai-4b",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task requires a formal proof of the retirement invariant or a legal failure schedule in the bridge system, including analysis of crash and replay scenarios. The deliverable is a submission-ready argument that must include a quantified invariant, initialization conditions, and a repair scenario that rules out a legal failure. The step that drives time is the analysis of the stable cursor state and the handling of delayed DRAINED events across generations, which involves tracing event sequences and verifying invariants under adversarial conditions. This aligns with the prior task of proving a flush barrier across restart, which also required detailed event tracing and formal reasoning. Both tasks involve similar logical depth and structural analysis of the system's state transitions. The user's budget of 75 minutes is justified by the task's requirement to establish a legal failure schedule and include a repair that rules out a failure, which mirrors the complexity of the prior task. The actual time for the prior task was 90 minutes, indicating a reasonable variance due to proofreading and clarification. The current task is comparable in scope and logical structure, so the estimated time of 75 minutes is supported by the task's structure and the requirement to include a repair and adversarial trace. The timing context includes one past task with measurable duration, and the comparison is directly relevant due to shared system model and failure analysis focus.",
+  "confidence_reason": "The task involves a formal analysis of the retirement invariant and a repair scenario under adversarial conditions, which requires tracing event sequences and verifying invariants. The prior task of proving a flush barrier across restart (slot 1) took 90 minutes, with a 1.2 ratio to the budget, indicating that the time is reasonable given the complexity of the system model and the need for formal reasoning. The current task is structurally similar, with the same failure model and event sequence references. The user's budget assumes a stable system state and a clear protocol, which are consistent with the task's requirements. There is no indication of scope expansion or additional complexity beyond the prior task. The confidence is high because the task's logical structure and required components (invariant, initialization, repair, adversarial trace) are directly comparable to the prior task, and the user's budget is based on a realistic estimate of the time needed for such a proof.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 250.924,
+  "latency_seconds": 250.976,
+  "evidence": [
+    {
+      "task_id": "barrier-proof",
+      "title": "Prove a flush barrier across restart",
+      "estimate_min": 75,
+      "actual_min": 90.0,
+      "ratio": 1.2,
+      "reason": "The task requires a similar level of formal reasoning and event tracing as the prior task, which involved analyzing the stable cursor and crash recovery. Both tasks require a quantified invariant and a repair scenario that rules out failure, with the same system model and event references.",
+      "reason_source": "model",
+      "model_rationale": "The task requires a similar level of formal reasoning and event tracing as the prior task, which involved analyzing the stable cursor and crash recovery. Both tasks require a quantified invariant and a repair scenario that rules out failure, with the same system model and event references.",
+      "source_quote": "Reason from stable cursor state; produce a counterexample for the delayed generation and repair it."
+    }
+  ],
+  "check": "Three previous crash-recovery arguments used 1.20, 1.25 and 1.20 times their budgets. A new 75-minute proof should land near 90 minutes.",
+  "qwen_candidates": [
+    {
+      "candidate": "barrier-proof",
+      "cosine": 0.6438314738415435,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "lease-restart",
+      "cosine": 0.5962086967750375,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "epoch-proof",
+      "cosine": 0.5363106545822541,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "clock-two",
+      "cosine": 0.519947634428948,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "ack-traces",
+      "cosine": 0.5077189763502974,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "0dc0ee2de5dc4f671fde5ebd50e827038ed84e44baa899f6eb951e7f348c217f",
+      "same_input_cohere_id": "43cae0e74b0ee9b2252f5ff35f7676021cd7bed0bf511c57722000def1a90c4b"
+    }
+  ],
+  "http_receipts": [
+    {
+      "request_id": "0dc0ee2de5dc4f671fde5ebd50e827038ed84e44baa899f6eb951e7f348c217f",
+      "started_utc": "2026-11-15T04:32:28.677113+00:00",
+      "max_tokens": 950,
+      "payload_sha256": "2de0188913ea59aed92277f47640fa7c93f23a50cc133da25d3560c0f3b05181",
+      "http_status": 200,
+      "response_model": "ternary-bonsai-4b",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 572,
+        "prompt_tokens": 1114,
+        "total_tokens": 1686,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 1114,
+        "prompt_ms": 48149.282,
+        "prompt_per_token_ms": 43.22197666068222,
+        "prompt_per_second": 23.136378233012906,
+        "predicted_n": 572,
+        "predicted_ms": 180870.958,
+        "predicted_per_token_ms": 316.76174781085814,
+        "predicted_per_second": 3.156946843837693
+      },
+      "content_sha256": "6294c15d80bb40050bb8b7a12770167bbd00c8f3f957f018764518ca6b9db026",
+      "ended_utc": "2026-11-15T04:36:39.599738+00:00",
+      "seconds": 250.923
+    }
+  ],
+  "started_utc": "2026-11-15T04:32:28.579249+00:00",
+  "ended_utc": "2026-11-15T04:36:39.602082+00:00",
+  "wall_model_seconds": 250.923
+}
