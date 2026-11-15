@@ -35,8 +35,12 @@ def check(component, config):
     endpoint, model = model_settings(config)
     if urlsplit(endpoint).hostname not in {"127.0.0.1", "localhost", "::1"}:
         raise ModelUnavailable("Set PLANNER_MODEL_ENDPOINT to your local chat endpoint for this check.")
+    # Exercise the forecast contract used by a task card with a selected comparison and a completion note.
+    prior = {**PRIOR, "id": "checked-copies", "estimate_minutes": 20, "actual_seconds": 28 * 60,
+             "completion_note": "Two laminated copies had to be reprinted."}
+    task = {**TASK, "relevance_overrides": {prior["id"]: True}}
     with TemporaryDirectory() as directory:
-        result = estimator.predict(TASK, [], Path(directory))
+        result = estimator.predict(task, [prior], Path(directory))
     if result["provenance"]["decision"] != "direct":
         raise ModelUnavailable(result["model_error"])
     return (f"{model} returned a validated forecast of {result['point_min']} min "

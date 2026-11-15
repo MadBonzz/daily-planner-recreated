@@ -110,6 +110,41 @@ def test_retry_after_truncation_returns_the_second_valid_model_forecast(tmp_path
     assert result["point_min"] == output["point_min"]
 
 
+@pytest.mark.parametrize("valid_citation", [True, False])
+def test_bonsai_forecast_recovers_once_with_the_same_grounding_and_validation(tmp_path, monkeypatch, valid_citation):
+    monkeypatch.setenv("PLANNER_MODEL", "ternary-bonsai-2-4b-mlx")
+    monkeypatch.setenv("PLANNER_MODEL_ENDPOINT", "http://127.0.0.1:1235/v1/chat/completions")
+    monkeypatch.setenv("PLANNER_SINGLE_MODEL", "0")
+    history = dict(paper("prior", 1.4), completion_note="I needed to check the boundary cases twice.")
+    reply = forecast(
+        comparisons=[{"slot": 1 if valid_citation else 99, "reason": "Both reproduce the same proof."}],
+        warnings=[{"observation_id": "S1.1", "advice": "Set aside time to recheck the boundary cases."}],
+    )
+    attempts = []
+
+    def complete(request, **kwargs):
+        body = json.loads(request.data)
+        attempts.append(body)
+        # The first model answer starts an object but genuinely fails JSON parsing.
+        content = '{"point_min":' if len(attempts) == 1 else json.dumps(reply)
+        return BytesIO(json.dumps({"choices": [{"finish_reason": "stop", "message": {"content": content}}]}).encode())
+
+    with patch("model_client.build_opener") as client:
+        client.return_value.open.side_effect = complete
+        result = estimator.predict(paper("now"), [history], tmp_path)
+    first, second = attempts
+    assert "response_format" in first and "response_format" not in second
+    assert first["messages"][-1] == second["messages"][-1]
+    assert "observation_id" in second["messages"][0]["content"] and "properties" in second["messages"][0]["content"]
+    assert result["provenance"]["minutes_by"] == ("model" if valid_citation else "history")
+    if valid_citation:
+        assert result["point_min"] == reply["point_min"] and result["model_rationale"] == reply["rationale"]
+        assert result["evidence"][0]["reason"] == reply["comparisons"][0]["reason"]
+        assert result["cautions"][0]["sources"][0]["task_id"] == history["id"]
+    else:
+        assert "model_error" in result and "model_rationale" not in result
+
+
 def test_disk_index_updates_and_forgets_open_and_completed_tasks(tmp_path):
     row = paper("current")
     originally_open = {**row, "status": "open", "actual_seconds": 0}

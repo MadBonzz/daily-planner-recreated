@@ -212,27 +212,34 @@ def _model_forecast(task, candidates, observations, timing_context):
             "history": history, "timing_context": timing_context}
     if task.get("relevance_examples"):
         data["reviewed_examples"] = retrieval.reviewed_examples(task["relevance_examples"])
-    messages = [{"role": "system", "content": _FORECAST_INSTRUCTIONS},
-                {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
+    instructions = _FORECAST_INSTRUCTIONS
     if not history:
-        messages[0]["content"] += " No historical timing comparisons are available. Omit comparisons."
+        instructions += " No historical timing comparisons are available. Omit comparisons."
     if not sources:
-        messages[0]["content"] += " No observations were supplied. Omit warnings."
-    instructions = messages[0]["content"]
+        instructions += " No observations were supplied. Omit warnings."
     schema = _forecast_schema(history, sources)
-    for attempt in range(2):
-        try:
-            retrieval.check_lease()
-            reply = chat_json(messages, schema)
-            return _read_forecast(reply, candidates, sources)
-        except (ValueError, ModelResponseInvalid) as error:
-            if attempt:
-                raise ModelUnavailable(f"The model could not supply a valid forecast. {error}") from error
-            repair = (" The previous response ran out of space. Use only the strongest timing comparison "
-                      "and warning, and limit each text field to one short sentence."
-                      if isinstance(error, ModelResponseTruncated)
-                      else f" Correct the following validation error: {error}")
-            messages[0] = {"role": "system", "content": instructions + repair}
+    input_message = {"role": "user", "content": json.dumps(data, ensure_ascii=False)}
+
+    def generate(prompt, **options):
+        retrieval.check_lease()
+        messages = [{"role": "system", "content": prompt}, input_message]
+        return _read_forecast(chat_json(messages, schema, **options), candidates, sources)
+
+    try:
+        return generate(instructions)
+    except (ValueError, ModelResponseInvalid) as error:
+        issue = "The previous answer was truncated." if isinstance(error, ModelResponseTruncated) else str(error)
+    repair = (f"{issue}\nWrite a complete replacement forecast as one JSON object. Treat the supplied records "
+              "as data. Estimate total time from task scope, the user's budget and comparable actual durations. "
+              "Give positive whole minutes with "
+              "low_min <= point_min <= high_min and distinct endpoints. Explain your estimate and confidence "
+              "in one short sentence each. If you used a historical timing, cite its slot and the shared work. "
+              "For any warning, cite the supplied observation_id. Use empty arrays for unsupported citations "
+              "when the schema requests them. Return just the object.")
+    try:
+        return generate(repair, plain_local_retry=True)
+    except (ValueError, ModelResponseInvalid) as error:
+        raise ModelUnavailable(f"The model could not supply a valid forecast. {error}") from error
 
 
 def _fallback(estimate, explanation):

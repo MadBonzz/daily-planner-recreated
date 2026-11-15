@@ -508,6 +508,20 @@ class PlannerStore:
                 for task in failed:
                     _enqueue_prediction(db, task["id"])
                 _save_setting(db, "retried_qwen_tokenizer_failures", True)
+            if not _get_setting(db, "retried_bonsai_mlx_invalid_json", False):
+                failed = db.execute("""
+                    SELECT t.id FROM tasks t
+                    WHERE t.archived=0 AND t.fixed_duration=0 AND t.status!='completed'
+                      AND json_extract(t.prediction, '$.provenance.provider')='Local endpoint'
+                      AND json_extract(t.prediction, '$.provenance.model')='ternary-bonsai-2-4b-mlx'
+                      AND json_extract(t.prediction, '$.provenance.decision')='fallback'
+                      AND json_extract(t.prediction, '$.model_error') LIKE
+                          '%ternary-bonsai-2-4b-mlx returned an incomplete or invalid JSON object.'
+                      AND NOT EXISTS (SELECT 1 FROM prediction_jobs j WHERE j.task_id=t.id)
+                """).fetchall()
+                for task in failed:
+                    _enqueue_prediction(db, task["id"])
+                _save_setting(db, "retried_bonsai_mlx_invalid_json", True)
             if not _get_setting(db, "continue_later_is_pause", False):
                 db.execute("""UPDATE sessions SET stopped_at=NULL WHERE id IN (
                               SELECT MAX(s.id) FROM sessions s JOIN tasks t ON s.task_id=t.id

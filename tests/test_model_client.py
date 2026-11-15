@@ -25,9 +25,9 @@ class ModelClientTests(unittest.TestCase):
         self.enterContext(patch("model_client.ENV_FILE", self.env_file))
         self.enterContext(patch.dict(os.environ, {}, clear=True))
 
-    def reply(self, content, finish_reason="stop"):
+    def reply(self, content=None, finish_reason="stop", *, message=None):
         return io.BytesIO(json.dumps({"choices": [
-            {"finish_reason": finish_reason, "message": {"content": content}}
+            {"finish_reason": finish_reason, "message": message if message is not None else {"content": content}}
         ]}).encode())
 
     @patch("model_client.build_opener")
@@ -43,6 +43,27 @@ class ModelClientTests(unittest.TestCase):
         self.assertEqual(body["response_format"]["json_schema"]["schema"], self.schema)
 
     @patch("model_client.build_opener")
+    def test_only_local_bonsai_retries_unsupported_reasoning_effort(self, opener):
+        for local, endpoint in [(True, API_URL), (False, "https://api.cohere.ai/compatibility/v1/chat/completions")]:
+            with self.subTest(endpoint=endpoint), patch.dict(
+                os.environ, PLANNER_MODEL="ternary-bonsai-2-4b-mlx", PLANNER_MODEL_ENDPOINT=endpoint, COHERE_API="test"
+            ):
+                opener.reset_mock()
+                issue = {"error": {"param": "reasoning_effort", "message": "Unsupported parameter"}}
+                failure = HTTPError(endpoint, 400, "Bad Request", {}, io.BytesIO(json.dumps(issue).encode()))
+                transport = opener.return_value.open
+                transport.side_effect = [failure, self.reply('{"label":"on_task"}')]
+                if local:
+                    self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
+                    first, retry = [json.loads(call.args[0].data) for call in transport.call_args_list]
+                    self.assertEqual(first.pop("reasoning_effort"), "none")
+                    self.assertEqual(retry, first)
+                else:
+                    with self.assertRaisesRegex(ModelUnavailable, "HTTP 400"):
+                        chat_json([], self.schema)
+                    transport.assert_called_once()
+
+    @patch("model_client.build_opener")
     def test_bad_schema_or_truncated_completion_is_recoverable(self, opener):
         for content, reason in [('{"label":"unknown"}', "stop"), ('{"label":', "stop"), ('{"label":"on_task"}', "length")]:
             with self.subTest(reason=reason):
@@ -50,6 +71,55 @@ class ModelClientTests(unittest.TestCase):
                 with self.assertRaises(ModelResponseInvalid) as exc:
                     chat_json([], self.schema)
                 self.assertEqual(isinstance(exc.exception, ModelResponseTruncated), reason == "length")
+
+    @patch("model_client.build_opener")
+    def test_local_bonsai_reads_only_the_final_schema_object(self, opener):
+        os.environ["PLANNER_MODEL"] = "ternary-bonsai-2-4b-mlx"
+        final = '{"label":"on_task"}'
+        draft = '{"label":"off_task"}'
+        messages = [
+            {"content": f"<think>{draft}</think>\n```json\n{final}\n```"},
+            {"content": f"Here is the final result.\n{final}"},
+            {"content": f"{draft}</think>\n{final}"},
+            {"content": f"```json\n{final}"},
+            {"content": [{"type": "reasoning", "text": draft}, {"type": "text", "text": final[:7]},
+                         {"type": "text", "text": final[7:]}]},
+            {"reasoning_content": draft, "content": [{"type": "output_text", "text": final}]},
+        ]
+        for message in messages:
+            with self.subTest(message=message):
+                opener.return_value.open.return_value = self.reply(message=message)
+                self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
+
+    @patch("model_client.build_opener")
+    def test_reasoning_or_ambiguous_or_invalid_bonsai_output_cannot_be_a_result(self, opener):
+        os.environ["PLANNER_MODEL"] = "ternary-bonsai-2-4b-mlx"
+        draft = '{"label":"off_task"}'
+        messages = [
+            {"content": "", "reasoning_content": draft},
+            {"content": f"<think>{draft}"},
+            {"content": [{"type": "reasoning", "text": draft}]},
+            {"content": f"{draft} or " + '{"label":"on_task"}'},
+            {"content": 'It took around 65 minutes.'},
+            {"content": '<think>' + draft + '</think>\n{"label":"invalid"}'},
+            {"content": '{"label":"on_task"'},
+            {"content": '{"broken":' + draft},
+        ]
+        for message in messages:
+            with self.subTest(message=message):
+                opener.return_value.open.return_value = self.reply(message=message)
+                with self.assertRaises(ModelResponseInvalid):
+                    chat_json([], self.schema)
+
+    @patch("model_client.build_opener")
+    def test_hosted_error_keeps_the_original_single_request(self, opener):
+        os.environ.update(PLANNER_MODEL="command-r7b-12-2024",
+                          PLANNER_MODEL_ENDPOINT="https://api.cohere.ai/compatibility/v1/chat/completions",
+                          COHERE_API="test-token")
+        opener.return_value.open.return_value = self.reply('Here is my guess. {"label":"on_task"}')
+        with self.assertRaises(ModelResponseInvalid):
+            chat_json([], self.schema)
+        opener.return_value.open.assert_called_once()
 
     @patch("model_client.build_opener")
     def test_schema_integer_slots_are_safe_indices_and_only_typed_integers_are_converted(self, opener):

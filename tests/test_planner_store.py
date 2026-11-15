@@ -186,6 +186,39 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(reopened.get_task(target)["creation_prediction"], failure)
         self.assertIsNone(reopened.claim_prediction())
 
+    def test_upgrade_retries_only_saved_local_bonsai_json_failures_and_keeps_other_jobs(self):
+        provenance = {"provider": "Local endpoint", "model": "ternary-bonsai-2-4b-mlx",
+                      "decision": "fallback", "minutes_by": "user"}
+        failed = dict(self.budget, provenance=provenance, model_error="The model could not supply a valid forecast. "
+                      "ternary-bonsai-2-4b-mlx returned an incomplete or invalid JSON object.")
+        self.finish_one("Completed", prediction=failed)
+        self.store.archive_task(self.task("Archived", prediction=failed)["id"])
+        fixed = self.task("Scheduled", prediction=failed)["id"]
+        self.task("Hosted", prediction=dict(failed, provenance={**provenance, "provider": "Hosted endpoint"}))
+        self.task("Other local model", prediction=dict(failed, provenance={**provenance, "model": "other-model"}))
+        self.task("Unavailable endpoint", prediction=dict(failed, model_error="Bonsai is unavailable."))
+        self.task("Healthy forecast")
+        active = self.task("Retry already in progress", prediction=failed)["id"]
+        self.store.retry_estimate(active)
+        active_job = self.store.claim_prediction()
+        target = self.task("Running task", prediction=failed)["id"]
+        self.store.transition(target, "start")
+        self.now += 45
+        with sqlite3.connect(self.store.path) as db:
+            db.execute("DELETE FROM settings WHERE key='retried_bonsai_mlx_invalid_json'")
+            db.execute("UPDATE tasks SET fixed_duration=1 WHERE id=?", (fixed,))
+
+        upgraded = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        self.assertTrue(upgraded.resolve_prediction(active, active_job["token"], self.budget))
+        job = upgraded.claim_prediction()
+        self.assertEqual(job["task"]["id"], target)
+        self.assertTrue(upgraded.resolve_prediction(target, job["token"], failed))
+        reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        self.assertIsNone(reopened.claim_prediction())
+        saved = reopened.get_task(target)
+        self.assertEqual((saved["status"], saved["actual_seconds"], saved["creation_prediction"]),
+                         ("running", 45, failed))
+
     def test_retry_saved_failure_is_idempotent_preserves_first_forecast_and_timer(self):
         failed = dict(self.budget, explanation="Model comparison unavailable. api.cohere.ai returned HTTP 422.")
         task_id = self.task(prediction=failed)["id"]

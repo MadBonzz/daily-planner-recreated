@@ -110,8 +110,14 @@ class BionicHandler(BaseHTTPRequestHandler):
         if self.path == "/v1/systemone":
             return self.reply({"answers": {"relevant": {"noul": 0.9}}})
         if self.path == "/v1/chat/completions":
+            if server.chat_replies:
+                server.forecast_requests.append(body)
+                return self.reply({"choices": [{"message": server.chat_replies.pop(0), "finish_reason": "stop"}]})
             answer = dict(FORECAST)
-            if "comparisons" in body["response_format"]["json_schema"]["schema"]["properties"]:
+            properties = body["response_format"]["json_schema"]["schema"]["properties"]
+            if "warnings" in properties:
+                answer["warnings"] = []
+            if "comparisons" in properties:
                 answer["comparisons"] = [{"slot": 1, "reason": "Both tasks compare printed checklists with a master copy."}]
             return self.reply({"choices": [{"message": {"content": json.dumps(answer)}, "finish_reason": "stop"}]})
         self.reply({}, 404)
@@ -129,6 +135,8 @@ def bionic(monkeypatch, tmp_path):
     server.load_requests = []
     server.reject_parallel = False
     server.fail_load = False
+    server.chat_replies = []
+    server.forecast_requests = []
     server.chat_started = threading.Event()
     server.release_chat = threading.Event()
     server.release_chat.set()
@@ -196,6 +204,49 @@ def test_regular_forecast_uses_both_qwen_queries_and_past_timing_without_sdk(bio
                                        retrieval.embedding_input(task), retrieval.embedding_input(prior)]
     assert bionic.truncated_inputs == bionic.embedding_inputs[:2]
     assert [event[1] for event in bionic.events if event[0] == "load"] == [QWEN, KEV, BONSAI]
+
+
+def test_nora_marker_word_recovers_a_real_forecast_after_reasoning_only_reply(bionic, tmp_path):
+    history, = histories("02-migration-lab")
+    rows = inputs(history)
+    sample = next(task for task in history["tasks"] if task["id"] == "ring-port")
+    prior = {**rows["ring-port"], "id": "ring-port", "actual_seconds": sample["actual_minutes"] * 60,
+             "completion_note": sample["completion_note"]}
+    task = {**rows["held-seed"], "id": "held-seed", "relevance_overrides": {"ring-port": True}}
+    answer = {**FORECAST, "point_min": 74, "low_min": 60, "high_min": 85,
+              "rationale": "Minimizing the failing trace takes multiple replay attempts.",
+              "comparisons": [{"slot": 1, "reason": "Both tasks involve reproducing a failing fixture."}],
+              "warnings": [{"observation_id": "S1.1", "advice": "Leave time to reproduce the minimized fixture."}]}
+    draft = json.dumps({**answer, "point_min": 65})
+    bionic.chat_replies = [
+        {"content": "", "reasoning_content": draft},
+        {"content": [{"type": "reasoning", "text": draft},
+                     {"type": "text", "text": "```json\n" + json.dumps(answer) + "\n```"}]},
+    ]
+    forecast = estimator.predict(task, [prior], tmp_path / "index")
+    assert forecast["provenance"]["decision"] == "direct"
+    assert forecast["point_min"] == 74
+    assert forecast["evidence"][0]["title"] == "Port the wraparound header reader"
+    assert forecast["cautions"][0]["sources"][0]["task_id"] == "ring-port"
+    first, retry = bionic.forecast_requests
+    assert "response_format" in first and "response_format" not in retry
+    for payload in (first, retry):
+        assert payload["model"] == BONSAI + ":1"
+        assert payload["reasoning_effort"] == "none"
+        assert {"max_tokens", "max_completion_tokens", "max_output_tokens"}.isdisjoint(payload)
+    assert first["messages"][-1] == retry["messages"][-1]
+    assert "point_min" in retry["messages"][0]["content"]
+
+
+def test_exhausted_bonsai_retry_preserves_fallback_and_keeps_reasoning_private(bionic, tmp_path):
+    draft = json.dumps({**FORECAST, "low_min": 700, "point_min": 777, "high_min": 800})
+    bionic.chat_replies = [{"content": "", "reasoning_content": draft},
+                           {"content": f"<think>{draft}</think>\nPRIVATE notes suggest 777 minutes."}]
+    result = estimator.predict(check_local_models.TASK, [], tmp_path / "index")
+    assert result["provenance"]["decision"] == "fallback"
+    assert result["point_min"] == check_local_models.TASK["estimate_minutes"]
+    assert result["model_error"] and "PRIVATE" not in result["model_error"]
+    assert len(bionic.forecast_requests) == 2
 
 
 def test_http_rejection_reuses_only_an_exact_packaged_vector(bionic, sdk_unavailable):

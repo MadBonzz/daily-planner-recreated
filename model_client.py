@@ -3,6 +3,7 @@
 import json
 import math
 import os
+import re
 import shlex
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -123,7 +124,90 @@ def _canonical_integers(value, schema):
     return value
 
 
-def chat_json(messages, schema):
+def _final_json(message, model):
+    """Decode one answer from the assistant's public text, ignoring reasoning blocks."""
+    content = message.get("content")
+    if isinstance(content, list):
+        content = "".join(part["text"] for part in content if isinstance(part, dict)
+                          and part.get("type") in {"text", "output_text"} and isinstance(part.get("text"), str))
+    if not isinstance(content, str) or not content.strip():
+        if message.get("reasoning_content") or message.get("reasoning"):
+            raise ModelResponseInvalid(f"{model} returned reasoning without a final JSON answer.")
+        raise ModelResponseInvalid(f"{model} returned no final answer text.")
+    content = content.strip()
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        pass
+
+    # Bonsai templates can prefill the opening think tag and emit only its close.
+    # Match a thinking prefix or a delimiter on its own line, outside the answer.
+    if content.startswith("<think>"):
+        _, close, content = content.partition("</think>")
+        if not close:
+            raise ModelResponseInvalid(f"{model} returned an unfinished thinking block without a final JSON answer.")
+    else:
+        close = re.search(r"(?m)^\s*</think>\s*|</think>\s*(?=```|[\[{]|$)", content)
+        if close:
+            content = content[close.end():]
+    content = content.strip()
+    # A local runtime may wrap the answer in a Markdown fence or a short preamble.
+    # Decode from the first opening delimiter only: a nested object in malformed
+    # output, or one of several proposed answers, is not a completed response.
+    start = re.search(r"[\[{]", content)
+    if not start or "<think>" in content[:start.start()]:
+        raise ModelResponseInvalid(f"{model} returned no final JSON object.")
+    try:
+        result, end = json.JSONDecoder().raw_decode(content, start.start())
+    except json.JSONDecodeError as exc:
+        raise ModelResponseInvalid(f"{model} returned incomplete or malformed final JSON.") from exc
+    if any(char in content[end:] for char in "{}[]") or "</think>" in content[end:]:
+        raise ModelResponseInvalid(f"{model} returned ambiguous text around the final JSON answer.")
+    return result
+
+
+def _post_completion(client, endpoint, headers, payload, timeout, model):
+    host = urlsplit(endpoint).hostname
+    bonsai = "reasoning_effort" in payload
+    while True:
+        request = Request(endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
+        try:
+            with client.open(request, timeout=timeout) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            with exc:
+                if exc.code not in (400, 413, 422):
+                    raise ModelUnavailable(f"{host} returned HTTP {exc.code} for {model}.") from exc
+                try:
+                    body = json.loads(exc.read(16384))
+                except (OSError, ValueError):
+                    body = {}
+            problem = body.get("error", body) if isinstance(body, dict) else {}
+            if not isinstance(problem, dict):
+                problem = {}
+            message = str(problem.get("message", "")).casefold()
+            param = problem.get("param")
+            if any(problem.get(k) in ("exceed_context_size_error", "context_length_exceeded") for k in ("type", "code")):
+                count, limit = problem.get("n_prompt_tokens"), problem.get("n_ctx")
+                sizes = (f" ({count:,} input tokens, {limit:,} available)"
+                         if type(count) is int and type(limit) is int and count > 0 and limit > 0 else "")
+                raise ModelContextExceeded(f"{model} rejected the input because it exceeds the context window{sizes}.") from exc
+            if "reasoning_effort" in payload and exc.code in (400, 422):
+                # A parameter rejected by HTTP validation has not started a generation.
+                if param == "reasoning_effort" or ("reasoning_effort" in message and any(word in message for word in
+                        ("unsupported", "not supported", "unknown", "unrecognized", "invalid", "unexpected"))):
+                    del payload["reasoning_effort"]
+                    continue
+            # Provider messages can echo private input. Surface only the error category.
+            if param == "response_format" or "response_format" in message or "json schema" in message:
+                if bonsai and "response_format" in payload and exc.code in (400, 422):
+                    raise ModelResponseInvalid(f"{model} rejected the requested JSON schema.") from exc
+                if host in COHERE_HOSTS and exc.code == 400:
+                    raise ModelUnavailable(f"{model} rejected the requested response format (HTTP 400).") from exc
+            raise ModelUnavailable(f"{host} returned HTTP {exc.code} for {model}.") from exc
+
+
+def chat_json(messages, schema, *, plain_local_retry=False):
     """Return locally validated JSON, or raise ModelUnavailable for the planner fallback."""
     config = _forecast_config.get() or planner_settings()
     endpoint, model = model_settings(config)
@@ -144,6 +228,8 @@ def chat_json(messages, schema):
     except ValueError:
         raise ModelUnavailable("Invalid PLANNER_MODEL_ENDPOINT. Use the chat completions URL.") from None
 
+    local = url.hostname in {"localhost", "127.0.0.1", "::1"}
+    bonsai = local and any("bonsai-2-" in name.casefold() for name in (model, config.get("PLANNER_MODEL_KEY") or ""))
     payload = {"model": model, "messages": messages, "temperature": 0}
     if cohere:
         if model in {"c4ai-aya-expanse-8b", "c4ai-aya-vision-8b"}:
@@ -152,15 +238,18 @@ def chat_json(messages, schema):
         if not key:
             raise ModelUnavailable("Set COHERE_API in .env to use the Cohere endpoint.")
         headers["Authorization"] = f"Bearer {key}"
-    if cohere and model.startswith(("c4ai-aya-", "tiny-aya-")):
-        # Aya supports ordinary chat. Provide its response contract in the prompt.
+    aya = cohere and model.startswith(("c4ai-aya-", "tiny-aya-"))
+    if bonsai or aya:
+        # Prompt the same contract when the runtime uses grammar-constrained or ordinary chat.
         instruction = "Return only one JSON object matching this schema:\n" + json.dumps(schema)
         conversation = list(messages)
         if conversation and conversation[0].get("role") in {"system", "developer"}:
             first = conversation.pop(0)
             instruction = first["content"] + "\n\n" + instruction
         payload["messages"] = [{"role": "system", "content": instruction}, *conversation]
-    else:
+    if bonsai:
+        payload.update(temperature=0.7, top_p=0.8, reasoning_effort="none")
+    if not aya and not (bonsai and plain_local_retry):
         # Both LM Studio and Cohere's OpenAI compatibility endpoint accept this envelope.
         payload["response_format"] = {
             "type": "json_schema",
@@ -170,45 +259,25 @@ def chat_json(messages, schema):
     # Only the explicitly configured endpoint receives the prompt. Loopback
     # traffic bypasses system web proxies; hosted requests honor HTTPS_PROXY.
     handlers = [_NoRedirect()]
-    if url.hostname in {"localhost", "127.0.0.1", "::1"}:
+    if local:
         handlers.append(ProxyHandler({}))
     client = build_opener(*handlers)
     try:
         with local_model_runtime.managed_model(endpoint, model, config, kind="llm", timeout=timeout) as instance:
             payload["model"] = instance
-            request = Request(endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
-            with client.open(request, timeout=timeout) as response:
-                completion = json.load(response)
+            completion = _post_completion(client, endpoint, headers, payload, timeout, model)
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":
             raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.")
-        content = choice["message"]["content"].strip()
-        if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
-            content = content.split("\n", 1)[1][:-3].strip()
-        result = json.loads(content)
+        if local:
+            result = _final_json(choice["message"], model)
+        else:
+            content = choice["message"]["content"].strip()
+            if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
+                content = content.split("\n", 1)[1][:-3].strip()
+            result = json.loads(content)
         validate(result, schema)
         return _canonical_integers(result, schema)
-    except HTTPError as exc:
-        if exc.code in (400, 413):
-            try:
-                body = json.loads(exc.read(16384))
-                detail = body.get("error") if isinstance(body, dict) else None
-            except (OSError, ValueError):
-                body = detail = None
-            if isinstance(detail, dict) and any(detail.get(k) in ("exceed_context_size_error", "context_length_exceeded")
-                                               for k in ("type", "code")):
-                count, limit = detail.get("n_prompt_tokens"), detail.get("n_ctx")
-                sizes = (f" ({count:,} input tokens, {limit:,} available)"
-                         if type(count) is int and type(limit) is int and count > 0 and limit > 0 else "")
-                raise ModelContextExceeded(f"{model} rejected the input because it exceeds the context window{sizes}.") from exc
-            if cohere and exc.code == 400:
-                # The provider can echo private input. Only display a known error category.
-                issue = detail if isinstance(detail, dict) else body
-                if isinstance(issue, dict):
-                    message = str(issue.get("message", "")).casefold()
-                    if issue.get("param") == "response_format" or "response_format" in message or "json schema" in message:
-                        raise ModelUnavailable(f"{model} rejected the requested response format (HTTP 400).") from exc
-        raise ModelUnavailable(f"{url.hostname} returned HTTP {exc.code} for {model}.") from exc
     except OSError as exc:
         # urllib can surface a read timeout directly or wrap a connection timeout in URLError.reason.
         if isinstance(exc, TimeoutError) or isinstance(getattr(exc, "reason", None), TimeoutError):
