@@ -1,0 +1,59 @@
+{
+  "fixed_duration": true,
+  "cautions": [],
+  "explanation": "The scheduled duration is 75 minutes.",
+  "model_calls": [],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.0,
+      1.0
+    ],
+    "evidence_ids": [
+      "radio-cabaret",
+      "short-on-air",
+      "quiet-show"
+    ],
+    "rationale": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.0,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "08-community-playhouse",
+  "task": "blue-show",
+  "title": "Operate captions for Sea Glass at 19:00",
+  "original": 75,
+  "category": 75,
+  "planner": 75,
+  "actual": 75,
+  "range": [
+    75,
+    75
+  ],
+  "covered": true,
+  "confidence": "fixed",
+  "basis": "Scheduled duration",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": null,
+    "model": null,
+    "decision": "fixed",
+    "minutes_by": "schedule"
+  },
+  "model_rationale": null,
+  "confidence_reason": null,
+  "model_status": "not_called",
+  "model_error": null,
+  "model_seconds": 0,
+  "latency_seconds": 0.004,
+  "evidence": [],
+  "check": "The event clock defines the required attendance; three prior fixed-length shows finished at exactly their scheduled duration. Prediction should remain exactly 75 minutes without borrowing setup overruns.",
+  "qwen_candidates": [],
+  "forecast_calls": []
+}

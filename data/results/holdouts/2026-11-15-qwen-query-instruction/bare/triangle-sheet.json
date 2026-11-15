@@ -1,0 +1,83 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves several steps, including downloading the exercise sheet, calculating coefficients, justifying their properties, and performing numerical checks. These steps are estimated to take a moderate amount of time, with the potential for some variation based on individual familiarity with the subject matter and the time spent on each step. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations.",
+  "model_calls": [
+    {
+      "prompt_sha256": "487fc317903717a4e276235f7fc178ecf7dfb8bff2d1c2d3f1ade58dd9b965e3",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 35,
+        "high_min": 55,
+        "confidence": "medium",
+        "rationale": "The task involves several steps, including downloading the exercise sheet, calculating coefficients, justifying their properties, and performing numerical checks. These steps are estimated to take a moderate amount of time, with the potential for some variation based on individual familiarity with the subject matter and the time spent on each step. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations.",
+        "confidence_reason": "The task involves a combination of mathematical calculations and conceptual understanding. The time estimate is based on the complexity of the problem and the need for careful calculations. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations."
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": [
+      0.86,
+      1.13
+    ],
+    "evidence_ids": [
+      "phasor-paper",
+      "filter-exercise"
+    ],
+    "rationale": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.9777777777777777,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "10-signal-study",
+  "task": "triangle-sheet",
+  "title": "Complete the triangle-wave practice problems",
+  "original": 45,
+  "category": 60,
+  "planner": 45,
+  "actual": 44,
+  "range": [
+    35,
+    55
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves several steps, including downloading the exercise sheet, calculating coefficients, justifying their properties, and performing numerical checks. These steps are estimated to take a moderate amount of time, with the potential for some variation based on individual familiarity with the subject matter and the time spent on each step. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations.",
+  "confidence_reason": "The task involves a combination of mathematical calculations and conceptual understanding. The time estimate is based on the complexity of the problem and the need for careful calculations. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.083,
+  "evidence": [],
+  "check": "The previous downloaded problem sets ran around the guess, 47/50 and 43/40. The 44-minute result is close to 45. Matching by the word Fourier or triangle alone would import an unrelated browser distraction.",
+  "qwen_candidates": [
+    {
+      "candidate": "pulse-video",
+      "cosine": 0.5273328537770283,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "999d5b225edc1cc3bd3c623a6d8f39e55a9c6e6542676846a9ec62f36a920ae7",
+      "source": "identical request"
+    }
+  ]
+}

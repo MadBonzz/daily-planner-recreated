@@ -1,0 +1,102 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves recording and analyzing data from a rover, which can be time-consuming due to the need for precise measurements and comparisons. The user's estimate of 45 minutes is a reasonable starting point, considering the complexity of the task. The low end of the range (30 minutes) assumes a smooth process with minimal manual corrections, while the high end (60 minutes) accounts for potential delays in data collection and analysis, especially with the need to compare IMU spikes and wheel speeds.",
+  "model_calls": [
+    {
+      "prompt_sha256": "c73f49fc4a035df633eb6f5f6e23924b761a32b88d39a4f1f4ed382aeed4e595",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 30,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The task involves recording and analyzing data from a rover, which can be time-consuming due to the need for precise measurements and comparisons. The user's estimate of 45 minutes is a reasonable starting point, considering the complexity of the task. The low end of the range (30 minutes) assumes a smooth process with minimal manual corrections, while the high end (60 minutes) accounts for potential delays in data collection and analysis, especially with the need to compare IMU spikes and wheel speeds.",
+        "confidence_reason": "The task's complexity and the need for precise measurements and comparisons make it challenging to estimate with high confidence. The user's estimate provides a good starting point, but the actual time may vary based on the specific challenges encountered during the trial."
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.43,
+      1.68
+    ],
+    "evidence_ids": [
+      "hall-encoder",
+      "turntable",
+      "dock-trace"
+    ],
+    "rationale": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+    "expected_caution": {
+      "evidence_ids": [
+        "hall-encoder",
+        "turntable",
+        "dock-trace"
+      ],
+      "rationale": "Warn that the original USB bridge disconnected on earlier live captures; leave time to reconnect and repeat the affected run."
+    },
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.5777777777777777,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": false,
+    "unknown_caution_source_ids": []
+  },
+  "history": "09-rover-night",
+  "task": "bump-crossing",
+  "title": "Record the cable-cover crossing on rover C",
+  "original": 45,
+  "category": 69,
+  "planner": 45,
+  "actual": 71,
+  "range": [
+    30,
+    60
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves recording and analyzing data from a rover, which can be time-consuming due to the need for precise measurements and comparisons. The user's estimate of 45 minutes is a reasonable starting point, considering the complexity of the task. The low end of the range (30 minutes) assumes a smooth process with minimal manual corrections, while the high end (60 minutes) accounts for potential delays in data collection and analysis, especially with the need to compare IMU spikes and wheel speeds.",
+  "confidence_reason": "The task's complexity and the need for precise measurements and comparisons make it challenging to estimate with high confidence. The user's estimate provides a good starting point, but the actual time may vary based on the specific challenges encountered during the trial.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.017,
+  "evidence": [],
+  "check": "The three physical rover-C sessions with the old USB bridge took 63/40, 77/50 and 70/45. This physical trace session took 71/45. Offline bag replay has no reconnection or rerun burden.",
+  "qwen_candidates": [
+    {
+      "candidate": "dock-trace",
+      "cosine": 0.5778980131658853,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "turntable",
+      "cosine": 0.52932464577671,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "wheel-ticks",
+      "cosine": 0.517047603266183,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "db45fb46954423a0c6d21b1118f9f2bcc6fa7f00750dbd79b947d962568f6bbf",
+      "source": "identical request"
+    }
+  ]
+}

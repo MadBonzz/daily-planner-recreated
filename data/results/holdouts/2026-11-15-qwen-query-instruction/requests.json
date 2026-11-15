@@ -1,0 +1,730 @@
+{
+  "43cae0e74b0ee9b2252f5ff35f7676021cd7bed0bf511c57722000def1a90c4b": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 10.277
+      }
+    ],
+    "response": {
+      "point_min": 60,
+      "low_min": 50,
+      "high_min": 70,
+      "confidence": "medium",
+      "rationale": "The task involves proving a retirement invariant or providing a legal failure schedule, which is a complex and detailed process. The provided document excerpt suggests that the task requires a deep understanding of distributed systems and the specific protocol in question. The history of a similar task, 'Prove a flush barrier across restart', took 90 minutes, which is a reasonable comparison point. Given the complexity of the task and the need for a detailed argument, I estimate that 60 minutes is the minimum time required, with a low-end estimate of 50 minutes and a high-end estimate of 70 minutes.",
+      "confidence_reason": "The confidence in the estimate is medium because the task involves a high level of complexity and requires a deep understanding of the subject matter. The history of a similar task provides a reasonable comparison point, but the actual time taken may vary depending on the individual's expertise and the specific details of the task.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves proving a retirement invariant or providing a legal failure schedule, which is a complex and detailed process. The history of a similar task, 'Prove a flush barrier across restart', took 90 minutes, which is a reasonable comparison point."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of potential distractions, such as off-task activities, and allocate time accordingly to ensure the task is completed efficiently."
+        }
+      ]
+    }
+  },
+  "66513579f20370e80772faa226a78c3702ca3dad58a89a7e25d3ffbad5b2022f": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.024
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The task involves labeling six exchanges and their durable states, which requires careful analysis and understanding of the provided text. The estimated time of 30 minutes is a reasonable starting point, considering the complexity of the task and the need to review and interpret the given information. However, the low end of the range (25 minutes) is possible if the exchanges are straightforward and the text is easily digestible. Conversely, the high end (35 minutes) is plausible if the exchanges are more intricate and require additional time for interpretation and labeling.",
+      "confidence_reason": "The confidence in the estimate is medium, as the task involves a degree of interpretation and analysis. The complexity of the exchanges and the need to understand the durable states could introduce some variability in the time required. However, the provided text and the estimated time of 30 minutes serve as a reasonable starting point for the task."
+    }
+  },
+  "05758449ea2c52ed3d6d679d7eb642ec60eaca6bdecd8ff38f378afb0e646f81": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 8.397
+      }
+    ],
+    "response": {
+      "point_min": 85,
+      "low_min": 75,
+      "high_min": 95,
+      "confidence": "medium",
+      "rationale": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+      "confidence_reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators. This could be a potential issue for the new task, so it's important to consider this when estimating the time."
+        }
+      ]
+    }
+  },
+  "7ae7c3fed05c81192ef86993124d3e6b940c4e3e14317f13d17bf6219cacbd4b": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 5.834
+      }
+    ],
+    "response": {
+      "point_min": 40,
+      "low_min": 35,
+      "high_min": 45,
+      "confidence": "medium",
+      "rationale": "The task involves analyzing and comparing archived transcripts from a replay system, which includes understanding the structure of the data, identifying a checksum collision, and explaining a specific case of identical exit codes hiding a logical difference. The estimated time is based on the complexity of the task, which requires a thorough understanding of the replay system's architecture and the ability to compare and analyze the transcripts. The low and high estimates consider the potential for additional time needed to review and understand the system's intricacies.",
+      "confidence_reason": "The confidence in the estimate is medium as the task involves a combination of technical understanding and analysis. While the provided information gives a good starting point, the actual time required may vary depending on the complexity of the system and the specific details of the checksum collision and logical difference."
+    }
+  },
+  "ea033bf04d580f8a6fcf4abad3c62c3bdde02203467124c4980666fa72e54255": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 9.554
+      }
+    ],
+    "response": {
+      "point_min": 100,
+      "low_min": 90,
+      "high_min": 110,
+      "confidence": "medium",
+      "rationale": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks. The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+      "confidence_reason": "The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Expand the conditional expectation one event at a time to avoid confusion and ensure accuracy in the proof."
+        },
+        {
+          "observation_id": "S1.2",
+          "advice": "Stay focused on the task and avoid off-task activities to ensure timely completion."
+        },
+        {
+          "observation_id": "S2.1",
+          "advice": "Double-check the algebra and ensure that the variance bound is correctly tested on the two-point loss table."
+        },
+        {
+          "observation_id": "S2.2",
+          "advice": "Avoid off-task activities during the task to ensure timely completion."
+        }
+      ]
+    }
+  },
+  "006ed3b678b7712db944515662b2fb4c072722ed3061b4aa733373a82cc059bb": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.737
+      }
+    ],
+    "response": {
+      "point_min": 45,
+      "low_min": 30,
+      "high_min": 60,
+      "confidence": "medium",
+      "rationale": "The task involves creating a slide summarizing the results of two ablations, with a focus on experiments 1 and 2. This requires understanding the experimental setup, identifying the control and confounding variables, and presenting the findings in a clear and concise manner. The estimated time of 45 minutes is based on the complexity of the task and the need to carefully analyze and synthesize the information from the experiments. The low end of the range (30 minutes) assumes a more straightforward task with less complex data, while the high end (60 minutes) accounts for potential challenges in interpreting the results and ensuring the slide is accurate and informative.",
+      "confidence_reason": "The confidence in the estimate is medium, as the task involves a combination of data analysis and presentation skills. While the experiments are described in the document, the actual time required may vary depending on the complexity of the data and the researcher's familiarity with the subject matter."
+    }
+  },
+  "dacea9400032b67dcc575df1f71f2d05f612bcd2ead7f9d8738497a39d55ba59": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.93
+      }
+    ],
+    "response": {
+      "point_min": 100,
+      "low_min": 90,
+      "high_min": 110,
+      "confidence": "medium",
+      "rationale": "The task involves fixing a nondeterministic segmented sum issue, which is a complex problem that requires careful analysis and implementation. The task also includes minimizing non-power-of-two failures, correcting ownership rules, and adding a regression. The history of past tasks provides some context, but the specific nature of the task and its requirements make it challenging to estimate the exact time needed. The user's budget of 85 minutes is likely insufficient, given the complexity of the task and the history of past tasks taking more time than estimated.",
+      "confidence_reason": "The task's complexity and the history of past tasks taking more time than estimated provide a moderate level of confidence in the estimate. However, the specific requirements and the need for careful analysis and implementation make it challenging to provide a precise estimate.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves fixing a segmented sum issue, which is similar to the 'Fix corruption on partial warp tails' task. However, the new task requires additional steps, such as minimizing non-power-of-two failures and correcting ownership rules, which may take more time."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Be prepared for potential delays due to GPU allocation issues, as mentioned in the history of the 'Fix corruption on partial warp tails' task."
+        }
+      ]
+    }
+  },
+  "be2e9ca08e83d92aa1b5fb87790714e360df877234eed52bfb2ac1f4c1d9ee1e": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.703
+      }
+    ],
+    "response": {
+      "point_min": 55,
+      "low_min": 50,
+      "high_min": 60,
+      "confidence": "medium",
+      "rationale": "The task involves rerunning an existing sweep on a validated reference branch, which is similar to the history task. The history task took 59 minutes, which is close to the user's estimate of 60 minutes. The task requires running the sweep, copying four medians, and listing compiler/driver information, which is similar to the history task. However, the history task also involved fixing a kernel and proving ownership, which is not mentioned in the new task. Therefore, the new task is likely to take a similar amount of time, but with a slightly lower estimate due to the absence of the additional steps.",
+      "confidence_reason": "The confidence is medium because the history task is similar to the new task, but the absence of the additional steps in the new task may reduce the time required. The user's estimate of 60 minutes is close to the history task's actual time of 59 minutes, which supports the estimate.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The history task is similar to the new task, involving running a sweep and copying medians."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Be aware of potential off-task distractions, as observed in the history task."
+        }
+      ]
+    }
+  },
+  "01457aa6b98bdf1347f404430fb891ecaa05b75ade924558154630341c55fd18": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.557
+      }
+    ],
+    "response": {
+      "point_min": 45,
+      "low_min": 40,
+      "high_min": 55,
+      "confidence": "medium",
+      "rationale": "The new task is similar to the past task in terms of category and user estimate, but it requires more detailed explanation and testing, which takes more time. The past task had a budget overrun, but the new task has a similar scope and complexity, so the budget is kept the same. The past task took 54 minutes, which is close to the user's estimate of 45 minutes, but the new task requires more detailed explanation and testing, which takes more time.",
+      "confidence_reason": "The confidence is medium because the past task had a budget overrun, but the new task has a similar scope and complexity, so the budget is kept the same. The past task took 54 minutes, which is close to the user's estimate of 45 minutes, but the new task requires more detailed explanation and testing, which takes more time.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The new task is similar to the past task in terms of category and user estimate, but it requires more detailed explanation and testing, which takes more time."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be careful not to get distracted by off-task activities during the task."
+        }
+      ]
+    }
+  },
+  "e0017036fec4e7adc5c2a008dbb38f2e0ff8f878d14712289d918cfe5f5bbc1e": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.718
+      }
+    ],
+    "response": {
+      "point_min": 25,
+      "low_min": 20,
+      "high_min": 30,
+      "confidence": "medium",
+      "rationale": "The user's budget for this task is 25 minutes, and the past tasks have a similar category and scope. The first task, 'Retype merge intervals from my notes', took 17 minutes, which is slightly under the budget. The second task, 'Review the saved monotone stack solution', took 21 minutes, which is also under the budget. Given the similarity in scope and category, it's reasonable to estimate that this task will take a similar amount of time. However, the task involves reimplementing a solution and testing endpoints, which could require more time for debugging and testing. Therefore, the high end of the range is set at 30 minutes.",
+      "confidence_reason": "The confidence is medium because the past tasks have a similar scope and category, but the task involves reimplementing a solution and testing endpoints, which could require more time for debugging and testing.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The first task, 'Retype merge intervals from my notes', took 17 minutes, which is slightly under the budget. The second task, 'Review the saved monotone stack solution', took 21 minutes, which is also under the budget."
+        }
+      ]
+    }
+  },
+  "bc83e0b16d2bec4dbe51aa2507624864bbe5ff8d785074960e208150cd67a627": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 9.662
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The task involves a 30-minute invite with Mara Imani to agree on handover owners for the two intake rooms and record the decision in the shift rota. This is similar to the past tasks 'Work out the overflow roster with Mara' and 'Assign the late intake room with Mara', which both had a budget of 30 minutes and actual times of 41 and 39 minutes, respectively. However, the task 'Review Thursday evening coverage with Mara' also had a budget of 30 minutes and an actual time of 40 minutes, suggesting that the task may take slightly longer than the budget due to the need to record the decision in the shift rota. Therefore, the estimated time for this task is 30 minutes, with a low-end estimate of 25 minutes and a high-end estimate of 35 minutes.",
+      "confidence_reason": "The confidence in the estimate is medium, as the past tasks provide a reasonable comparison, but the need to record the decision in the shift rota may add some time to the task.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "Similar task with a budget of 30 minutes and actual time of 41 minutes."
+        },
+        {
+          "slot": 2,
+          "reason": "Similar task with a budget of 30 minutes and actual time of 39 minutes."
+        },
+        {
+          "slot": 3,
+          "reason": "Similar task with a budget of 30 minutes and actual time of 40 minutes."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Mara was nine minutes late, which may impact the task duration."
+        },
+        {
+          "observation_id": "S2.2",
+          "advice": "Mara was off-task for 2 minutes on Candy Crush Saga, which may impact the task duration."
+        },
+        {
+          "observation_id": "S3.2",
+          "advice": "Mara was off-task for 3 minutes on Candy Crush Saga, which may impact the task duration."
+        }
+      ]
+    }
+  },
+  "2af2537fdd4f0f761c295c4c6798946813ee5c9b5ef6400acd8472ca5d0229ed": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.07
+      }
+    ],
+    "response": {
+      "point_min": 20,
+      "low_min": 18,
+      "high_min": 22,
+      "confidence": "medium",
+      "rationale": "The task is similar to the past tasks 'Stock check with Dev' and 'Check replenishment list with Dev', which both had a budget of 20 minutes and were completed in 15 and 14 minutes, respectively. This suggests that the task should take a similar amount of time. However, the task 'Run the supply check with Dev' involves reviewing the April reorder sheet and agreeing on two quantities with Dev, which may take a bit more time than the previous tasks. Therefore, I estimate the point_min to be 20 minutes, with a low_min of 18 minutes and a high_min of 22 minutes.",
+      "confidence_reason": "The confidence is medium because the past tasks provide a good estimate, but the task may take a bit more time due to the additional review of the April reorder sheet.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "Similar task with a budget of 20 minutes and actual time of 15 minutes."
+        },
+        {
+          "slot": 2,
+          "reason": "Similar task with a budget of 20 minutes and actual time of 14 minutes."
+        },
+        {
+          "slot": 3,
+          "reason": "Similar task with a budget of 20 minutes and actual time of 16 minutes."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Dev had already filtered the stock sheet, which may reduce the time needed for the task."
+        },
+        {
+          "observation_id": "S2.1",
+          "advice": "Dev brought the marked-up order sheet, which may help streamline the task."
+        }
+      ]
+    }
+  },
+  "da618c34de614c194c5d70dc68984a40e61f24d3845bbaf040c7717b6cb4e3f6": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.9
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The user's budget for this task is 30 minutes, which is a reasonable starting point. The task involves hand-washing dinner settings, cleaning an enameled tray, and drying a cast-iron pan, which are similar to the tasks in the provided history. The history shows that tasks of this nature typically take around 30-35 minutes, with some variation depending on the specific items and the level of cleaning required. The user's estimate of 30 minutes is close to the average of the past tasks, so it provides a good starting point for this task.",
+      "confidence_reason": "The confidence is medium because the user's estimate is close to the average of the past tasks, but there is some variation in the actual durations. The task involves similar activities to the past tasks, but the specific items and the level of cleaning required may vary.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves hand-washing dinner settings, which is similar to the 'Clear up the pasta supper' task, which took 31 minutes. The task also involves cleaning an enameled tray and drying a cast-iron pan, which are similar to the 'Do the dishes after chili night' task, which took 36 minutes."
+        },
+        {
+          "slot": 2,
+          "reason": "The task involves hand-washing dinner settings, which is similar to the 'Reset the kitchen after stew' task, which took 42 minutes. The task also involves cleaning an enameled tray and drying a cast-iron pan, which are similar to the 'Do the dishes after chili night' task, which took 36 minutes."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S2.2",
+          "advice": "Be mindful of potential distractions, such as using the phone, which can increase the time spent on the task."
+        }
+      ]
+    }
+  },
+  "5efc0bec24f4ec37c61e8975ffa2c956c90e5d6342824769f105424e86c485f4": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.932
+      }
+    ],
+    "response": {
+      "point_min": 25,
+      "low_min": 20,
+      "high_min": 30,
+      "confidence": "medium",
+      "rationale": "The user's budget of 30 minutes is a reasonable starting point, considering the task involves washing a duvet cover and making up a sofa bed. The history of washing the guest-room sheets provides a useful comparison, as both tasks involve bedding and machine washing. The actual time taken for the guest-room sheets task was 23 minutes, which is slightly less than the budget. However, the new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more. Therefore, the point estimate of 25 minutes is a reasonable compromise, with the potential for a longer time if the sofa bed requires additional effort.",
+      "confidence_reason": "The confidence in the estimate is medium, as the history provides a useful comparison, but the additional step of making up the sofa bed introduces some uncertainty. The user's budget is a reasonable starting point, and the actual time for the past task is slightly less than the budget, suggesting that the new task might take a similar amount of time or slightly more.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The past task of washing the guest-room sheets involved a similar bedding load and machine washing, with a budget and actual time of 35 and 23 minutes, respectively. The new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Be mindful of the additional step of making up the sofa bed, which could take more time than expected. Ensure that the duvet cover is properly fitted and secure before starting the machine cycle."
+        }
+      ]
+    }
+  },
+  "046c27f312b2c368399ed981131418f73dc5de063fd27285fcbe3a606506ca98": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.22
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The task involves checking and fixing projector routes, which can be time-consuming, especially if there are any issues with the setup. The user's estimate of 30 minutes is a reasonable starting point, but the actual time taken for similar tasks has been higher, ranging from 38 to 43 minutes. This suggests that the task may take longer than expected, especially if there are any technical issues or delays. However, the user's estimate is a good starting point, and the task can be completed within the estimated time if there are no major issues.",
+      "confidence_reason": "The confidence is medium because the task involves technical work, and the actual time taken for similar tasks has been higher than the user's estimate. However, the user's estimate is a reasonable starting point, and the task can be completed within the estimated time if there are no major issues.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves checking and fixing projector routes, which is similar to the 'Check the booth playback outputs' task. The actual time taken for this task was 38 minutes, which is higher than the user's estimate of 30 minutes. This suggests that the task may take longer than expected."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be aware of potential distractions, such as off-task activity on Ticketmaster, which can delay the task."
+        }
+      ]
+    }
+  },
+  "db45fb46954423a0c6d21b1118f9f2bcc6fa7f00750dbd79b947d962568f6bbf": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 5.442
+      }
+    ],
+    "response": {
+      "point_min": 45,
+      "low_min": 30,
+      "high_min": 60,
+      "confidence": "medium",
+      "rationale": "The task involves recording and analyzing data from a rover, which can be time-consuming due to the need for precise measurements and comparisons. The user's estimate of 45 minutes is a reasonable starting point, considering the complexity of the task. The low end of the range (30 minutes) assumes a smooth process with minimal manual corrections, while the high end (60 minutes) accounts for potential delays in data collection and analysis, especially with the need to compare IMU spikes and wheel speeds.",
+      "confidence_reason": "The task's complexity and the need for precise measurements and comparisons make it challenging to estimate with high confidence. The user's estimate provides a good starting point, but the actual time may vary based on the specific challenges encountered during the trial."
+    }
+  },
+  "080559fddd9e9d57fdf43f8293bcf4791e954f8a4f7719f58ed73d3527edd0c1": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.255
+      }
+    ],
+    "response": {
+      "point_min": 35,
+      "low_min": 30,
+      "high_min": 40,
+      "confidence": "medium",
+      "rationale": "The task involves replaying a recorded bag, marking specific events, and exporting overlays. This is similar to the 'Replot the wheel slip from Thursday\u2019s bag' task, which took 36 minutes, and the 'Replay the line-junction bag' task, which took 42 minutes. The user's estimate of 40 minutes is within the range of these past tasks, considering the complexity of the task and the need for careful analysis.",
+      "confidence_reason": "The confidence is medium because the task involves replaying a recorded bag, which is a repetitive process, but the specific events and overlays need to be marked and exported, adding some complexity. The user's estimate is within the range of the past tasks, but the actual time may vary depending on the specific requirements and the user's familiarity with the process.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "Similar task with similar duration and complexity."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Ensure the wheel channel wraps are handled correctly and the negative wrap is managed appropriately."
+        }
+      ]
+    }
+  },
+  "88531b9f7a6ecf1ac1d3dae596c0493fb70fb73ee6f47966aaf4fd56807394bf": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 8.849
+      }
+    ],
+    "response": {
+      "point_min": 40,
+      "low_min": 35,
+      "high_min": 45,
+      "confidence": "medium",
+      "rationale": "The user's estimate for this task is 40 minutes, which is a reasonable starting point. The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes. However, the user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task. The low end of the range (35 minutes) is based on the assumption that the user can complete the task without any distractions or interruptions, while the high end (45 minutes) is based on the possibility of unexpected delays or the need for additional time to ensure accuracy in the sketches.",
+      "confidence_reason": "The user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of potential distractions during the lecture, such as off-task activities on YouTube."
+        },
+        {
+          "observation_id": "S2.2",
+          "advice": "Be prepared for potential interruptions, such as recommended videos or off-task activities on YouTube."
+        },
+        {
+          "observation_id": "S3.2",
+          "advice": "Be aware of potential distractions, such as off-task activities on YouTube, and focus on the task at hand."
+        }
+      ]
+    }
+  },
+  "999d5b225edc1cc3bd3c623a6d8f39e55a9c6e6542676846a9ec62f36a920ae7": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.11
+      }
+    ],
+    "response": {
+      "point_min": 45,
+      "low_min": 35,
+      "high_min": 55,
+      "confidence": "medium",
+      "rationale": "The task involves several steps, including downloading the exercise sheet, calculating coefficients, justifying their properties, and performing numerical checks. These steps are estimated to take a moderate amount of time, with the potential for some variation based on individual familiarity with the subject matter and the time spent on each step. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations.",
+      "confidence_reason": "The task involves a combination of mathematical calculations and conceptual understanding. The time estimate is based on the complexity of the problem and the need for careful calculations. The confidence is medium as the task requires a good understanding of signal processing and trigonometric functions, and the time estimate is based on the complexity of the problem and the need for careful calculations."
+    }
+  },
+  "fcc86eb8bc93b7289fe0689271ae37f9c64c3aa7531211bd041c86b8c12ce05c": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.8
+      }
+    ],
+    "response": {
+      "point_min": 120,
+      "low_min": 100,
+      "high_min": 140,
+      "confidence": "medium",
+      "rationale": "The task involves proving the second-moment inequality and providing a two-item example, which requires a good understanding of the material and the ability to derive and construct examples. The past tasks, which involved similar paper reading and derivation tasks, took more time than estimated, with an average actual time of 1.7 times the budget. This suggests that the new task may also take longer than estimated. However, the confidence is medium as the scope and personal evidence are not very strong.",
+      "confidence_reason": "The confidence is medium as the scope and personal evidence are not very strong. The past tasks took more time than estimated, but the actual time was not provided for the new task. The new task involves proving the second-moment inequality and providing a two-item example, which requires a good understanding of the material and the ability to derive and construct examples.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The past task involved deriving a conditional second moment and writing an example, which is similar to the new task. The actual time taken was 104 minutes, which is 1.73 times the budget of 60 minutes."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of off-task activities, such as watching NBA on the phone or browsing nba.com, which can distract from the task and increase the actual time taken."
+        }
+      ]
+    }
+  },
+  "2c66fa2012dc7f157b9da84eebbbc1c9ea1c96171c979965a429ef6772f2d496": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 6.947
+      }
+    ],
+    "response": {
+      "point_min": 59,
+      "low_min": 55,
+      "high_min": 63,
+      "confidence": "medium",
+      "rationale": "The task involves rerunning a sweep on a validated reference branch, which is similar to the 'Publish timing table from the reference branch' task. The budget for this task is 60 minutes, and the actual time taken was 59 minutes, with a slight overrun. This suggests that the task is likely to take a similar amount of time, but there is some room for variability. The 'Repeat the archived shape sweep' task, which is also in the GPU lab category, took 51 minutes, which is slightly less than the budget. However, this task is not directly comparable, as it involves a different type of sweep and a different set of tasks. Overall, the budget for this task seems reasonable, and the actual time taken suggests that it is likely to be completed within the allocated time.",
+      "confidence_reason": "The confidence is medium because there is some variability in the actual time taken for similar tasks, and the budget is a reasonable estimate. However, the actual time taken for the 'Publish timing table from the reference branch' task is very close to the budget, which suggests that the task is likely to be completed within the allocated time.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves rerunning a sweep on a validated reference branch, which is similar to the 'Publish timing table from the reference branch' task."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.1",
+          "advice": "Be mindful of potential distractions, such as off-task activities, which can impact the actual time taken for the task."
+        }
+      ]
+    }
+  },
+  "635abe5513811cb013f62d1a32834a2f15390adab8a3b0e6894c5a88c22140a9": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.705
+      }
+    ],
+    "response": {
+      "point_min": 45,
+      "low_min": 40,
+      "high_min": 55,
+      "confidence": "medium",
+      "rationale": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts. The user's budget for the new task is 50 minutes, which is slightly higher than the actual time taken for the first task (54 minutes). This suggests that the new task might be slightly more complex or require additional steps. The second historical task, which involved designing a prefix-index invariant, took 72 minutes, which is significantly longer than the budget. However, the new task does not require designing a new invariant, so it is likely to be shorter than the second task. Based on these comparisons, the estimated time for the new task is between 40 and 55 minutes.",
+      "confidence_reason": "The confidence in the estimate is medium because the new task is similar to the first historical task, which had a recorded duration. However, the second historical task, which was more complex, took significantly longer than the budget. The new task does not require designing a new invariant, so it is likely to be shorter than the second task.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of off-task activities during the task."
+        }
+      ]
+    }
+  },
+  "5455fcf7b10763f0a0d188de9f7579bedd0ce42f9204a2d41895e93ed7a71f04": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 4.753
+      }
+    ],
+    "response": {
+      "point_min": 25,
+      "low_min": 20,
+      "high_min": 30,
+      "confidence": "medium",
+      "rationale": "The task is similar to the past task 'Retype merge intervals from my notes', which took 17 minutes. However, the new task requires reimplementing the solution and testing endpoints, which may take more time. The budget of 25 minutes is a reasonable starting point, but the actual time may vary depending on the complexity of the solution and the testing process.",
+      "confidence_reason": "The confidence is medium because the past task is similar, but the new task has additional requirements that may increase the time needed. The budget is a reasonable starting point, but the actual time may vary.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The past task 'Retype merge intervals from my notes' is similar to the new task, as they both involve retyping and checking intervals. However, the new task has additional requirements that may increase the time needed."
+        }
+      ]
+    }
+  },
+  "b1755a247879d6114afe2ac583402cd6bf634d9310c786e0c7b671140dcb11db": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 8.989
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The task involves a 30-minute invite and a review of the same capacity as the past tasks, which took 40, 41, and 39 minutes, respectively. The task is similar to the past tasks, but the actual time may vary due to the need to agree on the handover owners and record the decision in the shift rota. The confidence is medium because the past tasks had some variations in actual time, but the average time is within the estimated range.",
+      "confidence_reason": "The past tasks had some variations in actual time, but the average time is within the estimated range. The task involves a 30-minute invite and a review of the same capacity, which is similar to the past tasks.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The past task had a similar invite and review process, but the actual time was 40 minutes, which is slightly longer than the estimated time."
+        },
+        {
+          "slot": 2,
+          "reason": "The past task had a similar invite and review process, but the actual time was 41 minutes, which is slightly longer than the estimated time."
+        },
+        {
+          "slot": 3,
+          "reason": "The past task had a similar invite and review process, but the actual time was 39 minutes, which is slightly shorter than the estimated time."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of off-task activities during the meeting to avoid delays."
+        },
+        {
+          "observation_id": "S2.2",
+          "advice": "Be mindful of off-task activities during the meeting to avoid delays."
+        },
+        {
+          "observation_id": "S3.2",
+          "advice": "Be mindful of off-task activities during the meeting to avoid delays."
+        }
+      ]
+    }
+  },
+  "4ef61615ce70dae8d0ed60bc09faf9a86e41b52f39e866c827b1a30a58e54850": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 7.886
+      }
+    ],
+    "response": {
+      "point_min": 25,
+      "low_min": 20,
+      "high_min": 30,
+      "confidence": "medium",
+      "rationale": "The user's budget for this task is 30 minutes, and the past tasks for clearing up pasta supper and doing the dishes after chili night both took 31 and 36 minutes, respectively. The task of doing the dishes after the tray bake involves hand-washing the dinner settings, cleaning the enameled tray, drying the cast-iron pan, and wiping the sink. These tasks are similar to the previous ones, which involved hand-washing dishes and cleaning a cast-iron pot. However, the user's estimate of 30 minutes is slightly higher than the actual time taken for the previous tasks. Therefore, I estimate that this task will take between 20 and 30 minutes, with a medium level of confidence.",
+      "confidence_reason": "The confidence is medium because the user's estimate is slightly higher than the actual time taken for the previous tasks, and the tasks involve similar activities. However, the user's estimate is still within the range of the actual time taken for the previous tasks.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The task involves hand-washing the dinner settings, which is similar to the task of clearing up pasta supper."
+        },
+        {
+          "slot": 2,
+          "reason": "The task involves cleaning the enameled tray and drying the cast-iron pan, which is similar to the task of doing the dishes after chili night."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be mindful of the time spent on off-task activities, such as playing Candy Crush Saga, to avoid exceeding the budget."
+        }
+      ]
+    }
+  },
+  "091471897ca46ff289ca595651cf7c67b6d05b95b62d37c913ee0709475ceec2": {
+    "model": "command-r7b-12-2024",
+    "attempts": [
+      {
+        "seconds": 5.854
+      }
+    ],
+    "response": {
+      "point_min": 30,
+      "low_min": 25,
+      "high_min": 35,
+      "confidence": "medium",
+      "rationale": "The task involves checking projector routes, fixing any broken paths, and returning house screens to standby. This is similar to the 'Check the booth playback outputs' task, which had a budget of 30 minutes and an actual time of 38 minutes. The 'Do the Sea Glass booth preflight' task has a similar scope and complexity, so it is reasonable to estimate a similar time. However, the task also involves checking the visiting crew sheet and running test workspace, which may add some extra time. Therefore, the estimated time is 30 minutes, with a low-end estimate of 25 minutes and a high-end estimate of 35 minutes.",
+      "confidence_reason": "The confidence is medium because the task has a similar scope and complexity to the 'Check the booth playback outputs' task, but it also involves additional steps such as checking the visiting crew sheet and running test workspace. The actual time for the 'Check the booth playback outputs' task was 38 minutes, which is close to the budget of 30 minutes.",
+      "comparisons": [
+        {
+          "slot": 1,
+          "reason": "The 'Check the booth playback outputs' task had a similar scope and complexity to the 'Do the Sea Glass booth preflight' task."
+        }
+      ],
+      "warnings": [
+        {
+          "observation_id": "S1.2",
+          "advice": "Be aware of potential distractions such as off-task activities, which can add extra time to the task."
+        }
+      ]
+    }
+  }
+}

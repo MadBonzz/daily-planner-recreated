@@ -1,0 +1,140 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be aware of potential distractions such as off-task activities, which can add extra time to the task.",
+      "sources": [
+        {
+          "task_id": "blue-relay",
+          "title": "Test the relay for the Blue House tour",
+          "origin": "ActivityWatch",
+          "observation": "4.0 min on Ticketmaster on the phone labeled off-task."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task involves checking projector routes, fixing any broken paths, and returning house screens to standby. This is similar to the 'Check the booth playback outputs' task, which had a budget of 30 minutes and an actual time of 38 minutes. The 'Do the Sea Glass booth preflight' task has a similar scope and complexity, so it is reasonable to estimate a similar time. However, the task also involves checking the visiting crew sheet and running test workspace, which may add some extra time. Therefore, the estimated time is 30 minutes, with a low-end estimate of 25 minutes and a high-end estimate of 35 minutes.",
+  "model_calls": [
+    {
+      "prompt_sha256": "26c3dda49ac7e2edc11008452b0fc7ac70020b0e366c2f1e5efadf498ab61f29",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 30,
+        "low_min": 25,
+        "high_min": 35,
+        "confidence": "medium",
+        "rationale": "The task involves checking projector routes, fixing any broken paths, and returning house screens to standby. This is similar to the 'Check the booth playback outputs' task, which had a budget of 30 minutes and an actual time of 38 minutes. The 'Do the Sea Glass booth preflight' task has a similar scope and complexity, so it is reasonable to estimate a similar time. However, the task also involves checking the visiting crew sheet and running test workspace, which may add some extra time. Therefore, the estimated time is 30 minutes, with a low-end estimate of 25 minutes and a high-end estimate of 35 minutes.",
+        "confidence_reason": "The confidence is medium because the task has a similar scope and complexity to the 'Check the booth playback outputs' task, but it also involves additional steps such as checking the visiting crew sheet and running test workspace. The actual time for the 'Check the booth playback outputs' task was 38 minutes, which is close to the budget of 30 minutes.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The 'Check the booth playback outputs' task had a similar scope and complexity to the 'Do the Sea Glass booth preflight' task."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Be aware of potential distractions such as off-task activities, which can add extra time to the task."
+          }
+        ]
+      },
+      "seconds": 5.858
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.16,
+      1.42
+    ],
+    "evidence_ids": [
+      "cabaret-load",
+      "audio-preflight",
+      "blue-relay"
+    ],
+    "rationale": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.2333333333333334,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "blue-relay"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "08-community-playhouse",
+  "task": "sea-preflight",
+  "title": "Do the Sea Glass booth preflight",
+  "original": 30,
+  "category": 38,
+  "planner": 30,
+  "actual": 37,
+  "range": [
+    25,
+    35
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "source": "decision model",
+      "score": 0.6364931422001361
+    },
+    {
+      "task_id": "audio-preflight",
+      "title": "Check the booth playback outputs",
+      "source": "decision model",
+      "score": 0.6327198999749959
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves checking projector routes, fixing any broken paths, and returning house screens to standby. This is similar to the 'Check the booth playback outputs' task, which had a budget of 30 minutes and an actual time of 38 minutes. The 'Do the Sea Glass booth preflight' task has a similar scope and complexity, so it is reasonable to estimate a similar time. However, the task also involves checking the visiting crew sheet and running test workspace, which may add some extra time. Therefore, the estimated time is 30 minutes, with a low-end estimate of 25 minutes and a high-end estimate of 35 minutes.",
+  "confidence_reason": "The confidence is medium because the task has a similar scope and complexity to the 'Check the booth playback outputs' task, but it also involves additional steps such as checking the visiting crew sheet and running test workspace. The actual time for the 'Check the booth playback outputs' task was 38 minutes, which is close to the budget of 30 minutes.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 5.858,
+  "latency_seconds": 5.886,
+  "evidence": [
+    {
+      "task_id": "blue-relay",
+      "title": "Test the relay for the Blue House tour",
+      "estimate_min": 35,
+      "actual_min": 43.0,
+      "ratio": 1.2285714285714286,
+      "reason": "The 'Check the booth playback outputs' task had a similar scope and complexity to the 'Do the Sea Glass booth preflight' task.",
+      "reason_source": "model",
+      "model_rationale": "The 'Check the booth playback outputs' task had a similar scope and complexity to the 'Do the Sea Glass booth preflight' task.",
+      "source_quote": "Follow the visiting crew\u2019s booth changeover sheet. Verify the mirror display and restore the house workspace when the test is finished."
+    }
+  ],
+  "check": "Previous visiting-show preflights needed 33/25, 38/30 and 43/35, within a narrow range above the guess. Sea Glass took 37/30. The separate fixed public performance adds zero minutes here.",
+  "qwen_candidates": [
+    {
+      "candidate": "blue-relay",
+      "cosine": 0.6364931422001361,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "audio-preflight",
+      "cosine": 0.6327198999749959,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "091471897ca46ff289ca595651cf7c67b6d05b95b62d37c913ee0709475ceec2",
+      "source": "live endpoint"
+    }
+  ]
+}

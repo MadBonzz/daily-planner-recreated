@@ -1,0 +1,93 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves analyzing and comparing archived transcripts from a replay system, which includes understanding the structure of the data, identifying a checksum collision, and explaining a specific case of identical exit codes hiding a logical difference. The estimated time is based on the complexity of the task, which requires a thorough understanding of the replay system's architecture and the ability to compare and analyze the transcripts. The low and high estimates consider the potential for additional time needed to review and understand the system's intricacies.",
+  "model_calls": [
+    {
+      "prompt_sha256": "d3ab7242320b5e9a7fabe5db1601b0c7b918cf538548b1185a28f14e50b6c24a",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 40,
+        "low_min": 35,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The task involves analyzing and comparing archived transcripts from a replay system, which includes understanding the structure of the data, identifying a checksum collision, and explaining a specific case of identical exit codes hiding a logical difference. The estimated time is based on the complexity of the task, which requires a thorough understanding of the replay system's architecture and the ability to compare and analyze the transcripts. The low and high estimates consider the potential for additional time needed to review and understand the system's intricacies.",
+        "confidence_reason": "The confidence in the estimate is medium as the task involves a combination of technical understanding and analysis. While the provided information gives a good starting point, the actual time required may vary depending on the complexity of the system and the specific details of the checksum collision and logical difference."
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.84
+    ],
+    "evidence_ids": [
+      "suite-report",
+      "codec-caption"
+    ],
+    "rationale": "Two prior write-ups were quick when archived logs were already available.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.7,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-note",
+  "title": "Explain the three saved replay transcripts",
+  "original": 40,
+  "category": 51,
+  "planner": 40,
+  "actual": 28,
+  "range": [
+    35,
+    45
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves analyzing and comparing archived transcripts from a replay system, which includes understanding the structure of the data, identifying a checksum collision, and explaining a specific case of identical exit codes hiding a logical difference. The estimated time is based on the complexity of the task, which requires a thorough understanding of the replay system's architecture and the ability to compare and analyze the transcripts. The low and high estimates consider the potential for additional time needed to review and understand the system's intricacies.",
+  "confidence_reason": "The confidence in the estimate is medium as the task involves a combination of technical understanding and analysis. While the provided information gives a good starting point, the actual time required may vary depending on the complexity of the system and the specific details of the checksum collision and logical difference.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.012,
+  "evidence": [],
+  "check": "Two prior write-ups were quick when archived logs were already available.",
+  "qwen_candidates": [
+    {
+      "candidate": "codec-caption",
+      "cosine": 0.5826476992610962,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "trace-tool",
+      "cosine": 0.582119283352323,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "suite-report",
+      "cosine": 0.5652998291051807,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "7ae7c3fed05c81192ef86993124d3e6b940c4e3e14317f13d17bf6219cacbd4b",
+      "source": "identical request"
+    }
+  ]
+}

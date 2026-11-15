@@ -1,0 +1,189 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be mindful of potential distractions during the lecture, such as off-task activities on YouTube.",
+      "sources": [
+        {
+          "task_id": "pulse-video",
+          "title": "Watch the Fourier pulse-train lecture",
+          "origin": "ActivityWatch",
+          "observation": "8.0 min on youtube.com labeled off-task (Cats chasing a printer cable / Commuter train bloopers)."
+        }
+      ]
+    },
+    {
+      "advice": "Be prepared for potential interruptions, such as recommended videos or off-task activities on YouTube.",
+      "sources": [
+        {
+          "task_id": "symmetry-video",
+          "title": "Take notes on Fourier symmetry",
+          "origin": "ActivityWatch",
+          "observation": "11.0 min on youtube.com labeled off-task (Pottery wheel wobble / Clay fails compilation)."
+        }
+      ]
+    },
+    {
+      "advice": "Be aware of potential distractions, such as off-task activities on YouTube, and focus on the task at hand.",
+      "sources": [
+        {
+          "task_id": "window-video",
+          "title": "Work through the windowing video",
+          "origin": "ActivityWatch",
+          "observation": "13.0 min on youtube.com labeled off-task (Final-minute hockey goals / Tiny van kitchen build)."
+        }
+      ]
+    }
+  ],
+  "explanation": "The user's estimate for this task is 40 minutes, which is a reasonable starting point. The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes. However, the user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task. The low end of the range (35 minutes) is based on the assumption that the user can complete the task without any distractions or interruptions, while the high end (45 minutes) is based on the possibility of unexpected delays or the need for additional time to ensure accuracy in the sketches.",
+  "model_calls": [
+    {
+      "prompt_sha256": "1c292d79969994a0c4424a6ef081c9819af68122e96decfeb58d70ac5b0f855b",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 40,
+        "low_min": 35,
+        "high_min": 45,
+        "confidence": "medium",
+        "rationale": "The user's estimate for this task is 40 minutes, which is a reasonable starting point. The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes. However, the user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task. The low end of the range (35 minutes) is based on the assumption that the user can complete the task without any distractions or interruptions, while the high end (45 minutes) is based on the possibility of unexpected delays or the need for additional time to ensure accuracy in the sketches.",
+        "confidence_reason": "The user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Be mindful of potential distractions during the lecture, such as off-task activities on YouTube."
+          },
+          {
+            "observation_id": "S2.2",
+            "advice": "Be prepared for potential interruptions, such as recommended videos or off-task activities on YouTube."
+          },
+          {
+            "observation_id": "S3.2",
+            "advice": "Be aware of potential distractions, such as off-task activities on YouTube, and focus on the task at hand."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.25,
+      1.46
+    ],
+    "evidence_ids": [
+      "pulse-video",
+      "window-video",
+      "symmetry-video"
+    ],
+    "rationale": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+    "expected_caution": {
+      "evidence_ids": [
+        "pulse-video",
+        "window-video",
+        "symmetry-video"
+      ],
+      "rationale": "Suggest reducing recommended-video distractions during the lecture. The unrelated titles and the user\u2019s past notes give specific evidence."
+    },
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.35,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "pulse-video"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": true,
+    "unknown_caution_source_ids": []
+  },
+  "history": "10-signal-study",
+  "task": "triangle-video",
+  "title": "Watch the triangular-wave Fourier lecture",
+  "original": 40,
+  "category": 54,
+  "planner": 40,
+  "actual": 54,
+  "range": [
+    35,
+    45
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "pulse-video",
+      "title": "Watch the Fourier pulse-train lecture",
+      "source": "decision model",
+      "score": 0.7543680402255503
+    },
+    {
+      "task_id": "symmetry-video",
+      "title": "Take notes on Fourier symmetry",
+      "source": "decision model",
+      "score": 0.6333063742274447
+    },
+    {
+      "task_id": "window-video",
+      "title": "Work through the windowing video",
+      "source": "decision model",
+      "score": 0.5407205462805162
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The user's estimate for this task is 40 minutes, which is a reasonable starting point. The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes. However, the user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task. The low end of the range (35 minutes) is based on the assumption that the user can complete the task without any distractions or interruptions, while the high end (45 minutes) is based on the possibility of unexpected delays or the need for additional time to ensure accuracy in the sketches.",
+  "confidence_reason": "The user's actual time for the previous tasks was consistently longer than the estimated time, with an average of 1.34 times the budget. This suggests that the user may need more time to complete this task.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.01,
+  "evidence": [
+    {
+      "task_id": "pulse-video",
+      "title": "Watch the Fourier pulse-train lecture",
+      "estimate_min": 40,
+      "actual_min": 55.0,
+      "ratio": 1.375,
+      "reason": "The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes.",
+      "reason_source": "model",
+      "model_rationale": "The task involves watching a YouTube lecture and sketching two series reconstructions, which is similar to the previous tasks where the user watched lectures and took notes.",
+      "source_quote": "Watch the recorded pulse-train lesson on YouTube and recreate the first two coefficient sketches in my notebook."
+    }
+  ],
+  "check": "Three earlier YouTube Fourier study sessions ran at 55/40, 61/45 and 47/35 of the guess. This study timer ran 54 minutes. Leave unrelated video time visible in the reviewed report while keeping the timer outcome intact.",
+  "qwen_candidates": [
+    {
+      "candidate": "pulse-video",
+      "cosine": 0.7543680402255503,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "symmetry-video",
+      "cosine": 0.6333063742274447,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "window-video",
+      "cosine": 0.5407205462805162,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "88531b9f7a6ecf1ac1d3dae596c0493fb70fb73ee6f47966aaf4fd56807394bf",
+      "source": "identical request"
+    }
+  ]
+}

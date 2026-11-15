@@ -1,0 +1,145 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be prepared for potential delays due to GPU allocation issues, as mentioned in the history of the 'Fix corruption on partial warp tails' task.",
+      "sources": [
+        {
+          "task_id": "warp-tail",
+          "title": "Fix corruption on partial warp tails",
+          "origin": "Completion note",
+          "observation": "I lost time getting a GPU allocation after I had reduced the failure."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task involves fixing a nondeterministic segmented sum issue, which is a complex problem that requires careful analysis and implementation. The task also includes minimizing non-power-of-two failures, correcting ownership rules, and adding a regression. The history of past tasks provides some context, but the specific nature of the task and its requirements make it challenging to estimate the exact time needed. The user's budget of 85 minutes is likely insufficient, given the complexity of the task and the history of past tasks taking more time than estimated.",
+  "model_calls": [
+    {
+      "prompt_sha256": "3296c20d2dba1c08ed91b0fd0badab40383ac458f279ef6b9ea6a8e640195e2e",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 100,
+        "low_min": 90,
+        "high_min": 110,
+        "confidence": "medium",
+        "rationale": "The task involves fixing a nondeterministic segmented sum issue, which is a complex problem that requires careful analysis and implementation. The task also includes minimizing non-power-of-two failures, correcting ownership rules, and adding a regression. The history of past tasks provides some context, but the specific nature of the task and its requirements make it challenging to estimate the exact time needed. The user's budget of 85 minutes is likely insufficient, given the complexity of the task and the history of past tasks taking more time than estimated.",
+        "confidence_reason": "The task's complexity and the history of past tasks taking more time than estimated provide a moderate level of confidence in the estimate. However, the specific requirements and the need for careful analysis and implementation make it challenging to provide a precise estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task involves fixing a segmented sum issue, which is similar to the 'Fix corruption on partial warp tails' task. However, the new task requires additional steps, such as minimizing non-power-of-two failures and correcting ownership rules, which may take more time."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Be prepared for potential delays due to GPU allocation issues, as mentioned in the history of the 'Fix corruption on partial warp tails' task."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.38,
+      1.68
+    ],
+    "evidence_ids": [
+      "warp-tail",
+      "stride-kernel",
+      "race-repro"
+    ],
+    "rationale": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+    "predicted_ratio": 1.1764705882352942,
+    "realized_ratio": 1.5529411764705883,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "warp-tail"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "async-flicker",
+  "title": "Fix nondeterministic segmented sums",
+  "original": 85,
+  "category": 108,
+  "planner": 100,
+  "actual": 132,
+  "range": [
+    90,
+    110
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "source": "decision model",
+      "score": 0.8917492995485636
+    },
+    {
+      "task_id": "stride-kernel",
+      "title": "Debug a mismatched pitch in the strided kernel",
+      "source": "decision model",
+      "score": 0.5985794996964849
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves fixing a nondeterministic segmented sum issue, which is a complex problem that requires careful analysis and implementation. The task also includes minimizing non-power-of-two failures, correcting ownership rules, and adding a regression. The history of past tasks provides some context, but the specific nature of the task and its requirements make it challenging to estimate the exact time needed. The user's budget of 85 minutes is likely insufficient, given the complexity of the task and the history of past tasks taking more time than estimated.",
+  "confidence_reason": "The task's complexity and the history of past tasks taking more time than estimated provide a moderate level of confidence in the estimate. However, the specific requirements and the need for careful analysis and implementation make it challenging to provide a precise estimate.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.029,
+  "evidence": [
+    {
+      "task_id": "warp-tail",
+      "title": "Fix corruption on partial warp tails",
+      "estimate_min": 80,
+      "actual_min": 122.0,
+      "ratio": 1.525,
+      "reason": "The task involves fixing a segmented sum issue, which is similar to the 'Fix corruption on partial warp tails' task. However, the new task requires additional steps, such as minimizing non-power-of-two failures and correcting ownership rules, which may take more time.",
+      "reason_source": "model",
+      "model_rationale": "The task involves fixing a segmented sum issue, which is similar to the 'Fix corruption on partial warp tails' task. However, the new task requires additional steps, such as minimizing non-power-of-two failures and correcting ownership rules, which may take more time.",
+      "source_quote": "Compare the CUDA and scalar sums. Trace ownership with a poisoned tail and add a boundary regression."
+    }
+  ],
+  "check": "Prior debugging with odd shapes and poisoned padding needed about half again as much time.",
+  "qwen_candidates": [
+    {
+      "candidate": "warp-tail",
+      "cosine": 0.8917492995485636,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "throughput-table",
+      "cosine": 0.8740391951344204,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "stride-kernel",
+      "cosine": 0.5985794996964849,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "dacea9400032b67dcc575df1f71f2d05f612bcd2ead7f9d8738497a39d55ba59",
+      "source": "identical request"
+    }
+  ]
+}

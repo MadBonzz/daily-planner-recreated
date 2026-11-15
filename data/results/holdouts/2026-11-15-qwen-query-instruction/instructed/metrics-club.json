@@ -1,0 +1,99 @@
+{
+  "fixed_duration": false,
+  "cautions": [],
+  "explanation": "The task involves creating a slide summarizing the results of two ablations, with a focus on experiments 1 and 2. This requires understanding the experimental setup, identifying the control and confounding variables, and presenting the findings in a clear and concise manner. The estimated time of 45 minutes is based on the complexity of the task and the need to carefully analyze and synthesize the information from the experiments. The low end of the range (30 minutes) assumes a more straightforward task with less complex data, while the high end (60 minutes) accounts for potential challenges in interpreting the results and ensuring the slide is accurate and informative.",
+  "model_calls": [
+    {
+      "prompt_sha256": "70432dff431fe812164ecd792bca095bd908eea34bd5334d1f9246fa92c752d4",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 30,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The task involves creating a slide summarizing the results of two ablations, with a focus on experiments 1 and 2. This requires understanding the experimental setup, identifying the control and confounding variables, and presenting the findings in a clear and concise manner. The estimated time of 45 minutes is based on the complexity of the task and the need to carefully analyze and synthesize the information from the experiments. The low end of the range (30 minutes) assumes a more straightforward task with less complex data, while the high end (60 minutes) accounts for potential challenges in interpreting the results and ensuring the slide is accurate and informative.",
+        "confidence_reason": "The confidence in the estimate is medium, as the task involves a combination of data analysis and presentation skills. While the experiments are described in the document, the actual time required may vary depending on the complexity of the data and the researcher's familiarity with the subject matter."
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.6,
+      0.87
+    ],
+    "evidence_ids": [
+      "read-cache",
+      "read-queues",
+      "replica-figs"
+    ],
+    "rationale": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.6888888888888889,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "metrics-club",
+  "title": "Make one slide about the two ablations",
+  "original": 45,
+  "category": 56,
+  "planner": 45,
+  "actual": 31,
+  "range": [
+    30,
+    60
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model estimate from task scope",
+  "related_tasks": [],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves creating a slide summarizing the results of two ablations, with a focus on experiments 1 and 2. This requires understanding the experimental setup, identifying the control and confounding variables, and presenting the findings in a clear and concise manner. The estimated time of 45 minutes is based on the complexity of the task and the need to carefully analyze and synthesize the information from the experiments. The low end of the range (30 minutes) assumes a more straightforward task with less complex data, while the high end (60 minutes) accounts for potential challenges in interpreting the results and ensuring the slide is accurate and informative.",
+  "confidence_reason": "The confidence in the estimate is medium, as the task involves a combination of data analysis and presentation skills. While the experiments are described in the document, the actual time required may vary depending on the complexity of the data and the researcher's familiarity with the subject matter.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.016,
+  "evidence": [],
+  "check": "Use previous empirical-reading tasks rather than proof tasks on the same subject.",
+  "qwen_candidates": [
+    {
+      "candidate": "read-cache",
+      "cosine": 0.9224512399435787,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "derive-noise",
+      "cosine": 0.8768416961529324,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "read-queues",
+      "cosine": 0.5269476696144222,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "bound-floor",
+      "cosine": 0.5019208767616244,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "006ed3b678b7712db944515662b2fb4c072722ed3061b4aa733373a82cc059bb",
+      "source": "identical request"
+    }
+  ]
+}

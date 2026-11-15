@@ -1,0 +1,203 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Dev had already filtered the stock sheet, which may reduce the time needed for the task.",
+      "sources": [
+        {
+          "task_id": "dev-stock",
+          "title": "Stock check with Dev",
+          "origin": "Completion note",
+          "observation": "Dev had already filtered the stock sheet. We finished before the end of the slot."
+        }
+      ]
+    },
+    {
+      "advice": "Dev brought the marked-up order sheet, which may help streamline the task.",
+      "sources": [
+        {
+          "task_id": "dev-packs",
+          "title": "Check replenishment list with Dev",
+          "origin": "Completion note",
+          "observation": "Dev brought the marked-up order sheet. No backorders to discuss."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task is similar to the past tasks 'Stock check with Dev' and 'Check replenishment list with Dev', which both had a budget of 20 minutes and were completed in 15 and 14 minutes, respectively. This suggests that the task should take a similar amount of time. However, the task 'Run the supply check with Dev' involves reviewing the April reorder sheet and agreeing on two quantities with Dev, which may take a bit more time than the previous tasks. Therefore, I estimate the point_min to be 20 minutes, with a low_min of 18 minutes and a high_min of 22 minutes.",
+  "model_calls": [
+    {
+      "prompt_sha256": "30e7e26c6503d3c1ab988866177e7c6738f9b8a696f8b850fe9baeb82a8a62b9",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 20,
+        "low_min": 18,
+        "high_min": 22,
+        "confidence": "medium",
+        "rationale": "The task is similar to the past tasks 'Stock check with Dev' and 'Check replenishment list with Dev', which both had a budget of 20 minutes and were completed in 15 and 14 minutes, respectively. This suggests that the task should take a similar amount of time. However, the task 'Run the supply check with Dev' involves reviewing the April reorder sheet and agreeing on two quantities with Dev, which may take a bit more time than the previous tasks. Therefore, I estimate the point_min to be 20 minutes, with a low_min of 18 minutes and a high_min of 22 minutes.",
+        "confidence_reason": "The confidence is medium because the past tasks provide a good estimate, but the task may take a bit more time due to the additional review of the April reorder sheet.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Similar task with a budget of 20 minutes and actual time of 15 minutes."
+          },
+          {
+            "slot": 2,
+            "reason": "Similar task with a budget of 20 minutes and actual time of 14 minutes."
+          },
+          {
+            "slot": 3,
+            "reason": "Similar task with a budget of 20 minutes and actual time of 16 minutes."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Dev had already filtered the stock sheet, which may reduce the time needed for the task."
+          },
+          {
+            "observation_id": "S2.1",
+            "advice": "Dev brought the marked-up order sheet, which may help streamline the task."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.66,
+      0.86
+    ],
+    "evidence_ids": [
+      "dev-stock",
+      "dev-packs",
+      "dev-receipts"
+    ],
+    "rationale": "Dev\u2019s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+    "predicted_ratio": 1.0,
+    "realized_ratio": 0.75,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "dev-packs",
+      "dev-receipts",
+      "dev-stock"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "06-neighborhood-clinic",
+  "task": "dev-april",
+  "title": "Run the supply check with Dev",
+  "original": 20,
+  "category": 21,
+  "planner": 20,
+  "actual": 15,
+  "range": [
+    18,
+    22
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "dev-stock",
+      "title": "Stock check with Dev",
+      "source": "decision model",
+      "score": 0.7680068537779451
+    },
+    {
+      "task_id": "dev-packs",
+      "title": "Check replenishment list with Dev",
+      "source": "decision model",
+      "score": 0.7036435322573477
+    },
+    {
+      "task_id": "dev-receipts",
+      "title": "Close the supply list with Dev",
+      "source": "decision model",
+      "score": 0.6805588442196485
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task is similar to the past tasks 'Stock check with Dev' and 'Check replenishment list with Dev', which both had a budget of 20 minutes and were completed in 15 and 14 minutes, respectively. This suggests that the task should take a similar amount of time. However, the task 'Run the supply check with Dev' involves reviewing the April reorder sheet and agreeing on two quantities with Dev, which may take a bit more time than the previous tasks. Therefore, I estimate the point_min to be 20 minutes, with a low_min of 18 minutes and a high_min of 22 minutes.",
+  "confidence_reason": "The confidence is medium because the past tasks provide a good estimate, but the task may take a bit more time due to the additional review of the April reorder sheet.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.016,
+  "evidence": [
+    {
+      "task_id": "dev-stock",
+      "title": "Stock check with Dev",
+      "estimate_min": 20,
+      "actual_min": 15.0,
+      "ratio": 0.75,
+      "reason": "Similar task with a budget of 20 minutes and actual time of 15 minutes.",
+      "reason_source": "model",
+      "model_rationale": "Similar task with a budget of 20 minutes and actual time of 15 minutes.",
+      "source_quote": "Run through the gloves and badge sleeves that need reordering with Dev Patel. He has the counts in his sheet."
+    },
+    {
+      "task_id": "dev-packs",
+      "title": "Check replenishment list with Dev",
+      "estimate_min": 20,
+      "actual_min": 14.0,
+      "ratio": 0.7,
+      "reason": "Similar task with a budget of 20 minutes and actual time of 14 minutes.",
+      "reason_source": "model",
+      "model_rationale": "Similar task with a budget of 20 minutes and actual time of 14 minutes.",
+      "source_quote": "Ask Dev Patel which three packing supplies to add to Friday\u2019s order and cross off two received items."
+    },
+    {
+      "task_id": "dev-receipts",
+      "title": "Close the supply list with Dev",
+      "estimate_min": 20,
+      "actual_min": 16.0,
+      "ratio": 0.8,
+      "reason": "Similar task with a budget of 20 minutes and actual time of 16 minutes.",
+      "reason_source": "model",
+      "model_rationale": "Similar task with a budget of 20 minutes and actual time of 16 minutes.",
+      "source_quote": "Check the masks and envelope counts with Dev Patel and hand his order list to reception."
+    }
+  ],
+  "check": "Dev\u2019s stock calls lasted 14, 15 and 16 minutes in a nominal 20-minute slot. This one closed at 15. A different named partner has the opposite pattern in exactly the same category.",
+  "qwen_candidates": [
+    {
+      "candidate": "dev-stock",
+      "cosine": 0.7680068537779451,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dev-packs",
+      "cosine": 0.7036435322573477,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dev-receipts",
+      "cosine": 0.6805588442196485,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "mara-evening",
+      "cosine": 0.5040106379920926,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "2af2537fdd4f0f761c295c4c6798946813ee5c9b5ef6400acd8472ca5d0229ed",
+      "source": "identical request"
+    }
+  ]
+}

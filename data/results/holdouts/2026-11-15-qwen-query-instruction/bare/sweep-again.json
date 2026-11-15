@@ -1,0 +1,138 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be aware of potential off-task distractions, as observed in the history task.",
+      "sources": [
+        {
+          "task_id": "throughput-table",
+          "title": "Publish timing table from the reference branch",
+          "origin": "ActivityWatch",
+          "observation": "3.0 min on FotMob on the phone labeled off-task."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task involves rerunning an existing sweep on a validated reference branch, which is similar to the history task. The history task took 59 minutes, which is close to the user's estimate of 60 minutes. The task requires running the sweep, copying four medians, and listing compiler/driver information, which is similar to the history task. However, the history task also involved fixing a kernel and proving ownership, which is not mentioned in the new task. Therefore, the new task is likely to take a similar amount of time, but with a slightly lower estimate due to the absence of the additional steps.",
+  "model_calls": [
+    {
+      "prompt_sha256": "9eae4970bfb6805434d875a1575c323b2d08e6b33d2dca089a72a03d9ca6696d",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 55,
+        "low_min": 50,
+        "high_min": 60,
+        "confidence": "medium",
+        "rationale": "The task involves rerunning an existing sweep on a validated reference branch, which is similar to the history task. The history task took 59 minutes, which is close to the user's estimate of 60 minutes. The task requires running the sweep, copying four medians, and listing compiler/driver information, which is similar to the history task. However, the history task also involved fixing a kernel and proving ownership, which is not mentioned in the new task. Therefore, the new task is likely to take a similar amount of time, but with a slightly lower estimate due to the absence of the additional steps.",
+        "confidence_reason": "The confidence is medium because the history task is similar to the new task, but the absence of the additional steps in the new task may reduce the time required. The user's estimate of 60 minutes is close to the history task's actual time of 59 minutes, which supports the estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The history task is similar to the new task, involving running a sweep and copying medians."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Be aware of potential off-task distractions, as observed in the history task."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      0.9,
+      1.11
+    ],
+    "evidence_ids": [
+      "throughput-table",
+      "median-runs"
+    ],
+    "rationale": "The scripted sweeps are already well budgeted.",
+    "predicted_ratio": 0.9166666666666666,
+    "realized_ratio": 1.0166666666666666,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "throughput-table"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "04-kernel-workbench",
+  "task": "sweep-again",
+  "title": "Rerun the validated reference sweep",
+  "original": 60,
+  "category": 76,
+  "planner": 55,
+  "actual": 61,
+  "range": [
+    50,
+    60
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "source": "decision model",
+      "score": 0.9642138342209114
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves rerunning an existing sweep on a validated reference branch, which is similar to the history task. The history task took 59 minutes, which is close to the user's estimate of 60 minutes. The task requires running the sweep, copying four medians, and listing compiler/driver information, which is similar to the history task. However, the history task also involved fixing a kernel and proving ownership, which is not mentioned in the new task. Therefore, the new task is likely to take a similar amount of time, but with a slightly lower estimate due to the absence of the additional steps.",
+  "confidence_reason": "The confidence is medium because the history task is similar to the new task, but the absence of the additional steps in the new task may reduce the time required. The user's estimate of 60 minutes is close to the history task's actual time of 59 minutes, which supports the estimate.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.021,
+  "evidence": [
+    {
+      "task_id": "throughput-table",
+      "title": "Publish timing table from the reference branch",
+      "estimate_min": 60,
+      "actual_min": 59.0,
+      "ratio": 0.9833333333333333,
+      "reason": "The history task is similar to the new task, involving running a sweep and copying medians.",
+      "reason_source": "model",
+      "model_rationale": "The history task is similar to the new task, involving running a sweep and copying medians.",
+      "source_quote": "Run the existing sweep, copy four medians and list compiler/driver."
+    }
+  ],
+  "check": "The scripted sweeps are already well budgeted.",
+  "qwen_candidates": [
+    {
+      "candidate": "throughput-table",
+      "cosine": 0.9642138342209114,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "warp-tail",
+      "cosine": 0.8996314472109617,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "stride-kernel",
+      "cosine": 0.6122972242148672,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "be2e9ca08e83d92aa1b5fb87790714e360df877234eed52bfb2ac1f4c1d9ee1e",
+      "source": "identical request"
+    }
+  ]
+}

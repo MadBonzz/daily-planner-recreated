@@ -1,0 +1,145 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be mindful of off-task activities during the task.",
+      "sources": [
+        {
+          "task_id": "subarray-target",
+          "title": "LeetCode practice \u00b7 subarray sum equals k",
+          "origin": "ActivityWatch",
+          "observation": "4.0 min on youtube.com labeled off-task (Game highlights \u2014 overtime finish)."
+        }
+      ]
+    }
+  ],
+  "explanation": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts. The user's budget for the new task is 50 minutes, which is slightly higher than the actual time taken for the first task (54 minutes). This suggests that the new task might be slightly more complex or require additional steps. The second historical task, which involved designing a prefix-index invariant, took 72 minutes, which is significantly longer than the budget. However, the new task does not require designing a new invariant, so it is likely to be shorter than the second task. Based on these comparisons, the estimated time for the new task is between 40 and 55 minutes.",
+  "model_calls": [
+    {
+      "prompt_sha256": "614c76160ca3d751d03dfc9cde30244aa3f9765857ff4225f80c9cea94f1ae92",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 45,
+        "low_min": 40,
+        "high_min": 55,
+        "confidence": "medium",
+        "rationale": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts. The user's budget for the new task is 50 minutes, which is slightly higher than the actual time taken for the first task (54 minutes). This suggests that the new task might be slightly more complex or require additional steps. The second historical task, which involved designing a prefix-index invariant, took 72 minutes, which is significantly longer than the budget. However, the new task does not require designing a new invariant, so it is likely to be shorter than the second task. Based on these comparisons, the estimated time for the new task is between 40 and 55 minutes.",
+        "confidence_reason": "The confidence in the estimate is medium because the new task is similar to the first historical task, which had a recorded duration. However, the second historical task, which was more complex, took significantly longer than the budget. The new task does not require designing a new invariant, so it is likely to be shorter than the second task.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.2",
+            "advice": "Be mindful of off-task activities during the task."
+          }
+        ]
+      },
+      "seconds": 7.706
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.13,
+      1.31
+    ],
+    "evidence_ids": [
+      "subarray-target",
+      "window-cost",
+      "two-targets"
+    ],
+    "rationale": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+    "predicted_ratio": 0.9,
+    "realized_ratio": 1.24,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "subarray-target"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "05-interview-practice",
+  "task": "shortest-window",
+  "title": "Solve a new shortest-window problem",
+  "original": 50,
+  "category": 60,
+  "planner": 45,
+  "actual": 62,
+  "range": [
+    40,
+    55
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "subarray-target",
+      "title": "LeetCode practice \u00b7 subarray sum equals k",
+      "source": "decision model",
+      "score": 0.7125559194417129
+    },
+    {
+      "task_id": "two-targets",
+      "title": "Practice two non-overlapping target ranges",
+      "source": "decision model",
+      "score": 0.5093962323147673
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts. The user's budget for the new task is 50 minutes, which is slightly higher than the actual time taken for the first task (54 minutes). This suggests that the new task might be slightly more complex or require additional steps. The second historical task, which involved designing a prefix-index invariant, took 72 minutes, which is significantly longer than the budget. However, the new task does not require designing a new invariant, so it is likely to be shorter than the second task. Based on these comparisons, the estimated time for the new task is between 40 and 55 minutes.",
+  "confidence_reason": "The confidence in the estimate is medium because the new task is similar to the first historical task, which had a recorded duration. However, the second historical task, which was more complex, took significantly longer than the budget. The new task does not require designing a new invariant, so it is likely to be shorter than the second task.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 7.706,
+  "latency_seconds": 7.717,
+  "evidence": [
+    {
+      "task_id": "subarray-target",
+      "title": "LeetCode practice \u00b7 subarray sum equals k",
+      "estimate_min": 45,
+      "actual_min": 54.0,
+      "ratio": 1.2,
+      "reason": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts.",
+      "reason_source": "model",
+      "model_rationale": "The new task is similar to the first historical task, which involved solving a subarray sum problem using prefix counts.",
+      "source_quote": "Solve from a blank editor using prefix counts; include a trace with negative values and duplicate prefix sums."
+    }
+  ],
+  "check": "From-blank invariants took 54/45, 50/40 and 72/60 of budget; reheated solutions are a distractor.",
+  "qwen_candidates": [
+    {
+      "candidate": "subarray-target",
+      "cosine": 0.7125559194417129,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "window-cost",
+      "cosine": 0.54781901716995,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "two-targets",
+      "cosine": 0.5093962323147673,
+      "kev_accepted": true
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "635abe5513811cb013f62d1a32834a2f15390adab8a3b0e6894c5a88c22140a9",
+      "source": "live endpoint"
+    }
+  ]
+}

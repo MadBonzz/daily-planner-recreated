@@ -1,0 +1,154 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Ensure the wheel channel wraps are handled correctly and the negative wrap is managed appropriately.",
+      "sources": [
+        {
+          "task_id": "wheel-ticks",
+          "title": "Replot the wheel slip from Thursday\u2019s bag",
+          "origin": "Completion note",
+          "observation": "Plot updated on the first full run."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task involves replaying a recorded bag, marking specific events, and exporting overlays. This is similar to the 'Replot the wheel slip from Thursday\u2019s bag' task, which took 36 minutes, and the 'Replay the line-junction bag' task, which took 42 minutes. The user's estimate of 40 minutes is within the range of these past tasks, considering the complexity of the task and the need for careful analysis.",
+  "model_calls": [
+    {
+      "prompt_sha256": "077a86cd268d6612d725d5db01402a9edaa0331add1cfae368009810fc0be158",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 35,
+        "low_min": 30,
+        "high_min": 40,
+        "confidence": "medium",
+        "rationale": "The task involves replaying a recorded bag, marking specific events, and exporting overlays. This is similar to the 'Replot the wheel slip from Thursday\u2019s bag' task, which took 36 minutes, and the 'Replay the line-junction bag' task, which took 42 minutes. The user's estimate of 40 minutes is within the range of these past tasks, considering the complexity of the task and the need for careful analysis.",
+        "confidence_reason": "The confidence is medium because the task involves replaying a recorded bag, which is a repetitive process, but the specific events and overlays need to be marked and exported, adding some complexity. The user's estimate is within the range of the past tasks, but the actual time may vary depending on the specific requirements and the user's familiarity with the process.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "Similar task with similar duration and complexity."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Ensure the wheel channel wraps are handled correctly and the negative wrap is managed appropriately."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": [
+      0.85,
+      1.12
+    ],
+    "evidence_ids": [
+      "junction-replay",
+      "wheel-ticks"
+    ],
+    "rationale": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope.",
+    "predicted_ratio": 0.875,
+    "realized_ratio": 0.95,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "wheel-ticks"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "09-rover-night",
+  "task": "replay-ramp",
+  "title": "Plot the ramp trial from yesterday\u2019s recording",
+  "original": 40,
+  "category": 62,
+  "planner": 35,
+  "actual": 38,
+  "range": [
+    30,
+    40
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "wheel-ticks",
+      "title": "Replot the wheel slip from Thursday\u2019s bag",
+      "source": "decision model",
+      "score": 0.6561302445796389
+    },
+    {
+      "task_id": "junction-replay",
+      "title": "Replay the line-junction bag",
+      "source": "decision model",
+      "score": 0.5635425205803115
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves replaying a recorded bag, marking specific events, and exporting overlays. This is similar to the 'Replot the wheel slip from Thursday\u2019s bag' task, which took 36 minutes, and the 'Replay the line-junction bag' task, which took 42 minutes. The user's estimate of 40 minutes is within the range of these past tasks, considering the complexity of the task and the need for careful analysis.",
+  "confidence_reason": "The confidence is medium because the task involves replaying a recorded bag, which is a repetitive process, but the specific events and overlays need to be marked and exported, adding some complexity. The user's estimate is within the range of the past tasks, but the actual time may vary depending on the specific requirements and the user's familiarity with the process.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.01,
+  "evidence": [
+    {
+      "task_id": "wheel-ticks",
+      "title": "Replot the wheel slip from Thursday\u2019s bag",
+      "estimate_min": 35,
+      "actual_min": 36.0,
+      "ratio": 1.0285714285714285,
+      "reason": "Similar task with similar duration and complexity.",
+      "reason_source": "model",
+      "model_rationale": "Similar task with similar duration and complexity.",
+      "source_quote": "Open the recorded bag on the laptop, correct the wheel diameter in the plotting notebook and export the overlay."
+    }
+  ],
+  "check": "Two earlier archived-bag tasks finished near their guesses (42/45 and 36/35). The laptop-only ramp analysis took 38/40. A warning to reconnect the live robot would be out of scope.",
+  "qwen_candidates": [
+    {
+      "candidate": "wheel-ticks",
+      "cosine": 0.6561302445796389,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "dock-trace",
+      "cosine": 0.6076688392848839,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "hall-encoder",
+      "cosine": 0.5664920843669522,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "junction-replay",
+      "cosine": 0.5635425205803115,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "turntable",
+      "cosine": 0.5216713497632971,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "080559fddd9e9d57fdf43f8293bcf4791e954f8a4f7719f58ed73d3527edd0c1",
+      "source": "identical request"
+    }
+  ]
+}

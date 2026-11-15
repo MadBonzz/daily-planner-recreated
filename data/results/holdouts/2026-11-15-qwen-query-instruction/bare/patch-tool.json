@@ -1,0 +1,151 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators. This could be a potential issue for the new task, so it's important to consider this when estimating the time.",
+      "sources": [
+        {
+          "task_id": "trace-tool",
+          "title": "Implement the bounded mismatch reporter",
+          "origin": "Completion note",
+          "observation": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators."
+        }
+      ]
+    }
+  ],
+  "explanation": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+  "model_calls": [
+    {
+      "prompt_sha256": "f5c4988462afcc47d9264f3dfdf7e2133cedf8e9a2df89283e854a1cab202104",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 85,
+        "low_min": 75,
+        "high_min": 95,
+        "confidence": "medium",
+        "rationale": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+        "confidence_reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Minimizing the EOF fixture was slow because the harness silently zipped the iterators. This could be a potential issue for the new task, so it's important to consider this when estimating the time."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.34,
+      1.65
+    ],
+    "evidence_ids": [
+      "ring-port",
+      "trace-tool",
+      "boundary-debug"
+    ],
+    "rationale": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+    "expected_caution": {
+      "evidence_ids": [
+        "trace-tool",
+        "boundary-debug"
+      ],
+      "rationale": "The EOF regression fixture needed minimizing twice."
+    },
+    "predicted_ratio": 1.0,
+    "realized_ratio": 1.6235294117647059,
+    "prediction_in_band": false,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "trace-tool"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": true,
+    "unknown_caution_source_ids": []
+  },
+  "history": "02-migration-lab",
+  "task": "patch-tool",
+  "title": "Implement first divergence for C and Rust traces",
+  "original": 85,
+  "category": 109,
+  "planner": 85,
+  "actual": 138,
+  "range": [
+    75,
+    95
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "source": "decision model",
+      "score": 0.628513362257733
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+  "confidence_reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task. The user's estimate of 85 minutes is a good starting point, but the actual time taken for the past task (118 minutes) suggests that the task may take longer. The task also involves passing four acceptance cases, which could add additional time. Therefore, the high end of the range (95 minutes) is a more realistic estimate.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.015,
+  "evidence": [
+    {
+      "task_id": "trace-tool",
+      "title": "Implement the bounded mismatch reporter",
+      "estimate_min": 80,
+      "actual_min": 118.0,
+      "ratio": 1.475,
+      "reason": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task.",
+      "reason_source": "model",
+      "model_rationale": "The task involves implementing a bounded streaming tool and registering it in the repair loop, which is similar to the 'Implement the bounded mismatch reporter' task.",
+      "source_quote": "Add a streaming comparison tool and wire its error envelope into the CLI; test truncated tails."
+    }
+  ],
+  "check": "Three earlier code-and-regression changes overran their budgets. Compare the deliverable and tests rather than counting matching keywords.",
+  "qwen_candidates": [
+    {
+      "candidate": "trace-tool",
+      "cosine": 0.628513362257733,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "suite-report",
+      "cosine": 0.5750046881464865,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "boundary-debug",
+      "cosine": 0.5173604165364645,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "ring-port",
+      "cosine": 0.5066780706377588,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "05758449ea2c52ed3d6d679d7eb642ec60eaca6bdecd8ff38f378afb0e646f81",
+      "source": "identical request"
+    }
+  ]
+}

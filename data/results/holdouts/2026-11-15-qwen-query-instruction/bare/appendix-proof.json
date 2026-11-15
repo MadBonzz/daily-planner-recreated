@@ -1,0 +1,195 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Expand the conditional expectation one event at a time to avoid confusion and ensure accuracy in the proof.",
+      "sources": [
+        {
+          "task_id": "derive-noise",
+          "title": "Rebuild the loss estimate under one audit coin",
+          "origin": "Completion note",
+          "observation": "I had to expand the conditional expectation one event at a time."
+        }
+      ]
+    },
+    {
+      "advice": "Stay focused on the task and avoid off-task activities to ensure timely completion.",
+      "sources": [
+        {
+          "task_id": "derive-noise",
+          "title": "Rebuild the loss estimate under one audit coin",
+          "origin": "ActivityWatch",
+          "observation": "6.0 min on NBA on the phone labeled off-task."
+        }
+      ]
+    },
+    {
+      "advice": "Double-check the algebra and ensure that the variance bound is correctly tested on the two-point loss table.",
+      "sources": [
+        {
+          "task_id": "bound-floor",
+          "title": "Work out the epsilon-floor variance lemma",
+          "origin": "Completion note",
+          "observation": "Expanding the conditional expectation before taking the variance fixed my algebra."
+        }
+      ]
+    },
+    {
+      "advice": "Avoid off-task activities during the task to ensure timely completion.",
+      "sources": [
+        {
+          "task_id": "bound-floor",
+          "title": "Work out the epsilon-floor variance lemma",
+          "origin": "ActivityWatch",
+          "observation": "4.0 min on nba.com labeled off-task (Fourth quarter box score from last night)."
+        }
+      ]
+    }
+  ],
+  "explanation": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks. The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+  "model_calls": [
+    {
+      "prompt_sha256": "0a7af82e8b7bab3c296e12caa5504d29d09dfaf43c9c4251b9045f5f2b05a295",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 100,
+        "low_min": 90,
+        "high_min": 110,
+        "confidence": "medium",
+        "rationale": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks. The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+        "confidence_reason": "The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Expand the conditional expectation one event at a time to avoid confusion and ensure accuracy in the proof."
+          },
+          {
+            "observation_id": "S1.2",
+            "advice": "Stay focused on the task and avoid off-task activities to ensure timely completion."
+          },
+          {
+            "observation_id": "S2.1",
+            "advice": "Double-check the algebra and ensure that the variance bound is correctly tested on the two-point loss table."
+          },
+          {
+            "observation_id": "S2.2",
+            "advice": "Avoid off-task activities during the task to ensure timely completion."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "patterned",
+    "expected_ratio_range": [
+      1.48,
+      1.86
+    ],
+    "evidence_ids": [
+      "derive-noise",
+      "bound-floor",
+      "check-jensen"
+    ],
+    "rationale": "Deriving a proof takes substantially longer than a figures-only reading.",
+    "predicted_ratio": 1.6666666666666667,
+    "realized_ratio": 1.75,
+    "prediction_in_band": true,
+    "realization_in_band": true,
+    "selected_expected_ids": [
+      "derive-noise"
+    ],
+    "selected_unlisted_ids": [],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "03-reading-depth",
+  "task": "appendix-proof",
+  "title": "Prepare the appendix board derivation",
+  "original": 60,
+  "category": 75,
+  "planner": 100,
+  "actual": 105,
+  "range": [
+    90,
+    110
+  ],
+  "covered": true,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "source": "decision model",
+      "score": 0.9295553288785768
+    },
+    {
+      "task_id": "bound-floor",
+      "title": "Work out the epsilon-floor variance lemma",
+      "source": "decision model",
+      "score": 0.5325890183181687
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks. The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+  "confidence_reason": "The past tasks had a budget of 60 minutes, but the actual time taken was consistently higher, ranging from 104 to 120 minutes. This suggests that the budget might be underestimated. The new task requires a similar level of detail and complexity, so it is reasonable to estimate a higher time budget. However, the confidence is medium because the past tasks had some variations in actual time, and the new task might require additional time for proof and example construction.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.015,
+  "evidence": [
+    {
+      "task_id": "derive-noise",
+      "title": "Rebuild the loss estimate under one audit coin",
+      "estimate_min": 60,
+      "actual_min": 104.0,
+      "ratio": 1.7333333333333334,
+      "reason": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks.",
+      "reason_source": "model",
+      "model_rationale": "The new task involves proving the second-moment inequality and providing a two-item example, which is similar in scope to the past tasks.",
+      "source_quote": "Derive a conditional second moment on paper and write an example where ignoring missing observations biases it."
+    }
+  ],
+  "check": "Deriving a proof takes substantially longer than a figures-only reading.",
+  "qwen_candidates": [
+    {
+      "candidate": "derive-noise",
+      "cosine": 0.9295553288785768,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "read-cache",
+      "cosine": 0.8879442109975617,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "bound-floor",
+      "cosine": 0.5325890183181687,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "read-queues",
+      "cosine": 0.5131009283326292,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "ea033bf04d580f8a6fcf4abad3c62c3bdde02203467124c4980666fa72e54255",
+      "source": "identical request"
+    }
+  ]
+}

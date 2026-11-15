@@ -1,0 +1,132 @@
+{
+  "fixed_duration": false,
+  "cautions": [
+    {
+      "advice": "Be mindful of the additional step of making up the sofa bed, which could take more time than expected. Ensure that the duvet cover is properly fitted and secure before starting the machine cycle.",
+      "sources": [
+        {
+          "task_id": "sheets",
+          "title": "Wash the guest-room sheets",
+          "origin": "Completion note",
+          "observation": "The fitted sheet took a few tries. The machine ran while I went shopping."
+        }
+      ]
+    }
+  ],
+  "explanation": "The user's budget of 30 minutes is a reasonable starting point, considering the task involves washing a duvet cover and making up a sofa bed. The history of washing the guest-room sheets provides a useful comparison, as both tasks involve bedding and machine washing. The actual time taken for the guest-room sheets task was 23 minutes, which is slightly less than the budget. However, the new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more. Therefore, the point estimate of 25 minutes is a reasonable compromise, with the potential for a longer time if the sofa bed requires additional effort.",
+  "model_calls": [
+    {
+      "prompt_sha256": "d9fc29f5e43a7770e97fa1dc3bb113e13ab625f6ee59e1e7c01eaa0cb8b43003",
+      "max_tokens": 950,
+      "response": {
+        "point_min": 25,
+        "low_min": 20,
+        "high_min": 30,
+        "confidence": "medium",
+        "rationale": "The user's budget of 30 minutes is a reasonable starting point, considering the task involves washing a duvet cover and making up a sofa bed. The history of washing the guest-room sheets provides a useful comparison, as both tasks involve bedding and machine washing. The actual time taken for the guest-room sheets task was 23 minutes, which is slightly less than the budget. However, the new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more. Therefore, the point estimate of 25 minutes is a reasonable compromise, with the potential for a longer time if the sofa bed requires additional effort.",
+        "confidence_reason": "The confidence in the estimate is medium, as the history provides a useful comparison, but the additional step of making up the sofa bed introduces some uncertainty. The user's budget is a reasonable starting point, and the actual time for the past task is slightly less than the budget, suggesting that the new task might take a similar amount of time or slightly more.",
+        "comparisons": [
+          {
+            "slot": 1,
+            "reason": "The past task of washing the guest-room sheets involved a similar bedding load and machine washing, with a budget and actual time of 35 and 23 minutes, respectively. The new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more."
+          }
+        ],
+        "warnings": [
+          {
+            "observation_id": "S1.1",
+            "advice": "Be mindful of the additional step of making up the sofa bed, which could take more time than expected. Ensure that the duvet cover is properly fitted and secure before starting the machine cycle."
+          }
+        ]
+      },
+      "seconds": 0.0
+    }
+  ],
+  "evaluation": {
+    "kind": "control",
+    "expected_ratio_range": null,
+    "evidence_ids": [],
+    "rationale": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+    "predicted_ratio": 0.8333333333333334,
+    "realized_ratio": 1.9333333333333333,
+    "prediction_in_band": null,
+    "realization_in_band": null,
+    "selected_expected_ids": [],
+    "selected_unlisted_ids": [
+      "sheets"
+    ],
+    "caution_cites_expected_source": null,
+    "unknown_caution_source_ids": []
+  },
+  "history": "07-shared-apartment",
+  "task": "duvet",
+  "title": "Wash the spare duvet cover",
+  "original": 30,
+  "category": 28,
+  "planner": 25,
+  "actual": 58,
+  "range": [
+    20,
+    30
+  ],
+  "covered": false,
+  "confidence": "medium",
+  "basis": "Model forecast",
+  "related_tasks": [
+    {
+      "task_id": "sheets",
+      "title": "Wash the guest-room sheets",
+      "source": "decision model",
+      "score": 0.7429990746032807
+    }
+  ],
+  "retrieval_error": null,
+  "provenance": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024",
+    "decision": "direct",
+    "minutes_by": "model"
+  },
+  "model_rationale": "The user's budget of 30 minutes is a reasonable starting point, considering the task involves washing a duvet cover and making up a sofa bed. The history of washing the guest-room sheets provides a useful comparison, as both tasks involve bedding and machine washing. The actual time taken for the guest-room sheets task was 23 minutes, which is slightly less than the budget. However, the new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more. Therefore, the point estimate of 25 minutes is a reasonable compromise, with the potential for a longer time if the sofa bed requires additional effort.",
+  "confidence_reason": "The confidence in the estimate is medium, as the history provides a useful comparison, but the additional step of making up the sofa bed introduces some uncertainty. The user's budget is a reasonable starting point, and the actual time for the past task is slightly less than the budget, suggesting that the new task might take a similar amount of time or slightly more.",
+  "model_status": "ok",
+  "model_error": null,
+  "model_seconds": 0.0,
+  "latency_seconds": 0.033,
+  "evidence": [
+    {
+      "task_id": "sheets",
+      "title": "Wash the guest-room sheets",
+      "estimate_min": 35,
+      "actual_min": 23.0,
+      "ratio": 0.6571428571428571,
+      "reason": "The past task of washing the guest-room sheets involved a similar bedding load and machine washing, with a budget and actual time of 35 and 23 minutes, respectively. The new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more.",
+      "reason_source": "model",
+      "model_rationale": "The past task of washing the guest-room sheets involved a similar bedding load and machine washing, with a budget and actual time of 35 and 23 minutes, respectively. The new task includes an additional step of making up the sofa bed, which could take a similar amount of time or more.",
+      "source_quote": "Start one bedding load. Later make up the guest bed and put the spare covers on the shelf."
+    }
+  ],
+  "check": "A broken closure inside the second-hand cover was discovered while making the bed. The extra hand stitching was absent from the task details and previous laundry. The 58 minutes are an observed miss, with no predeclared target ratio.",
+  "qwen_candidates": [
+    {
+      "candidate": "sheets",
+      "cosine": 0.7429990746032807,
+      "kev_accepted": true
+    },
+    {
+      "candidate": "towels-one",
+      "cosine": 0.5106869196043438,
+      "kev_accepted": false
+    },
+    {
+      "candidate": "mugs",
+      "cosine": 0.5061072457933592,
+      "kev_accepted": false
+    }
+  ],
+  "forecast_calls": [
+    {
+      "request_id": "5efc0bec24f4ec37c61e8975ffa2c956c90e5d6342824769f105424e86c485f4",
+      "source": "identical request"
+    }
+  ]
+}
