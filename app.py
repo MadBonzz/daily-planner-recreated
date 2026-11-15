@@ -605,9 +605,17 @@ def estimate_section(store, task, *, read_only=False):
     has_forecast = "point_min" in prediction
     if has_forecast:
         st.caption(forecast_source(prediction))
+        fallbacks = prediction.get("retrieval_fallbacks", ())
+        sources = [label for role, label in (("embedding", "Qwen embeddings"), ("decision", "Kev decisions"))
+                   if role in fallbacks]
+        if sources:
+            st.caption("History lookup used precomputed " + " and ".join(sources) +
+                       " for exact matches when live lookup was unavailable.")
         comparison_summary(prediction)
     if prediction.get("retrieval_error"):
         st.warning(prediction["retrieval_error"])
+    if prediction.get("model_error"):
+        st.warning(f"Forecast request failed. {prediction['model_error']}")
     if not read_only and task["status"] != "completed":
         with st.container(horizontal=True):
             if st.button("Re-estimate", key=f"estimate-retry-{task['id']}",

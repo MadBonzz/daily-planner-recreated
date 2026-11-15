@@ -6,6 +6,7 @@ from pathlib import Path
 
 from model_client import ModelUnavailable, chat_json, forecast_endpoint
 from retrieval import DECISION_MODEL, _local_post
+import sample_retrieval
 from sample_retrieval import decision_hash
 
 
@@ -99,11 +100,10 @@ def live(request, config):
 
 
 def decide(request, config):
-    cached = packaged(decision_hash(request))
-    if cached is not None:
-        return cached, f"Packaged {request['model']} decision"
     try:
-        return live(request, config), request["model"]
+        return sample_retrieval.resolve(
+            "decision", request["model"], config, lambda canonical: packaged(decision_hash({**request, "model": canonical})),
+            lambda: live(request, config))
     except ModelUnavailable:
         schema = {"type": "object", "properties": {"eligible": {"type": "boolean"}},
                   "required": ["eligible"], "additionalProperties": False}

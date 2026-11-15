@@ -9,10 +9,21 @@ from pathlib import Path
 import re
 import struct
 
+from fallback_provenance import record_packaged_fallback
+from local_model_runtime import ModelUnavailable
+
 DIRECTORY = Path(__file__).resolve().parent / "data" / "tasks" / "retrieval"
 FORMAT = 2
 DIMENSIONS = 1024
 ROLES = ("document", "query")
+QWEN = "qwen3-embedding-0.6b"
+KEV = "kev-4b"
+_MODELS = {
+    "embedding": (QWEN, "PLANNER_EMBEDDING_MODEL_KEY",
+                  {QWEN, "text-embedding-qwen3-embedding-0.6b", "qwen3-embedding-0.6b-gguf",
+                   "qwen/qwen3-embedding-0.6b-gguf", "qwen/qwen3-embedding-0.6b"}),
+    "decision": (KEV, "PLANNER_DECISION_MODEL_KEY", {KEV, "kev-4b-gguf", "ggml-org/kev-4b-gguf", "ggml-org/kev-4b"}),
+}
 _NUMBER = re.compile(r"-?(?:\d+\.\d+|\d+)(?:[eE][+-]?\d+)?", re.ASCII)
 
 
@@ -22,6 +33,47 @@ def text_hash(text):
 
 def decision_hash(payload):
     return text_hash(json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False))
+
+
+def packaged_model(role, model, config):
+    """Only compare requests against the archived weights for that component."""
+    canonical, key_setting, installed_keys = _MODELS[role]
+    physical = config.get(key_setting)
+    if physical and physical.casefold() not in installed_keys:
+        return None
+    if physical and config.get("PLANNER_SINGLE_MODEL") == "1":
+        # Native management maps the logical alias to this specific installed key.
+        return canonical
+    if model.casefold() in installed_keys or model == canonical + "-live":
+        return canonical
+    return None
+
+
+def prefer_packaged(role, model, config):
+    return config.get("PLANNER_SINGLE_MODEL") != "1" and packaged_model(role, model, config) == model
+
+
+def resolve(role, model, config, lookup, infer):
+    """Return the result and source. A live failure may reuse only a matched input."""
+    canonical = packaged_model(role, model, config)
+    package_first = canonical == model and config.get("PLANNER_SINGLE_MODEL") != "1"
+    if package_first:
+        hit = lookup(canonical)
+        if hit is not None:  # A false Kev decision is a complete result.
+            return hit, f"Packaged {canonical} {role}"
+    try:
+        return infer(), model
+    except ModelUnavailable:
+        if canonical is not None and not package_first:
+            try:
+                hit = lookup(canonical)
+            except (OSError, ValueError):
+                # An unreadable or invalid bundled file cannot satisfy this request.
+                hit = None
+            if hit is not None:
+                record_packaged_fallback(role)
+                return hit, f"Packaged {canonical} {role} (local model unavailable)"
+        raise
 
 
 def csv_path(index_path, task_id):

@@ -7,6 +7,7 @@ import re
 
 from model_client import ModelUnavailable, planner_settings
 import retrieval
+import sample_retrieval
 from sample_retrieval import decision_hash as key
 
 
@@ -107,7 +108,8 @@ def live_decision(request, config=None):
 
 def decide(request, config=None):
     """Use an exact public judgment or request a new decision from the local model."""
-    value = packaged(request)
-    if value is not None:
-        return value
-    return live_decision(request, config)
+    config = planner_settings() if config is None else config
+    value, _ = sample_retrieval.resolve(
+        "decision", request["model"], config, lambda canonical: packaged({**request, "model": canonical}),
+        lambda: live_decision(request, config))
+    return value

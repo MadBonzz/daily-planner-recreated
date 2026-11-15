@@ -4,7 +4,7 @@ We paired every flexible held-out task with every eligible completed task in its
 
 ## Candidate retrieval
 
-Qwen3-Embedding-0.6B Q8_0 previously searched with only the instructed vector for the full task. We tested the complementary plain-text vector for the same full input, either vector passing, and a reverse search using the candidate as the instructed query. The production change admits either the instructed or the plain-text query at the existing 0.50 cosine floor, stores one vector per historical task, and sends each qualifying candidate to Kev once. The additional query embedding and vector search are the cost for a new custom task. Public samples already contain both vectors. Each query includes all the task's fields and extracted document content.
+Qwen3-Embedding-0.6B Q8_0 previously searched with only the instructed vector for the full task. We tested the complementary plain-text vector for the same full input, either vector passing, and a reverse search using the candidate as the instructed query. The production change admits either the instructed or the plain-text query at the existing 0.50 cosine floor, stores one vector per historical task, and sends each qualifying candidate to Kev once. The additional query embedding and vector search are the cost for a new custom task. Public samples already contain both vectors. Each embedding request includes the task fields and extracted document content. In current live runs, the planner uses a valid embedding even when the provider has truncated that input to its context window.
 
 | Split / stage | TP | FP | FN | TN | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |

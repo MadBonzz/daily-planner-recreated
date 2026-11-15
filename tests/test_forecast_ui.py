@@ -83,3 +83,17 @@ def test_scope_only_forecast_always_shows_evidence_gap():
     )))
     assert "No comparable timed task" in copy and "without a personal timing comparison" in copy
     assert "six exchanges" in copy
+
+
+def test_packaged_retrieval_source_and_forecast_model_error_are_independent():
+    sources = ["embedding", "decision"]
+    result = budget(retrieval_fallbacks=sources, provenance={"provider": "Local endpoint", "model": "Bonsai",
+                                                             "decision": "direct", "minutes_by": "model"})
+    card = show_card(result)
+    assert "precomputed Qwen embeddings and Kev decisions" in prose(card)
+    assert not card.warning
+    result.update(model_error="Bonsai timed out after 360 seconds.")
+    result["provenance"].update(decision="fallback", minutes_by="user")
+    card = show_card(result)
+    assert "precomputed Qwen embeddings and Kev decisions" in prose(card)
+    assert any("Bonsai timed out after 360 seconds" in w.value for w in card.warning)

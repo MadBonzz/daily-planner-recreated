@@ -12,6 +12,7 @@ import estimator
 import focus_domains
 import retrieval
 import workspace_forecast
+from fallback_provenance import capture_fallbacks
 from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
 from task_files import document_text
@@ -147,7 +148,8 @@ def _read_documents(store, task):
 
 def _process_relation(store, job):
     pair, token = job["pair"], job["token"]
-    with _heartbeat(lambda: store.renew_relation(pair, token, lease_seconds=_LEASE_SECONDS)) as revoked:
+    with (capture_fallbacks() as fallbacks,
+          _heartbeat(lambda: store.renew_relation(pair, token, lease_seconds=_LEASE_SECONDS)) as revoked):
         try:
             for task in (job["target"], job["candidate"]):
                 _read_documents(store, task)
@@ -162,7 +164,8 @@ def _process_relation(store, job):
             _LOG.error("Pair relevance failed (%s).", type(exc).__name__)
             related = None
         if not revoked.is_set():
-            store.resolve_relation(pair, token, related, examples=job["examples"])
+            store.resolve_relation(pair, token, related, examples=job["examples"],
+                                   packaged_fallback="decision" in fallbacks)
 
 
 def _process(store, index_dir, job):

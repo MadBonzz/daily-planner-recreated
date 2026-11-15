@@ -7,6 +7,7 @@ from statistics import median
 
 import retrieval
 from activity import reviewed_examples as reviewed_activity
+from fallback_provenance import capture_fallbacks, record_packaged_fallback
 from model_client import ModelResponseInvalid, ModelResponseTruncated, ModelUnavailable, chat_json, forecast_endpoint
 from pdf_reader import assigned_section_text, document_excerpt, extract_pdf_text
 from retrieval import COLLECTION, _index, clear_index, forget_task, index_current_task, index_task, search as _search
@@ -266,7 +267,15 @@ def _offline_estimate(estimate, matches, observations, error):
 
 
 def predict(task, completed, index_dir):
-    """Return one validated, model-authored forecast, or a clearly identified fallback."""
+    """Return one validated forecast with the sources of its minutes and history lookup."""
+    with capture_fallbacks() as fallbacks:
+        prediction = _predict(task, completed, index_dir)
+    if fallbacks:
+        prediction["retrieval_fallbacks"] = sorted(fallbacks)
+    return prediction
+
+
+def _predict(task, completed, index_dir):
     estimate = float(task["estimate_minutes"])
     if not math.isfinite(estimate) or estimate <= 0:
         raise ValueError("Enter a positive estimate in minutes.")
@@ -287,6 +296,8 @@ def predict(task, completed, index_dir):
                 origins[key] = "user"
         elif not row.get("fixed_duration"):
             if "matrix_related" in row:
+                if row.get("matrix_packaged_fallback"):
+                    record_packaged_fallback("decision")
                 matrix_feedback.update(row.get("matrix_feedback_ids", []))
                 if row["matrix_related"]:
                     candidates.append((row, None))

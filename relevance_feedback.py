@@ -59,7 +59,7 @@ def save_choices(db, task_id, selected, previous, reviewed, now):
     affected = reviewed.intersection(selected | previous | {row[0] for row in existing})
     pairs = [(*sorted((task_id, source_id)), source_id in selected) for source_id in affected]
     db.executemany("""INSERT INTO task_relations(left_id,right_id,related) VALUES(?,?,?)
-                      ON CONFLICT(left_id,right_id) DO UPDATE SET related=excluded.related, refresh_due=0,
+                      ON CONFLICT(left_id,right_id) DO UPDATE SET related=excluded.related, packaged_fallback=0, refresh_due=0,
                          token=NULL, lease_end=NULL, failures=0, retry_at=0""", pairs)
     db.executemany("DELETE FROM task_relation_sources WHERE left_id=? AND right_id=?",
                    [(left, right) for left, right, _ in pairs])

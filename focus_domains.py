@@ -11,6 +11,7 @@ from activity import activity_key
 from model_client import ModelUnavailable, planner_settings
 from retrieval import check_lease
 from relevance_feedback import related_ids
+from sample_retrieval import prefer_packaged
 
 
 def normalize_domain(value):
@@ -162,9 +163,10 @@ def policy_from_db(db, task_id):
     task = _target(db, task_id)
     stored = json.loads(task["prediction"]).get("focus_verdicts", {})
     suggestions, pending = {}, {}
-    for domain, reason, request in _site_evidence(db, task, _related_sources(db, task), None):
+    config = planner_settings()
+    for domain, reason, request in _site_evidence(db, task, _related_sources(db, task), config):
         verdict = stored.get(focus_judge.key(request))
-        if type(verdict) is not bool:
+        if type(verdict) is not bool and prefer_packaged("decision", request["model"], config):
             verdict = focus_judge.packaged(request)
         if verdict is True:
             suggestions[domain] = reason + " Kev recommends blocking it for this task."

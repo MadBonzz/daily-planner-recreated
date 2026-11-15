@@ -169,6 +169,23 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(final["prediction"], self.budget)
         self.assertFalse(reopened.has_pending_predictions())
 
+    def test_upgrade_retries_only_open_tokenizer_failures_once(self):
+        failure = dict(self.budget, retrieval_error="The bare task embedding was unavailable. "
+                       "Could not verify the complete input with the local model tokenizer.")
+        self.finish_one("Completed task", prediction=failure)
+        target = self.task("Unfinished task", prediction=failure)["id"]
+        self.task("Healthy forecast")
+        self.task("Other failure", prediction=dict(self.budget, retrieval_error="Index unavailable."))
+        with sqlite3.connect(self.store.path) as db:
+            db.execute("DELETE FROM settings WHERE key='retried_qwen_tokenizer_failures'")
+        upgraded = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        job = upgraded.claim_prediction()
+        self.assertEqual(job["task"]["id"], target)
+        reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        self.assertTrue(reopened.resolve_prediction(target, job["token"], self.budget))
+        self.assertEqual(reopened.get_task(target)["creation_prediction"], failure)
+        self.assertIsNone(reopened.claim_prediction())
+
     def test_retry_saved_failure_is_idempotent_preserves_first_forecast_and_timer(self):
         failed = dict(self.budget, explanation="Model comparison unavailable. api.cohere.ai returned HTTP 422.")
         task_id = self.task(prediction=failed)["id"]

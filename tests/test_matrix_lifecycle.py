@@ -291,3 +291,23 @@ def test_reverse_only_packaged_vote_is_preserved_under_both_insertion_orders(mon
         l, r = retrieval.active_decision_order(first, second, ())
         assert l == z and r == a
         assert retrieval.decide_related(l, r)
+
+
+def test_fallback_decision_is_saved_with_the_pair_and_restored_for_the_forecast(tmp_path, monkeypatch):
+    from fallback_provenance import record_packaged_fallback
+    store = PlannerStore(tmp_path)
+    target, source = [card(store, title) for title in ("Check the traces", "Check the second trace")]
+    def packaged(*args, **kwargs):
+        record_packaged_fallback("decision")
+        return True
+    monkeypatch.setattr(estimate_worker.retrieval, "decide_related", packaged)
+    estimate_worker._process_relation(store, store.claim_relation())
+    reopened = PlannerStore(tmp_path)
+    reopened.transition(source, "finish", spent_seconds=1800)
+    job = reopened.claim_prediction()
+    assert job["task"]["id"] == target
+    assert job["history"][0]["matrix_packaged_fallback"]
+    monkeypatch.setattr(estimate_worker.estimator, "_model_forecast", lambda *_: {"evidence": [], "cautions": []})
+    prediction = estimate_worker.estimator.predict(job["task"], job["history"], tmp_path / "vectors")
+    assert prediction["retrieval_fallbacks"] == ["decision"]
+    assert prediction["provenance"]["decision"] == "direct"

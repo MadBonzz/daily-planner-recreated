@@ -3,9 +3,6 @@
 import hashlib
 import json
 import math
-import os
-import subprocess
-import sys
 import threading
 import uuid
 from contextlib import contextmanager
@@ -18,6 +15,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from qdrant_client import QdrantClient, models
 
 import local_model_runtime
+from fallback_provenance import capture_fallbacks
 from model_client import ModelUnavailable, _NoRedirect, planner_settings
 from pdf_reader import assigned_section_text, document_excerpt
 import sample_retrieval
@@ -26,8 +24,8 @@ import sample_retrieval
 COLLECTION = "planner_tasks_qwen_v2"
 LEGACY_COLLECTION = "planner_tasks_v1"
 INDEX_LOCK = threading.RLock()
-EMBEDDING_MODEL = "qwen3-embedding-0.6b"
-DECISION_MODEL = "kev-4b"
+EMBEDDING_MODEL = sample_retrieval.QWEN
+DECISION_MODEL = sample_retrieval.KEV
 QUERY_INSTRUCTION = ("Retrieve past tasks whose work, methods, and scope are comparable and whose durations "
                      "could help estimate this task.")
 MINIMUM_THRESHOLD = 0.50
@@ -63,55 +61,6 @@ class DocumentTooLong(ModelUnavailable):
     """The full task cannot fit into the loaded embedding context."""
 
 
-def _check_embedding_context(url, payload, client, timeout, *, loaded_only=False):
-    """LM Studio's compatibility route silently truncates long inputs; its SDK counts them exactly."""
-    origin = f"{url.scheme}://{url.netloc}"
-    try:
-        with client.open(origin + "/api/v1/models", timeout=timeout) as response:
-            loaded = json.load(response).get("models")
-    except HTTPError as exc:
-        if exc.code not in (400, 404, 405):
-            raise
-        loaded = None
-    if loaded is None:
-        # LM Studio's standalone llama.cpp backend has no SDK. Its embeddings
-        # endpoint rejects an overlength string with HTTP 400 instead of truncating it.
-        with client.open(origin + "/props", timeout=timeout) as response:
-            properties = json.load(response)
-        if "default_generation_settings" not in properties:
-            raise ModelUnavailable("Cannot verify the local embedding model's context limit.")
-        return
-    model = payload["model"]
-    capacities = [instance.get("config", {}).get("context_length") for entry in loaded
-                  for instance in entry.get("loaded_instances", [])
-                  if instance.get("id") == model or entry.get("key") == model]
-    document = payload["input"].encode("utf-8")
-    # Qwen's byte-level tokenizer needs at most one token per UTF-8 byte plus EOS.
-    # Count exactly for other tokenizers, unknown contexts and potentially long PDFs.
-    if (model == EMBEDDING_MODEL and len(capacities) == 1 and type(capacities[0]) is int
-            and len(document) + 1 <= capacities[0]):
-        return
-    # The SDK uses process-wide proxy settings and has no per-client opt-out.
-    # Isolate that client so the task stays on loopback and the hosted forecast
-    # endpoint can keep using its proxy in other worker threads.
-    env = {k: v for k, v in os.environ.items() if not k.lower().endswith("_proxy")}
-    env["NO_PROXY"] = "*"
-    try:
-        command = [sys.executable, str(Path(__file__).with_name("embedding_context.py")), url.netloc, model]
-        if loaded_only:
-            command.append("--loaded-only")
-        counted = subprocess.run(command, input=document, capture_output=True, check=True,
-                                 timeout=timeout, env=env)
-        tokens, capacity = json.loads(counted.stdout)
-    except (subprocess.SubprocessError, OSError, ValueError) as exc:
-        raise ModelUnavailable("Could not verify the complete input with the local model tokenizer. "
-                               "Install the planner requirements and check the loaded LM Studio model.") from exc
-    if tokens + 1 > capacity:
-        raise DocumentTooLong(f"The complete task needs {tokens} text tokens plus the end token. "
-                               f"The loaded embedding context holds {capacity} tokens. "
-                               "Reload it with a longer context and re-estimate.")
-
-
 def _local_post(endpoint, payload, config):
     try:
         url = urlsplit(endpoint)
@@ -124,20 +73,21 @@ def _local_post(endpoint, payload, config):
         with local_model_runtime.managed_model(endpoint, payload["model"], config, kind=kind, timeout=timeout) as instance:
             # Keep the logical model ID in the original payload for sample hashes and saved decisions.
             wire_payload = {**payload, "model": instance}
-            if kind == "embedding":
-                _check_embedding_context(url, wire_payload, client, timeout,
-                                         loaded_only=local_model_runtime.is_managed(endpoint, config))
             request = Request(endpoint, data=json.dumps(wire_payload).encode(), headers={"Content-Type": "application/json"})
             with client.open(request, timeout=timeout) as response:
                 return json.load(response)
     except HTTPError as exc:
-        if exc.code == 400:
+        if exc.code in {400, 413}:
             try:
                 problem = json.loads(exc.read(4096)).get("error", {})
-                detail = str(problem.get("type", "")) + " " + str(problem.get("message", ""))
+                if isinstance(problem, dict):
+                    problem = " ".join(str(problem.get(field, "")) for field in ("type", "code", "message"))
+                detail = str(problem).casefold()
             except (ValueError, TypeError, AttributeError):
                 detail = ""
-            if "context" in detail.casefold():
+            finally:
+                exc.close()
+            if "context" in detail:
                 raise DocumentTooLong(f"The full input exceeds the loaded context for {payload['model']}. "
                                        "Reload it in LM Studio with a longer context and re-estimate.") from exc
         raise ModelUnavailable(f"LM Studio returned HTTP {exc.code} for {payload['model']}. "
@@ -159,10 +109,10 @@ def embed_task(task, config=None, query=False):
     config = planner_settings() if config is None else config
     model = config.get("PLANNER_EMBEDDING_MODEL") or EMBEDDING_MODEL
     content = embedding_input(task, query)
-    packaged = sample_retrieval.vector_for(model, content)
-    if packaged is not None:
-        return packaged
-    return _live_vector(content, model, config)
+    vector, _ = sample_retrieval.resolve(
+        "embedding", model, config, lambda canonical: sample_retrieval.vector_for(canonical, content),
+        lambda: _live_vector(content, model, config))
+    return vector
 
 
 def _live_vector(content, model, config):
@@ -173,7 +123,7 @@ def _live_vector(content, model, config):
         if not isinstance(vector, list) or not vector or not all(
                 type(v) in (int, float) and math.isfinite(v) for v in vector) or not any(vector):
             raise ValueError
-        if model == EMBEDDING_MODEL and len(vector) != sample_retrieval.DIMENSIONS:
+        if sample_retrieval.packaged_model("embedding", model, config) and len(vector) != sample_retrieval.DIMENSIONS:
             raise ModelUnavailable(f"{model} returned {len(vector)} components. This configuration requires {sample_retrieval.DIMENSIONS}.")
     except (IndexError, KeyError, TypeError, ValueError) as exc:
         raise ModelUnavailable(f"{model} returned an invalid embedding.") from exc
@@ -216,29 +166,31 @@ def decision_payload(left, right, examples, model):
 
 
 def decide_related(left, right, examples=()):
-    """Use an exact packaged decision, otherwise judge this pair with the configured model."""
+    """Judge this exact comparison with the configured live or precomputed profile."""
     config = planner_settings()
     model = config.get("PLANNER_DECISION_MODEL") or DECISION_MODEL
     payload = decision_payload(left, right, examples, model)
-    packaged = sample_retrieval.decision_for(payload)
-    if packaged is not None:
-        return packaged
-    return _live_decision(payload, config)
+    value, _ = sample_retrieval.resolve(
+        "decision", model, config, lambda canonical: sample_retrieval.decision_for({**payload, "model": canonical}),
+        lambda: _live_decision(payload, config))
+    return value
 
 
 def active_decision_order(left, right, examples=(), *, model=None):
     """Choose one repeatable input order for an undirected active-task cell.
 
-    Legacy public schedules can ship only the opposite call. Its exact recorded Kev
-    verdict is used on every machine, including when a live server is available.
-    New inputs and cells with both archived directions always use canonical order.
+    Legacy public schedules can ship only the opposite call. Use that input order
+    for both live inference and exact fallback. New inputs and cells with both
+    archived directions use canonical order.
     """
     def content_key(task):
         return tuple(task.get(field) or "" for _, field in _FIELDS)
     first, second = sorted((left, right), key=content_key)
-    model = model or planner_settings().get("PLANNER_DECISION_MODEL") or DECISION_MODEL
-    if sample_retrieval.decision_for(decision_payload(first, second, examples, model)) is None:
-        if sample_retrieval.decision_for(decision_payload(second, first, examples, model)) is not None:
+    config = planner_settings()
+    model = model or config.get("PLANNER_DECISION_MODEL") or DECISION_MODEL
+    canonical = sample_retrieval.packaged_model("decision", model, config)
+    if canonical and sample_retrieval.decision_for(decision_payload(first, second, examples, canonical)) is None:
+        if sample_retrieval.decision_for(decision_payload(second, first, examples, canonical)) is not None:
             return second, first
     return first, second
 
@@ -298,12 +250,16 @@ def _upsert_tasks(client, name, rows, config, errors=None):
         # A revoked worker cannot resurrect a vector after another process purges it.
         check_lease()
         saved = existing.get(point_id)
-        if saved and saved.get("content_hash") == payload["content_hash"]:
+        if saved and saved.get("content_hash") == payload["content_hash"] and not saved.get("packaged_fallback"):
             if saved != payload:
                 client.overwrite_payload(name, payload=payload, points=[point_id])
             continue
         try:
-            vector = embed_task(row, config)
+            # A vector recovered during an outage should get a fresh live attempt on the next forecast.
+            with capture_fallbacks() as sources:
+                vector = embed_task(row, config)
+            if "embedding" in sources:
+                payload["packaged_fallback"] = True
         except ModelUnavailable as error:
             if errors is None:
                 raise

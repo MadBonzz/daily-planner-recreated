@@ -44,7 +44,7 @@ The [benchmark retrieval data](retrieval/) includes a CSV for each of the 119 or
 
 ## Verify the five Dev profiles
 
-The demo combines exact cached Qwen and Kev outputs from the benchmark with [new model outputs](demo/models/). The content, model, query role and decision prompt determine whether a cached result applies. The final forecast and activity classification go to your configured forecast endpoint. Editing task text, attaching another document, reviewing relevance, or changing activity labels can produce a new local-model request.
+The demo combines exact cached Qwen and Kev outputs from the benchmark with [new model outputs](demo/models/). The submitted content, model, query role and decision prompt determine whether a packaged result applies. The Bionic launcher tries the live embedding first and uses a valid vector even if Bionic truncated the input. A failed live lookup can fall back to a packaged result for the exact request. The final forecast and activity classification go to your configured forecast endpoint. Editing task text, attaching another document, reviewing relevance, or changing activity labels can produce a new local-model request.
 
 Run the following command to reconstruct the authored requests and check their coverage without calling a model:
 

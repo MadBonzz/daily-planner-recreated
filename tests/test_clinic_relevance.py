@@ -1,5 +1,6 @@
 """Relevance is decided from each task pair, including pairs with identical titles."""
 
+import json
 from unittest.mock import patch
 
 import pytest
@@ -107,29 +108,22 @@ def test_pair_upgrades_sampled_documents_from_legacy_or_fixed_tasks(tmp_path, mo
     assert all(store.get_task(row["id"])["pdf_text_version"] == 1 for row in judge.call_args.args)
 
 
-def test_native_lmstudio_prevents_silent_truncation_before_embedding(monkeypatch):
+def test_unmanaged_embedding_sends_the_full_input_directly_to_the_endpoint(monkeypatch):
     from io import BytesIO
-    from types import SimpleNamespace
-    from urllib.parse import urlsplit
+
+    text = "underwater " * 5000
+    calls = []
 
     class NativeClient:
-        def open(self, endpoint, timeout):
-            assert endpoint.endswith("/api/v1/models")
-            return BytesIO(b'{"models":[{"loaded_instances":[{"id":"qwen3-embedding-0.6b","config":{"context_length":16}}]}]}')
+        def open(self, request, timeout):
+            calls.append((request.full_url, request.get_method(), json.loads(request.data)))
+            return BytesIO(b'{"data":[{"embedding":[0.5,0.5]}],"usage":{"prompt_tokens":16}}')
 
-    captured = {}
-
-    def count(cmd, **kwargs):
-        captured.update(kwargs)
-        return SimpleNamespace(stdout=b"[20,16]")
-
-    monkeypatch.setattr(retrieval.subprocess, "run", count)
-    input_text = "underwater " * 20
-    with pytest.raises(retrieval.DocumentTooLong, match="20 text tokens"):
-        retrieval._check_embedding_context(urlsplit("http://localhost:1234/v1/embeddings"),
-                                           {"model": retrieval.EMBEDDING_MODEL, "input": input_text}, NativeClient(), 5)
-    assert captured["input"] == input_text.encode()
-    assert not any(k in captured["env"] for k in ("HTTPS_PROXY", "ALL_PROXY", "http_proxy"))
+    monkeypatch.setattr(retrieval, "build_opener", lambda *args: NativeClient())
+    endpoint = "http://localhost:1235/v1/embeddings"
+    payload = {"model": "custom-embedding-model", "input": text}
+    assert retrieval._local_post(endpoint, payload, {})["data"][0]["embedding"] == [0.5, 0.5]
+    assert calls == [(endpoint, "POST", payload)]
 
 
 def test_either_qwen_query_can_qualify_a_pair_and_each_candidate_appears_once(tmp_path, monkeypatch):

@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS task_relations (
     left_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
     right_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
     related INTEGER CHECK (related IN (0, 1)),
+    packaged_fallback INTEGER NOT NULL DEFAULT 0,
     refresh_due INTEGER NOT NULL DEFAULT 0,
     token TEXT,
     lease_end REAL,
@@ -457,6 +458,8 @@ class PlannerStore:
                 db.execute("ALTER TABLE periods ADD COLUMN workspace_run TEXT")
             if "workspace_only" not in {row["name"] for row in db.execute("PRAGMA table_info(prediction_jobs)")}:
                 db.execute("ALTER TABLE prediction_jobs ADD COLUMN workspace_only INTEGER NOT NULL DEFAULT 0")
+            if "packaged_fallback" not in {row["name"] for row in db.execute("PRAGMA table_info(task_relations)")}:
+                db.execute("ALTER TABLE task_relations ADD COLUMN packaged_fallback INTEGER NOT NULL DEFAULT 0")
             history_columns = {row["name"] for row in db.execute("PRAGMA table_info(prediction_history)")}
             if "snapshot" not in history_columns:
                 db.execute("ALTER TABLE prediction_history ADD COLUMN snapshot TEXT")
@@ -493,6 +496,18 @@ class PlannerStore:
             if not _get_setting(db, "retired_completed_pairs", False):
                 db.execute(_OBSOLETE_PAIRS)
                 _save_setting(db, "retired_completed_pairs", True)
+            if not _get_setting(db, "retried_qwen_tokenizer_failures", False):
+                # Older Mac runs saved the tokenizer failure as a finished forecast.
+                # Queue a refresh without replacing a running job or the original estimate.
+                failed = db.execute("""
+                    SELECT t.id FROM tasks t
+                    WHERE t.archived=0 AND t.fixed_duration=0 AND t.status!='completed'
+                      AND instr(json_extract(t.prediction, '$.retrieval_error'), ?) > 0
+                      AND NOT EXISTS (SELECT 1 FROM prediction_jobs j WHERE j.task_id=t.id)
+                """, ("Could not verify the complete input with the local model tokenizer.",)).fetchall()
+                for task in failed:
+                    _enqueue_prediction(db, task["id"])
+                _save_setting(db, "retried_qwen_tokenizer_failures", True)
             if not _get_setting(db, "continue_later_is_pause", False):
                 db.execute("""UPDATE sessions SET stopped_at=NULL WHERE id IN (
                               SELECT MAX(s.id) FROM sessions s JOIN tasks t ON s.task_id=t.id
@@ -772,7 +787,7 @@ class PlannerStore:
                                       AND right_id=? AND token=? AND lease_end>?""",
                                    (now + lease_seconds, *pair, token, now)).rowcount)
 
-    def resolve_relation(self, pair, token, related, *, examples=()):
+    def resolve_relation(self, pair, token, related, *, examples=(), packaged_fallback=False):
         """Commit a binary decision, or leave an unavailable model's pair for retry."""
         if related is not None and not isinstance(related, bool):
             raise ValueError("A relevance decision must be a boolean.")
@@ -787,8 +802,8 @@ class PlannerStore:
                 db.execute("""UPDATE task_relations SET token=NULL,lease_end=NULL,failures=failures+1,retry_at=?
                               WHERE left_id=? AND right_id=?""", (now + delay, *pair))
             else:
-                db.execute("""UPDATE task_relations SET related=?,refresh_due=0,token=NULL,lease_end=NULL
-                              WHERE left_id=? AND right_id=?""", (int(related), *pair))
+                db.execute("""UPDATE task_relations SET related=?,packaged_fallback=?,refresh_due=0,token=NULL,lease_end=NULL
+                              WHERE left_id=? AND right_id=?""", (int(related), int(packaged_fallback), *pair))
                 db.execute("DELETE FROM task_relation_sources WHERE left_id=? AND right_id=?", pair)
                 source_ids = {example[key] for example in examples
                               for key in ("target_id", "candidate_id") if example.get(key)}
@@ -831,7 +846,7 @@ class PlannerStore:
             # refresh must use the same verdict that triggered it, even if the newly
             # completed task was originally the target of the symmetric matrix check.
             peers = {row["source_id"]: row for row in db.execute("""
-                SELECT h.source_id,r.related,coalesce((SELECT json_group_array(s.source_id)
+                SELECT h.source_id,r.related,r.packaged_fallback,coalesce((SELECT json_group_array(s.source_id)
                   FROM task_relation_sources s WHERE s.left_id=r.left_id AND s.right_id=r.right_id),'[]') AS examples
                 FROM prediction_history h JOIN task_relations r
                   ON r.left_id=min(h.task_id,h.source_id) AND r.right_id=max(h.task_id,h.source_id)
@@ -842,6 +857,8 @@ class PlannerStore:
                 peer = peers.get(source["id"])
                 if peer is not None:
                     source["matrix_related"] = bool(peer["related"])
+                    if peer["packaged_fallback"]:
+                        source["matrix_packaged_fallback"] = True
                     source["matrix_feedback_ids"] = json.loads(peer["examples"])
                 snapshot = snapshots[source["id"]]
                 if snapshot is not None:

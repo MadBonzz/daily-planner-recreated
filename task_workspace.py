@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from model_client import ModelUnavailable, chat_json, forecast_endpoint, planner_settings
 from pdf_reader import requested_pages
-from sample_retrieval import decision_hash
+from sample_retrieval import decision_hash, prefer_packaged
 import workspace_eligibility as eligibility
 
 
@@ -59,7 +59,7 @@ def availability(store, task, *, retry=False):
             return None
     if row and row["eligible"] is not None:
         return dict(row)
-    packaged = eligibility.packaged(fingerprint)
+    packaged = eligibility.packaged(fingerprint) if prefer_packaged("decision", request["model"], config) else None
     if packaged is not None:
         _record(store, task["id"], fingerprint, packaged, "Packaged " + request["model"], revision=task.get("edit_revision", 0))
         with store._db() as db:

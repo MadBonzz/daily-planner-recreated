@@ -1,15 +1,21 @@
 import io
 import json
 import multiprocessing
+import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
 
+import estimator
 import model_client
+import retrieval
+import sample_retrieval
+from examples.estimation.package_retrieval import inputs
+from examples.estimation.run import histories
+from fallback_provenance import capture_fallbacks
 from examples.estimation import check_local_models
 
 
@@ -45,7 +51,12 @@ class BionicHandler(BaseHTTPRequestHandler):
                           **self.server.instance_options.get(instance_id, {})}}
                          for instance_id, (installed, context) in self.server.loaded.items()
                          if key == installed]
-            inventory.append({"key": key, "type": kind, "loaded_instances": instances})
+            entry = {"key": key, "type": kind, "loaded_instances": instances}
+            if key == QWEN:
+                # The native embedding inventory omits architecture and separates trained and loaded context.
+                entry.update(publisher="Qwen", display_name="Qwen3 Embedding 0.6B", format="gguf",
+                             max_context_length=32768, quantization={"name": "Q8_0", "bits_per_weight": 8})
+            inventory.append(entry)
         self.reply({"models": inventory})
 
     def do_POST(self):
@@ -85,11 +96,24 @@ class BionicHandler(BaseHTTPRequestHandler):
         if instance_id not in server.loaded:
             return self.reply({"error": "instance unavailable"}, 404)
         if self.path == "/v1/embeddings":
-            return self.reply({"data": [{"embedding": [0.5] * 1024}]})
+            text = body["input"]
+            server.embedding_inputs.append(text)
+            if server.reject_embeddings:
+                return self.reply({"error": {"type": "context_length_exceeded", "message": "Input exceeds context."}}, 400)
+            # Simulate a backend that embeds only the prefix fitting its context.
+            words = text.split()
+            context = server.loaded[instance_id][1]
+            if len(words) > context:
+                server.truncated_inputs.append(text)
+            return self.reply({"data": [{"embedding": [0.03125] * 1024}],
+                               "usage": {"prompt_tokens": min(len(words), context)}})
         if self.path == "/v1/systemone":
             return self.reply({"answers": {"relevant": {"noul": 0.9}}})
         if self.path == "/v1/chat/completions":
-            return self.reply({"choices": [{"message": {"content": json.dumps(FORECAST)}, "finish_reason": "stop"}]})
+            answer = dict(FORECAST)
+            if "comparisons" in body["response_format"]["json_schema"]["schema"]["properties"]:
+                answer["comparisons"] = [{"slot": 1, "reason": "Both tasks compare printed checklists with a master copy."}]
+            return self.reply({"choices": [{"message": {"content": json.dumps(answer)}, "finish_reason": "stop"}]})
         self.reply({}, 404)
 
 
@@ -98,6 +122,9 @@ def bionic(monkeypatch, tmp_path):
     server = ThreadingHTTPServer(("127.0.0.1", 0), BionicHandler)
     server.loaded = {}
     server.events = []
+    server.embedding_inputs = []
+    server.truncated_inputs = []
+    server.reject_embeddings = False
     server.instance_options = {}
     server.load_requests = []
     server.reject_parallel = False
@@ -134,14 +161,15 @@ def check(role):
     return check_local_models.check(role, model_client.planner_settings())
 
 
-def test_full_local_check_switches_once_per_role_and_reuses_bonsai(bionic, monkeypatch):
-    tokenizer_calls = []
+@pytest.fixture
+def sdk_unavailable(monkeypatch):
+    def failed_count(args, **kwargs):
+        raise subprocess.CalledProcessError(1, args, stderr=b"SDK protocol mismatch")
 
-    def count_tokens(args, **kwargs):
-        tokenizer_calls.append(args)
-        return SimpleNamespace(stdout=b"[200, 2048]")
+    monkeypatch.setattr(subprocess, "run", failed_count)
 
-    monkeypatch.setattr("retrieval.subprocess.run", count_tokens)
+
+def test_full_local_check_switches_once_per_role_and_reuses_bonsai(bionic, sdk_unavailable):
     assert "1024 dimensions" in check("embedding")
     assert "as related" in check("decision")
     assert "validated forecast of 20 min" in check("forecast")
@@ -152,8 +180,41 @@ def test_full_local_check_switches_once_per_role_and_reuses_bonsai(bionic, monke
         ("load", BONSAI, 8192), ("/v1/chat/completions", BONSAI + ":1"), ("/v1/chat/completions", BONSAI + ":1"),
     ]
     assert [body.get("parallel") for body in bionic.load_requests] == [None, None, 1]
-    assert len(tokenizer_calls) == 1
-    assert tokenizer_calls[0][-2:] == [QWEN + ":1", "--loaded-only"]
+
+
+def test_regular_forecast_uses_both_qwen_queries_and_past_timing_without_sdk(bionic, sdk_unavailable, tmp_path):
+    task = {**check_local_models.TASK, "id": "new", "pdf_text": "Compare each checklist annotation. " * 800}
+    prior = {**check_local_models.PRIOR, "id": "prior", "estimate_minutes": 20,
+             "actual_seconds": 1500, "status": "completed"}
+    result = estimator.predict(task, [prior], tmp_path / "index")
+    assert result["provenance"]["decision"] == "direct"
+    assert "retrieval_error" not in result
+    assert not result.get("retrieval_fallbacks")
+    assert result["used_task_ids"] == ["prior"]
+    assert result["evidence"][0]["actual_min"] == 25
+    assert bionic.embedding_inputs == [retrieval.embedding_input(task, query=True),
+                                       retrieval.embedding_input(task), retrieval.embedding_input(prior)]
+    assert bionic.truncated_inputs == bionic.embedding_inputs[:2]
+    assert [event[1] for event in bionic.events if event[0] == "load"] == [QWEN, KEV, BONSAI]
+
+
+def test_http_rejection_reuses_only_an_exact_packaged_vector(bionic, sdk_unavailable):
+    task = inputs(histories(None)[0])["bridge-proof"]
+    bionic.reject_embeddings = True
+    for query in (False, True):
+        text = retrieval.embedding_input(task, query)
+        archived = sample_retrieval.vector_for(retrieval.EMBEDDING_MODEL, text)
+        assert archived is not None
+        with capture_fallbacks() as used:
+            assert retrieval.embed_task(task, query=query) == archived
+            assert used == {"embedding"}
+        assert bionic.embedding_inputs[-1] == text
+
+    changed = {**task, "description": "Check a newly recorded hardware trace."}
+    with capture_fallbacks() as used, pytest.raises(retrieval.DocumentTooLong):
+        retrieval.embed_task(changed)
+    assert not used
+    assert bionic.embedding_inputs[-1] == retrieval.embedding_input(changed)
 
 
 def test_retains_existing_target_and_releases_other_loaded_role(bionic):
