@@ -11,6 +11,7 @@ fi
 base_url=http://127.0.0.1:1235/v1
 export PLANNER_SINGLE_MODEL=1
 export PLANNER_KEEP_MODELS_LOADED=0
+export PLANNER_PREFER_PRECOMPUTED=0
 export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
 export PLANNER_EMBEDDING_MODEL_KEY=text-embedding-qwen3-embedding-0.6b
 export PLANNER_EMBEDDING_ENDPOINT="$base_url/embeddings"
@@ -27,8 +28,13 @@ check=0
 for option in "$@"; do
     case "$option" in
         --resident) export PLANNER_KEEP_MODELS_LOADED=1 ;;
+        --precomputed)
+            export PLANNER_PREFER_PRECOMPUTED=1
+            export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b
+            export PLANNER_DECISION_MODEL=kev-4b
+            ;;
         --check) check=1 ;;
-        *) echo "Usage: bash run-bionic-mac.sh [--resident] [--check]" >&2; exit 2 ;;
+        *) echo "Usage: bash run-bionic-mac.sh [--precomputed] [--resident] [--check]" >&2; exit 2 ;;
     esac
 done
 if [[ "$check" == 1 ]]; then

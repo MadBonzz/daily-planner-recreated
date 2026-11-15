@@ -50,13 +50,14 @@ def packaged_model(role, model, config):
 
 
 def prefer_packaged(role, model, config):
-    return config.get("PLANNER_SINGLE_MODEL") != "1" and packaged_model(role, model, config) == model
+    use_saved = config.get("PLANNER_SINGLE_MODEL") != "1" or config.get("PLANNER_PREFER_PRECOMPUTED") == "1"
+    return use_saved and packaged_model(role, model, config) == model
 
 
 def resolve(role, model, config, lookup, infer):
     """Return the result and source. A live failure may reuse only a matched input."""
     canonical = packaged_model(role, model, config)
-    package_first = canonical == model and config.get("PLANNER_SINGLE_MODEL") != "1"
+    package_first = prefer_packaged(role, model, config)
     if package_first:
         hit = lookup(canonical)
         if hit is not None:  # A false Kev decision is a complete result.

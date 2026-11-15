@@ -58,6 +58,15 @@ Leave that Terminal and Bionic open. Visit <http://127.0.0.1:8501> and choose **
 
 **Check the setup separately.** From the repo, run `bash run-bionic-mac.sh --check`. It checks Qwen, Kev and Bonsai in sequence, prints a 1,024-dimensional embedding, a related/unrelated decision and a forecast in minutes, then exits. The normal launch command starts the app directly.
 
+**Faster Mac demo with precomputed Qwen and Kev.** Leave Bionic running on port 1235. Stop Streamlit with Ctrl+C, then run the following in the repository:
+
+```bash
+git pull --ff-only
+bash run-bionic-mac.sh --precomputed
+```
+
+Open the same editable Dev history. Exact matches use the bundled Qwen embeddings and Kev decisions immediately. Bonsai still generates fresh forecasts and chat replies locally. New or edited inputs without a bundled match use the local Qwen or Kev model as needed. To prefer live Qwen and Kev again, restart without `--precomputed`. Both launches use the same saved tasks and timers.
+
 | Stage | Bionic model key | ID used by the planner | Context requested |
 | --- | --- | --- | ---: |
 | Embed task text | `text-embedding-qwen3-embedding-0.6b` | `qwen3-embedding-0.6b-live` | 4,096 |
