@@ -1,0 +1,92 @@
+name: Apple Silicon local model checks
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/mac-local-models.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  local-model:
+    runs-on: macos-15
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - role: embedding
+            repo: Qwen/Qwen3-Embedding-0.6B-GGUF
+            revision: 370f27d7550e0def9b39c1f16d3fbaa13aa67728
+            file: Qwen3-Embedding-0.6B-Q8_0.gguf
+            model: qwen3-embedding-0.6b
+            context: 8192
+          - role: decision
+            repo: ggml-org/Kev-4B-GGUF
+            revision: f4624b6bb7072f1bab726a622c1cad3f96030b9e
+            file: Kev-4B-Q4_K_M.gguf
+            model: kev-4b
+            context: 4096
+          - role: forecast
+            tag: 4b
+            repo: prism-ml/Ternary-Bonsai-4B-gguf
+            revision: a3eb42bafe873f9686bc97486c43b72ef7d75ec8
+            file: Ternary-Bonsai-4B-Q2_0_g64.gguf
+            model: ternary-bonsai-4b
+            context: 6144
+          - role: forecast
+            tag: 9b
+            repo: prism-ml/Ternary-Bonsai-2-9B-gguf
+            revision: 82265ccc78ddaac4700286a35e9badcc32376dd9
+            file: Ternary-Bonsai-2-9B-Q2_0.gguf
+            model: ternary-bonsai-2-9b
+            context: 6144
+    env:
+      MODEL_REPO: ${{ matrix.repo }}
+      MODEL_REVISION: ${{ matrix.revision }}
+      MODEL_FILE: ${{ matrix.file }}
+      MODEL_ID: ${{ matrix.model }}
+      MODEL_CONTEXT: ${{ matrix.context }}
+      ROLE: ${{ matrix.role }}
+      PAUSE_TAG: ${{ matrix.tag }}
+      PLANNER_MODEL_ENDPOINT: http://127.0.0.1:1234/v1/chat/completions
+      PLANNER_MODEL_TIMEOUT_SECONDS: '600'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install the planner and headless LM Studio
+        run: |
+          python -m pip install -r requirements.txt
+          curl -fsSL --retry 3 https://lmstudio.ai/install.sh | bash
+          echo "$HOME/.lmstudio/bin" >> "$GITHUB_PATH"
+      - name: Load the pinned GGUF and start the server
+        run: |
+          lms daemon up
+          lms runtime get llama.cpp --yes
+          curl -fL --retry 3 "https://huggingface.co/$MODEL_REPO/resolve/$MODEL_REVISION/$MODEL_FILE" -o "$RUNNER_TEMP/$MODEL_FILE"
+          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --yes
+          lms load "$MODEL_FILE" --identifier "$MODEL_ID" --context-length "$MODEL_CONTEXT" --gpu off
+          lms server start --bind 127.0.0.1 --port 1234
+          lms ps
+      - name: Exercise the planner endpoint
+        run: |
+          export PLANNER_MODEL="$MODEL_ID"
+          python -m examples.estimation.check_local_models --component "$ROLE"
+      - name: Run 48 pause conversations
+        if: matrix.role == 'forecast'
+        run: |
+          export PLANNER_MODEL="$MODEL_ID"
+          # A repeated CI run must make fresh requests even when the repo contains earlier receipts.
+          rm -rf "data/results/component-scale/pause/runs/$PAUSE_TAG"
+          python -m examples.estimation.scale_pause run "$PAUSE_TAG" --workers 1
+          python -m examples.estimation.scale_pause score "$PAUSE_TAG"
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.role == 'forecast'
+        with:
+          name: mac-pause-${{ matrix.tag }}
+          path: data/results/component-scale/pause/runs/${{ matrix.tag }}
+          if-no-files-found: ignore

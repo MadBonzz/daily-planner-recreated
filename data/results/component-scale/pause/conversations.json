@@ -1,0 +1,922 @@
+[
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-deposit",
+    "elapsed_minutes": 47,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Does the archive prefer a WAV or an MP3?"
+      },
+      {
+        "role": "assistant",
+        "content": "The checklist calls for a WAV."
+      },
+      {
+        "role": "user",
+        "content": "Hum gone, levels checked. The WAV is in the archive folder now. That's the last thing on my list."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-pass",
+    "elapsed_minutes": 16,
+    "messages": [
+      {
+        "role": "user",
+        "content": "My first filter pass removed the mains hum in the introduction; the interview itself still has the buzz. Any trick for that?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-clip",
+    "elapsed_minutes": 23,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The source breaks up at 03:14 every time I render it. I just found a second capture and will have to align it by hand."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-manual",
+    "elapsed_minutes": 9,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Quoting the manual for discussion: ‘I exported the corrected WAV and deposited it.’ That's the manual's narrator, not my recording."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-session",
+    "elapsed_minutes": 34,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The session clock says 34 minutes but I went downstairs and forgot it. Can you remind me of the target format?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "archive",
+    "task": {
+      "title": "Restore an oral-history clip",
+      "description": "Clean the hum in the interview, normalize the voice, export a WAV and place the copy in the archive folder.",
+      "category": "Audio",
+      "estimate_minutes": 55
+    },
+    "id": "archive-again",
+    "elapsed_minutes": 25,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I've cleaned the opening minute."
+      },
+      {
+        "role": "assistant",
+        "content": "Good place to pause."
+      },
+      {
+        "role": "user",
+        "content": "Same status as last time: I've cleaned the opening minute."
+      }
+    ],
+    "new_message_start": 2
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-ride",
+    "elapsed_minutes": 51,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Just got back from the courtyard. Three clean stops after the cable swap; the brake job is done."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-housing",
+    "elapsed_minutes": 14,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The old inner cable is out and I threaded the replacement through the housing. Haven't tightened the pinch bolt yet."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-ferrule",
+    "elapsed_minutes": 24,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The barrel adjuster is set. I need exactly 12 more active minutes to trim the end and do the stopping test."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-spare",
+    "elapsed_minutes": 12,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Fixed the squeak on my daughter's blue scooter. That's another job; I haven't even gone over to the bicycle yet."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-if",
+    "elapsed_minutes": 18,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Suppose I had already tensioned the cable. What would the lever travel feel like?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "bicycle",
+    "task": {
+      "title": "Fit a new rear brake cable",
+      "description": "Remove the old cable, route and tension the replacement, then do a stopping test in the courtyard.",
+      "category": "Repair",
+      "estimate_minutes": 45
+    },
+    "id": "bicycle-assistant",
+    "elapsed_minutes": 5,
+    "messages": [
+      {
+        "role": "user",
+        "content": "How do I keep the return spring centred?"
+      },
+      {
+        "role": "assistant",
+        "content": "I wrote out the adjustment sequence for you and checked the order twice."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-upload",
+    "elapsed_minutes": 62,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Caption file uploaded beside the orientation film. I played it from start to credits with speaker tags showing. Nothing else is due."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-cue",
+    "elapsed_minutes": 19,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Here are my timed opening cues: 00:00:05.200 --> 00:00:08.011 [Curator] Welcome inside. I still have the second half to time."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-rate",
+    "elapsed_minutes": 30,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The published cut runs at 25 fps, not the 24 fps copy I used. My last cue ends two seconds early. I have to retime the last reel."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-mail",
+    "elapsed_minutes": 6,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The curator's email says 'The captions are uploaded.' She's describing last year's welcome film. Does that change the format for this year's?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-tab",
+    "elapsed_minutes": 22,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Subtitle Edit has been open since lunch. That is the only update I have."
+      },
+      {
+        "role": "assistant",
+        "content": "Would you like a refresher on timing?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "captions",
+    "task": {
+      "title": "Caption the museum orientation film",
+      "description": "Time the dialogue cues, mark speaker changes and upload an accessible caption file with the short film.",
+      "category": "Media",
+      "estimate_minutes": 75
+    },
+    "id": "captions-mark",
+    "elapsed_minutes": 13,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I saw a green check near the file, but I can't tell whether it was for captions or the thumbnail. How can I inspect it?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-ledger",
+    "elapsed_minutes": 58,
+    "messages": [
+      {
+        "role": "user",
+        "content": "All three drawer counts are in the ledger. I sent the finished copy to the coordinator from the shed."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-drawer",
+    "elapsed_minutes": 28,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The red drawer totals 37 envelopes. I entered its cultivars in the ledger; the other two drawers are still closed."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-recount",
+    "elapsed_minutes": 39,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I found two envelopes with identical accession labels but different beans. I've set them aside and must cross-check the accession cards before closing the ledger."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-wish",
+    "elapsed_minutes": 8,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Imagine we'd finished all three drawers before the weekend. Would the coordinator expect a backup copy?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-prior",
+    "elapsed_minutes": 32,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I counted the red drawer."
+      },
+      {
+        "role": "assistant",
+        "content": "You have the other drawers left."
+      },
+      {
+        "role": "user",
+        "content": "Can you tell me how to record a torn label?"
+      }
+    ],
+    "new_message_start": 2
+  },
+  {
+    "family": "seedbank",
+    "task": {
+      "title": "Inventory the bean seed envelopes",
+      "description": "Count the bean envelopes in three drawers, record cultivar and count, and send the completed ledger to the seed-bank coordinator.",
+      "category": "Volunteer",
+      "estimate_minutes": 65
+    },
+    "id": "seedbank-duration",
+    "elapsed_minutes": 6,
+    "messages": [
+      {
+        "role": "user",
+        "content": "My calendar leaves me 15 minutes before the bus. I have no idea how far the inventory has got. Can you suggest a counting order?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-sent",
+    "elapsed_minutes": 35,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The producer just acknowledged my packet: all six entries, matching scans, no corrections needed. I've closed the reimbursement task."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-balance",
+    "elapsed_minutes": 12,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Four receipts match the log down to the cent. The petrol-station sandwich and the wrap from Tuesday are the two I haven't matched."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-minutes",
+    "elapsed_minutes": 26,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The amounts balance now. From here I expect 8 more minutes total to scan the last slip and send the packet."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-example",
+    "elapsed_minutes": 7,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The help page has a sample memo reading 'All six receipts matched. Packet sent.' I copied it as a formatting example."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-guess",
+    "elapsed_minutes": 15,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I think someone might have sent something to the producer, but I don't know who or which envelope. Where can I check?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "expenses",
+    "task": {
+      "title": "Reconcile a film crew expense envelope",
+      "description": "Match the six meal receipts to the log, attach scans, and send the reimbursement packet to the producer.",
+      "category": "Administration",
+      "estimate_minutes": 40
+    },
+    "id": "expenses-future",
+    "elapsed_minutes": 3,
+    "messages": [
+      {
+        "role": "user",
+        "content": "If I get the afternoon free I'll scan everything in one batch. Would that be acceptable?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-live",
+    "elapsed_minutes": 82,
+    "messages": [
+      {
+        "role": "user",
+        "content": "All four pins are checked on the public route map. I opened the published link on a second phone and every pin is visible. That's the map delivered."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-bridge",
+    "elapsed_minutes": 33,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I pinned and photographed the towpath and bridge taps. The two by the basin need another pass."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-closure",
+    "elapsed_minutes": 41,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The lock gate is chained and the path is closed. At the gate now. I'll need to walk around via Mill Road to reach the next tap."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-volunteer",
+    "elapsed_minutes": 14,
+    "messages": [
+      {
+        "role": "user",
+        "content": "My partner mapped four taps for the school running track. I'm looking at their map as an example for the canal one."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-directions",
+    "elapsed_minutes": 10,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Which canal tap would you visit first?"
+      },
+      {
+        "role": "assistant",
+        "content": "I placed four example locations in the answer below. Use these as a starting point."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "watermap",
+    "task": {
+      "title": "Map refill taps along the canal",
+      "description": "Check four refill taps along the route, pin their locations, and publish the annotated route map.",
+      "category": "Fieldwork",
+      "estimate_minutes": 90
+    },
+    "id": "watermap-echo",
+    "elapsed_minutes": 48,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The bridge tap is pinned."
+      },
+      {
+        "role": "assistant",
+        "content": "Understood."
+      },
+      {
+        "role": "user",
+        "content": "The bridge tap is pinned. Am I supposed to record the council asset number too?"
+      }
+    ],
+    "new_message_start": 2
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-shelf",
+    "elapsed_minutes": 43,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Board is on kiln shelf B, with three coated, numbered tiles. That's everything I was responsible for today; firing belongs to the technician."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-weights",
+    "elapsed_minutes": 17,
+    "messages": [
+      {
+        "role": "user",
+        "content": "My mix log now reads A 60/40, B 55/45, C 50/50. I weighed those batches myself. The tiles aren't coated yet."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-sieve",
+    "elapsed_minutes": 21,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I reset the scale and all three mixes are ready. Coating, labeling and shelving should take me about 18 minutes altogether from now."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-manual",
+    "elapsed_minutes": 4,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Studio sheet: 'Set three coated tiles on shelf B.' That's the instruction I'm trying to understand. Does B mean bisque?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-picture",
+    "elapsed_minutes": 12,
+    "messages": [
+      {
+        "role": "user",
+        "content": "There's an image of a board on my screen but I can't tell whose test tiles they are. How can I read the stamped codes?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "clay",
+    "task": {
+      "title": "Prepare a glaze test board",
+      "description": "Weigh three test mixtures, coat labeled tiles and set the board on the kiln shelf for the next firing.",
+      "category": "Studio",
+      "estimate_minutes": 57
+    },
+    "id": "clay-elapsed",
+    "elapsed_minutes": 36,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The kiln timer shows 18 minutes but it is counting a different firing. Is shelf B the right height for this board?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-printer",
+    "elapsed_minutes": 44,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Phone number corrected. I signed off the notices and the print shop replied that the final PDF is on their press queue. My part is finished."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-proof",
+    "elapsed_minutes": 19,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Finished proofing the market and allotment notices. I still need to verify the number in the library notice. Can you show me a clean way to set it?"
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-wrongnum",
+    "elapsed_minutes": 27,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The library's new number goes to the old closed branch. I rang it myself. I'm waiting on the branch desk for the right contact before I export the PDF."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-proofset",
+    "elapsed_minutes": 5,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Would it save time if I proofread from a paper copy?"
+      },
+      {
+        "role": "assistant",
+        "content": "It might. I can outline the steps."
+      }
+    ],
+    "new_message_start": 0
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-repeated",
+    "elapsed_minutes": 22,
+    "messages": [
+      {
+        "role": "user",
+        "content": "I've fixed the market notice."
+      },
+      {
+        "role": "assistant",
+        "content": "What else needs checking?"
+      },
+      {
+        "role": "user",
+        "content": "Nothing new since then. Can you explain the print bleed setting?"
+      }
+    ],
+    "new_message_start": 2
+  },
+  {
+    "family": "newsletter",
+    "task": {
+      "title": "Send the neighborhood print newsletter",
+      "description": "Proofread the local notices, insert the corrected phone number, and send the final printer PDF to the print shop.",
+      "category": "Editing",
+      "estimate_minutes": 50
+    },
+    "id": "newsletter-rumour",
+    "elapsed_minutes": 10,
+    "messages": [
+      {
+        "role": "user",
+        "content": "The shop's website just says 'received'. I haven't entered our order number and it could be any job. Is there a way to look it up?"
+      }
+    ],
+    "new_message_start": 0
+  }
+]
