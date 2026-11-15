@@ -1,0 +1,17 @@
+{
+  "history": "06-neighborhood-clinic",
+  "anchor_day": "2026-11-15",
+  "mode": "configured",
+  "requested_actions": 40,
+  "total_actions": 40,
+  "schedule_sha256": "e9e1a246821e78de21fdfa09c1b05dcb3dc1ad3860788cc8d688d2d155d03a62",
+  "fixture_sha256": "844ea47ce85ec38890562505198f5c066dc0892d23b3a0de4e3b1ca80c79969c",
+  "activitywatch_sha256": "0fe17f044930af8d5f1c9e5df14c6eb0fd6e6d850a7e0c587cac96fbe40b4962",
+  "forecast_model": {
+    "provider": "Cohere",
+    "model": "command-r7b-12-2024"
+  },
+  "embedding_model": "qwen3-embedding-0.6b",
+  "decision_model": "kev-4b",
+  "relevance_threshold": 0.7
+}

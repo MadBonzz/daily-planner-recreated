@@ -877,6 +877,7 @@ class PlannerStore:
             db.execute("DELETE FROM settings WHERE key=?", (f"dev_activity_{task_id}",))
             db.execute("INSERT OR IGNORE INTO vector_purges VALUES (?)", (task_id,))
             _save_setting(db, "memory_revision", _get_setting(db, "memory_revision", 0) + 1)
+            affected_forecasts = []
             for row in db.execute("SELECT id, created_at, completed_at, prediction, creation_prediction, report FROM tasks").fetchall():
                 for column in ("prediction", "creation_prediction"):
                     if row[column] is None:
@@ -898,6 +899,8 @@ class PlannerStore:
                                 "basis", "provenance") if key in prediction}
                         safe.update(evidence=[], related_tasks=[], explanation="Supporting history was removed from memory.")
                         db.execute(f"UPDATE tasks SET {column}=? WHERE id=?", (json.dumps(safe), row["id"]))
+                        if column == "prediction":
+                            affected_forecasts.append(row["id"])
                 if row["report"] and task_id in json.loads(row["report"]).get("feedback_source_ids", []):
                     db.execute("UPDATE tasks SET report=NULL WHERE id=?", (row["id"],))
                     _enqueue_report(db, row["id"])
@@ -909,6 +912,8 @@ class PlannerStore:
                           WHERE snapshot IS NOT NULL AND EXISTS
                           (SELECT 1 FROM json_each(snapshot,'$.report.feedback_source_ids') WHERE value=?)""", (task_id,))
             db.execute("""UPDATE report_jobs SET generation=lower(hex(randomblob(16))) WHERE error IS NULL""")
+            for target_id in affected_forecasts:
+                _queue_related_target(db, target_id)
 
     def pending_vector_purges(self):
         with self._db() as db:

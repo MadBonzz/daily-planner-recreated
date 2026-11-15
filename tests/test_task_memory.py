@@ -67,6 +67,20 @@ def test_soft_delete_preserves_learning_then_forget_cancels_jobs_and_removes_evi
     assert not store.pending_vector_purges()
 
 
+def test_forgetting_a_comparison_refreshes_only_the_affected_open_forecast(tmp_path):
+    store = PlannerStore(tmp_path)
+    source = create(store, "Old draft")
+    pred = {"point_min": 24, "evidence": [], "related_tasks": [{"task_id": source["id"], "title": source["title"]}]}
+    target = store.create_task(title="Revise draft", description="Revise the document", estimate_minutes=20,
+                               day=date.today(), prediction=pred)
+    unrelated = create(store, "Sweep floor")
+    store.delete_task(source["id"])
+    assert store.get_task(target["id"])["estimate_updating"]
+    assert not store.get_task(unrelated["id"])["estimate_updating"]
+    job = store.claim_prediction()
+    assert job["task"]["id"] == target["id"] and job["history"] == []
+
+
 def test_card_trash_cancel_and_default_confirm(tmp_path):
     store = PlannerStore(tmp_path)
     task = create(store, "Inspect switch")
