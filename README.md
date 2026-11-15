@@ -89,6 +89,28 @@ Expect `returned 1024 dimensions`. The project’s Apple Silicon test loaded the
 | Unknown model | Run `curl -sS http://127.0.0.1:1235/api/v1/models \| python -m json.tool`. Use the Qwen embedding entry’s `key` in the load request. |
 | The runtime is selected but the cause is still unclear | In a second Terminal, run `lms log stream --source runtime`. Repeat the HTTP load in the first Terminal and capture its response body and the first engine error. If your CLI does not recognize the runtime log source, use `lms log stream --source server`. |
 
+##### HTTP 500 model_load_failed on the Mac
+
+If the response says `Failed to load embedding model` and repeats `Error loading model`, Bionic received the request and recognized Qwen. The response leaves the engine failure unspecified. In Terminal, press **⌘N** and start the log stream in the new window:
+
+```sh
+lms log stream --source runtime
+```
+
+Leave that window open. In the original window, press **↑** and **Return** to repeat the Qwen `curl` command above. If you share the result, include the first engine error and the few lines around it. Use `lms log stream --source server` if your CLI rejects the runtime source.
+
+If the logs still give only a generic error, and `lms runtime ls` shows both Apple Silicon llama.cpp **2.73.0** (selected) and **2.70.0** (installed), you can compare the two with the same file and load settings. Run this in the original window, then repeat the same Qwen `curl` command:
+
+```sh
+lms runtime select 'llama.cpp-mac-arm64-apple-metal-advsimd@2.70.0'
+```
+
+This changes the selected GGUF runtime for subsequent loads. If Qwen loads, run the embedding check above to verify it returns 1,024 dimensions. If the same error persists, restore your original selection:
+
+```sh
+lms runtime select 'llama.cpp-mac-arm64-apple-metal-advsimd@2.73.0'
+```
+
 **3. Load Kev.** Look for a `decision` entry for Kev in step 1. If present, use its key in the load command below. The `-live` alias makes the demo request fresh relevance decisions through `/v1/systemone`. [Kev decision endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
 
 If Downloads already shows **ggml-org · Kev 4B GGUF Q4_K_M** as completed but the native inventory has no Kev entry, run `lms ls --decision`. Click the folder icon beside the completed download and compare the file’s location in Finder with **My Models → Models directory**.
