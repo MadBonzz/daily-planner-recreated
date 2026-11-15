@@ -9,6 +9,8 @@ from examples.estimation import run
 def test_classify_history_uses_only_prior_evidence_and_records_failures(tmp_path, monkeypatch, provider_available):
     history, = run.histories('01')
     holdout = history['holdouts'][0]
+    monkeypatch.setattr("retrieval.embed_task", lambda *args: [1.0, 0.0])
+    monkeypatch.setattr("retrieval.decide_related", lambda *args: True)
     requests = []
 
     def classify(messages, schema, **kwargs):

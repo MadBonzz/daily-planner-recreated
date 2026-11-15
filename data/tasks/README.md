@@ -19,12 +19,25 @@ Ten fictional people have **79 completed tasks**, **20 editable open tasks**, an
 
 Start the planner normally. Select **Dev** and choose a **Sample history**. Its completed tasks include the original time budget, recorded sessions, attached PDFs when supplied and any notes left at completion. Open **History details** to jump to the date of an earlier task, or work on today's open tasks. Edits persist separately for each sample. **Reset sample history** restores that sample. **Demo** opens the personal planner.
 
+The ten event calendars in `schedules/` contain 410 task creations and timer actions. Each event identifies a task in the matching `histories/` file, its local minute after midnight, and a day offset ending on day zero. The task ID connects it to the existing attachment and synthetic ActivityWatch database. Each task's timer periods keep the original durations and breaks, so a window or phone event stays aligned after the calendar moves. For example, the apartment resident renews a filter subscription while the washer is running, and the interview student does the dishes during a break between two attempts at a problem. The calendars omit the held-out tasks.
+
 For a manual forecast on the benchmark inputs, use the CLI's temporary profile. It recreates the chosen history and stages its held-out tasks on today's plan. Stopping the command discards that trial.
 
 ```sh
 python -m examples.estimation.run list
 python -m examples.estimation.run open 02
 ```
+
+## Score a chronological replay
+
+Run a single profile from its first creation through its last timer event. Choose a new output directory for each run. You can stop at an event count or pass a specific local date for day zero.
+
+```sh
+python -m examples.estimation.replay 06 --output data/results/local/clinic-live-01
+python -m examples.estimation.replay 01 --actions 12 --offline --anchor-day 2026-11-15 --output data/results/local/replica-offline-01
+```
+
+The configured run uses the same forecasting, relevance and report generation as the Dev replay. Offline mode exercises the planner fallback, skips embeddings and pair decisions, and marks activity requiring a model label as uncertain. Each line of `events.jsonl` records one action, its observed timer state, available completed history for each forecast job, and changes to forecasts and reports. Task IDs match the profile fixtures. The `manifest.json` records fixture hashes and the anchor day. The `summary.json` compares the user's budget and the planner's **initial** forecast to recorded minutes on tasks completed within the selected events. It reports mean absolute error in minutes and counts model, fallback and scheduled forecasts separately.
 
 ## Score the estimator
 

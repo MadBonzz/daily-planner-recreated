@@ -1,5 +1,6 @@
 """Plan Smarter UI. Run with python -m streamlit run app.py."""
 
+from collections import Counter
 from datetime import date, datetime, timedelta
 from html import escape
 import os
@@ -11,10 +12,12 @@ import streamlit as st
 
 import activity
 import estimator
-from dev_workspace import dev_activity_report, history_choices, open_dev_workspace
+from dev_workspace import history_choices, open_dev_workspace
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
-from pdf_reader import extract_pdf_text
+from relevance_feedback import related_ids
+from planner_analytics import render_analytics
+from report_worker import schedule_reports
 from model_client import model_settings
 from urllib.parse import urlsplit
 
@@ -44,6 +47,9 @@ h2,h3 {letter-spacing: -.033em}
 .task-head span.running {color:#234cce}.task-head span.completed {color:#287053}
 .task-copy {color:#425266;margin:.3rem 0 .25rem;white-space:pre-wrap;overflow-wrap:anywhere}
 .empty-plan {background:white;border:1px dashed #b9c4d5;padding:2.6rem 1rem;text-align:center;border-radius:16px}
+[class*="st-key-task_header_"] [data-testid="stHorizontalBlock"] {flex-wrap:nowrap}
+[class*="st-key-task_header_"] [data-testid="stColumn"]:first-child {flex:1;min-width:0}
+[class*="st-key-task_header_"] [data-testid="stColumn"]:last-child {flex:0 0 2.5rem;min-width:2.5rem}
 @media (max-width:640px) {
  .st-key-plan_navigation [data-testid="stHorizontalBlock"] {display:grid;grid-template-columns:4.5rem minmax(0,1fr) 2.8rem;gap:.45rem}
  .st-key-plan_navigation [data-testid="stColumn"] {width:100%;min-width:0;flex:none}
@@ -77,13 +83,6 @@ def show_error(error):
 
 def notice(message):
     st.session_state["notice"] = message
-
-
-def sync_index(store, index_dir, task):
-    try:
-        estimator.index_current_task(index_dir, store, task["id"])
-    except (OSError, ValueError, RuntimeError):
-        notice("Task saved. The planner will retry indexing it when it searches completed work.")
 
 
 def forecast_source(prediction):
@@ -203,15 +202,6 @@ def perform(store, task, action, **kwargs):
         return None
 
 
-def task_report(store, task, dev):
-    with st.spinner("Reviewing recorded activity…"):
-        if dev:
-            return dev_activity_report(store, task)
-        return activity.build_report(task, store.periods(task["id"]),
-                                     exclusions=store.get_setting("exclusions", []),
-                                     disabled_periods=store.disabled_periods(task["id"]))
-
-
 @st.dialog("Have you finished this task?")
 def stop_confirmation(store, index_dir, task, dev):
     st.html(f'<strong>{escape(task["title"])}</strong>')
@@ -220,36 +210,20 @@ def stop_confirmation(store, index_dir, task, dev):
                         placeholder="What affected how long this took?")
     yes, no = st.columns(2)
     if yes.button("Yes, finish task", type="primary", width="stretch"):
-        # Stop has closed the timer. Finalize the note, report, actual and comparison
-        # history together, so a new forecast sees this task's activity immediately.
-        parsed = None
-        try:
-            if task["fixed_duration"] and task["attachments"] and not task["pdf_text"]:
-                # Fixed events have no prediction worker. Read attachments here,
-                # after the timer stops, for classification and future comparisons.
-                parsed = "\n".join(extract_pdf_text(store.attachment_bytes(doc["id"]))
-                                   for doc in task["attachments"])
-                task = {**task, "pdf_text": parsed}
-            report = task_report(store, task, dev)
-        except (ValueError, RuntimeError, OSError) as error:
-            report = None
-            notice(f"Task finished. Activity review can be retried on its card. {error}")
-        saved = perform(store, task, "finish", completion_note=note, report=report, pdf_text=parsed)
-        if saved:
-            if saved["prediction"].get("status") != "pending":
-                sync_index(store, index_dir, saved)
+        if perform(store, task, "finish", completion_note=note, queue_report=True):
+            schedule_reports(store, dev)
             st.rerun()
     if no.button("No, continue later", width="stretch"):
         if perform(store, task, "continue_later"):
             st.rerun()
 
 
-def timeline(intervals):
+def timeline(intervals, *, show_date=False):
     if not intervals:
         st.caption("No intervals to show.")
         return
     rows = []
-    spans_days = len({datetime.fromtimestamp(i["start"]).date() for i in intervals}) > 1
+    spans_days = show_date or len({datetime.fromtimestamp(i["start"]).date() for i in intervals}) > 1
     for event in intervals:
         start = datetime.fromtimestamp(event["start"]).strftime("%b %d %H:%M:%S" if spans_days else "%H:%M:%S")
         kind = "Excluded" if event["excluded"] else event.get("app") or "Unknown"
@@ -266,10 +240,71 @@ def timeline(intervals):
 
 def show_report(report):
     st.html(f'<p class="task-copy">{escape(report["summary"])}</p>')
-    st.caption(f"{report['switches']} recorded activity switches. Labels estimate task relevance.")
+    st.caption(f"{report['switches']} recorded activity switches.")
     for warning in report.get("warnings", []):
         st.caption(warning)
-    timeline(report["intervals"])
+    with st.expander("Activity timeline"):
+        timeline(report["intervals"])
+
+
+def review_activity(store, task, dev):
+    groups = activity.review_groups(task["report"])
+    if not groups:
+        return
+    choices = {"on_task": "Work", "off_task": "Distraction", "uncertain": "Uncertain"}
+    by_name = {name: label for label, name in choices.items()}
+    rows = []
+    for group in groups.values():
+        labels = group["labels"]
+        rows.append({"App": group["app"], "Site": group["domain"], "Window": group["title"],
+                     "Phone app": group["phone_app"], "Laptop idle": group["idle"],
+                     "Time": duration(group["seconds"]), "Source": ", ".join(sorted(group["sources"])),
+                     "Classification": choices[next(iter(labels))] if len(labels) == 1 else "Mixed"})
+    with st.form(f'review-{task["id"]}'):
+        st.caption("Review how each app, site or window was used. Saved changes inform future reports and estimates.")
+        edited = st.data_editor(rows, hide_index=True, width="stretch", key=f'labels-{task["id"]}',
+                                disabled=[key for key in rows[0] if key != "Classification"],
+                                column_config={"Classification": st.column_config.SelectboxColumn(
+                                    options=[*by_name, "Mixed"], required=True)})
+        if st.form_submit_button("Save classifications and regenerate report"):
+            changes = {key: by_name[row["Classification"]]
+                       for key, original, row in zip(groups, rows, edited)
+                       if row["Classification"] in by_name and original["Classification"] != row["Classification"]}
+            if changes:
+                try:
+                    store.request_report(task["id"], changes)
+                    schedule_reports(store, dev)
+                    st.rerun()
+                except (ValueError, sqlite3.Error) as error:
+                    show_error(error)
+            else:
+                st.caption("Choose a different classification to save a correction.")
+
+
+def activity_section(store, task, dev):
+    task_id = task["id"]
+    job = store.report_job(task_id)
+    if job and not job["error"]:
+        @st.fragment(run_every="2s", key=f"report-progress-{task_id}")
+        def progress():
+            current = store.report_job(task_id)
+            if not current or current["error"]:
+                st.rerun()
+            st.info("Generating activity report…")
+            schedule_reports(store, dev)
+
+        progress()
+        return
+    if job:
+        st.warning(job["error"])
+    task = store.get_task(task_id)
+    if task["report"]:
+        show_report(task["report"])
+        review_activity(store, task, dev)
+    if st.button("Rebuild report" if task["report"] else "Generate report", key=f"report-{task_id}"):
+        store.request_report(task_id)
+        schedule_reports(store, dev)
+        st.rerun()
 
 
 @st.fragment(run_every="1s")
@@ -301,16 +336,41 @@ def live_activity(store, task):
     preview()
 
 
-@st.dialog("Delete task")
-def delete_task(store, index_dir, task):
-    st.text(f'Delete “{task["title"]}” and its stored sessions, PDFs, and report?')
-    if st.button("Delete task permanently", type="primary"):
+def purge_vectors(store, index_dir):
+    for task_id in store.pending_vector_purges():
         try:
-            store.delete_task(task["id"])
-            estimator.forget_task(index_dir, task["id"])
+            estimator.forget_task(index_dir, task_id)
+            store.confirm_vector_purge(task_id)
+        except (OSError, RuntimeError, ValueError):
+            st.warning("The task is excluded from estimates. Plan Smarter will retry removing its saved vector.")
+            return
+
+
+def close_delete_dialog():
+    st.session_state.pop("delete_target", None)
+
+
+@st.dialog("Delete task", on_dismiss=close_delete_dialog)
+def delete_task(store, index_dir, task):
+    st.text(f'Remove “{task["title"]}” from the planner?')
+    forget = st.checkbox("Also delete this task’s data from memory", value=False, key=f"forget-{task['id']}")
+    st.caption("This erases the task, attachments, tracked sessions, activity report and learned feedback."
+               if forget else "Its history stays available for estimates and analytics.")
+    yes, no = st.columns(2)
+    if no.button("No", width="stretch"):
+        close_delete_dialog()
+        st.rerun()
+    if yes.button("Yes, delete", type="primary", width="stretch"):
+        try:
+            if forget:
+                store.delete_task(task["id"])
+                purge_vectors(store, index_dir)
+            else:
+                store.archive_task(task["id"])
         except (ValueError, RuntimeError, OSError, sqlite3.Error) as error:
             show_error(error)
             return
+        close_delete_dialog()
         st.rerun()
 
 
@@ -359,6 +419,15 @@ def settings(store, index_dir, dev):
             store.set_setting("poll_seconds", interval)
             st.rerun()
     st.divider()
+    archived = {t["id"]: f'{t["day"]} · {t["title"]}' for t in store.archived_tasks()}
+    if archived:
+        st.subheader("Tasks removed from the planner")
+        selected = st.selectbox("Saved in memory", archived.keys(), format_func=archived.get)
+        forget = st.checkbox("Permanently erase this task and its data", key=f"erase-saved-{selected}")
+        if st.button("Erase selected task", disabled=not forget):
+            store.delete_task(selected)
+            purge_vectors(store, index_dir)
+            st.rerun()
     st.subheader("Delete planner data")
     which = "example" if dev else "personal"
     confirm = st.checkbox(f"Delete my {which} tasks, PDFs, reports and estimate history.")
@@ -384,7 +453,53 @@ def estimate_pending(task):
     return task["estimate_updating"]
 
 
-def estimate_section(store, task):
+def forecast_may_change(task):
+    return estimate_pending(task) or task.get("awaiting_related_update", False)
+
+
+def comparison_summary(prediction):
+    used = list(prediction.get("evidence", []))
+    for caution in prediction.get("cautions", []):
+        used.extend(caution.get("sources", []))
+    if "related_tasks" in prediction:
+        selected = prediction["related_tasks"]
+        titles = " · ".join(escape(row["title"]) for row in selected) or "None"
+        st.html(f"<small><strong>Selected comparisons</strong> · {titles}</small>")
+    else:
+        st.caption("This earlier forecast saved only the comparisons used for timing.")
+    if "used_task_ids" in prediction:
+        by_id = {row["task_id"]: row for row in [*prediction.get("related_tasks", []), *used] if row.get("task_id")}
+        used = [by_id[task_id] for task_id in prediction["used_task_ids"] if task_id in by_id]
+    names = {row.get("task_id", row["title"]): row["title"] for row in used}
+    citations = " · ".join(escape(title) for title in names.values()) or "None"
+    st.html(f"<small><strong>Used in this forecast</strong> · {citations}</small>")
+
+
+@st.dialog("Edit relevant tasks", width="large")
+def edit_comparisons(store, task, options):
+    baseline = related_ids(task["prediction"])
+    labels = {row["id"]: f'{row["title"]} · {row["category"]} · {row["day"]}' for row in options}
+    # Distinguish same-day tasks with identical names and categories in the picker.
+    duplicates = {label for label, count in Counter(labels.values()).items() if count > 1}
+    for task_id, label in labels.items():
+        if label in duplicates:
+            labels[task_id] = f"{label} · {task_id[:8]}"
+    st.text(task["title"])
+    st.caption("Choose completed tasks with recorded time. Your additions and removals also guide future forecasts.")
+    with st.form(f"compare-{task['id']}"):
+        selected = st.multiselect("Use these comparisons", options=list(labels), format_func=labels.get,
+                                  default=[task_id for task_id in baseline if task_id in labels],
+                                  placeholder="Choose completed tasks")
+        if st.form_submit_button("Save and re-estimate", type="primary"):
+            try:
+                store.revise_related_tasks(task["id"], selected, previous_ids=baseline, reviewed_ids=list(labels))
+            except (ValueError, sqlite3.Error) as error:
+                show_error(error)
+            else:
+                st.rerun()
+
+
+def estimate_section(store, task, *, read_only=False):
     prediction = task["prediction"]
     initial_pending = prediction.get("status") == "pending"
     fixed = task["fixed_duration"]
@@ -398,19 +513,27 @@ def estimate_section(store, task):
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
     if estimate_pending(task) and not initial_pending:
         values.append("Updating estimate…")
-    if task["status"] != "running":
+    if read_only or task["status"] != "running":
         values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
     if initial_pending or estimate_pending(task) or fixed:
         return
-    if task["status"] != "completed":
-        if st.button("Re-estimate", key=f"estimate-retry-{task['id']}",
-                     help="Use the current model, task details and completed history for another forecast."):
-            store.retry_estimate(task["id"])
-            st.rerun()
-    if not prediction or "point_min" not in prediction:
+    has_forecast = "point_min" in prediction
+    if has_forecast:
+        st.caption(forecast_source(prediction))
+        comparison_summary(prediction)
+    if prediction.get("retrieval_error"):
+        st.warning(prediction["retrieval_error"])
+    if not read_only and task["status"] != "completed":
+        with st.container(horizontal=True):
+            if st.button("Re-estimate", key=f"estimate-retry-{task['id']}",
+                         help="Use the current model, task details and completed history for another forecast."):
+                store.retry_estimate(task["id"])
+                st.rerun()
+            if has_forecast and st.button("Edit relevant tasks", key=f"estimate-edit-{task['id']}"):
+                edit_comparisons(store, task, store.comparison_options(task["id"]))
+    if not has_forecast:
         return
-    st.caption(forecast_source(prediction))
     cautions = prediction.get("cautions", [])
     if cautions:
         # Keep one observation visible while the full evidence is collapsed.
@@ -446,18 +569,16 @@ def estimate_section(store, task):
                        f"({original['low_min']:g}–{original['high_min']:g} min).")
 
 
-def live_estimate_section(store, task, index_dir):
+def live_estimate_section(store, task):
     # Refresh only this part of the card. A finished forecast must not close an open dialog.
-    @st.fragment(run_every="1s", key=f"estimate-{task['id']}")
+    @st.fragment(run_every="2s", key=f"estimate-{task['id']}")
     def refresh():
-        if estimate_pending(task):
+        if forecast_may_change(task):
             try:
                 fresh = store.get_task(task["id"])
             except ValueError:
                 st.rerun()
             task.update(fresh)
-            if estimate_pending(fresh):
-                schedule_pending(store, index_dir)
         estimate_section(store, task)
     refresh()
 
@@ -474,30 +595,52 @@ def daily_totals(tasks):
 
 
 def live_daily_totals(store, day, tasks):
-    @st.fragment(run_every="1s")
+    @st.fragment(run_every="2s")
     def refresh():
-        if any(estimate_pending(t) for t in tasks):
+        if any(forecast_may_change(t) for t in tasks):
             tasks[:] = store.list_tasks(day)
         daily_totals(tasks)
     refresh()
 
 
-def render_task(store, index_dir, task, dev):
+def replay_forecasts(store, task_id):
+    rows = []
+    for entry in store.forecast_timeline(task_id):
+        forecast = entry["prediction"]
+        rows.append({"As of": datetime.fromtimestamp(entry["at"]).strftime("%b %d %Y %H:%M"),
+                     "Forecast": "Initial" if entry["initial"] else "Re-estimate",
+                     "Estimate (min)": forecast.get("point_min"),
+                     "Range (min)": f'{forecast["low_min"]:g}–{forecast["high_min"]:g}',
+                     "Confidence": forecast["confidence"], "Source": forecast_source(forecast),
+                     "Tasks used": ", ".join(row["title"] for row in forecast.get("evidence", [])) or "None"})
+    if rows:
+        with st.expander("Forecast history"):
+            st.dataframe(rows, hide_index=True, width="stretch")
+
+
+def render_task(store, index_dir, task, dev, *, replay=False):
     key = task["id"]
     status = task["status"]
     with st.container(border=True):
-        st.html(f'<div class="task-head"><h3>{escape(task["title"])}</h3>'
-                f'<span class="{status}">{STATUS[status]}</span></div>'
-                f'<p class="task-copy">{escape(task["description"])}</p>')
-        if estimate_pending(task):
-            live_estimate_section(store, task, index_dir)
+        header, trash = st.container(key=f"task_header_{key}").columns([14, 1], vertical_alignment="center")
+        header.html(f'<div class="task-head"><h3>{escape(task["title"])}</h3>'
+                    f'<span class="{status}">{STATUS[status]}</span></div>')
+        if not replay and trash.button(":material/delete:", type="tertiary", key=f"delete-{key}", help=f'Delete {task["title"]}'):
+            st.session_state["delete_target"] = key
+        if not replay and st.session_state.get("delete_target") == key:
+            delete_task(store, index_dir, task)
+        st.html(f'<p class="task-copy">{escape(task["description"])}</p>')
+        if not replay and forecast_may_change(task):
+            live_estimate_section(store, task)
         else:
-            estimate_section(store, task)
+            estimate_section(store, task, read_only=replay)
+        if replay:
+            replay_forecasts(store, key)
         if task["category"]:
             st.html(f'<small>{escape(task["category"])}</small>')
-        if status == "running":
+        if not replay and status == "running":
             running_clock(store, key)
-        if status == "running" and time.time() - task["started_at"] >= 8 * 3600:
+        if not replay and status == "running" and time.time() - task["started_at"] >= 8 * 3600:
             start = datetime.fromtimestamp(task["started_at"])
             with st.expander(f"Timer running since {start:%b %d at %H:%M} · correct the end time"):
                 with st.form(f"correct-stop-{key}"):
@@ -510,7 +653,7 @@ def render_task(store, index_dir, task, dev):
                         if perform(store, task, "stop", ended_at=end_ts):
                             st.session_state["ask_finish"] = key
                             st.rerun()
-        if status in ("running", "paused"):
+        if not replay and status in ("running", "paused"):
             left, right = st.columns(2)
             action = "pause" if status == "running" else "resume"
             if left.button(action.title(), key=f"{action}-{key}", width="stretch"):
@@ -520,29 +663,34 @@ def render_task(store, index_dir, task, dev):
                 if perform(store, task, "stop"):
                     st.session_state["ask_finish"] = key
                     st.rerun()
-        elif status == "ready":
+        elif not replay and status == "ready":
             if st.button("Start", key=f"start-{key}", type="primary"):
                 if perform(store, task, "start"):
                     st.rerun()
-        elif status == "awaiting_finish":
+        elif not replay and status == "awaiting_finish":
             if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
                 stop_confirmation(store, index_dir, task, dev)
         if status == "running" and not dev:
             if st.toggle("Live activity", key=f"live-{key}", help="Preview the last two minutes."):
                 live_activity(store, task)
+        if dev and task["actual_seconds"] > 0:
+            if st.toggle("ActivityWatch log", key=f"sample-log-{key}"):
+                from dev_schedule import activity_preview
+
+                intervals = activity_preview(store, task, store.get_setting("exclusions", []))
+                timeline([{key: value for key, value in interval.items() if key not in ("label", "reason")}
+                          for interval in intervals], show_date=True)
         if status == "completed":
             if task["completion_note"]:
                 st.caption("Completion note")
                 st.text(task["completion_note"])
             with st.expander("Activity report", expanded=True):
-                if task["report"]:
+                if not replay:
+                    activity_section(store, task, dev)
+                elif task["report"]:
                     show_report(task["report"])
                 else:
-                    st.caption("An activity report has not been generated for this task.")
-                if st.button("Rebuild report" if task["report"] else "Generate report", key=f"report-{key}"):
-                    report = task_report(store, task, dev)
-                    store.save_report(key, report)
-                    st.rerun()
+                    st.caption("No activity report was recorded.")
         with st.expander("Task details"):
             if task["details"]:
                 st.text(task["details"])
@@ -550,66 +698,122 @@ def render_task(store, index_dir, task, dev):
                 st.download_button("Download PDF", store.attachment_bytes(item["id"]), item["name"],
                                    mime="application/pdf", key=f"pdf-{item['id']}", on_click="ignore")
                 st.text(item["name"])
-            if status != "completed":
+            if not replay and status != "completed":
                 with st.form(f"reschedule-{key}"):
                     new_day = st.date_input("Scheduled day", value=date.fromisoformat(task["day"]), key=f"date-{key}")
                     if st.form_submit_button("Move task"):
                         store.reschedule(key, new_day)
                         st.rerun()
-            if st.button("Delete task", key=f"delete-{key}"):
-                delete_task(store, index_dir, task)
+
+
+def replay_controls(store, history_id):
+    from dev_schedule import advance, progress
+
+    state = progress(store, history_id)
+    profile = str(store.path)
+    focus_day = state["last_day"] or state["next_day"]
+    if profile != st.session_state.get("replay_profile") and focus_day:
+        select_day(date.fromisoformat(focus_day))
+    st.session_state["replay_profile"] = profile
+    st.progress(state["done"] / max(1, state["total"]),
+                text=f'{state["done"]} of {state["total"]} scheduled actions applied')
+    if state["done"] < state["total"]:
+        upcoming = state["events"][state["done"]]
+        st.caption(f'Next · {upcoming["day"]} {upcoming["time"]} · {upcoming["action"]} · {upcoming["task"]}')
+        step, run = st.columns(2)
+        single = step.button("Apply next action", key="replay-step", type="primary", width="stretch")
+        all_actions = run.button("Run to end", key="replay-run", width="stretch")
+        if single or all_actions:
+            with st.spinner("Applying scheduled actions and processing model jobs…"):
+                advance(store, history_id, through_end=all_actions)
+            applied = progress(store, history_id)["last_day"]
+            if applied:
+                select_day(date.fromisoformat(applied))
+            st.rerun()
+    with st.expander("Replay schedule"):
+        st.caption("The schedule controls task creation, timers and completion in this workspace.")
+        st.dataframe([{"Date": e["day"], "Time": e["time"], "Task": e["task"], "Action": e["action"],
+                       "Status": "Applied" if e["applied"] else "Upcoming"} for e in state["events"]],
+                     hide_index=True, width="stretch")
+        days = sorted({date.fromisoformat(e["day"]) for e in state["events"]})
+        if days:
+            day, jump = st.columns([3, 1], vertical_alignment="bottom")
+            selected = day.selectbox("Schedule date", days, key=f"replay-date-{history_id}")
+            jump.button("Open date", key="replay-jump", on_click=select_day, args=(selected,), width="stretch")
+        if st.button("Restart replay", key="replay-reset", help="Start this schedule again from its first action."):
+            open_dev_workspace(DATA_ROOT, history_id, reset=True, replay=True)
+            st.session_state.pop("ask_finish", None)
+            st.rerun()
 
 
 def main():
     st.session_state.setdefault("plan_day", date.today())
     title, options = st.container(key="plan_header").columns([4, 1], vertical_alignment="center")
     title.title("Plan Smarter")
-    with options.popover("Options", width="stretch"):
-        open_settings = st.button("Planner settings")
     mode = st.segmented_control("Mode", ["Demo", "Dev"], default="Demo", required=True,
                                 key="planner_mode", on_change=select_day, args=(date.today(),),
                                 help="Demo is your planner. Dev loads editable sample histories.")
     dev = mode == "Dev"
+    replay = False
     if dev:
         choices = history_choices()
         selected = st.selectbox("Sample history", list(choices), format_func=choices.get,
                                 key="dev_history", on_change=select_day, args=(date.today(),))
-        store = open_dev_workspace(DATA_ROOT, selected)
-        with st.expander("History details"):
-            st.caption("This workspace contains synthetic tasks. Your edits are saved separately for each sample.")
-            past = store.list_tasks()
-            st.dataframe([{"Date": t["day"], "Task": t["title"], "Status": STATUS[t["status"]],
-                           "Duration (min)": t["estimate_minutes"], "Recorded (min)": round(t["actual_seconds"] / 60, 1)}
-                          for t in past], hide_index=True, width="stretch")
-            available_days = sorted({date.fromisoformat(t["day"]) for t in past}, reverse=True)
-            if available_days:
-                date_column, jump = st.columns([3, 1], vertical_alignment="bottom")
-                target = date_column.selectbox("Task date", available_days, key=f"dev-date-{selected}")
-                jump.button("Open date", on_click=select_day, args=(target,), width="stretch")
-            if st.button("Reset sample history", help="Restore the original tasks and discard edits to this sample."):
-                open_dev_workspace(DATA_ROOT, selected, reset=True)
-                select_day(date.today())
-                st.session_state.pop("ask_finish", None)
-                st.rerun()
+        view = st.radio("History view", ["Editable history", "Chronological replay"], horizontal=True,
+                        key="dev_history_view", on_change=select_day, args=(date.today(),))
+        replay = view == "Chronological replay"
+        store = open_dev_workspace(DATA_ROOT, selected, replay=replay)
+        if replay:
+            replay_controls(store, selected)
+        else:
+            st.session_state.pop("replay_profile", None)
+            with st.expander("History details"):
+                st.caption("Your edits are saved separately for each sample.")
+                if not store.get_setting("dev_calendar"):
+                    st.caption("Reset this saved sample to load the dated task schedule and activity logs.")
+                past = store.list_tasks()
+                st.dataframe([{"Date": t["day"], "Task": t["title"], "Status": STATUS[t["status"]],
+                               "Duration (min)": t["estimate_minutes"], "Recorded (min)": round(t["actual_seconds"] / 60, 1)}
+                              for t in past], hide_index=True, width="stretch")
+                available_days = sorted({date.fromisoformat(t["day"]) for t in past}, reverse=True)
+                if available_days:
+                    date_column, jump = st.columns([3, 1], vertical_alignment="bottom")
+                    target = date_column.selectbox("Task date", available_days, key=f"dev-date-{selected}")
+                    jump.button("Open date", on_click=select_day, args=(target,), width="stretch")
+                if st.button("Reset sample history", help="Restore the original tasks and discard edits to this sample."):
+                    open_dev_workspace(DATA_ROOT, selected, reset=True)
+                    select_day(date.today())
+                    st.session_state.pop("ask_finish", None)
+                    st.rerun()
     else:
         store = PlannerStore(DATA_ROOT / "live")
     index_dir = store.data_dir / "vectors"
-    if store.has_pending_predictions():
-        schedule_pending(store, index_dir)
-    if open_settings:
-        settings(store, index_dir, dev)
+    if not replay:
+        schedule_reports(store, dev)
+        purge_vectors(store, index_dir)
+        if store.has_estimation_work():
+            schedule_pending(store, index_dir)
+        with options.popover("Options", width="stretch"):
+            open_settings = st.button("Planner settings")
+        if open_settings:
+            settings(store, index_dir, dev)
     if "notice" in st.session_state:
         st.warning(st.session_state.pop("notice"))
+    page = st.segmented_control("View", ["Daily plan", "Analytics & logs"], default="Daily plan",
+                                required=True, key="planner_view")
+    if page == "Analytics & logs":
+        render_analytics(store)
+        return
     controls = st.container(key="plan_navigation").columns([1, 2, 1, 1, 2], vertical_alignment="bottom")
     controls[0].button("←", key="prev", help="Previous day", on_click=move_day, args=(-1,), width="stretch")
     day = controls[1].date_input("Plan date", key="plan_day", format="MM/DD/YYYY",
                                  label_visibility="collapsed")
     controls[2].button("→", key="next", help="Next day", on_click=move_day, args=(1,), width="stretch")
     controls[3].button("Today", on_click=select_day, args=(date.today(),), width="stretch")
-    if controls[4].button("＋ Add task", type="primary", width="stretch"):
+    if not replay and controls[4].button("＋ Add task", type="primary", width="stretch"):
         new_task(store, day)
     tasks = store.list_tasks(day)
-    if any(estimate_pending(t) for t in tasks):
+    if not replay and any(forecast_may_change(t) for t in tasks):
         live_daily_totals(store, day, tasks.copy())
     else:
         daily_totals(tasks)
@@ -622,12 +826,18 @@ def main():
             st.text(f'A stopped session on {pending["day"]} is waiting for your decision.')
             st.button("View stopped task", on_click=select_day, args=(date.fromisoformat(pending["day"]),))
     st.subheader(day.strftime("%A, %B %d").replace(" 0", " "))
-    if not tasks:
+    other = store.worked_on(day) if dev else []
+    if not tasks and not other:
         st.html('<div class="empty-plan"><strong>No tasks planned</strong>'
-                '<p>Add a task to plan and track your work for this day.</p></div>')
+                + ("<p>Use the replay schedule to browse or advance to a task.</p>" if replay else
+                   "<p>Add a task to plan and track your work for this day.</p>") + "</div>")
     for task in sorted(tasks, key=lambda t: (t["status"] == "completed", t["created_at"])):
-        render_task(store, index_dir, task, dev)
-    if key := st.session_state.pop("ask_finish", None):
+        render_task(store, index_dir, task, dev, replay=replay)
+    if other:
+        st.subheader("Also worked on this day" if tasks else "Worked on this day")
+        for task in other:
+            render_task(store, index_dir, task, dev, replay=replay)
+    if not replay and (key := st.session_state.pop("ask_finish", None)):
         stopped = store.get_task(key)
         if stopped["status"] == "awaiting_finish":
             stop_confirmation(store, index_dir, stopped, dev)

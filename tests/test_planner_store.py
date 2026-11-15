@@ -141,6 +141,11 @@ class StoreTests(unittest.TestCase):
         self.store.transition(task["id"], "stop")
         return self.store.transition(task["id"], "finish")
 
+    def decide_pairs(self, relevant):
+        while job := self.store.claim_relation():
+            related = relevant(*job["pair"])
+            self.assertTrue(self.store.resolve_relation(job["pair"], job["token"], related))
+
     def test_background_estimate_freezes_history_and_survives_task_completion(self):
         earlier = self.finish_one("Earlier proof")
         target = self.task("Another proof", prediction=None)
@@ -236,6 +241,10 @@ class StoreTests(unittest.TestCase):
         self.assertNotIn("completion_note", initial["task"])
         self.assertNotIn("actual_seconds", initial["task"])
         self.assertTrue(reopened.resolve_prediction(target["id"], initial["token"], self.budget))
+        self.assertTrue(reopened.get_task(target["id"])["awaiting_related_update"])
+        pair = reopened.claim_relation()
+        self.assertEqual(set(pair["pair"]), {latest["id"], target["id"]})
+        self.assertTrue(reopened.resolve_relation(pair["pair"], pair["token"], True))
         pending = reopened.get_task(target["id"])
         self.assertTrue(pending["estimate_updating"])
         self.assertEqual(pending["creation_prediction"], self.budget)
@@ -260,6 +269,7 @@ class StoreTests(unittest.TestCase):
         self.assertFalse(fixed["estimate_updating"])
         target = self.task("Writing")
         source = self.finish_one("Revision")
+        self.decide_pairs(lambda a,b: target["id"] in (a,b))
         stale = self.store.claim_prediction()
         self.assertEqual(stale["task"]["id"], target["id"])
         self.store.transition(fixed["id"], "start")
@@ -279,7 +289,7 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(self.store.get_task(target["id"])["prediction"], self.budget)
         self.assertFalse(self.store.has_pending_predictions())
 
-    def test_refreshes_running_paused_and_ready_tasks_in_other_days(self):
+    def test_refreshes_only_related_tasks_in_other_days_and_timer_states(self):
         ready, paused, running = (self.task(title) for title in ("Tuesday", "Paused", "Active"))
         self.store.reschedule(ready["id"], "2026-11-15")
         self.store.transition(paused["id"], "start")
@@ -289,12 +299,97 @@ class StoreTests(unittest.TestCase):
         self.now += 20
         self.store.transition(prior["id"], "stop")
         self.store.transition(running["id"], "start")
+        self.decide_pairs(lambda a,b: ready["id"] not in (a,b))
         self.store.transition(prior["id"], "finish")
         for task, state in ((ready, "ready"), (paused, "paused"), (running, "running")):
             refreshed = self.store.get_task(task["id"])
-            self.assertTrue(refreshed["estimate_updating"])
+            self.assertEqual(refreshed["estimate_updating"], task["id"] != ready["id"])
             self.assertEqual(refreshed["status"], state)
         self.assertFalse(self.store.get_task(prior["id"])["estimate_updating"])
+
+    def test_initial_job_has_priority_over_queued_refresh_across_workers(self):
+        existing = self.task("Existing")
+        self.finish_one("Completed")
+        self.decide_pairs(lambda a,b: True)
+        self.assertTrue(self.store.get_task(existing["id"])["estimate_updating"])
+        first = self.task("Just added", prediction=None)
+        claim = self.store.claim_prediction()
+        self.assertEqual(claim["task"]["id"], first["id"])
+        self.assertIsNone(self.store.claim_prediction())
+        self.assertIsNone(self.store.claim_relation())
+        self.store.resolve_prediction(first["id"], claim["token"], self.budget)
+        self.assertEqual(self.store.claim_prediction()["task"]["id"], existing["id"])
+
+    def test_pending_pair_recovers_after_outage_and_never_refreshes_deleted_source(self):
+        self.task("Target")
+        source = self.finish_one("Source")
+        job = self.store.claim_relation(lease_seconds=3)
+        self.assertIsNone(self.store.claim_relation())
+        self.assertTrue(self.store.resolve_relation(job["pair"], job["token"], None))
+        self.assertIsNone(self.store.claim_relation())
+        self.assertIsNone(self.store.claim_prediction())
+        self.now += 16
+        reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        retry = reopened.claim_relation(lease_seconds=2)
+        self.assertEqual(retry["pair"], job["pair"])
+        self.now += 3
+        self.assertFalse(reopened.resolve_relation(retry["pair"], retry["token"], True))
+        last = reopened.claim_relation()
+        reopened.delete_task(source["id"])
+        self.assertFalse(reopened.resolve_relation(last["pair"], last["token"], True))
+        self.assertFalse(reopened.has_estimation_work())
+
+    def test_forgetting_an_example_rejudges_only_dependent_edges(self):
+        example = self.finish_one("Reviewed old handout")
+        a,b,c = [self.task(name)["id"] for name in ("A","B","C")]
+        expected = tuple(sorted((a,b)))
+        while job := self.store.claim_relation():
+            used = [{"candidate_id": example["id"]}] if job["pair"] == expected else []
+            self.assertTrue(self.store.resolve_relation(job["pair"], job["token"], True, examples=used))
+        self.store.delete_task(example["id"])
+        new = self.store.claim_relation()
+        self.assertEqual(new["pair"], expected)
+        self.assertTrue(self.store.resolve_relation(new["pair"], new["token"], False))
+        self.assertIsNone(self.store.claim_relation())
+
+    def test_matrix_backfill_only_unfinished_pairs_and_reopen_is_idempotent(self):
+        self.finish_one("Finished")
+        a,b,c = [self.task(name)["id"] for name in ("A","B","C")]
+        with sqlite3.connect(self.store.path) as db:
+            db.execute("DELETE FROM settings WHERE key='relation_matrix_initialized'")
+            db.execute("DROP TABLE task_relations")
+        restored = PlannerStore(self.store.data_dir)
+        pairs = []
+        while job := restored.claim_relation():
+            pairs.append(set(job["pair"]))
+            restored.resolve_relation(job["pair"], job["token"], False)
+        self.assertCountEqual(pairs, [{a,b},{b,c},{a,c}])
+        self.assertFalse(PlannerStore(self.store.data_dir).has_estimation_work())
+
+    def test_replay_timeline_records_successful_commits_and_forgets_deleted_sources(self):
+        source = self.finish_one("Source")
+        self.assertEqual(self.store.forecast_timeline(source["id"]), [])
+        self.store.set_setting("dev_replay_enabled", True)
+        target = self.task("Target", prediction=None)
+        first = self.store.claim_prediction()
+        original = dict(self.budget, feedback_source_ids=[source["id"]], rationale="private feedback")
+        first_at = self.now
+        self.store.resolve_prediction(target["id"], first["token"], original)
+        self.now += 120
+        self.assertTrue(self.store.retry_estimate(target["id"]))
+        retry = self.store.claim_prediction()
+        self.assertFalse(self.store.resolve_prediction(target["id"], first["token"], original))
+        self.store.resolve_prediction(target["id"], retry["token"], self.budget)
+        self.assertEqual(self.store.forecast_timeline(target["id"]), [
+            {"at": first_at, "initial": True, "prediction": original},
+            {"at": self.now, "initial": False, "prediction": self.budget},
+        ])
+        self.store.delete_task(source["id"])
+        self.assertEqual([event["initial"] for event in self.store.forecast_timeline(target["id"])], [False])
+        self.store.delete_task(target["id"])
+        self.assertEqual(self.store.forecast_timeline(target["id"]), [])
+        fixed = self.task("Meeting", fixed_duration=True)
+        self.assertEqual(self.store.forecast_timeline(fixed["id"])[0]["prediction"], fixed["prediction"])
 
     def test_previous_databases_preserve_creation_forecasts_and_pending_work(self):
         known = self.task()

@@ -10,6 +10,12 @@ import estimate_worker as worker
 from planner_store import PlannerStore
 
 
+@pytest.fixture(autouse=True)
+def local_models(monkeypatch):
+    monkeypatch.setattr(worker.retrieval, "embed_task", lambda *a, **kw: [0.6, 0.8])
+    monkeypatch.setattr(worker.retrieval, "decide_related", lambda *a, **kw: True)
+
+
 def create(store, **overrides):
     return store.create_task(**{
         "day": "2026-11-18", "title": "Read a proof", "description": "Derive the bound.",
@@ -74,7 +80,7 @@ def test_pdf_worker_runs_without_blocking_timer_or_duplicating_calls(tmp_path, m
         payload = rows[0].payload
         assert payload["status"] == status and payload["planner_minutes"] == 35
         assert payload["attachments"][0]["name"] == "proof.pdf"
-        assert rows[0].vector == pytest.approx(worker.estimator._vector(result), abs=1e-6)
+        assert rows[0].vector == pytest.approx([0.6, 0.8], abs=1e-6)
         if finish_before_prediction:
             assert payload["actual_seconds"] == result["actual_seconds"]
 

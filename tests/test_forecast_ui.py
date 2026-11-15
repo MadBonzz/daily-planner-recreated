@@ -35,7 +35,7 @@ def test_model_card_identifies_saved_model_and_quotes_supported_reasoning():
                      "a different print queue", "Both tasks use colour stock", "Check the print queue",
                      "Print a flyer · Completion note"):
         assert expected in copy
-    assert [button.label for button in card.button] == ["Re-estimate"]
+    assert [button.label for button in card.button] == ["Re-estimate", "Edit relevant tasks"]
 
 
 def test_legacy_card_identifies_hybrid_and_does_not_attribute_compact_placeholder_to_model():
@@ -55,3 +55,21 @@ def test_reestimating_hides_stale_explanation_and_completed_and_fixed_tasks_have
     assert not pending.expander and not pending.button and "old explanation" not in prose(pending)
     for settings in ({"status": "completed"}, {"fixed_duration": True}):
         assert not show_card(old, **settings).button
+
+
+def test_selected_comparisons_are_distinct_from_the_subset_used_by_the_forecast():
+    result = budget(related_tasks=[{"task_id": "a", "title": "Compare one"}, {"task_id": "b", "title": "Compare two"}],
+                    evidence=[{"task_id": "b", "title": "Compare two", "estimate_min": 20, "actual_min": 25, "ratio": 1.25}])
+    text = prose(show_card(result))
+    assert "<strong>Selected comparisons</strong> · Compare one · Compare two" in text
+    assert "<strong>Used in this forecast</strong> · Compare two" in text
+    empty = prose(show_card(budget(related_tasks=[], evidence=[])))
+    assert "<strong>Selected comparisons</strong> · None" in empty
+    assert "<strong>Used in this forecast</strong> · None" in empty
+
+
+def test_warning_only_citation_counts_as_used():
+    result = budget(related_tasks=[{"task_id": "a", "title": "Print a flyer"}], evidence=[],
+                    used_task_ids=["a"], cautions=[{"advice": "Allow time for the jam.",
+                        "sources": [{"task_id": "a", "title": "Print a flyer", "origin": "Completion note"}]}])
+    assert "<strong>Used in this forecast</strong> · Print a flyer" in prose(show_card(result))

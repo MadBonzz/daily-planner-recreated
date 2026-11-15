@@ -162,12 +162,12 @@ def _review(row, *, annotations):
     return label, 'Synthetic fixture annotation for this observed foreground activity.'
 
 
-def _report(task, source, periods, annotations, exclusions, use_model=False):
+def _report(task, source, periods, annotations, exclusions, use_model=False, *, examples=(), overrides=None):
     reviewed = None if use_model else partial(_review, annotations=annotations)
     if isinstance(exclusions, str):
         exclusions = exclusions.splitlines()
     report = activity.build_report(task, periods, [EXCLUDED_MARKER, *exclusions],
-                                   source=source, reviewed_label=reviewed)
+                                   source=source, reviewed_label=reviewed, examples=examples, overrides=overrides)
     report['classification_source'] = 'model' if use_model else 'synthetic_annotations'
     return report
 
@@ -239,7 +239,7 @@ class ShiftedSource:
 
 
 def replay_task_at(history, row, destination_sessions, periods, *, directory=None, exclusions=(),
-                   use_model=False, task_context=None):
+                   use_model=False, task_context=None, examples=(), overrides=None):
     """Move bounded seed observations to Dev's clock. Later user activity stays unobserved."""
     if isinstance(history, str):  # Backward compatibility with inline scenes.
         history = {'id': history, 'tasks': [row]}
@@ -259,7 +259,7 @@ def replay_task_at(history, row, destination_sessions, periods, *, directory=Non
                    for a, b, label in item['annotations']
                    for left, right, delta in mappings if left < b and right > a]
     return _report(task_context or row, ShiftedSource(source, mappings), periods, annotations,
-                   exclusions, use_model)
+                   exclusions, use_model, examples=examples, overrides=overrides)
 
 
 def write_database(export, path):

@@ -7,6 +7,15 @@ from pypdf import PdfWriter
 from qdrant_client import QdrantClient
 
 import estimator
+import retrieval
+
+
+@pytest.fixture(autouse=True)
+def local_models(monkeypatch):
+    # The forecast tests exercise the real index with deterministic model transports.
+    monkeypatch.setattr(retrieval, "embed_task", lambda task, config=None:
+                        [0.6, 0.8] if task.get("pdf_text") else [0.8, 0.6])
+    monkeypatch.setattr(retrieval, "decide_related", lambda *args: True)
 
 
 def paper(task_id, ratio=1, category="Reading", details="Work through the derivations"):
@@ -79,7 +88,7 @@ def test_first_estimate_model_unavailable(tmp_path):
 @pytest.mark.parametrize("invalid", [
     {"point_min": 120}, {"low_min": 0}, {"point_min": 87.5}, {"point_min": True},
     {"comparisons": [{"slot": 3, "reason": "Similar proof."}]},
-    {"comparisons": [{"slot": 1, "reason": "Trace a road on the map."}]},
+    {"comparisons": [{"slot": 1, "reason": "These tasks are not related."}]},
     {"warnings": [{"observation_id": "S1.9", "advice": "Allow extra setup."}]},
 ])
 def test_invalid_or_invented_model_outputs_cannot_be_published(tmp_path, invalid):
@@ -128,7 +137,7 @@ def test_disk_index_updates_and_forgets_open_and_completed_tasks(tmp_path):
 def test_offline_model_still_returns_explained_budget(tmp_path):
     with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("offline")):
         result = estimator.predict(paper("now"), [paper("then", 1.5)], tmp_path)
-    assert result["basis"] == "Text similarity"
+    assert result["basis"] == "Selected history calculation"
     assert "unavailable" in result["explanation"]
     assert result["confidence"] == "low"
     assert result["evidence"][0]["task_id"] == "then"
@@ -205,7 +214,7 @@ def test_retrieval_repairs_an_old_pre_pdf_vector(tmp_path):
         records, _ = client.scroll(estimator.COLLECTION, with_vectors=True)
         assert records[0].payload["planner_minutes"] == 90
         assert records[0].payload["status"] == "completed"
-        assert records[0].vector == pytest.approx(estimator._vector(task), abs=1e-6)
+        assert records[0].vector == pytest.approx(retrieval.embed_task(task), abs=1e-6)
 
 
 def test_fixed_duration_skips_model_and_timed_comparisons(tmp_path):
@@ -273,7 +282,7 @@ def test_offline_forecast_credits_notes_and_keeps_consistent_ratios(tmp_path):
                for i, ratio in enumerate((1.20, 1.25, 1.20))]
     with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("offline")):
         result = estimator.predict(paper("now"), history, tmp_path)
-    assert result["basis"] == "Text similarity" and result["point_min"] == 72
+    assert result["basis"] == "Selected history calculation" and result["point_min"] == 72
     caution, = result["cautions"]
     assert "Reconnected the serial link." in caution["advice"]
     assert [source["observation"] for source in caution["sources"]] == ["Reconnected the serial link."] * 3
@@ -291,40 +300,44 @@ def test_cautions_quote_new_obstacles_verbatim_and_keep_different_observations_a
     assert cautions[1]["sources"] == [other] and issue not in cautions[1]["advice"]
 
 
-def test_migration_fixture_fallback_warns_about_fixture_minimization_only_on_the_related_task(tmp_path):
-    from examples.estimation.run import DATASET, histories, historical_rows, task_inputs
-
-    scenario, = histories("02")
-    history = historical_rows(scenario, DATASET)
-    with patch("estimator.chat_json", side_effect=estimator.ModelUnavailable("offline")):
-        results = {row["title"]: estimator.predict(task_inputs(row, scenario["id"], DATASET)[0], history, tmp_path)
-                   for row in scenario["open_tasks"]}
-    coding = results["Minimize the marker-word failure"]
-    assert coding["retryable"] and any("EOF fixture" in item["advice"] for item in coding["cautions"])
-    assert {source["origin"] for item in coding["cautions"] for source in item["sources"]} == {"Completion note"}
-    pickup = results["Pick up the lab access card"]
-    assert pickup["cautions"] == [] and pickup["evidence"] == []
+def test_rejected_history_never_reaches_model_or_its_warning_sources(tmp_path, monkeypatch):
+    past = [{**paper("approved"), "completion_note": "USB bridge stopped responding."},
+            {**paper("rejected"), "completion_note": "UNRELATED_PRIVATE_NOTE"}]
+    monkeypatch.setattr(retrieval, "decide_related", lambda left, right, examples: right["id"] == "approved")
+    with patch("estimator.chat_json", return_value=forecast(warnings=[
+            {"observation_id": "S1.1", "advice": "Allow time for reconnecting the bridge."}])) as model:
+        prediction = estimator.predict(paper("new"), past, tmp_path)
+    payload = json.loads(model.call_args.args[0][-1]["content"])
+    assert len(payload["history"]) == 1 and "UNRELATED_PRIVATE_NOTE" not in str(payload)
+    assert prediction["cautions"][0]["sources"][0]["task_id"] == "approved"
+    assert [r["task_id"] for r in prediction["related_tasks"]] == ["approved"]
 
 
-def test_repeated_obstacle_can_reach_model_without_disclosing_unrelated_duration(tmp_path):
-    from examples.estimation.run import DATASET, histories, historical_rows, task_inputs
+def test_pinned_and_excluded_tasks_and_learned_examples(tmp_path, monkeypatch):
+    approved = dict(paper("user-picked"), fixed_duration=True)
+    prior = [approved, paper("excluded"), paper("automatic")]
+    example = {"target_id": "review-t", "candidate_id": "review-c", "target": prior[0],
+               "candidate": prior[2], "related": True}
+    task = dict(paper("new"), relevance_overrides={"user-picked": True, "excluded": False},
+                relevance_examples=[example])
+    with patch.object(retrieval, "decide_related", return_value=True) as decide,             patch("estimator.chat_json", return_value=forecast(comparisons=[
+                {"slot": 1, "reason": "The same kind of proof."}])) as model:
+        prediction = estimator.predict(task, prior, tmp_path)
+    decide.assert_called_once_with(task, prior[2], [example])
+    assert {r["task_id"] for r in prediction["related_tasks"]} == {"user-picked", "automatic"}
+    assert [r["task_id"] for r in prediction["evidence"]] == ["user-picked"]
+    assert set(prediction["feedback_source_ids"]) == {"review-t", "review-c"}
+    payload = json.loads(model.call_args.args[0][-1]["content"])
+    assert payload["reviewed_examples"][0]["related"] is True
+    assert "actual_seconds" not in str(payload["reviewed_examples"])
+    assert "review-t" not in str(payload)
 
-    scenario, = histories("02")
-    target = next(row for row in scenario["open_tasks"] if row["id"] == "held-seed")
-    fields, _ = task_inputs(target, scenario["id"], DATASET)
-    history = historical_rows(scenario, DATASET)
-    advice = "Allow time to reproduce the EOF regression with a smaller fixture."
 
-    def answer(messages, schema, **kwargs):
-        payload = json.loads(messages[-1]["content"])
-        issue = next(row for row in payload["observations_only"] if "EOF fixture" in row["observation"])
-        assert not {"slot", "actual_minutes", "user_estimate_minutes"}.intersection(issue)
-        assert issue["title"] not in {row["title"] for row in payload["history"]}
-        return forecast(warnings=[{"observation_id": issue["id"], "advice": advice}])
-
-    with patch("estimator.chat_json", side_effect=answer) as model:
-        result = estimator.predict(fields, history, tmp_path)
-    model.assert_called_once()
-    assert result["evidence"] == []
-    caution, = result["cautions"]
-    assert caution["advice"] == advice and caution["sources"][0]["task_id"] == "trace-tool"
+def test_unavailable_local_retrieval_preserves_cold_model_forecast(tmp_path, monkeypatch):
+    monkeypatch.setattr(retrieval, "embed_task", lambda *args: (_ for _ in ()).throw(
+        retrieval.ModelUnavailable("Embedding model unavailable.")))
+    with patch("estimator.chat_json", return_value=forecast()) as model:
+        result = estimator.predict(paper("new"), [paper("same-title")], tmp_path)
+    assert model.called and result["related_tasks"] == [] and result["evidence"] == []
+    assert result["point_min"] == 87 and result["provenance"]["decision"] == "direct"
+    assert result["retryable"] and "Embedding model" in result["retrieval_error"]

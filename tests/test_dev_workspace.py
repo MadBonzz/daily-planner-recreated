@@ -124,7 +124,8 @@ def test_failed_reset_keeps_the_previous_profile(profiles):
     assert set(store.data_dir.parent.glob("generation-*")) == original_generations
 
 
-def test_reset_while_worker_and_database_are_in_use(profiles):
+def test_reset_while_worker_and_database_are_in_use(profiles, monkeypatch):
+    monkeypatch.setattr("retrieval.embed_task", lambda *args: [0.6, 0.8])
     import gc
     import sqlite3
     import weakref

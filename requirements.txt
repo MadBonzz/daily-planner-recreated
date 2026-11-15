@@ -1,5 +1,6 @@
 streamlit>=1.67,<2
 qdrant-client>=1.12,<2
+lmstudio>=1.5,<2
 portalocker[win32]>=2.7,<5
 pypdf>=5,<8
 jsonschema>=4.20,<5

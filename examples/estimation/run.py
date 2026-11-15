@@ -14,6 +14,7 @@ import subprocess
 import sys
 from tempfile import TemporaryDirectory
 import time
+from contextlib import nullcontext
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
@@ -219,7 +220,8 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None, activit
         category_min = category_prediction(fields, completed)
         model_calls = []
         started = time.perf_counter()
-        with patch.object(estimator, "chat_json", record_calls(request, model_calls)):
+        skip_retrieval = patch.object(estimator, "_search", side_effect=offline_request) if offline else nullcontext()
+        with skip_retrieval, patch.object(estimator, "chat_json", record_calls(request, model_calls)):
             prediction = estimator.predict(fields, completed, index_dir)
         latency = time.perf_counter() - started
         outcome = "not_called"
@@ -255,6 +257,7 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None, activit
             "range": [prediction["low_min"], prediction["high_min"]],
             "covered": prediction["low_min"] <= actual <= prediction["high_min"],
             "confidence": prediction["confidence"], "basis": prediction["basis"],
+            "related_tasks": prediction.get("related_tasks", []), "retrieval_error": prediction.get("retrieval_error"),
             "provenance": provenance, "model_rationale": prediction.get("model_rationale"),
             "confidence_reason": prediction.get("confidence_reason"),
             "model_status": outcome, "model_error": model_error, "model_seconds": round(model_seconds, 3),
@@ -265,6 +268,8 @@ def evaluate(history, directory, index_dir, *, offline=False, case=None, activit
 
 
 def model_succeeded(row):
+    if row.get("retrieval_error"):
+        return False
     if row.get("fixed_duration") and row["basis"] == "Scheduled duration":
         return row["model_status"] == "not_called"
     return row["model_status"] in {"ok", "ok_after_retry"}

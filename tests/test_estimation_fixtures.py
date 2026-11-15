@@ -6,6 +6,12 @@ import pytest
 from examples.estimation import run
 
 
+@pytest.fixture(autouse=True)
+def isolated_local_models(monkeypatch):
+    monkeypatch.setattr("retrieval.embed_task", lambda *args: [1.0, 0.0])
+    monkeypatch.setattr("retrieval.decide_related", lambda *args: True)
+
+
 def fixture_history():
     task = {
         "id": "edit", "day": "2026-03-01", "title": "Review a draft",
@@ -148,6 +154,7 @@ def test_unpredictable_case_is_graded_only_on_realized_outcome():
     summary = rubric_summary([{"evaluation": scored, "original": 30, "category": 30, "planner": 30, "actual": 51}])
     assert scored["prediction_in_band"] is None and scored["caution_cites_expected_source"] is None
     assert summary["patterned_cases"] == 0 and summary["control_cases"] == 1
+    assert not run.model_succeeded({"model_status": "ok", "retrieval_error": "Embedding service unavailable"})
     assert run.model_succeeded({"basis": "Scheduled duration", "fixed_duration": True, "model_status": "not_called"})
     assert not run.model_succeeded({"basis": "User estimate", "fixed_duration": False, "model_status": "not_called"})
 

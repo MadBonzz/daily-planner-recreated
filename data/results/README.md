@@ -4,6 +4,7 @@ Each suite has a report comparing the same held-out tasks across runs. Each run 
 
 | Suite | Cases | Reports and records |
 | --- | ---: | --- |
+| Local task relevance · Qwen3 and Kev | 19 holdouts, 150 within-profile pairs | [Threshold calibration and held-out decisions](retrieval/2026-11-15-qwen06b-kev4b/) |
 | V3 · Model-generated point, range, confidence and warnings | 8 Cohere checks, 20 offline cases | [Report and run status](v3/README.md) · [Live Cohere checks](v3/runs/2026-11-14-cohere-direct-release/) |
 | V2 · Frozen hybrid estimator, mixed daily histories, completion notes and ActivityWatch evidence | 20 in 10 histories | [Comparison report](v2/README.md) · [Runs](v2/runs/) |
 | V1 · Original completed-task histories and PDFs | 20 in 10 histories | [Comparison report](v1/README.md) · [Paired case table](v1/cases.csv) · [Runs and probes](v1/runs/) |

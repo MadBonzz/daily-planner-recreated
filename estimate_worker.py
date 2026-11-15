@@ -1,11 +1,14 @@
 """Run pending estimates independently of Streamlit sessions and reruns."""
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 import logging
 import sqlite3
 import threading
 
 import estimator
+import retrieval
+from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
 
 
@@ -14,6 +17,7 @@ _POOL = ThreadPoolExecutor(max_workers=2, thread_name_prefix="planner-estimate")
 _LOCK = threading.Lock()
 # A set event requests another scan while a workspace is already being drained.
 _ACTIVE = {}
+_RETRIES = {}
 _LEASE_SECONDS = 30
 _RECHECK_SECONDS = 5
 
@@ -22,6 +26,9 @@ def schedule_pending(store, index_dir):
     """Wake one worker per workspace. Safe to call on startup or after a task save."""
     key = store.path.resolve()
     with _LOCK:
+        retry = _RETRIES.pop(key, None)
+        if retry:
+            retry.cancel()
         if key in _ACTIVE:
             _ACTIVE[key].set()
             return
@@ -34,21 +41,42 @@ def schedule_pending(store, index_dir):
             raise
 
 
+def run_one_job(store, index_dir):
+    """Run one currently claimable forecast or pair; return False when idle."""
+    job = store.claim_prediction(lease_seconds=_LEASE_SECONDS)
+    if job:
+        _process(store, index_dir, job)
+        return True
+    pair = store.claim_relation(lease_seconds=_LEASE_SECONDS)
+    if pair:
+        _process_relation(store, pair)
+        return True
+    return False
+
+
 def _drain(store, index_dir, key, wake):
     try:
         while True:
             wake.clear()
-            job = store.claim_prediction(lease_seconds=_LEASE_SECONDS)
-            if job:
-                _process(store, index_dir, job)
+            if run_one_job(store, index_dir):
                 continue
             if store.has_pending_predictions():
                 # A previous process may have stopped with a lease outstanding.
                 wake.wait(_RECHECK_SECONDS)
                 continue
+            delay = store.next_estimation_delay()
+            if delay == 0:
+                continue  # A transaction queued new work between scans.
             with _LOCK:
                 if not wake.is_set():
                     del _ACTIVE[key]
+                    if delay is not None:
+                        # Release the pool slot during backoff so an offline
+                        # decision model in Dev cannot starve other workspaces.
+                        timer = threading.Timer(delay, schedule_pending, args=(store, index_dir))
+                        timer.daemon = True
+                        _RETRIES[key] = timer
+                        timer.start()
                     return
     except Exception as exc:
         # A later UI render will reschedule durable jobs on a temporary DB error.
@@ -59,16 +87,15 @@ def _drain(store, index_dir, key, wake):
                 del _ACTIVE[key]
 
 
-def _process(store, index_dir, job):
-    task, token = job["task"], job["token"]
-    task_id = task["id"]
+@contextmanager
+def _heartbeat(extend):
     finished = threading.Event()
     revoked = threading.Event()
 
     def renew():
         while not finished.wait(_LEASE_SECONDS / 3):
             try:
-                if store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS):
+                if extend():
                     continue
             except sqlite3.Error:
                 # Recheck ownership before publishing a result.
@@ -78,24 +105,68 @@ def _process(store, index_dir, job):
 
     heartbeat = threading.Thread(target=renew, daemon=True, name="planner-estimate-lease")
     heartbeat.start()
-    pdf_text = None
     try:
-        try:
-            pages = []
-            unreadable = []
-            for document in task["attachments"]:
-                text = extract_pdf_text(store.attachment_bytes(document["id"]))
-                if text:
-                    pages.append(text)
-                else:
-                    unreadable.append(document["name"])
-            if pages or task["attachments"]:
-                pdf_text = "\n".join(pages)
-                task["pdf_text"] = pdf_text
+        yield revoked
+    finally:
+        finished.set()
+        heartbeat.join()
 
-            if revoked.is_set() or not store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS):
+
+def _read_documents(store, task):
+    """Hydrate a snapshot from immutable uploads when extraction has not run yet."""
+    if task.get("pdf_text_version") or not task.get("attachments"):
+        return None, []
+    pages, unreadable = [], []
+    for document in task["attachments"]:
+        text = extract_pdf_text(store.attachment_bytes(document["id"]))
+        if text:
+            pages.append(text)
+        else:
+            unreadable.append(document["name"])
+    extracted = "\n".join(pages)
+    task["pdf_text"] = extracted
+    if not unreadable:
+        store.cache_document_text(task["id"], extracted)
+        task["pdf_text_version"] = 1
+    return extracted, unreadable
+
+
+def _process_relation(store, job):
+    pair, token = job["pair"], job["token"]
+    with _heartbeat(lambda: store.renew_relation(pair, token, lease_seconds=_LEASE_SECONDS)) as revoked:
+        try:
+            for task in (job["target"], job["candidate"]):
+                _read_documents(store, task)
+            if revoked.is_set() or not store.renew_relation(pair, token, lease_seconds=_LEASE_SECONDS):
                 return
-            prediction = estimator.predict(task, job["history"], index_dir)
+            related = retrieval.decide_related(job["target"], job["candidate"], examples=job["examples"])
+        except ModelUnavailable as exc:
+            _LOG.info("Pair relevance pending. %s", exc)
+            related = None
+        except Exception as exc:
+            _LOG.error("Pair relevance failed (%s).", type(exc).__name__)
+            related = None
+        if not revoked.is_set():
+            store.resolve_relation(pair, token, related, examples=job["examples"])
+
+
+def _process(store, index_dir, job):
+    task, token = job["task"], job["token"]
+    task_id = task["id"]
+    pdf_text = None
+    with _heartbeat(lambda: store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS)) as revoked:
+        try:
+            pdf_text, unreadable = _read_documents(store, task)
+            for source in job["history"]:
+                _read_documents(store, source)
+
+            def renew():
+                return not revoked.is_set() and store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS)
+
+            if not renew():
+                return
+            with retrieval.estimation_lease(renew):
+                prediction = estimator.predict(task, job["history"], index_dir)
             if unreadable:
                 prediction["explanation"] += " No readable text was available from: " + ", ".join(unreadable) + "."
         except Exception as exc:
@@ -119,6 +190,3 @@ def _process(store, index_dir, job):
             for row in job["history"]:
                 if row["id"] not in existing:
                     estimator.forget_task(index_dir, row["id"])
-    finally:
-        finished.set()
-        heartbeat.join()

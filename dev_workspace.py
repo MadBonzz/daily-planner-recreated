@@ -78,7 +78,7 @@ def seed_completed(store, history, directory):
                      status="completed", now=sessions[-1][-1][1], report=report)
 
 
-def dev_activity_report(store, task):
+def dev_activity_report(store, task, *, examples=(), overrides=None):
     """Replay only imported device events. Manually timed work is unobserved in Dev."""
     periods = store.periods(task["id"])
     ref = store.get_setting(f"dev_activity_{task['id']}")
@@ -89,7 +89,8 @@ def dev_activity_report(store, task):
             if row["id"] == ref["task"]:
                 return replay_task_at(history, row, ref["sessions"], periods, directory=DATASET,
                                       exclusions=store.get_setting("exclusions", []), task_context=task,
-                                      use_model=bool(history.get("activitywatch_sha256")))
+                                      use_model=bool(history.get("activitywatch_sha256")),
+                                      examples=examples, overrides=overrides)
     return activity.build_report(task, periods, capture=False)
 
 
@@ -152,7 +153,7 @@ def _reap_retired(profile, selected):
             continue
 
 
-def open_dev_workspace(data_root, history_id, *, reset=False):
+def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
     """Atomically select one editable generation of this scenario for new sessions."""
     if not valid_id(history_id):
         raise ValueError("Invalid history ID")
@@ -160,6 +161,8 @@ def open_dev_workspace(data_root, history_id, *, reset=False):
     if not source.is_file():
         raise ValueError(f"Unknown example history {history_id}")
     dev_root = Path(data_root) / "dev"
+    if replay:
+        dev_root = dev_root / "replays"
     profile = dev_root / history_id
     profile.mkdir(parents=True, exist_ok=True)
     with closing(sqlite3.connect(dev_root / "profiles.sqlite3", timeout=30)) as registry:
@@ -177,8 +180,14 @@ def open_dev_workspace(data_root, history_id, *, reset=False):
             current = Path(mkdtemp(dir=profile, prefix="generation-"))
             try:
                 fresh = PlannerStore(current)
-                seed_completed(fresh, history, DATASET)
-                _seed_open(fresh, history, time.time())
+                import dev_schedule
+                if dev_schedule.schedule_exists(history_id, DATASET):
+                    dev_schedule.initialize(fresh, history_id, DATASET, replay=replay, now=time.time())
+                elif replay:
+                    raise ValueError("No chronological schedule is available for this sample.")
+                else:
+                    seed_completed(fresh, history, DATASET)
+                    _seed_open(fresh, history, time.time())
             except BaseException:
                 rmtree(current, ignore_errors=True)
                 raise
@@ -189,6 +198,15 @@ def open_dev_workspace(data_root, history_id, *, reset=False):
         # paths forever. A late model reply from the previous generation can
         # finish only in its original workspace, even in another process.
         store = _read_generation(current)
+        if replay:
+            # Use a fresh read on every tick. Workers and other tabs share the same virtual clock.
+            path = store.path
+            def replay_clock():
+                with closing(sqlite3.connect(path, timeout=15)) as clock_db:
+                    row = clock_db.execute("SELECT value FROM settings WHERE key='dev_calendar'").fetchone()
+                    calendar = json.loads(row[0])
+                    return calendar.get("clock", calendar["opened_at"])
+            store.clock = replay_clock
         # Protect the existing selection until the commit succeeds, as well
         # as the incoming generation. Later opens collect unowned generations.
         _reap_retired(profile, {current, previous})

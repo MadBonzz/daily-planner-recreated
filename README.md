@@ -48,6 +48,23 @@ The request timeout defaults to 90 seconds. Set `PLANNER_MODEL_TIMEOUT_SECONDS=3
 
 LM Studio and the planner must run on the same host for this configuration. The initial software and model downloads require internet access.
 
+### Local relevance models
+
+Even with a hosted forecast model, the planner uses Qwen3-Embedding-0.6B to search task history and Kev-4B to decide whether each candidate is comparable. Both run through LM Studio on the planner's machine. Install a version with the [System One API](https://lmstudio.ai/docs/developer/jev-compat/systemone) and an updated llama.cpp runtime.
+
+Download [Qwen3-Embedding-0.6B-Q8_0.gguf](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/blob/370f27d7550e0def9b39c1f16d3fbaa13aa67728/Qwen3-Embedding-0.6B-Q8_0.gguf) and [Kev-4B-Q4_K_M.gguf](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/f4624b6bb7072f1bab726a622c1cad3f96030b9e/Kev-4B-Q4_K_M.gguf). Run the following commands from the folder containing both downloads.
+
+```sh
+lms daemon up
+lms import Qwen3-Embedding-0.6B-Q8_0.gguf --user-repo Qwen/Qwen3-Embedding-0.6B-GGUF -y
+lms import Kev-4B-Q4_K_M.gguf --user-repo ggml-org/Kev-4B-GGUF -y
+lms load text-embedding-qwen3-embedding-0.6b --gpu off --context-length 8192 --identifier qwen3-embedding-0.6b
+lms load kev-4b --gpu off --context-length 4096 --identifier kev-4b
+lms server start --bind 127.0.0.1 --port 1234
+```
+
+The planner requests one embedding for the combined title, description, details and extracted document text. The local Qdrant index uses cosine similarity. Candidates at or above the default 0.45 threshold go to Kev individually. Category breaks tied cosine scores. The [threshold evaluation](data/results/retrieval/2026-11-15-qwen06b-kev4b/README.md) records the selection metric and held-out results. Check `.env.example` for local endpoint and threshold overrides.
+
 ## ActivityWatch
 
 Run [ActivityWatch](https://activitywatch.net/) on the same computer. Enable its window and AFK watchers. Install its browser extension for active-tab details. On Windows the planner checks the local ActivityWatch database and the synced stores listed below. If it cannot find a desktop store automatically, it reads the local ActivityWatch API on port 5600. Pause or Stop closes the timed period immediately. The **Finished?** prompt determines whether to add that task to estimation history.
@@ -73,15 +90,28 @@ The task is saved immediately. Its card shows **Estimating task time…** while 
 
 The model forecasts the minutes, planning range and confidence from the task description, optional details and PDF passages, plus relevant completed work retrieved from local Qdrant. **Why this estimate?** shows its rationale, confidence explanation and any cited comparisons. If the request fails, the card identifies the fallback. Older forecasts identify which steps were performed by the planner where that information was recorded.
 
-When finishing, optionally record what affected the time. The completion adds its actual duration, note and filtered activity report to the history for future estimates. Open tasks can then receive an updated forecast. The planner retains your budget and its first forecast for comparison. A **Watch for** preview on the card highlights an earlier observation. Expand **Why this estimate? → What to watch for** to see the relevant completion notes or ActivityWatch observations and the tasks they came from. When there is no supporting history, the section says so. Choose **Re-estimate** on any unfinished task with a flexible duration to request a new forecast using the current endpoint and completed history. While it runs, the card labels the previous forecast. Your original forecast and timer are preserved.
+Each card lists the completed tasks selected for comparison and the ones the forecast actually used. Choose **Edit relevant tasks** to add or remove comparisons and re-estimate. Your corrections supply examples for later forecasts and relevance decisions.
+
+**Stop → No, continue later** pauses the session. **Yes, finish task** records the actual duration and optional note immediately. The activity report appears on the completed card as soon as the worker finishes. Its activity table lets you correct classifications and regenerate the report. Later reports and estimates can use these corrections. Original estimates for newly created tasks run first. A completion triggers automatic refreshes only for unfinished tasks the pairwise decision model found related. The planner keeps your budget and its initial forecast for comparison. A **Watch for** preview on the card highlights an earlier observation. Expand **Why this estimate? → What to watch for** to see the relevant completion notes or ActivityWatch observations and the tasks they came from. When there is no supporting history, the section says so. Choose **Re-estimate** on any unfinished task with a flexible duration to request a new forecast using the current endpoint and completed history. While it runs, the card labels the previous forecast. Your original forecast and timer are preserved.
 
 PDF processing uses readable text from every page and selects passages relevant to the task. Image-only scans can be attached but supply no text.
 
+Use the trash icon on a card to remove it from the plan. The confirmation defaults to keeping its data in memory. Checking **Also delete this task’s data from memory** erases its planner sessions, files, report, vectors and learned feedback. You can also erase a previously hidden task under **Options → Planner settings**. The planner reads ActivityWatch’s source databases independently of its own storage.
+
 ## Demo and Dev
 
-**Demo** opens your personal plan, including tasks you have already saved. **Dev** lets you choose any of ten independent synthetic histories. The current day includes unfinished work. Open **History details** to inspect past tasks, their dates and recorded durations. Add a new task, finish an existing one, or switch profiles and return later. **Reset sample history** restores only the selected sample. Dev replays synthetic ActivityWatch data and keeps your personal activity separate.
+**Demo** opens your personal plan. In **Dev**, select one of ten profiles and a history view.
+
+* **Editable history** opens a populated calendar with dated tasks, descriptions, notes, PDFs and timer sessions. Go back a day with the arrow or choose a date under **History details**. The day shows tasks added to the plan and tasks worked on that day. Open a card to inspect the synthetic ActivityWatch intervals. Historical reports in this starting view use the fixture's reviewer labels. You can add tasks, finish work and revise classifications. If you loaded this profile on an earlier version, **Reset sample history** replaces its saved edits with the new calendar.
+* **Chronological replay** starts a separate copy with an empty planner. **Apply next action** or **Run to end** advances the schedule through real task creation, timers, model forecasts, completion and report generation. Each task's forecast history shows the initial prediction and subsequent revisions, including the evidence the model had at that time. You can leave and resume a replay, or restart it without affecting the editable calendar.
 
 SQLite stores the tasks, attached PDFs, completion notes, work sessions, forecasts and activity reports. Qdrant stores the searchable local task index. Set `PLANNER_DATA_DIR` to choose a different data directory.
+
+## Analytics & logs
+
+Open **View → Analytics & logs** in either workspace. Choose completion dates and categories to compare your budgets or the original model forecasts with recorded timer time. For each category, the table shows how often estimates were high, low or exact, and the average miss in minutes. An empty model column means that task has no recorded model-generated creation forecast.
+
+Under **Activity logs**, select an activity day and task to inspect timestamps, window titles, apps, domains, classifications and their sources. Intervals spanning midnight are apportioned across the two days. **Ask about your history** answers questions such as “Which sites accounted for the most distraction time on my reading tasks?” The configured model proposes a read-only query over the filtered tasks and visible logs, then summarizes the result. Expand the supporting data to inspect the query and rows.
 
 ## Evaluate the models
 
