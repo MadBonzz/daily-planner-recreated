@@ -85,6 +85,18 @@ class ModelClientTests(unittest.TestCase):
                 self.assertIn("HTTP 400", str(exc.exception))
 
     @patch("model_client.build_opener")
+    def test_cohere_schema_rejection_explains_format_without_echoing_input(self, opener):
+        url = "https://api.cohere.ai/compatibility/v1/chat/completions"
+        message = "invalid response_format: unsupported JSON schema - PRIVATE PROMPT ECHO"
+        with patch.dict("os.environ", {"PLANNER_MODEL_ENDPOINT": url, "COHERE_API": "test-token"}):
+            for error in ({"message": message}, {"error": {"param": "response_format", "message": message}}):
+                opener.return_value.open.side_effect = HTTPError(
+                    url, 400, "Bad Request", {}, io.BytesIO(json.dumps(error).encode()))
+                with self.assertRaisesRegex(ModelUnavailable, "response format.*HTTP 400") as exc:
+                    chat_json([], self.schema)
+                self.assertNotIn("PRIVATE PROMPT", str(exc.exception))
+
+    @patch("model_client.build_opener")
     def test_configured_cohere_request_loads_dotenv_and_keeps_prompt(self, opener):
         self.env_file.write_text(
             'COHERE_API="test-token"\nPLANNER_MODEL=c4ai-aya-expanse-32b\n'

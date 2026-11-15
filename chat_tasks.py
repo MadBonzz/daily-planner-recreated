@@ -87,9 +87,11 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
     data["pending_request"] = prior
     data["files"] = [{"id": key, "name": item["name"], "uploaded_this_turn": item["current"]}
                      for key, item in files.items()]
+    # Cohere supports numeric types in a response schema, but rejects numeric bounds.
+    # Check the returned effort here before offering the task to the store.
     props = {"action": {"type": "string", "enum": ["create", "clarify", "answer"]},
              "title": {"type": "string"}, "description": {"type": "string"}, "details": {"type": "string"},
-             "estimate_minutes": {"type": "number", "minimum": 0}, "day": {"type": "string"},
+             "estimate_minutes": {"type": "number"}, "day": {"type": "string"},
              "category": {"type": "string", "enum": ["", *categories]}, "fixed_duration": {"type": "boolean"},
              "when": {"type": "string"}, "estimate_phrase": {"type": "string"},
              "file_ids": {"type": "array", "items": {"type": "string"}},
@@ -112,7 +114,7 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
     if result["action"] != "create":
         return {"tool": tool, "pending_request": request if result["action"] == "clarify" else "", "answer": result["reply"] or "What task would you like to add, and for how long?"}
     effort = result["estimate_phrase"].strip().casefold()
-    if not result["estimate_minutes"] or not effort or effort not in request.casefold():
+    if not 0 < result["estimate_minutes"] < float("inf") or not effort or effort not in request.casefold():
         return {"tool": tool, "pending_request": request, "answer": "How many minutes do you expect this task to take?"}
     when, day = _destination(request, result, plan, infer_literal=True)
     if not when:

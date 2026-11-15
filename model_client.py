@@ -196,13 +196,20 @@ def chat_json(messages, schema):
                 body = json.loads(exc.read(16384))
                 detail = body.get("error") if isinstance(body, dict) else None
             except (OSError, ValueError):
-                detail = None
+                body = detail = None
             if isinstance(detail, dict) and any(detail.get(k) in ("exceed_context_size_error", "context_length_exceeded")
                                                for k in ("type", "code")):
                 count, limit = detail.get("n_prompt_tokens"), detail.get("n_ctx")
                 sizes = (f" ({count:,} input tokens, {limit:,} available)"
                          if type(count) is int and type(limit) is int and count > 0 and limit > 0 else "")
                 raise ModelContextExceeded(f"{model} rejected the input because it exceeds the context window{sizes}.") from exc
+            if cohere and exc.code == 400:
+                # The provider can echo private input. Only display a known error category.
+                issue = detail if isinstance(detail, dict) else body
+                if isinstance(issue, dict):
+                    message = str(issue.get("message", "")).casefold()
+                    if issue.get("param") == "response_format" or "response_format" in message or "json schema" in message:
+                        raise ModelUnavailable(f"{model} rejected the requested response format (HTTP 400).") from exc
         raise ModelUnavailable(f"{url.hostname} returned HTTP {exc.code} for {model}.") from exc
     except OSError as exc:
         # urllib can surface a read timeout directly or wrap a connection timeout in URLError.reason.
