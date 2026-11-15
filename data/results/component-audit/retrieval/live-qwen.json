@@ -1,0 +1,30 @@
+[
+  {
+    "task": "patch-tool",
+    "role": "document",
+    "input_sha256": "223fc3257fd71acadcc9e8368e32e59a9509b426a8a67793e05602e900005969",
+    "dimensions": 1024,
+    "cosine_against_published_vector": 1.0
+  },
+  {
+    "task": "patch-tool",
+    "role": "query",
+    "input_sha256": "18af745b35f181131165f5df45ed0038bba208d973fa6b27d466c64056a2fbe7",
+    "dimensions": 1024,
+    "cosine_against_published_vector": 1.0
+  },
+  {
+    "task": "suite-report",
+    "role": "document",
+    "input_sha256": "1c73d2cb0bcd9143b460b9bd049e33b42eac0f0c6cb755e307eeae7509abb6bc",
+    "dimensions": 1024,
+    "cosine_against_published_vector": 1.0
+  },
+  {
+    "task": "suite-report",
+    "role": "query",
+    "input_sha256": "4af91b7ae2c07918898e1a97da9268401264a184fd17feae300dbeaa8563e2cf",
+    "dimensions": 1024,
+    "cosine_against_published_vector": 1.0
+  }
+]

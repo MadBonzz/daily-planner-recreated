@@ -1,0 +1,611 @@
+{
+  "bonsai-4b": {
+    "original_full": {
+      "counts": {
+        "total": 20,
+        "direct": 16,
+        "labeled_bands": 15,
+        "inside_rubric_band": 3,
+        "valid_interval": 16,
+        "fallback": 3,
+        "fixed_without_call": 1,
+        "warning_source_unavailable": 2
+      },
+      "matched_counterfactual": {},
+      "direction_by_confidence": {
+        "low": {
+          "labeled": 0,
+          "correct_direction": 0
+        },
+        "medium": {
+          "labeled": 8,
+          "correct_direction": 1
+        },
+        "high": {
+          "labeled": 7,
+          "correct_direction": 2
+        }
+      },
+      "wall_clock_including_queue": {
+        "model_calls": 22,
+        "retries": 3,
+        "length_truncations": 6,
+        "median_call_seconds": 316.88,
+        "median_model_seconds_per_task": 307.43,
+        "calls_over_default_90_seconds": 21
+      },
+      "direction_one_vs_rest": {
+        "up": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 8,
+          "fn": 7,
+          "precision": null,
+          "recall": 0.0
+        },
+        "near": {
+          "tp": 3,
+          "fp": 10,
+          "tn": 2,
+          "fn": 0,
+          "precision": 0.231,
+          "recall": 1.0
+        },
+        "down": {
+          "tp": 0,
+          "fp": 2,
+          "tn": 8,
+          "fn": 5,
+          "precision": 0.0,
+          "recall": 0.0
+        }
+      },
+      "timing_citations_given_candidates": {
+        "tp": 13,
+        "fp": 1,
+        "tn": 0,
+        "fn": 6,
+        "precision": 0.929,
+        "recall": 0.684
+      },
+      "warning_cases_given_reachable_source_or_explicit_negative": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 1,
+        "precision": null,
+        "recall": 0.0
+      },
+      "warning_topic_and_source_cases": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 1,
+        "precision": null,
+        "recall": 0.0
+      },
+      "warning_detection_exhaustively_labeled": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "precision": null,
+        "recall": null
+      },
+      "cases": {
+        "appendix-proof": {
+          "budget": 60,
+          "forecast": 60,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [
+            "bound-floor"
+          ],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "high"
+        },
+        "async-flicker": {
+          "budget": 85,
+          "forecast": 80,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "warp-tail"
+          ],
+          "warnings": [],
+          "interval_width_min": 20,
+          "confidence": "high"
+        },
+        "bridge-proof": {
+          "budget": 75,
+          "forecast": 75,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [
+            "barrier-proof"
+          ],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "high"
+        },
+        "bridge-trace": {
+          "budget": 30,
+          "forecast": 30,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "bump-crossing": {
+          "budget": 45,
+          "forecast": 45,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "medium"
+        },
+        "dev-april": {
+          "budget": 20,
+          "forecast": 20,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [
+            "dev-packs",
+            "dev-receipts",
+            "dev-stock"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "high"
+        },
+        "duvet": {
+          "budget": 30,
+          "forecast": 30,
+          "expected_direction": null,
+          "direction": "near",
+          "cited": [
+            "sheets"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "editorial-review": {
+          "budget": 25,
+          "forecast": 25,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [
+            "retype-merge"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "metrics-club": {
+          "budget": 45,
+          "forecast": 45,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "medium"
+        },
+        "patch-note": {
+          "budget": 40,
+          "forecast": 40,
+          "expected_direction": "down",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "medium"
+        },
+        "patch-tool": {
+          "budget": 85,
+          "forecast": 80,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "trace-tool"
+          ],
+          "warnings": [],
+          "interval_width_min": 20,
+          "confidence": "high"
+        },
+        "replay-ramp": {
+          "budget": 40,
+          "forecast": 40,
+          "expected_direction": "near",
+          "direction": "near",
+          "cited": [
+            "wheel-ticks"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "high"
+        },
+        "sea-preflight": {
+          "budget": 30,
+          "forecast": 30,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [
+            "audio-preflight",
+            "blue-relay"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "shortest-window": {
+          "budget": 50,
+          "forecast": 50,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [
+            "subarray-target"
+          ],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "medium"
+        },
+        "sweep-again": {
+          "budget": 60,
+          "forecast": 59,
+          "expected_direction": "near",
+          "direction": "near",
+          "cited": [
+            "throughput-table"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "high"
+        },
+        "triangle-sheet": {
+          "budget": 45,
+          "forecast": 45,
+          "expected_direction": "near",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "medium"
+        }
+      }
+    }
+  },
+  "bonsai-9b": {
+    "original_full": {
+      "counts": {
+        "total": 20,
+        "direct": 19,
+        "labeled_bands": 18,
+        "inside_rubric_band": 7,
+        "valid_interval": 19,
+        "fixed_without_call": 1,
+        "warning_source_unavailable": 2
+      },
+      "matched_counterfactual": {},
+      "direction_by_confidence": {
+        "low": {
+          "labeled": 2,
+          "correct_direction": 1
+        },
+        "medium": {
+          "labeled": 15,
+          "correct_direction": 6
+        },
+        "high": {
+          "labeled": 1,
+          "correct_direction": 1
+        }
+      },
+      "wall_clock_including_queue": {
+        "model_calls": 19,
+        "retries": 0,
+        "length_truncations": 0,
+        "median_call_seconds": 272.38,
+        "median_model_seconds_per_task": 272.38,
+        "calls_over_default_90_seconds": 19
+      },
+      "direction_one_vs_rest": {
+        "up": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 8,
+          "fn": 8,
+          "precision": 1.0,
+          "recall": 0.2
+        },
+        "near": {
+          "tp": 1,
+          "fp": 1,
+          "tn": 14,
+          "fn": 2,
+          "precision": 0.5,
+          "recall": 0.333
+        },
+        "down": {
+          "tp": 5,
+          "fp": 9,
+          "tn": 4,
+          "fn": 0,
+          "precision": 0.357,
+          "recall": 1.0
+        }
+      },
+      "timing_citations_given_candidates": {
+        "tp": 26,
+        "fp": 1,
+        "tn": 0,
+        "fn": 2,
+        "precision": 0.963,
+        "recall": 0.929
+      },
+      "warning_cases_given_reachable_source_or_explicit_negative": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 3,
+        "precision": null,
+        "recall": 0.0
+      },
+      "warning_topic_and_source_cases": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 3,
+        "precision": null,
+        "recall": 0.0
+      },
+      "warning_detection_exhaustively_labeled": {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "precision": null,
+        "recall": null
+      },
+      "cases": {
+        "appendix-proof": {
+          "budget": 60,
+          "forecast": 45,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "bound-floor",
+            "check-jensen",
+            "derive-noise"
+          ],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "medium"
+        },
+        "async-flicker": {
+          "budget": 85,
+          "forecast": 75,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "warp-tail"
+          ],
+          "warnings": [],
+          "interval_width_min": 40,
+          "confidence": "medium"
+        },
+        "bake-dishes": {
+          "budget": 30,
+          "forecast": 30,
+          "expected_direction": "up",
+          "direction": "near",
+          "cited": [
+            "chili-dishes",
+            "pasta-dishes",
+            "stew-dishes"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "medium"
+        },
+        "bridge-proof": {
+          "budget": 75,
+          "forecast": 60,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "barrier-proof"
+          ],
+          "warnings": [],
+          "interval_width_min": 30,
+          "confidence": "medium"
+        },
+        "bridge-trace": {
+          "budget": 30,
+          "forecast": 25,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "bump-crossing": {
+          "budget": 45,
+          "forecast": 30,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "low"
+        },
+        "dev-april": {
+          "budget": 20,
+          "forecast": 15,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [
+            "dev-packs",
+            "dev-receipts",
+            "dev-stock"
+          ],
+          "warnings": [],
+          "interval_width_min": 6,
+          "confidence": "high"
+        },
+        "duvet": {
+          "budget": 30,
+          "forecast": 25,
+          "expected_direction": null,
+          "direction": "down",
+          "cited": [
+            "sheets"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "medium"
+        },
+        "editorial-review": {
+          "budget": 25,
+          "forecast": 20,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [
+            "retype-merge"
+          ],
+          "warnings": [],
+          "interval_width_min": 10,
+          "confidence": "medium"
+        },
+        "mara-rooms": {
+          "budget": 30,
+          "forecast": 35,
+          "expected_direction": "up",
+          "direction": "up",
+          "cited": [
+            "mara-capacity",
+            "mara-evening",
+            "mara-late-room"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "metrics-club": {
+          "budget": 45,
+          "forecast": 25,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "low"
+        },
+        "patch-note": {
+          "budget": 40,
+          "forecast": 25,
+          "expected_direction": "down",
+          "direction": "down",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "patch-tool": {
+          "budget": 85,
+          "forecast": 60,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "trace-tool"
+          ],
+          "warnings": [],
+          "interval_width_min": 45,
+          "confidence": "medium"
+        },
+        "replay-ramp": {
+          "budget": 40,
+          "forecast": 35,
+          "expected_direction": "near",
+          "direction": "down",
+          "cited": [
+            "junction-replay",
+            "wheel-ticks"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "sea-preflight": {
+          "budget": 30,
+          "forecast": 25,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "audio-preflight",
+            "blue-relay"
+          ],
+          "warnings": [],
+          "interval_width_min": 15,
+          "confidence": "medium"
+        },
+        "shortest-window": {
+          "budget": 50,
+          "forecast": 45,
+          "expected_direction": "up",
+          "direction": "down",
+          "cited": [
+            "subarray-target",
+            "two-targets"
+          ],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "medium"
+        },
+        "sweep-again": {
+          "budget": 60,
+          "forecast": 55,
+          "expected_direction": "near",
+          "direction": "down",
+          "cited": [
+            "median-runs",
+            "throughput-table"
+          ],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "medium"
+        },
+        "triangle-sheet": {
+          "budget": 45,
+          "forecast": 45,
+          "expected_direction": "near",
+          "direction": "near",
+          "cited": [],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "medium"
+        },
+        "triangle-video": {
+          "budget": 40,
+          "forecast": 45,
+          "expected_direction": "up",
+          "direction": "up",
+          "cited": [
+            "pulse-video",
+            "window-video"
+          ],
+          "warnings": [],
+          "interval_width_min": 25,
+          "confidence": "medium"
+        }
+      }
+    }
+  }
+}

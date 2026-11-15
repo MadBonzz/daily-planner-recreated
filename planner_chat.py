@@ -52,6 +52,23 @@ _CUTOFF = re.compile(r"\b(?:before|by|until|till|stop(?:ping)? at|finish(?:ing)?
                      r"(midnight|noon|(?:[01]?\d|2[0-3])(?::[0-5]\d)?\s*(?:[ap]\.?m\.?)?)\b", re.I)
 
 
+def _clock_cutoff(day, clock, zone, start):
+    """Resolve an explicitly stated clock reading to its next real occurrence on that day."""
+    requested = datetime.combine(day, clock)
+    instants = set()
+    for fold in (0, 1):
+        stamp = requested.replace(tzinfo=zone, fold=fold).timestamp()
+        observed = datetime.fromtimestamp(stamp, zone)
+        if observed.replace(tzinfo=None) == requested:
+            instants.add(stamp)
+    if not instants:
+        return None  # This clock reading was skipped as clocks moved forward.
+    upcoming = [stamp for stamp in instants if stamp >= start.timestamp()]
+    stamp = min(upcoming) if upcoming else max(instants)
+    value = datetime.fromtimestamp(stamp, zone)
+    return value if zone is not None else value.astimezone()
+
+
 def plan_window(question, snap, previous=None):
     now = snap["now"]
     selected = date.fromisoformat(snap["selected_day"])
@@ -105,7 +122,10 @@ def plan_window(question, snap, previous=None):
                     return {"error": "What local clock time should the plan end?"}
                 hour = hour % 12 + 12 * (match[3] == "pm")
         if hour < 24 and (hour, minute) != (0, 0):
-            end = wall_time(day, time(hour, minute))
+            end = _clock_cutoff(day, time(hour, minute), now.tzinfo, start)
+            if end is None:
+                return {"error": f"{hour:02}:{minute:02} does not occur on {day} in your local timezone. "
+                                  "Which clock time should the plan end?"}
         end_kind = "your stated cutoff"
     elif not duration and re.search(r"\b(?:before|until|by)\s+(?:my |the )?(?:dinner|bedtime|lunch|class|meeting|exam|work)\b", q):
         return {"error": "What local time is that commitment, or how many free minutes do you have before it?"}
@@ -122,19 +142,23 @@ def plan_window(question, snap, previous=None):
                 budget += int(extra[1])
             elif re.match(r"\s+and a half\b", question[duration.end():], re.I):
                 budget += 30
-    if previous.get("day") == day.isoformat() and not constraint and not duration:
-        if previous.get("end_kind") == "your stated cutoff":
+    budget_end = start.timestamp() + budget * 60 if budget is not None else None
+    if previous.get("day") == day.isoformat():
+        if not constraint and previous.get("end_kind") == "your stated cutoff":
             end = datetime.fromisoformat(previous["end"])
             end_kind = previous["end_kind"]
-        if previous.get("budget_minutes") is not None:
-            budget = previous["budget_minutes"]
-            if previous.get("start") and day == now.date():
-                elapsed = max(0, (start.timestamp() - datetime.fromisoformat(previous["start"]).timestamp()) / 60)
-                budget = max(0, ceil(budget - elapsed))
+        if not duration and previous.get("budget_minutes") is not None:
+            budget_end = previous.get("budget_expires_at")
+            if budget_end is None and previous.get("start"):
+                # Conversations from before absolute expiry was stored.
+                budget_end = datetime.fromisoformat(previous["start"]).timestamp() + previous["budget_minutes"] * 60
+            if budget_end is not None:
+                budget = max(0, floor((budget_end - start.timestamp()) / 60))
     calendar = 0 if day < now.date() else max(0, floor((end.timestamp() - start.timestamp()) / 60))
     return {"selected_day": snap["selected_day"], "day": day.isoformat(), "local_now": local_now.isoformat(timespec="minutes"),
             "start": start.isoformat(timespec="minutes"), "end": end.isoformat(timespec="minutes"),
             "end_kind": end_kind, "calendar_minutes": calendar, "budget_minutes": budget,
+            "budget_expires_at": budget_end,
             "available_minutes": min(calendar, budget) if budget is not None else calendar,
             "past": day < now.date(), "future": day > now.date()}
 
@@ -179,7 +203,9 @@ def answer_plan(question, snap, history, past_metrics, chat_json, still_current=
     rows = [{"id": i, **{k: v for k, v in t.items() if k != "id"}} for i, t in enumerate(tasks, 1)]
     remaining = window["available_minutes"]
     earlier = [{"question": t["question"], "answer": t.get("answer", "")[:650]} for t in history[-3:]]
-    data = {"question": question, "window": window, "unfinished_tasks": rows, "previous_turns": earlier,
+    # Expiry is conversation bookkeeping. The model already receives the available whole minutes.
+    visible_window = {k: v for k, v in window.items() if k != "budget_expires_at"}
+    data = {"question": question, "window": visible_window, "unfinished_tasks": rows, "previous_turns": earlier,
             "completed_task_accuracy_by_category": past_metrics}
     if still_current and not still_current():
         return {"answer": "Your records changed. Ask again using the current data."}

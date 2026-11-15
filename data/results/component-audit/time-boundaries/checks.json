@@ -1,0 +1,84 @@
+{
+  "baseline": "78f8034",
+  "zone": "America/New_York",
+  "counts": {
+    "before": {
+      "pass": 6,
+      "fail": 9
+    },
+    "after": {
+      "pass": 15
+    }
+  },
+  "checks": {
+    "test_ithaca_calendar_measures_elapsed_minutes[2026-03-07T18:00:00-05:00-day0-1380]": {
+      "before": "pass",
+      "after": "pass"
+    },
+    "test_ithaca_calendar_measures_elapsed_minutes[2026-10-31T18:00:00-04:00-day1-1500]": {
+      "before": "pass",
+      "after": "pass"
+    },
+    "test_ithaca_calendar_measures_elapsed_minutes[2026-03-08T01:30:00-05:00-day2-1290]": {
+      "before": "pass",
+      "after": "pass"
+    },
+    "test_next_occurrence_of_ambiguous_cutoff[iana-zone]": {
+      "before": "fail",
+      "before_failure": "assert 0 == 50",
+      "after": "pass"
+    },
+    "test_next_occurrence_of_ambiguous_cutoff[dashboard-local]": {
+      "before": "fail",
+      "before_failure": "assert 0 == 50",
+      "after": "pass"
+    },
+    "test_ask_for_another_cutoff_during_spring_gap[iana-zone]": {
+      "before": "fail",
+      "before_failure": "AssertionError: assert 'error' in {'selected_day': '2026-03-08', 'day': '2026-03-08', 'local_now': '2026-03-08T01:40-05:00', 'start': '2026-03-08T01:40-05:00', ...}",
+      "after": "pass"
+    },
+    "test_ask_for_another_cutoff_during_spring_gap[dashboard-local]": {
+      "before": "fail",
+      "before_failure": "AssertionError: assert 'error' in {'selected_day': '2026-03-08', 'day': '2026-03-08', 'local_now': '2026-03-08T01:40-05:00', 'start': '2026-03-08T01:40-05:00', ...}",
+      "after": "pass"
+    },
+    "test_followup_retains_cutoff_when_only_budget_changes": {
+      "before": "fail",
+      "before_failure": "assert (90 == 90 and 90 == 30)",
+      "after": "pass"
+    },
+    "test_followup_retains_elapsed_budget_when_only_cutoff_changes": {
+      "before": "fail",
+      "before_failure": "assert 140 == 20",
+      "after": "pass"
+    },
+    "test_repeated_subminute_followups_never_reset_budget": {
+      "before": "fail",
+      "before_failure": "assert 9 == 8",
+      "after": "pass"
+    },
+    "test_completed_midnight_session_and_two_0130_instants_survive_restart": {
+      "before": "fail",
+      "before_failure": "assert [1793511000.0, 1793511000.0] == [1793511000.0, 1793514600.0]",
+      "after": "pass"
+    },
+    "test_review_stays_due_during_repeated_hour_and_delivers_once": {
+      "before": "fail",
+      "before_failure": "AssertionError: assert '2026-10-31' == '2026-11-01'",
+      "after": "pass"
+    },
+    "test_spring_gap_review_delivers_at_clock_jump_and_only_once": {
+      "before": "pass",
+      "after": "pass"
+    },
+    "test_budget_resets_on_next_calendar_day": {
+      "before": "pass",
+      "after": "pass"
+    },
+    "test_first_fold_notification_is_not_repeated_after_restart": {
+      "before": "pass",
+      "after": "pass"
+    }
+  }
+}

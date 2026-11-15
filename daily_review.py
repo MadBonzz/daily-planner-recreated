@@ -26,7 +26,12 @@ def _due(db, now):
         return None
     local = datetime.fromtimestamp(now)
     yesterday = local.date() - timedelta(days=1)
-    last_due = local.date() if local.time() >= time.fromisoformat(config["time"]) else yesterday
+    at = time.fromisoformat(config["time"])
+    first_occurrence = datetime.combine(local.date(), at).replace(fold=0).timestamp()
+    # A skipped review time becomes due at the spring clock jump. Once reached in
+    # the first autumn occurrence it stays due even while the clock repeats.
+    reached = local.time() >= at or now >= first_occurrence
+    last_due = local.date() if reached else yesterday
     # On waking or opening the planner late, offer the most recent due plan once.
     # Older missed dates stay available through the regular day navigation.
     row = db.execute("""SELECT day, COUNT(*) AS total, SUM(status='completed') AS done

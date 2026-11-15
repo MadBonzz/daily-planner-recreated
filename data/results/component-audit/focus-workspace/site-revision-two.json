@@ -1,0 +1,533 @@
+{
+  "model": "kev-4b",
+  "results": [
+    {
+      "id": "game-during-writing",
+      "component": "focus",
+      "split": "development",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"lichess.org\", \"tab_titles\": [\"Three-minute puzzle storm — lichess\"]}, \"task_now\": \"Draft the methods note. Write 300 words on how we normalized load times. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.5956219704905946
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.11312228344763511
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "repeated-game-used-now",
+      "component": "focus",
+      "split": "development",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"lichess.org\", \"tab_titles\": [\"Three-minute puzzle storm — lichess\"]}, \"task_now\": \"Study my missed tactics. Load yesterday's puzzles on Lichess and replay all failed attempts. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.33283978005936615
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.8681523041459183
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "generic-login-twice",
+      "component": "focus",
+      "split": "development",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"portal.example\", \"tab_titles\": [\"Sign in\"]}, \"task_now\": \"Prepare a one-page summary. Describe changes to our sample processing procedure. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.8288347954327004
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.1879967861917939
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "video-is-resource",
+      "component": "focus",
+      "split": "development",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"vimeo.com\", \"tab_titles\": [\"Skateboarding finals highlights\"]}, \"task_now\": \"Learn balance equations. Watch the assigned Vimeo lecture before writing a derivation. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.5410241225580161
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.8311349838787382
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-portal",
+      "component": "focus",
+      "split": "development",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"portal.example\", \"tab_titles\": [\"Home\"]}, \"task_now\": \"Draft the shift memo. Review the coverage changes with a pencil and paper. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.09212471874061584
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.13869124192184693
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sports-while-debugging",
+      "component": "focus",
+      "split": "development",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"cbssports.com\", \"tab_titles\": [\"Rangers vs Orioles final inning recap\"]}, \"task_now\": \"Trace the missing ACK. Use the simulator and compare two message timelines. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.7018244809568478
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.2452247818324709
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mixed-use-site",
+      "component": "focus",
+      "split": "development",
+      "expected": false,
+      "predicted": false,
+      "live_calls": []
+    },
+    {
+      "id": "two-observed-shopping",
+      "component": "focus",
+      "split": "development",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"bids.example\", \"tab_titles\": [\"Vintage watch ending in four minutes\"]}, \"task_now\": \"Profile the GPU driver. Collect three traces and tabulate memory pressure. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.17135741350006511
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.15244727922477255
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "crossword-during-coding",
+      "component": "focus",
+      "split": "held_out",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"puzzles.example\", \"tab_titles\": [\"Solve today's Sunday cryptic crossword\"]}, \"task_now\": \"Instrument queue retries. Compare p90 delay before and after increasing the retry limit. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.5658013736168981
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.0612511281626131
+            }
+          },
+          "replayed_from": "baseline.json"
+        }
+      ]
+    },
+    {
+      "id": "streams-needed-twice",
+      "component": "focus",
+      "split": "held_out",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"twitch.tv\", \"tab_titles\": [\"Speedrun marathon: world record attempt\"]}, \"task_now\": \"Moderate the club livestream. On Twitch, review the live moderation queue and pin the guest's announcement. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.21304239211170845
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.6699855548530707
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "browser-placeholder",
+      "component": "focus",
+      "split": "held_out",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"tab.example\", \"tab_titles\": [\"New Tab\"]}, \"task_now\": \"Expand the proof outline. Explain the monotonicity argument from class. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.8998265163218382
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.10293859970219274
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-dashboard",
+      "component": "focus",
+      "split": "held_out",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"dashboard.example\", \"tab_titles\": [\"Dashboard\"]}, \"task_now\": \"Reconcile cash receipts. Add receipt totals to the register and file the records. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.2230827258622437
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.2864665822938528
+            }
+          },
+          "replayed_from": "baseline.json"
+        }
+      ]
+    },
+    {
+      "id": "required-from-handout",
+      "component": "focus",
+      "split": "held_out",
+      "expected": false,
+      "predicted": false,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"openstreetmap.org\", \"tab_titles\": [\"Browsing holiday cycle routes\"]}, \"task_now\": \"Complete the map exercise. Answer the four prompts in the attached field guide. \", \"previous_task\": \"Prepare previous edition 1\", \"site_reference_in_attachment\": \"Open OpenStreetMap and trace the survey route using the map editor.\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.5571267318043078
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.7805649540125321
+            }
+          },
+          "replayed_from": "baseline.json"
+        }
+      ]
+    },
+    {
+      "id": "multiple-explicit-diversions",
+      "component": "focus",
+      "split": "held_out",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"celebrity.example\", \"tab_titles\": [\"Photo gallery: seven celebrity weddings\"]}, \"task_now\": \"Outline the reviewer response. Write the response to the reviewers using the printed comments. \", \"previous_tasks\": [\"Prepare previous edition 1\", \"Prepare previous edition 2\"], \"related_tasks_with_off_task_visits\": 2}",
+            "questions": {
+              "generic": {
+                "type": "noul",
+                "instructions": "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, headline, event, game, or show. A named item need not include a verb."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "generic": {
+              "type": "noul",
+              "noul": 0.11005052959335078
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.2064670938249247
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "combined-phone",
+      "component": "focus",
+      "split": "held_out",
+      "expected": false,
+      "predicted": false,
+      "live_calls": []
+    },
+    {
+      "id": "documentary-during-lab",
+      "component": "focus",
+      "split": "held_out",
+      "expected": true,
+      "predicted": true,
+      "live_calls": [
+        {
+          "request": {
+            "model": "kev-4b",
+            "state": "{\"observed_off_task_browser_visit\": {\"label\": \"off_task\", \"domain\": \"film.example\", \"tab_titles\": [\"Watch the new action movie trailer\"]}, \"task_now\": \"Calibrate the humidity sensor. Compare three readings against the salt standard. \", \"previous_task\": \"Prepare previous edition 1\"}",
+            "questions": {
+              "specific": {
+                "type": "noul",
+                "instructions": "Does the title of the observed browser tab name a specific activity or content, like playing a game, reading a story, viewing a score or shopping for an item? Answer false for an uninformative title like Home, New Tab, Sign in or a blank tab."
+              },
+              "needed": {
+                "type": "noul",
+                "instructions": "Does this current task specifically use the website in the past visit? Look at the new task goals, required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+              }
+            }
+          },
+          "answers": {
+            "specific": {
+              "type": "noul",
+              "noul": 0.6528174862191114
+            },
+            "needed": {
+              "type": "noul",
+              "noul": 0.06440384761800055
+            }
+          },
+          "replayed_from": "baseline.json"
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "focus/development": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 5,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "focus/held_out": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 5,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  }
+}

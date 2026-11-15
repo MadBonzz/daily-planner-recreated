@@ -62,7 +62,7 @@ def analytics_rows(completed, exclusions):
                 midnight = datetime.combine(local.date() + timedelta(days=1), datetime.min.time()).timestamp()
                 stop = min(midnight, end)
                 logs.append({
-                    "task_id": item["id"], "started": local.isoformat(timespec="seconds"),
+                    "task_id": item["id"], "started": local.astimezone().isoformat(timespec="seconds"),
                     "seconds": stop - start, "device": device_label(event), "app": fields["app"], "domain": fields["domain"],
                     "window": fields["title"], "phone_app": fields["phone_app"],
                     "classification": event.get("label") or "uncertain", "source": source, "reason": fields["reason"],
@@ -684,7 +684,7 @@ def render_analytics(store, plan_day=None):
                        "Site": row["domain"], "Phone app": row["phone_app"],
                        "Label source": row["source"],
                        "Reason": row["reason"]}
-                      for row in sorted(filtered_logs, key=lambda r: r["started"], reverse=True)],
+                      for row in sorted(filtered_logs, key=lambda r: datetime.fromisoformat(r["started"]).timestamp(), reverse=True)],
                      hide_index=True, width="stretch", height="content" if len(filtered_logs) < 7 else 300)
     else:
         st.caption("No visible activity intervals match these filters.")

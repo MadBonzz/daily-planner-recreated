@@ -1,0 +1,465 @@
+[
+  {
+    "id": "game-during-writing",
+    "component": "focus",
+    "split": "development",
+    "title": "Draft the methods note",
+    "description": "Write 300 words on how we normalized load times.",
+    "domain": "lichess.org",
+    "visits": [
+      [
+        {
+          "title": "Three-minute puzzle storm \u2014 lichess"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "repeated-game-used-now",
+    "component": "focus",
+    "split": "development",
+    "title": "Study my missed tactics",
+    "description": "Load yesterday's puzzles on Lichess and replay all failed attempts.",
+    "domain": "lichess.org",
+    "visits": [
+      [
+        {
+          "title": "Three-minute puzzle storm \u2014 lichess"
+        }
+      ],
+      [
+        {
+          "title": "Three-minute puzzle storm \u2014 lichess"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "generic-login-twice",
+    "component": "focus",
+    "split": "development",
+    "title": "Prepare a one-page summary",
+    "description": "Describe changes to our sample processing procedure.",
+    "domain": "portal.example",
+    "visits": [
+      [
+        {
+          "title": "Sign in"
+        }
+      ],
+      [
+        {
+          "title": "Sign in"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "video-is-resource",
+    "component": "focus",
+    "split": "development",
+    "title": "Learn balance equations",
+    "description": "Watch the assigned Vimeo lecture before writing a derivation.",
+    "domain": "vimeo.com",
+    "visits": [
+      [
+        {
+          "title": "Skateboarding finals highlights"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "ambiguous-portal",
+    "component": "focus",
+    "split": "development",
+    "title": "Draft the shift memo",
+    "description": "Review the coverage changes with a pencil and paper.",
+    "domain": "portal.example",
+    "visits": [
+      [
+        {
+          "title": "Home"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "sports-while-debugging",
+    "component": "focus",
+    "split": "development",
+    "title": "Trace the missing ACK",
+    "description": "Use the simulator and compare two message timelines.",
+    "domain": "cbssports.com",
+    "visits": [
+      [
+        {
+          "title": "Rangers vs Orioles final inning recap"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "mixed-use-site",
+    "component": "focus",
+    "split": "development",
+    "title": "Prepare regression notes",
+    "description": "Write up the benchmark and attach references.",
+    "domain": "video.example",
+    "visits": [
+      [
+        {
+          "title": "Cup final highlights"
+        },
+        {
+          "title": "Measuring CUDA occupancy seminar",
+          "label": "on_task"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "two-observed-shopping",
+    "component": "focus",
+    "split": "development",
+    "title": "Profile the GPU driver",
+    "description": "Collect three traces and tabulate memory pressure.",
+    "domain": "bids.example",
+    "visits": [
+      [
+        {
+          "title": "Vintage watch ending in four minutes"
+        }
+      ],
+      [
+        {
+          "title": "Vintage watch ending in four minutes"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "desk-review",
+    "component": "workspace",
+    "split": "development",
+    "title": "Review the sampler memo",
+    "description": "Read the attached PDF and extract two assumptions from its methods.",
+    "attachments": true,
+    "expected": true
+  },
+  {
+    "id": "desk-missing-paper",
+    "component": "workspace",
+    "split": "development",
+    "title": "Review the sampler memo",
+    "description": "Read the PDF stored on my lab workstation. Use its exact confidence intervals in my summary.",
+    "attachments": false,
+    "expected": false
+  },
+  {
+    "id": "desk-ide",
+    "component": "workspace",
+    "split": "development",
+    "title": "Patch the lookup table",
+    "description": "Run the test suite and commit a fix in the project checkout.",
+    "attachments": true,
+    "expected": false
+  },
+  {
+    "id": "desk-writing",
+    "component": "workspace",
+    "split": "development",
+    "title": "Draft a thank-you message",
+    "description": "Write two sentences thanking the volunteer for running the food drive.",
+    "attachments": false,
+    "expected": true
+  },
+  {
+    "id": "desk-mixed-dominant",
+    "component": "workspace",
+    "split": "development",
+    "title": "Repair the punctured tire",
+    "description": "Follow the supplied PDF to patch the tube and reinstall the wheel.",
+    "attachments": true,
+    "expected": false
+  },
+  {
+    "id": "desk-proof",
+    "component": "workspace",
+    "split": "development",
+    "title": "Prove a parity lemma",
+    "description": "Write a direct proof that the sum of two odd integers is even.",
+    "attachments": false,
+    "expected": true
+  },
+  {
+    "id": "desk-prior-event",
+    "component": "workspace",
+    "split": "development",
+    "title": "Draft a retrospective",
+    "description": "Yesterday's meeting is finished. Write up its decisions using the notes supplied here: swap duty shifts and move the key safe.",
+    "attachments": false,
+    "expected": true
+  },
+  {
+    "id": "crossword-during-coding",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Instrument queue retries",
+    "description": "Compare p90 delay before and after increasing the retry limit.",
+    "domain": "puzzles.example",
+    "visits": [
+      [
+        {
+          "title": "Solve today's Sunday cryptic crossword"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "streams-needed-twice",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Moderate the club livestream",
+    "description": "On Twitch, review the live moderation queue and pin the guest's announcement.",
+    "domain": "twitch.tv",
+    "visits": [
+      [
+        {
+          "title": "Speedrun marathon: world record attempt"
+        }
+      ],
+      [
+        {
+          "title": "Speedrun marathon: world record attempt"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "browser-placeholder",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Expand the proof outline",
+    "description": "Explain the monotonicity argument from class.",
+    "domain": "tab.example",
+    "visits": [
+      [
+        {
+          "title": "New Tab"
+        }
+      ],
+      [
+        {
+          "title": "New Tab"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "ambiguous-dashboard",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Reconcile cash receipts",
+    "description": "Add receipt totals to the register and file the records.",
+    "domain": "dashboard.example",
+    "visits": [
+      [
+        {
+          "title": "Dashboard"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "required-from-handout",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Complete the map exercise",
+    "description": "Answer the four prompts in the attached field guide.",
+    "domain": "openstreetmap.org",
+    "visits": [
+      [
+        {
+          "title": "Browsing holiday cycle routes"
+        }
+      ]
+    ],
+    "expected": false,
+    "pdf_text": "Open OpenStreetMap and trace the survey route using the map editor."
+  },
+  {
+    "id": "multiple-explicit-diversions",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Outline the reviewer response",
+    "description": "Write the response to the reviewers using the printed comments.",
+    "domain": "celebrity.example",
+    "visits": [
+      [
+        {
+          "title": "Photo gallery: seven celebrity weddings"
+        }
+      ],
+      [
+        {
+          "title": "Photo gallery: seven celebrity weddings"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "combined-phone",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Summarize the induction proof",
+    "description": "Check the induction step and write one counterexample.",
+    "domain": "video.example",
+    "visits": [
+      [
+        {
+          "title": "Cat fails compilation",
+          "phone_app": "Mobile game"
+        }
+      ]
+    ],
+    "expected": false
+  },
+  {
+    "id": "documentary-during-lab",
+    "component": "focus",
+    "split": "held_out",
+    "title": "Calibrate the humidity sensor",
+    "description": "Compare three readings against the salt standard.",
+    "domain": "film.example",
+    "visits": [
+      [
+        {
+          "title": "Watch the new action movie trailer"
+        }
+      ]
+    ],
+    "expected": true
+  },
+  {
+    "id": "desk-physical",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Transplant the herb seedlings",
+    "description": "Use the attached care guide, then repot the basil and water it.",
+    "attachments": true,
+    "expected": false
+  },
+  {
+    "id": "desk-join-call",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Attend the steering meeting",
+    "description": "Join the room call, take attendance and vote on the budget.",
+    "attachments": false,
+    "expected": false
+  },
+  {
+    "id": "desk-attached-study",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Read the power-analysis handout",
+    "description": "Underline the definition of power in the attached document and explain it in two sentences.",
+    "attachments": true,
+    "expected": true
+  },
+  {
+    "id": "desk-composition",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Draft volunteer role descriptions",
+    "description": "Write plain-text descriptions of greeter and treasurer responsibilities for the handbook.",
+    "attachments": false,
+    "expected": true
+  },
+  {
+    "id": "desk-unavailable-reference",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Extract all four item counts",
+    "description": "The table is only in the spreadsheet on my desktop. Open it and transcribe its exact item counts.",
+    "attachments": false,
+    "expected": false
+  },
+  {
+    "id": "desk-submit-after-drafting",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Write a personal statement",
+    "description": "Draft three paragraphs about my tutoring work. I will paste the finished text into the portal later.",
+    "attachments": false,
+    "expected": true
+  },
+  {
+    "id": "desk-lab-before-writing",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Run the soil tests",
+    "description": "Collect three soil samples, run the nitrate assay with the kit and log the readings.",
+    "attachments": true,
+    "expected": false
+  },
+  {
+    "id": "desk-online-reading",
+    "component": "workspace",
+    "split": "held_out",
+    "title": "Compare today's headlines",
+    "description": "Open the live newspaper homepage and compare its current top three headlines.",
+    "attachments": false,
+    "expected": false
+  },
+  {
+    "split": "development",
+    "id": "desk-cad-render",
+    "title": "Draw a dimensioned bolt in CAD",
+    "description": "Create a scale drawing in CAD and export the dimensioned drawing as DXF. The attached handout gives the required measurements.",
+    "attachments": true,
+    "expected": false,
+    "component": "workspace"
+  },
+  {
+    "split": "development",
+    "id": "desk-visual-only",
+    "title": "Sketch the force arrows",
+    "description": "Draw the actual arrows on the supplied free-body diagram and return the annotated image.",
+    "attachments": true,
+    "expected": false,
+    "component": "workspace"
+  },
+  {
+    "split": "held_out",
+    "id": "desk-annotation",
+    "title": "Mark every fracture on the image",
+    "description": "Use the attached radiograph and circle each fracture directly on the image for the practical grade.",
+    "attachments": true,
+    "expected": false,
+    "component": "workspace"
+  },
+  {
+    "split": "held_out",
+    "id": "desk-alternative",
+    "title": "Describe the proposed dashboard",
+    "description": "Describe in plain English how each chart will look. Do not draw or implement the dashboard.",
+    "attachments": false,
+    "expected": true,
+    "component": "workspace"
+  }
+]

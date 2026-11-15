@@ -1,0 +1,32 @@
+{
+  "actual_overlaps": 112,
+  "both_orders_archived": 32,
+  "old_disagreements": [
+    {
+      "history": "01-replica-proofs",
+      "target": "epoch-proof",
+      "candidate": "lease-restart",
+      "newer_first": true,
+      "older_first": false,
+      "canonical_vote": true
+    },
+    {
+      "history": "02-migration-lab",
+      "target": "trace-tool",
+      "candidate": "ring-port",
+      "newer_first": true,
+      "older_first": false,
+      "canonical_vote": true
+    },
+    {
+      "history": "04-kernel-workbench",
+      "target": "stride-kernel",
+      "candidate": "warp-tail",
+      "newer_first": true,
+      "older_first": false,
+      "canonical_vote": true
+    }
+  ],
+  "legacy_reverse_reused": 41,
+  "new_order_disagreements": []
+}

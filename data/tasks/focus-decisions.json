@@ -354,7 +354,7 @@
     }
   },
   "model": "kev-4b",
-  "public_revision": "6d9a5a94699a01a245cfd1541099ec1ab6a09218",
+  "public_revision": "78f803439d37c964dfbee6bd9f5fd6e521cda0ec",
   "snapshot_requests": {
     "01-replica-proofs": {
       "bridge-proof": {},

@@ -1,0 +1,73 @@
+{
+  "profiles": {
+    "01-replica-proofs": {
+      "tasks": 7,
+      "intervals": 39,
+      "edited_groups": 6,
+      "revised_intervals": 8
+    },
+    "02-migration-lab": {
+      "tasks": 7,
+      "intervals": 45,
+      "edited_groups": 6,
+      "revised_intervals": 7
+    },
+    "03-reading-depth": {
+      "tasks": 7,
+      "intervals": 40,
+      "edited_groups": 6,
+      "revised_intervals": 7
+    },
+    "04-kernel-workbench": {
+      "tasks": 7,
+      "intervals": 50,
+      "edited_groups": 6,
+      "revised_intervals": 6
+    },
+    "05-interview-practice": {
+      "tasks": 8,
+      "intervals": 38,
+      "edited_groups": 7,
+      "revised_intervals": 8
+    },
+    "06-neighborhood-clinic": {
+      "tasks": 9,
+      "intervals": 28,
+      "edited_groups": 8,
+      "revised_intervals": 11
+    },
+    "07-shared-apartment": {
+      "tasks": 8,
+      "intervals": 21,
+      "edited_groups": 5,
+      "revised_intervals": 5
+    },
+    "08-community-playhouse": {
+      "tasks": 8,
+      "intervals": 22,
+      "edited_groups": 7,
+      "revised_intervals": 7
+    },
+    "09-rover-night": {
+      "tasks": 9,
+      "intervals": 39,
+      "edited_groups": 8,
+      "revised_intervals": 8
+    },
+    "10-signal-study": {
+      "tasks": 9,
+      "intervals": 38,
+      "edited_groups": 8,
+      "revised_intervals": 11
+    }
+  },
+  "totals": {
+    "tasks": 79,
+    "intervals": 360,
+    "edited_groups": 67,
+    "revised_intervals": 78
+  },
+  "model": null,
+  "split": "validation",
+  "component": "accounting"
+}

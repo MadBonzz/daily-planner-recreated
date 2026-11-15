@@ -1,0 +1,282 @@
+{
+  "12fb2de45c302df17d6d945b940ab755acae02d6a3cdc04381e6a58982ee71c9": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "patch-tool",
+    "old_hash": "1ab416a174cb5d115c05ec8091d2fec68021e7b93548449c2dc119694dc067e9",
+    "previous": false,
+    "scoped_score": 0.3611319643631916,
+    "related": false,
+    "expected": null
+  },
+  "969c213f62ed9e407a53d807e8df02ed19727bdc9628ae0befabda3bcef4c51c": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "codec-caption",
+    "old_hash": "363955663c7096368e8adcf48ab41d89e723255e4572cf3d6e090d9a75a45a5f",
+    "previous": false,
+    "scoped_score": 0.3764848336002918,
+    "related": false,
+    "expected": true
+  },
+  "e35d5cf91a8a2681076252551b805b473110f24fbaa3915785c14663734372b8": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "trace-tool",
+    "old_hash": "3f196847c9a36a63eb8b95fb644cd96834e01c0a016a13e9120fcd05c51fc1e6",
+    "previous": true,
+    "scoped_score": 0.7906392567258008,
+    "related": true,
+    "expected": true
+  },
+  "03af9562ea6ad68d998a128a2c2883e86de451d255c676b3cf1897bd6f61a033": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "pickup",
+    "old_hash": "41fd8e22b525465769accdb051ee66df0513845ba8a8d132285e9b60dec6a5b9",
+    "previous": false,
+    "scoped_score": 0.06646923644039766,
+    "related": false,
+    "expected": null
+  },
+  "6c99bb1577881c99cff34d40adf077ca1af3b545305cae50eb31298126fef168": {
+    "history": "02-migration-lab",
+    "target": "held-seed",
+    "candidate": "patch-note",
+    "old_hash": "532347fe7235fcb495e8d7ba443c3a14d01a3e65436853874a560822ea9c5289",
+    "previous": false,
+    "scoped_score": 0.30328382978010093,
+    "related": false,
+    "expected": null
+  },
+  "08e5341650a10529fa0df4da8003b0954c6c7a06b24f1e8dd0421f0f2551ed6a": {
+    "history": "02-migration-lab",
+    "target": "pickup",
+    "candidate": "patch-note",
+    "old_hash": "56d2bc90f110c6df94321b76c98e0d67a0c93c42344bd2984d6017068e42c129",
+    "previous": false,
+    "scoped_score": 0.1145337520617959,
+    "related": false,
+    "expected": null
+  },
+  "f19b59591f9d714838e8e54333b2880af20b8cba9ec89384f99db380a23927bb": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "held-seed",
+    "old_hash": "6707c594cd8260d85d8b2c09639967c2c1e9030dc836e926158e9c5214a8501c",
+    "previous": false,
+    "scoped_score": 0.2661040308319944,
+    "related": false,
+    "expected": null
+  },
+  "68d907a0061590ee8323f9bcffcb5814e69811a32b958782bb5b9822e63b9956": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "suite-report",
+    "old_hash": "7211975904ddeaca48b7b146ef500e2b6f481c26544c84f32bbb864f9aa265a0",
+    "previous": false,
+    "scoped_score": 0.5459197854866951,
+    "related": true,
+    "expected": true
+  },
+  "15bab35df1d34060d8e06639576362d8eb69f3980b88d9a6374000f0ac9786d9": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "patch-note",
+    "old_hash": "724cd99d5a7161cd72992abcadb1033b574a1d35b6769a53f6a247284de809cc",
+    "previous": false,
+    "scoped_score": 0.2768344067698501,
+    "related": false,
+    "expected": null
+  },
+  "1a3a46b5d3c8bc668e899f143c9dd7b92d3ae5b0f50f5cfa24c09da93f405c75": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "patch-note",
+    "old_hash": "7aa601397b846a43eab17f48b021f548a58379c8eaab18c99e823ab1edfa8b85",
+    "previous": true,
+    "scoped_score": 0.6120466499426167,
+    "related": true,
+    "expected": null
+  },
+  "8ae19ce56c8a94ef9e2bb3f5d3245e02e95c9103cd7d3c1d0e106fa4fefe4f82": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "pickup",
+    "old_hash": "83ed393a1179d7aa75fece52b915b476715dfa310663d80b21b9d0991cbfc47a",
+    "previous": false,
+    "scoped_score": 0.1035354148185507,
+    "related": false,
+    "expected": null
+  },
+  "c4f5b44e618fe82edb6ac3b681b5b1f84897a6e5be78ecab377e63f8b1d25684": {
+    "history": "02-migration-lab",
+    "target": "pickup",
+    "candidate": "patch-tool",
+    "old_hash": "883625827c8b7d3efc5ef4aa7ea452339728213a93efdabcb98dde427555f0af",
+    "previous": false,
+    "scoped_score": 0.10795920236074323,
+    "related": false,
+    "expected": null
+  },
+  "89b77a2c6156ee39fbbaf686e69165f1129d8b7b7755160fc14774a7173fa976": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "boundary-debug",
+    "old_hash": "944e793311808909d137903cd4d4430f8682853e9ff31747a50ee06f47763568",
+    "previous": false,
+    "scoped_score": 0.5588057122469032,
+    "related": true,
+    "expected": true
+  },
+  "4af6465339109025fd4ac3dd01295ff3b62f910eab2c33c65b9e3b2730d90df4": {
+    "history": "02-migration-lab",
+    "target": "patch-note",
+    "candidate": "trace-tool",
+    "old_hash": "a318c8f0a98fed31154d63aad7c203988dd4685c09b29051fb69642224d1af70",
+    "previous": false,
+    "scoped_score": 0.3815660431696043,
+    "related": false,
+    "expected": false
+  },
+  "911640b740e7848454910023a3c94a7ab3799efd013d034759917dd9f07ef857": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "held-seed",
+    "old_hash": "b169f801ef4fdc56245411c26854f23faf82fe6fd0d6ffbfbd4bdd7e2af4cc2f",
+    "previous": false,
+    "scoped_score": 0.3244947294579797,
+    "related": false,
+    "expected": null
+  },
+  "7c2c60b7b665b0823eb03793837bbbecbeb83c41fbd43ceb37d5cea7a4c33fbc": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "suite-report",
+    "old_hash": "ba96dd0421bda0eb038f9d4c4b0fe70fbe649f6c7d66e489c70cbabc36fb79e9",
+    "previous": false,
+    "scoped_score": 0.27082110160136813,
+    "related": false,
+    "expected": false
+  },
+  "7e2fadac8b60e466105725d95afb0589a15526efe9709f38cdba279ced1159ba": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "patch-tool",
+    "old_hash": "d17b1589244178be5a90b7941d4b6f15f07c7890af0941f48ae3e2f2f7853b4f",
+    "previous": true,
+    "scoped_score": 0.6126964975633199,
+    "related": true,
+    "expected": null
+  },
+  "bc4310fd66609fc1c684290e7873aeae07e651367b616fb0d2142ed731a8899b": {
+    "history": "02-migration-lab",
+    "target": "patch-tool",
+    "candidate": "ring-port",
+    "old_hash": "d1be30e3570ee71920b3545c4d6ba73a6ec849983b68cf486e3063f6f6a1b681",
+    "previous": false,
+    "scoped_score": 0.37416775113417905,
+    "related": false,
+    "expected": true
+  },
+  "33e87af9d17361463b6dac323189d896b2f2d91f9b8686ea74a115e7bfc04bc2": {
+    "history": "02-migration-lab",
+    "target": "held-seed",
+    "candidate": "patch-tool",
+    "old_hash": "d757f64adf3dec66a2ef1d4bf565af33694638b3453f17d5f1675acf41d630be",
+    "previous": false,
+    "scoped_score": 0.3624344412528484,
+    "related": false,
+    "expected": null
+  },
+  "2969247a6baebe6acfad76b4880e1fc095e89ebe7e94b31e73931c076815f0f8": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "dishsoap",
+    "old_hash": "31d170804cf20ae8f3a755da85af15c80ceeb435a6a1e4644ab25e8a236c71ef",
+    "previous": false,
+    "scoped_score": 0.10060773235383715,
+    "related": false,
+    "expected": null
+  },
+  "e37a7357c88d801914739ffabdecdd855ad34ed5a10cb5dd9cb2e5fe85af6d0e": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "stride-kernel",
+    "old_hash": "33844bd5743ffce6efc9c52ef16e6199603ef5753343e9c57053fe82d2bc3d60",
+    "previous": true,
+    "scoped_score": 0.5374598432551733,
+    "related": true,
+    "expected": true
+  },
+  "9165b4b9939e0f66cbbc0d98fad5fb080fe3d4d9cc35ca571aa20c6aa598532b": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "async-flicker",
+    "old_hash": "4d433dc8e947c03ac92926cc2a1b1364ff0c5e0393b6ab9207b8970b89a3afa8",
+    "previous": true,
+    "scoped_score": 0.6380068394853942,
+    "related": true,
+    "expected": null
+  },
+  "23570bfff98d756f4c56b0b99615796bb331208ceba8a06e4fdbadf228f82e33": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "sweep-again",
+    "old_hash": "70598e1eb42a2568d60119a280e0f01069c017ecc051a2cc19ffc780c1273c24",
+    "previous": false,
+    "scoped_score": 0.23986267945768047,
+    "related": false,
+    "expected": null
+  },
+  "491a9bd443d8556a3c3d51c43a4c640eb98ee45a6b3413098f952c41bf98cee6": {
+    "history": "04-kernel-workbench",
+    "target": "recheck-tail",
+    "candidate": "async-flicker",
+    "old_hash": "72c2a6b1d61d741ea6a079f6e4e883b490c0145377375991cfe2735197fa9952",
+    "previous": false,
+    "scoped_score": 0.37055351814407456,
+    "related": false,
+    "expected": null
+  },
+  "7d2af5d30c8f6c3162dfb7ae4ed200c6c5680df87634f2c025a9c50fb5a9304f": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "warp-tail",
+    "old_hash": "7ce320671c7c4bac9b4be9e17b12d1fabfb5ad18baedeaad351baa10525f8e32",
+    "previous": true,
+    "scoped_score": 0.5410204562539979,
+    "related": true,
+    "expected": true
+  },
+  "2c99caa4ad1533c250ee3bcd122a29ca0f70badf2af402cfd21a53cb6a9702d8": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "recheck-tail",
+    "old_hash": "8d640448f9d3e94aebc02719e5386dbf161a9464c748f4f0c38ccab5da9aea5f",
+    "previous": false,
+    "scoped_score": 0.4303049576419177,
+    "related": false,
+    "expected": null
+  },
+  "eb3921e7b973efe6bf1e193d21a996c3ae590c5320f174e2763ee79c7debabf9": {
+    "history": "04-kernel-workbench",
+    "target": "sweep-again",
+    "candidate": "async-flicker",
+    "old_hash": "8daa2bc8ef4afd79fb7dfd361261d07355000eb3109df00361702b83d2b55f9b",
+    "previous": false,
+    "scoped_score": 0.3758158017261783,
+    "related": false,
+    "expected": null
+  },
+  "3ff661e73eb1529b76dc42c0e57bbc09b331e131365f7e03521556e6c0c51a47": {
+    "history": "04-kernel-workbench",
+    "target": "async-flicker",
+    "candidate": "throughput-table",
+    "old_hash": "d08fdf45708613a1c33be73e5b7a9efb10dbf321f05966cdb18e571f2f8b5c3b",
+    "previous": false,
+    "scoped_score": 0.29086568783584243,
+    "related": false,
+    "expected": false
+  }
+}
