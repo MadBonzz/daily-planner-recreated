@@ -29,7 +29,9 @@ def test_recurring_across_distinct_related_tasks_with_live_edits_and_deletion(tm
     b = history(store, "Shared memory", [visit("www.x.com"), visit("tutorial.edu")])
     unrelated = history(store, "Shopping", [visit("sports.example")])
     target = open_task(store, "Matrix multiply", [a])
-    assert policy(store, target)["domains"] == []   # Two visits on a single task.
+    initial = policy(store, target)
+    assert initial["domains"] == []
+    assert "x.com" in initial["pending"]  # Both visits belong to one task; its Kev review is still missing.
     assert store.retry_estimate(target)
     lease = store.claim_prediction()
     assert store.resolve_prediction(target, lease["token"], {"related_tasks": [{"task_id": a}, {"task_id": b}]})

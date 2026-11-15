@@ -86,7 +86,7 @@ Choose **Mark complete** to finish a task directly and optionally supply its dur
 
 ## Website blocking
 
-On a task card, open **Websites to block during this task** to see which sites were distractions on at least two related completed tasks. Review the evidence, remove a suggestion or add a domain. Once you pair the browser, both **Start** and **Start with workspace** apply that task’s saved list. Pausing releases the sites and restores already-open tabs. Switching tasks applies the next task’s list.
+On a task card, open **Websites to block during this task** to see the sites suggested by past activity. One off-task visit on a related task is enough for Kev to review the domain. For example, it can suggest blocking a chess puzzle during another proof-writing task. The card shows where the visit occurred and for how long. Repeated off-task use across related tasks also qualifies. A site used for work in the same comparisons or named in the new task stays available unless you choose to block it. Review the evidence, remove a suggestion or add a domain. Once you pair the browser, both **Start** and **Start with workspace** apply that task’s saved list. Pausing releases the sites and restores already-open tabs. Switching tasks applies the next task’s list.
 
 Pair the extension once per Chrome or Edge profile under **Options → Planner settings → Browser blocking**. This works within the browser and requires no administrator access. [Install, pair and test the extension](browser_extension/README.md)
 

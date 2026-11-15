@@ -85,3 +85,15 @@ Inspect a fixture with the SQLite CLI. The following query lists watcher types a
 ```sh
 sqlite3 -readonly data/tasks/activitywatch/06-neighborhood-clinic.db "SELECT b.type, b.client, count(e.id) FROM buckets b LEFT JOIN events e ON e.bucketrow=b.id GROUP BY b.id;"
 ```
+
+## Website blocking suggestions
+
+`focus-decisions.json` contains Kev’s decisions for websites labeled as distractions in a single completed comparison task. The index includes the dated schedule, the 40 open and addable tasks across the ten histories, and the choice to manually select any completed task in the same history. A decision is keyed by the exact model request, including the task scope and observed tab titles.
+
+This command verifies the keys and coverage using only the published samples.
+
+```sh
+python -m examples.estimation.package_focus --check
+```
+
+To regenerate the decisions with Kev loaded locally, run `python -m examples.estimation.package_focus`. An optional `--checkpoint PATH` saves each completed judgment for interrupted builds.

@@ -27,8 +27,11 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
 
     def no_local_model(endpoint, payload, config):
         if "state" in payload:
-            pair = json.loads(payload["state"])
-            missing.append((pair["target"]["title"], pair["candidate"]["title"]))
+            state = json.loads(payload["state"])
+            if "observed_off_task_browser_visit" in state:
+                missing.append(("website", state["task_now"][:100], state["observed_off_task_browser_visit"]["domain"]))
+            else:
+                missing.append(("timing comparison", state["target"]["title"], state["candidate"]["title"]))
         else:
             missing.append(payload["input"][:90])
         raise retrieval.ModelUnavailable("Packaged task made a local model request.")

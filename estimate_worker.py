@@ -9,6 +9,7 @@ import threading
 import portalocker
 
 import estimator
+import focus_domains
 import retrieval
 from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
@@ -174,6 +175,11 @@ def _process(store, index_dir, job):
                 return
             with retrieval.estimation_lease(renew):
                 prediction = estimator.predict(task, job["history"], index_dir)
+                try:
+                    focus_domains.review_singles(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
+                except Exception as exc:
+                    # Site suggestions are optional. Preserve a completed time estimate if this review fails.
+                    _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
             if unreadable:
                 prediction["explanation"] += " No readable text was available from: " + ", ".join(unreadable) + "."
         except Exception as exc:

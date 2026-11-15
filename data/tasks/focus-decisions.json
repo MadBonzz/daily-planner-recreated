@@ -1,0 +1,405 @@
+{
+  "chronological_requests": {
+    "01-replica-proofs": [],
+    "02-migration-lab": [
+      "89d01f6dda3101f37e896880f4180b7d04d09584d493a0cc23af043d5efdfdc2"
+    ],
+    "03-reading-depth": [
+      "a91081a538ff0699344660e61874b4b1b6161b45df63563b676ca1964954a53f"
+    ],
+    "04-kernel-workbench": [
+      "f120bd5b37599a7f311aa90c9cc397ac34f0939b6f213709ed0bd429468486c1",
+      "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0"
+    ],
+    "05-interview-practice": [
+      "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61"
+    ],
+    "06-neighborhood-clinic": [
+      "744a0f65697375361d791b3203270c02658a7880aa23eb9888457a85288f5780"
+    ],
+    "07-shared-apartment": [],
+    "08-community-playhouse": [
+      "0b3fd41ba6d52fc5c94aabf7b2c6cbcffda27f1661d69be2a616134feaab2c8f"
+    ],
+    "09-rover-night": [],
+    "10-signal-study": []
+  },
+  "cosine_floor": 0.5,
+  "decisions": {
+    "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61": true,
+    "0b3fd41ba6d52fc5c94aabf7b2c6cbcffda27f1661d69be2a616134feaab2c8f": true,
+    "1147fa89883cdc240e88ff6d090364310ebc7456d3f96b98666457788b6471a8": true,
+    "126a2ad2b6444db0cf62415a1ce581ce64ae4193ee73028013b25e605a63b727": true,
+    "12c17473f34ea5670f72b161dc9045c526b0c53a813e01156724443a00ba7319": true,
+    "1476287e4defd3f979816705845878ef11e15810bc607b5a31d9b86688427f83": true,
+    "147cebefb13f991497a5c9c6a1525125a80a5c288080c6f54fd729c1e65bb148": true,
+    "1a62c1b9235f38177658607df6ea7f37370b06b20bc4ca23d4c4d612c899afa0": true,
+    "218000ef32d3c65a09545b6989ae7e80ebac47dea360d884ac33ce5b226bb037": true,
+    "2319cdcb72fd3845784ecb138a81719002c3904cff727dc97ebb3a6a385a07b9": true,
+    "2de9430f1f06b052d5f04eed7cc7341de9a358a39380ce9c9fe3f8bada1ddccb": true,
+    "2e9b448cc00cfb90bf6302ec4f28b968649731381daf899858fffab2319f80f7": true,
+    "390edb7ba3a2e2bfd6c374133aed9218ed8486f3bea6581a60f0b2a74659012b": false,
+    "4cdb853dba3830b4fdb412157484312c58f565360ab1104b7d994da87a2029cd": true,
+    "4ea804dc84e8ce901ad41a9d7a28d10cccd231924d793fdc20a7af834b75f58d": true,
+    "55cc8551b51d3c75bd1403f54b199fd4cc5c7d626ae2e621b04909edfe5fe9b4": true,
+    "58a845956f18b2a2fd4c749e65bc1230e32ea6cf955006c851f90fc1e292fdfb": true,
+    "5a5fff3f4b271aed03fe8cb8e5e5c09f66fa92e5d0017a59e280b9559b220f93": true,
+    "5b80c60e5d57a036663da405b17cdce433bf3fca379d60eca0be895ea90534d5": true,
+    "5be8e769435e1bfcf26362ec5ff62cb27eef56782c16135e09affe9058aa0b7b": true,
+    "6aebea90a722dfe14ab9b75e014bbd72f9e6246d684c1c955d41117857cb5b6b": true,
+    "6ff853794ed4430dfc40b56ce7a3ebac1f59252d2280573fea42f3d6c2c8daf0": true,
+    "730e31c7c52a0cf7ba370e934ca96a107c2a1ee1e3b6badef08dc3a53916b45a": true,
+    "744a0f65697375361d791b3203270c02658a7880aa23eb9888457a85288f5780": true,
+    "783165eb7b1ebec1db2bd03312d7b4db00369076fdf96e772f11cf0f913e5683": true,
+    "78ab71c29be5b6ff5ad388460beb41603f89cfec9fb6e83eed850625ba75a571": true,
+    "861dde8a36922cc4388438ecf24e6375fcbacb163fa8fd4a935b459d06157d09": true,
+    "89d01f6dda3101f37e896880f4180b7d04d09584d493a0cc23af043d5efdfdc2": true,
+    "920aa734233ed029d5f8b36b7958cc4bf1c3b161d7ccf7448fa6e9e2170b98fc": true,
+    "98eca1e1522904738c33d5c8a66cd272d5ee8b71d2457e1f674da44332e3a6f2": true,
+    "a91081a538ff0699344660e61874b4b1b6161b45df63563b676ca1964954a53f": true,
+    "bb67d3b4f3146d41ac5a71b0116b6fb94c12c9d5507f641fa83d9cebbe67f89e": true,
+    "bc1590d7001ea0eafa6fa639045b62fbab43b891d6d2af3902d9fca1aac6ee9c": true,
+    "c09fbef16a67dc72f3876b1a803bbd25c64099948f5031bd44dba42f6a907be0": true,
+    "c3cbdbe2eb00c5529a1a8e270229ad7d62abd0d5e48bbd78df516f86bf5d7556": true,
+    "cc796c85f4f6806e4cbb811beb4615cb416d0d9e95ece952581096d7f452aaeb": true,
+    "ce7030518eb755af8835bf04eaa2c8918cf6d2c51e1e2d93dd561afc356e53e1": true,
+    "cf4f2656934f94cd6048560f01508cf5a243065428099938d7b351abd1e2be55": true,
+    "d64acc2cefa1528c23209e58819d15fae39babe5ecd1e763d8b74c849e0a7355": true,
+    "d85266e51de2ddfa5e36a8c11be60954814787b4715d98d3fbf5976eae911343": true,
+    "da3ddd29d929e5d23759de6af5a1ad3f6337820c9722de6655b55ceb4824a5fd": true,
+    "e13ce005ee1c6795e6dc21cc69ae7e75be9484aaa96d35e7493e1fa845ea6998": true,
+    "e24f166b7d1c2b7d5a56d2a2c74aec8803564aedee536f6b28569ad81a3cbe1c": true,
+    "e29281d33fc217f07c2f201477025be96beeda7144feb6ee8d56ca4b4d88de04": true,
+    "ec26e3a15c880a5aecbf7992f64a005c451e14b823b7d542180ab3a6659adc7e": true,
+    "eeadaf484a18733ca0006c7d5a29cf82f1e981724bf11f701f0764af5f383ae2": true,
+    "f120bd5b37599a7f311aa90c9cc397ac34f0939b6f213709ed0bd429468486c1": true,
+    "f184a4884a906ff0868c1c72c34a0bf436f27d5b6082ffa90713e59cc55bfd8b": true,
+    "f3fc35ed8a17bc77ba20cbd5b1f0a0719d3ad3650164f7cdd6fd7a22a5848004": false,
+    "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0": true,
+    "fd23f1c0eb5c201fa1ef77fb940f6573ddc9e829c7a89c5e24ce822e5ce19379": true
+  },
+  "format": 1,
+  "manual_requests": {
+    "01-replica-proofs": {
+      "bridge-proof": {
+        "epoch-proof": {
+          "chess.com": "5be8e769435e1bfcf26362ec5ff62cb27eef56782c16135e09affe9058aa0b7b"
+        }
+      },
+      "bridge-trace": {
+        "epoch-proof": {
+          "chess.com": "218000ef32d3c65a09545b6989ae7e80ebac47dea360d884ac33ce5b226bb037"
+        }
+      },
+      "fix-proof": {
+        "epoch-proof": {
+          "chess.com": "147cebefb13f991497a5c9c6a1525125a80a5c288080c6f54fd729c1e65bb148"
+        }
+      },
+      "soap": {
+        "epoch-proof": {
+          "chess.com": "cc796c85f4f6806e4cbb811beb4615cb416d0d9e95ece952581096d7f452aaeb"
+        }
+      }
+    },
+    "02-migration-lab": {
+      "held-seed": {
+        "ring-port": {
+          "ebay.com": "89d01f6dda3101f37e896880f4180b7d04d09584d493a0cc23af043d5efdfdc2"
+        }
+      },
+      "patch-note": {
+        "ring-port": {
+          "ebay.com": "ce7030518eb755af8835bf04eaa2c8918cf6d2c51e1e2d93dd561afc356e53e1"
+        }
+      },
+      "patch-tool": {
+        "ring-port": {
+          "ebay.com": "da3ddd29d929e5d23759de6af5a1ad3f6337820c9722de6655b55ceb4824a5fd"
+        }
+      },
+      "pickup": {
+        "ring-port": {
+          "ebay.com": "d64acc2cefa1528c23209e58819d15fae39babe5ecd1e763d8b74c849e0a7355"
+        }
+      }
+    },
+    "03-reading-depth": {
+      "appendix-proof": {
+        "bound-floor": {
+          "nba.com": "6ff853794ed4430dfc40b56ce7a3ebac1f59252d2280573fea42f3d6c2c8daf0"
+        },
+        "check-jensen": {
+          "sports.example": "c3cbdbe2eb00c5529a1a8e270229ad7d62abd0d5e48bbd78df516f86bf5d7556"
+        }
+      },
+      "audit-card": {
+        "bound-floor": {
+          "nba.com": "a91081a538ff0699344660e61874b4b1b6161b45df63563b676ca1964954a53f"
+        },
+        "check-jensen": {
+          "sports.example": "f184a4884a906ff0868c1c72c34a0bf436f27d5b6082ffa90713e59cc55bfd8b"
+        }
+      },
+      "metrics-club": {
+        "bound-floor": {
+          "nba.com": "2de9430f1f06b052d5f04eed7cc7341de9a358a39380ce9c9fe3f8bada1ddccb"
+        },
+        "check-jensen": {
+          "sports.example": "bc1590d7001ea0eafa6fa639045b62fbab43b891d6d2af3902d9fca1aac6ee9c"
+        }
+      },
+      "potluck": {
+        "bound-floor": {
+          "nba.com": "e29281d33fc217f07c2f201477025be96beeda7144feb6ee8d56ca4b4d88de04"
+        },
+        "check-jensen": {
+          "sports.example": "1a62c1b9235f38177658607df6ea7f37370b06b20bc4ca23d4c4d612c899afa0"
+        }
+      }
+    },
+    "04-kernel-workbench": {
+      "async-flicker": {
+        "stride-kernel": {
+          "youtube.com": "c09fbef16a67dc72f3876b1a803bbd25c64099948f5031bd44dba42f6a907be0"
+        },
+        "warp-tail": {
+          "youtube.com": "1147fa89883cdc240e88ff6d090364310ebc7456d3f96b98666457788b6471a8"
+        }
+      },
+      "dishsoap": {
+        "stride-kernel": {
+          "youtube.com": "fd23f1c0eb5c201fa1ef77fb940f6573ddc9e829c7a89c5e24ce822e5ce19379"
+        },
+        "warp-tail": {
+          "youtube.com": "4ea804dc84e8ce901ad41a9d7a28d10cccd231924d793fdc20a7af834b75f58d"
+        }
+      },
+      "recheck-tail": {
+        "stride-kernel": {
+          "youtube.com": "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0"
+        },
+        "warp-tail": {
+          "youtube.com": "55cc8551b51d3c75bd1403f54b199fd4cc5c7d626ae2e621b04909edfe5fe9b4"
+        }
+      },
+      "sweep-again": {
+        "stride-kernel": {
+          "youtube.com": "126a2ad2b6444db0cf62415a1ce581ce64ae4193ee73028013b25e605a63b727"
+        },
+        "warp-tail": {
+          "youtube.com": "cf4f2656934f94cd6048560f01508cf5a243065428099938d7b351abd1e2be55"
+        }
+      }
+    },
+    "05-interview-practice": {
+      "analysis-extension": {
+        "subarray-target": {
+          "youtube.com": "e13ce005ee1c6795e6dc21cc69ae7e75be9484aaa96d35e7493e1fa845ea6998"
+        },
+        "window-cost": {
+          "youtube.com": "bb67d3b4f3146d41ac5a71b0116b6fb94c12c9d5507f641fa83d9cebbe67f89e"
+        }
+      },
+      "editorial-review": {
+        "subarray-target": {
+          "youtube.com": "4cdb853dba3830b4fdb412157484312c58f565360ab1104b7d994da87a2029cd"
+        },
+        "window-cost": {
+          "youtube.com": "ec26e3a15c880a5aecbf7992f64a005c451e14b823b7d542180ab3a6659adc7e"
+        }
+      },
+      "queue-drill": {
+        "subarray-target": {
+          "youtube.com": "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61"
+        },
+        "window-cost": {
+          "youtube.com": "78ab71c29be5b6ff5ad388460beb41603f89cfec9fb6e83eed850625ba75a571"
+        }
+      },
+      "shortest-window": {
+        "subarray-target": {
+          "youtube.com": "5b80c60e5d57a036663da405b17cdce433bf3fca379d60eca0be895ea90534d5"
+        },
+        "window-cost": {
+          "youtube.com": "861dde8a36922cc4388438ecf24e6375fcbacb163fa8fd4a935b459d06157d09"
+        }
+      }
+    },
+    "06-neighborhood-clinic": {
+      "dev-april": {
+        "mara-capacity": {
+          "nytimes.com": "920aa734233ed029d5f8b36b7958cc4bf1c3b161d7ccf7448fa6e9e2170b98fc"
+        }
+      },
+      "mara-rooms": {
+        "mara-capacity": {
+          "nytimes.com": "6aebea90a722dfe14ab9b75e014bbd72f9e6246d684c1c955d41117857cb5b6b"
+        }
+      },
+      "paused-flyer": {
+        "mara-capacity": {
+          "nytimes.com": "98eca1e1522904738c33d5c8a66cd272d5ee8b71d2457e1f674da44332e3a6f2"
+        }
+      },
+      "ready-door": {
+        "mara-capacity": {
+          "nytimes.com": "730e31c7c52a0cf7ba370e934ca96a107c2a1ee1e3b6badef08dc3a53916b45a"
+        }
+      }
+    },
+    "07-shared-apartment": {
+      "bake-dishes": {
+        "filter-renewal": {
+          "rei.com": "1476287e4defd3f979816705845878ef11e15810bc607b5a31d9b86688427f83"
+        }
+      },
+      "duvet": {
+        "filter-renewal": {
+          "rei.com": "d85266e51de2ddfa5e36a8c11be60954814787b4715d98d3fbf5976eae911343"
+        }
+      },
+      "paused-blue-load": {
+        "filter-renewal": {
+          "rei.com": "eeadaf484a18733ca0006c7d5a29cf82f1e981724bf11f701f0764af5f383ae2"
+        }
+      },
+      "ready-rice": {
+        "filter-renewal": {
+          "rei.com": "2e9b448cc00cfb90bf6302ec4f28b968649731381daf899858fffab2319f80f7"
+        }
+      }
+    },
+    "08-community-playhouse": {
+      "blue-show": {
+        "audio-preflight": {
+          "ticketmaster.com": "390edb7ba3a2e2bfd6c374133aed9218ed8486f3bea6581a60f0b2a74659012b"
+        }
+      },
+      "ready-ribbons": {
+        "audio-preflight": {
+          "ticketmaster.com": "e24f166b7d1c2b7d5a56d2a2c74aec8803564aedee536f6b28569ad81a3cbe1c"
+        }
+      },
+      "run-foyer": {
+        "audio-preflight": {
+          "ticketmaster.com": "12c17473f34ea5670f72b161dc9045c526b0c53a813e01156724443a00ba7319"
+        }
+      },
+      "sea-preflight": {
+        "audio-preflight": {
+          "ticketmaster.com": "f3fc35ed8a17bc77ba20cbd5b1f0a0719d3ad3650164f7cdd6fd7a22a5848004"
+        }
+      }
+    },
+    "09-rover-night": {
+      "bump-crossing": {
+        "turntable": {
+          "geoguessr.com": "58a845956f18b2a2fd4c749e65bc1230e32ea6cf955006c851f90fc1e292fdfb"
+        }
+      },
+      "paused-frames": {
+        "turntable": {
+          "geoguessr.com": "2319cdcb72fd3845784ecb138a81719002c3904cff727dc97ebb3a6a385a07b9"
+        }
+      },
+      "ready-washers": {
+        "turntable": {
+          "geoguessr.com": "783165eb7b1ebec1db2bd03312d7b4db00369076fdf96e772f11cf0f913e5683"
+        }
+      },
+      "replay-ramp": {
+        "turntable": {
+          "geoguessr.com": "5a5fff3f4b271aed03fe8cb8e5e5c09f66fa92e5d0017a59e280b9559b220f93"
+        }
+      }
+    },
+    "10-signal-study": {
+      "ready-headphone": {},
+      "run-edit": {},
+      "triangle-sheet": {},
+      "triangle-video": {}
+    }
+  },
+  "model": "kev-4b",
+  "public_revision": "6d9a5a94699a01a245cfd1541099ec1ab6a09218",
+  "snapshot_requests": {
+    "01-replica-proofs": {
+      "bridge-proof": {},
+      "bridge-trace": {},
+      "fix-proof": {},
+      "soap": {}
+    },
+    "02-migration-lab": {
+      "held-seed": {
+        "ebay.com": "89d01f6dda3101f37e896880f4180b7d04d09584d493a0cc23af043d5efdfdc2"
+      },
+      "patch-note": {},
+      "patch-tool": {},
+      "pickup": {}
+    },
+    "03-reading-depth": {
+      "appendix-proof": {
+        "nba.com": "6ff853794ed4430dfc40b56ce7a3ebac1f59252d2280573fea42f3d6c2c8daf0",
+        "sports.example": "c3cbdbe2eb00c5529a1a8e270229ad7d62abd0d5e48bbd78df516f86bf5d7556"
+      },
+      "audit-card": {
+        "nba.com": "a91081a538ff0699344660e61874b4b1b6161b45df63563b676ca1964954a53f"
+      },
+      "metrics-club": {},
+      "potluck": {}
+    },
+    "04-kernel-workbench": {
+      "async-flicker": {},
+      "dishsoap": {},
+      "recheck-tail": {
+        "youtube.com": "f7cb4f5fc06c93e09e5f55eb24d3cd3dfacdc1cf9eafcdde73de81d55e397dd0"
+      },
+      "sweep-again": {}
+    },
+    "05-interview-practice": {
+      "analysis-extension": {},
+      "editorial-review": {},
+      "queue-drill": {
+        "youtube.com": "016659ecd3bf53a25f8bb7a09b300b9021ee94a41ffdc0acc4d0dddc6489cf61"
+      },
+      "shortest-window": {
+        "youtube.com": "5b80c60e5d57a036663da405b17cdce433bf3fca379d60eca0be895ea90534d5"
+      }
+    },
+    "06-neighborhood-clinic": {
+      "dev-april": {},
+      "mara-rooms": {
+        "nytimes.com": "6aebea90a722dfe14ab9b75e014bbd72f9e6246d684c1c955d41117857cb5b6b"
+      },
+      "paused-flyer": {},
+      "ready-door": {}
+    },
+    "07-shared-apartment": {
+      "bake-dishes": {},
+      "duvet": {},
+      "paused-blue-load": {},
+      "ready-rice": {}
+    },
+    "08-community-playhouse": {
+      "blue-show": {},
+      "ready-ribbons": {},
+      "run-foyer": {},
+      "sea-preflight": {
+        "ticketmaster.com": "f3fc35ed8a17bc77ba20cbd5b1f0a0719d3ad3650164f7cdd6fd7a22a5848004"
+      }
+    },
+    "09-rover-night": {
+      "bump-crossing": {},
+      "paused-frames": {},
+      "ready-washers": {},
+      "replay-ramp": {}
+    },
+    "10-signal-study": {
+      "ready-headphone": {},
+      "run-edit": {},
+      "triangle-sheet": {},
+      "triangle-video": {}
+    }
+  }
+}

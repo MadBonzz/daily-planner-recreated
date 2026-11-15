@@ -681,7 +681,8 @@ class PlannerStore:
             inputs = {key: task[key] for key in ("id", "title", "description", "category", "details",
                       "day", "estimate_minutes", "fixed_duration", "pdf_text", "pdf_text_version", "attachments")}
             inputs.update(forecast_feedback(db, task_id))
-            return {"task": inputs, "history": history, "token": token}
+            return {"task": inputs, "history": history, "token": token,
+                    "focus_verdicts": (task.get("prediction") or {}).get("focus_verdicts", {})}
 
     def renew_prediction(self, task_id, token, *, lease_seconds=300):
         if not math.isfinite(lease_seconds) or lease_seconds <= 0:

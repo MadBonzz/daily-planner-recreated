@@ -2,10 +2,14 @@
 
 from collections import defaultdict
 import json
+import math
 import re
 from urllib.parse import urlsplit
 
+import focus_judge
 from activity import activity_key
+from model_client import ModelUnavailable, planner_settings
+from retrieval import check_lease
 from relevance_feedback import related_ids
 
 
@@ -48,28 +52,35 @@ def _blocked_by(host, domain):
     return host == domain or host.endswith("." + domain)
 
 
-def _suggestions(db, task, sources):
+def _site_evidence(db, target, sources, config):
+    """Collect current, sanitized evidence before making or using any domain judgment."""
     if not sources:
-        return {}
+        return
     ids = json.dumps(sources)
-    rows = db.execute("""SELECT id, title, report FROM tasks WHERE status='completed' AND report IS NOT NULL
+    rows = db.execute("""SELECT id, title, report FROM tasks
+                         WHERE status='completed' AND report IS NOT NULL
                          AND id IN (SELECT value FROM json_each(?)) ORDER BY title, id""", (ids,))
-    # An explicit allow on comparable work also counts against a blanket rule.
     allowed = {r["domain"] for r in db.execute("""SELECT domain FROM focus_domain_choices
                WHERE blocked=0 AND task_id IN (SELECT value FROM json_each(?))""", (ids,))}
     feedback = {(r["task_id"], r["activity_key"]): r["label"] for r in db.execute(
         """SELECT task_id,activity_key,label FROM activity_feedback WHERE task_id IN (SELECT value FROM json_each(?))""",
         (ids,))}
     setting = db.execute("SELECT value FROM settings WHERE key='exclusions'").fetchone()
-    exclusions = json.loads(setting[0]) if setting else []
-    excluded = [v.strip().casefold() for v in exclusions if isinstance(v, str) and v.strip()]
-    repeats = defaultdict(dict)
-    for row in rows:
-        for event in json.loads(row["report"]).get("intervals", []):
-            if event.get("excluded") or not event.get("domain") or event.get("seconds", 0) <= 0:
+    exclusions = [v.strip().casefold() for v in (json.loads(setting[0]) if setting else [])
+                  if isinstance(v, str) and v.strip()]
+    visits = defaultdict(dict)
+    tasks = {}
+    for record in rows:
+        row = dict(record)
+        intervals = json.loads(row.pop("report")).get("intervals", [])
+        tasks[row["id"]] = row
+        for event in intervals:
+            seconds = event.get("seconds")
+            if (event.get("excluded") or not event.get("domain") or type(seconds) not in (int, float)
+                    or not math.isfinite(seconds) or seconds <= 0):
                 continue
             text = " ".join(str(event.get(k) or "") for k in ("app", "title", "domain", "phone_app")).casefold()
-            if any(term in text for term in excluded):
+            if any(term in text for term in exclusions):
                 continue
             try:
                 host = normalize_domain(event["domain"])
@@ -79,41 +90,97 @@ def _suggestions(db, task, sources):
             if label == "on_task":
                 allowed.add(host)
             elif label == "off_task" and not event.get("idle") and not event.get("phone_app"):
-                # One classification over a desktop and a phone cannot establish which one distracted the user.
-                if row["id"] not in repeats[host]:
-                    repeats[host][row["id"]] = [row["title"], 0.0]
-                repeats[host][row["id"]][1] += event["seconds"]
-    recurring = {domain: observations for domain, observations in repeats.items()
-                 if len(observations) >= 2 and not any(_blocked_by(host, domain) or _blocked_by(domain, host) for host in allowed)}
-    if not recurring:
-        return {}
-    # A link in the target may be part of its instructions even if it was distracting in the past.
-    fields = db.execute("SELECT title, description, details, pdf_text FROM tasks WHERE id=?", (task["id"],)).fetchone()
-    target_text = " ".join(value or "" for value in fields).casefold()
-    suggestions = {}
-    for domain, observations in sorted(recurring.items()):
+                # A combined phone/laptop interval cannot attribute the distraction to this domain.
+                visit = visits[host].setdefault(row["id"], {"seconds": 0, "titles": set()})
+                visit["seconds"] += seconds
+                if event.get("title"):
+                    visit["titles"].add(event["title"])
+
+    target_text = " ".join(target.get(k) or "" for k in ("title", "description", "details", "pdf_text")).casefold()
+    for domain, observations in sorted(visits.items()):
+        if any(_blocked_by(host, domain) or _blocked_by(domain, host) for host in allowed):
+            continue
         if re.search(r"(?<![\w-])" + re.escape(domain) + r"(?![\w-]|\.[\w-])", target_text):
             continue
-        names = [title for title, _ in observations.values()]
-        minutes = sum(seconds for _, seconds in observations.values()) / 60
-        examples = " and ".join(f"“{name}”" for name in names[:2])
-        suggestions[domain] = (f"{minutes:.1f} minutes labeled distraction across {len(names)} related tasks, "
-                               f"including {examples}.")
-    return suggestions
+        minutes = sum(visit["seconds"] for visit in observations.values()) / 60
+        if len(observations) == 1:
+            source_id, visit = next(iter(observations.items()))
+            source = tasks[source_id]
+            example = " / ".join(sorted(visit["titles"])[:2])
+            detail = f' The recorded window was “{example}”.' if example else ""
+            reason = f'{minutes:.1f} minutes labeled distraction during one related task, “{source["title"]}”.{detail}'
+            if config is None:
+                config = planner_settings()
+            yield domain, reason, focus_judge.payload(target, domain, source, visit["titles"], config)
+        else:
+            names = (tasks[k]["title"] for k in list(observations)[:2])
+            examples = " and ".join(f"“{name}”" for name in names)
+            reason = f"{minutes:.1f} minutes labeled distraction across {len(observations)} related tasks, including {examples}."
+            yield domain, reason, None
+
+
+def _target(db, task_id):
+    row = db.execute("""SELECT id, title, description, details, pdf_text, prediction FROM tasks
+                        WHERE id=? AND archived=0""", (task_id,)).fetchone()
+    if row is None:
+        raise ValueError("This task is no longer available.")
+    return dict(row)
+
+
+def single_requests(store, task_id, source_ids, *, pdf_text=None, config=None):
+    if not source_ids:
+        return {}
+    with store._db() as db:
+        target = _target(db, task_id)
+        if pdf_text is not None:
+            target["pdf_text"] = pdf_text
+        return {domain: request for domain, _, request in _site_evidence(db, target, source_ids, config)
+                if request is not None}
+
+
+def review_singles(store, task, prediction, pdf_text, previous):
+    """Run local inference outside SQLite; commit verdicts atomically with this forecast."""
+    sources = related_ids(prediction)
+    if not sources:
+        return
+    config = planner_settings()
+    requests = single_requests(store, task["id"], sources, pdf_text=pdf_text, config=config)
+    results = {}
+    for request in requests.values():
+        key = focus_judge.key(request)
+        check_lease()
+        try:
+            results[key] = previous[key] if type(previous.get(key)) is bool else focus_judge.decide(request, config)
+        except ModelUnavailable:
+            # An unreviewed domain remains editable; a later re-estimate can retry.
+            continue
+    if results:
+        prediction["focus_verdicts"] = results
 
 
 def policy_from_db(db, task_id):
-    """Compute a read-only policy in the caller's transaction. Only the active timer should enforce it."""
-    task = db.execute("SELECT id, prediction FROM tasks WHERE id=? AND archived=0", (task_id,)).fetchone()
-    if task is None:
-        raise ValueError("This task is no longer available.")
-    suggestions = _suggestions(db, task, _related_sources(db, task))
+    """Read the effective policy without calling a model from a UI render or browser poll."""
+    task = _target(db, task_id)
+    stored = json.loads(task["prediction"]).get("focus_verdicts", {})
+    suggestions, pending = {}, {}
+    for domain, reason, request in _site_evidence(db, task, _related_sources(db, task), None):
+        if request is None:
+            suggestions[domain] = reason
+            continue
+        verdict = stored.get(focus_judge.key(request))
+        if type(verdict) is not bool:
+            verdict = focus_judge.packaged(request)
+        if verdict is True:
+            suggestions[domain] = reason + " Kev recommends blocking it for this task."
+        elif verdict is None:
+            pending[domain] = reason
     choices = {r["domain"]: bool(r["blocked"]) for r in db.execute(
         "SELECT domain, blocked FROM focus_domain_choices WHERE task_id=?", (task_id,))}
     added = {d for d, enabled in choices.items() if enabled}
     removed = {d for d, enabled in choices.items() if not enabled}
     return {"domains": sorted((suggestions.keys() | added) - removed), "suggestions": suggestions,
-            "added": sorted(added), "removed": sorted(removed)}
+            "added": sorted(added), "removed": sorted(removed),
+            "pending": {d: why for d, why in pending.items() if d not in choices}}
 
 
 def policy(store, task_id):

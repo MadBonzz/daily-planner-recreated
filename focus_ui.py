@@ -63,10 +63,14 @@ def site_editor(store, task):
         if policy["suggestions"]:
             for d, evidence in policy["suggestions"].items():
                 st.text(f"{d} · {evidence}")
-        else:
-            st.caption("No recurring distracting site was found in related tasks. You can add a site yourself.")
+        elif not policy["pending"]:
+            st.caption("No website was suggested from related work. You can add one yourself.")
+        if policy["pending"]:
+            st.caption("These sites appeared during one related task. Re-estimate to retry the Kev review, or select a site yourself.")
+            for domain, reason in policy["pending"].items():
+                st.text(f"{domain} · {reason}")
         domains = policy["domains"]
-        options = sorted(set(domains) | set(policy["suggestions"]) | set(policy["removed"]))
+        options = sorted(set(domains) | set(policy["suggestions"]) | set(policy["removed"]) | set(policy["pending"]))
         version = hashlib.sha256("\n".join(domains).encode()).hexdigest()[:12]
         with st.form(f"site-list-{key}-{version}"):
             selected = st.multiselect("Blocked websites", options, default=domains, accept_new_options=True,
