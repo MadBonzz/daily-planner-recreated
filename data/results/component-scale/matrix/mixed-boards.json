@@ -1,0 +1,121 @@
+[
+  {
+    "name": "Friday close",
+    "split": "validation",
+    "tasks": [
+      [
+        "till",
+        "Friday close",
+        "For a dozen counter payments, match the receipt and tip against the settlement in the bank export. Record discrepancies on the close sheet and sign it."
+      ],
+      [
+        "forms",
+        "Friday close",
+        "From twelve paper service slips, key the date, form ID, initials and ticked option into four columns. Reread each slip against the row to check the transcription."
+      ],
+      [
+        "dues",
+        "Reconcile this week's club dues",
+        "Match twelve members' paid invoices against the individual deposits in the settlement file. List unmatched amounts for the treasurer and sign off."
+      ],
+      [
+        "labels",
+        "Botanical voucher accession",
+        "Key the identifier, date, initials and cultivar from a dozen handwritten plant labels into the collection table. Compare each saved row with the physical label."
+      ],
+      [
+        "code",
+        "Friday close",
+        "Implement a Python reconciler that joins receipts to bank settlements and unit-test duplicate amounts. Deliver the code; somebody else will perform this week's reconciliation."
+      ],
+      [
+        "import",
+        "Import the new service slips",
+        "The twelve slips are already a verified CSV. Run the existing import and compare its reported row count with twelve. No rekeying or reconciliation is needed."
+      ],
+      [
+        "waivers",
+        "Enter the photography waivers",
+        "Read a dozen signed paper waivers, transcribe the four marked fields into the intake table, then individually compare the saved values against the originals."
+      ],
+      [
+        "brief",
+        "Brief the next shift",
+        "Give the shop lead a live spoken handover of this week's exceptions and answer their questions. The signed reconciliation sheet is already available."
+      ]
+    ],
+    "related": [
+      [
+        "till",
+        "dues"
+      ],
+      [
+        "forms",
+        "labels"
+      ],
+      [
+        "forms",
+        "waivers"
+      ],
+      [
+        "labels",
+        "waivers"
+      ]
+    ]
+  },
+  {
+    "name": "Equipment handover",
+    "split": "validation",
+    "tasks": [
+      [
+        "audio",
+        "Find the two dropouts",
+        "Use the existing inspector to align a reference WAV with an observed WAV. Step through both traces, locate the first two divergences and report offsets plus surrounding samples. Do not change the player."
+      ],
+      [
+        "binary",
+        "Triage the telemetry replay",
+        "Use the existing stream inspector to align a known-good byte trace with the new capture. Locate the first two mismatches and report their offsets with nearby values. The collector is already built."
+      ],
+      [
+        "impl",
+        "Triage the telemetry replay",
+        "Build and unit-test the stream inspector itself. Implement alignment and mismatch detection, package the CLI and hand it to the analysts. There are no captured streams to investigate yet."
+      ],
+      [
+        "demo",
+        "Explain the two dropouts",
+        "Present a five-minute prerecorded demonstration of previously identified audio offsets. All offsets, slides and narration are supplied. Check the level and play the clip for the class."
+      ],
+      [
+        "strap",
+        "Prepare the field recorder",
+        "Fit the new shoulder strap through two recessed buckles, trim the tails, melt the cut edges and load-test it with the recorder in the bag."
+      ],
+      [
+        "mask",
+        "Refit the sample carrier",
+        "Thread its replacement webbing through two recessed buckles, trim and heat-seal the ends and check that neither buckle slips with a full carrier."
+      ],
+      [
+        "cue",
+        "Play the telemetry clip",
+        "Run a five-minute pre-recorded clip during handover, using the provided speaking notes and existing slides. Check playback volume and introduce the clip."
+      ]
+    ],
+    "related": [
+      [
+        "audio",
+        "binary"
+      ],
+      [
+        "demo",
+        "cue"
+      ],
+      [
+        "strap",
+        "mask"
+      ]
+    ]
+  }
+]

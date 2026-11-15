@@ -1,0 +1,144 @@
+{
+  "boards": [
+    {
+      "id": "braille",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Translate the museum's braille labels",
+          "description": "Convert two paragraphs of gallery labels into contracted braille and proof against the visitor-center style sheet."
+        },
+        {
+          "key": "B",
+          "title": "Emboss and assemble the tactile city map",
+          "description": "Translate two paragraphs of map labels into contracted braille, proof them against the organization's style sheet, then emboss and bind the overlays."
+        },
+        {
+          "key": "C",
+          "title": "Install the ready-made braille map",
+          "description": "Unpack a finished embossed wall map, use the mounting template to drill the anchors, hang it, and check its height with a visitor."
+        }
+      ]
+    },
+    {
+      "id": "flood",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Seal a zinc downspout seam",
+          "description": "Form and solder a one-meter joint in zinc sheet, then direct water over it and inspect for leakage."
+        },
+        {
+          "key": "B",
+          "title": "Write the gallery roof report",
+          "description": "Summarize the contractor's photographs of a repaired zinc seam, quote the supplied water-test results and attach the work order to the facilities ticket."
+        },
+        {
+          "key": "C",
+          "title": "Patch and water-test the gallery roof drain",
+          "description": "Crimp a replacement seam along one meter of sheet zinc, solder the joint and check the repair with a bucket before resealing the surrounding curb."
+        }
+      ]
+    },
+    {
+      "id": "seed-bank",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Approve the imported plant list",
+          "description": "The labels are already entered and verified. Review the imported list size and email the existing report to the nursery curator."
+        },
+        {
+          "key": "B",
+          "title": "Catalog and germinate a seed accession",
+          "description": "Transcribe all eight collection labels into the plant register and compare rows with the originals. Then sow the accessions in a humidity tray."
+        },
+        {
+          "key": "C",
+          "title": "Enter the lichen collection slips",
+          "description": "Key eight dried specimen slips into the collections table. Verify the catalog number and place on each saved row against the paper."
+        }
+      ]
+    },
+    {
+      "id": "sewing-machine",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Clean the spare treadle",
+          "description": "Remove the faceplate and lint buildup, oil the service points, reassemble and stitch a trial seam."
+        },
+        {
+          "key": "B",
+          "title": "Service and demonstrate the treadle machine",
+          "description": "Remove the faceplate, clean lint from the feed dogs, oil the marked points and test the stitches. Then film a five-minute demonstration for the repair cafe."
+        },
+        {
+          "key": "C",
+          "title": "Present the treadle service video",
+          "description": "Play a supplied five-minute recording at the repair cafe and thank the demonstrator. The machine was serviced before the meeting."
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Build the balloon calibration widget",
+          "description": "Implement a web form that will later accept pressure profiles and correction curves. No measurements or curves are available; deliver form code and UI tests."
+        },
+        {
+          "key": "B",
+          "title": "Calibrate the lake depth logger",
+          "description": "Fit a correction curve to pressure readings against three supplied reference depths and plot the residuals for the sensor notebook."
+        },
+        {
+          "key": "C",
+          "title": "Make and correct the balloon sounding",
+          "description": "Launch a weather balloon and retrieve the pressure profile, then fit a correction curve against three logged reference heights and plot residuals."
+        }
+      ]
+    },
+    {
+      "id": "pottery-mould",
+      "tasks": [
+        {
+          "key": "A",
+          "title": "Carve the new tile master",
+          "description": "Use gouges to carve a hardwood positive master for a replacement mould. There is no plaster mould or liquid slip in this session."
+        },
+        {
+          "key": "B",
+          "title": "Cast the replacement address tile",
+          "description": "Use the existing plaster mould to slip-cast one tile, drain the excess, release it and trim the edges before drying."
+        },
+        {
+          "key": "C",
+          "title": "Cast a new tile and touch up the studio mould",
+          "description": "Cast one slip tile in the existing plaster mould, drain, release and trim the tile, then plug two tiny surface chips on the mould."
+        }
+      ]
+    }
+  ],
+  "positive_pairs": {
+    "braille": [
+      "AB"
+    ],
+    "flood": [
+      "AC"
+    ],
+    "seed-bank": [
+      "BC"
+    ],
+    "sewing-machine": [
+      "AB"
+    ],
+    "weather": [
+      "BC"
+    ],
+    "pottery-mould": [
+      "BC"
+    ]
+  }
+}

@@ -1,7 +1,25 @@
 """Grade predictions after inference against declared patterns and realized effort."""
 
-from math import isfinite
+from collections import Counter
+from math import isfinite, sqrt
 from statistics import mean
+
+
+def cosine(a, b):
+    return sum(x * y for x, y in zip(a, b, strict=True)) / sqrt(
+        sum(x ** 2 for x in a) * sum(x ** 2 for x in b))
+
+
+def pair_metrics(rows, passes):
+    counts = Counter()
+    for row in rows:
+        accepted = passes(row)
+        counts[(row["expected"], accepted)] += 1
+    tp, fp, fn, tn = (counts[key] for key in ((True, True), (False, True), (True, False), (False, False)))
+    return {"tp": tp, "fp": fp, "fn": fn, "tn": tn,
+            "precision": tp / (tp + fp) if tp + fp else 0,
+            "recall": tp / (tp + fn) if tp + fn else 0,
+            "f2": 5 * tp / (5 * tp + 4 * fn + fp) if tp + fn + fp else 0}
 
 
 def validate_rubric(rubric, past_ids):

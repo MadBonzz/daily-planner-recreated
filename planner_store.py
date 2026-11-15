@@ -265,15 +265,14 @@ def _enqueue_prediction(db, task_id, *, workspace_only=False):
 _INITIAL_JOBS = """SELECT 1 FROM prediction_jobs j0 JOIN tasks t0 ON t0.id=j0.task_id
                    WHERE t0.creation_prediction IS NULL AND (t0.archived=0 OR t0.status='completed')"""
 
-# A completed endpoint remains actionable while its unfinished partner awaits a
-# decision about that completion. An outage must never be recorded as a negative.
+# Finish an overlap decision while either card remains open. refresh_due separately
+# controls whether a positive result should schedule another forecast.
 _UNDECIDED = """
 FROM task_relations r
 JOIN tasks a ON a.id=r.left_id JOIN tasks b ON b.id=r.right_id
 WHERE r.related IS NULL
   AND (a.archived=0 OR a.status='completed') AND (b.archived=0 OR b.status='completed')
   AND (a.status!='completed' OR b.status!='completed')
-  AND ((a.status!='completed' AND b.status!='completed') OR r.refresh_due=1)
 """
 
 _OBSOLETE_PAIRS = """DELETE FROM task_relations AS r WHERE related IS NULL

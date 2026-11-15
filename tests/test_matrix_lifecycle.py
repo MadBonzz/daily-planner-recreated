@@ -18,6 +18,23 @@ def no_more_searches(*args, **kwargs):
     raise AssertionError("A committed active-pair decision was searched or judged again.")
 
 
+@pytest.mark.parametrize("fixed_finishes_first", [False, True])
+@pytest.mark.parametrize("related", [False, True])
+def test_overlap_with_fixed_task_finishes_before_judgment(tmp_path, fixed_finishes_first, related):
+    store = PlannerStore(tmp_path)
+    show = card(store, "Caption the scheduled performance", fixed=True)
+    errand = card(store, "Collect the captioning script")
+    store.transition(show if fixed_finishes_first else errand, "finish", spent_seconds=2700)
+    # Reopening an existing snapshot must also pick up the unfinished cell.
+    store = PlannerStore(tmp_path)
+    job = store.claim_relation()
+    assert set(job["pair"]) == {show, errand}
+    assert store.resolve_relation(job["pair"], job["token"], related)
+    with store._db() as db:
+        assert db.execute("SELECT related FROM task_relations").fetchone()[0] == related
+    assert store.claim_prediction() is None
+    assert not store.has_estimation_work()
+
 @pytest.mark.parametrize("minutes", [10, 90])
 def test_independent_completion_is_a_noop_then_real_duration_reaches_forecast(tmp_path, monkeypatch, minutes):
     store = PlannerStore(tmp_path)

@@ -1,0 +1,34 @@
+{
+  "Friday close": [
+    [
+      "till",
+      "dues"
+    ],
+    [
+      "forms",
+      "labels"
+    ],
+    [
+      "forms",
+      "waivers"
+    ],
+    [
+      "labels",
+      "waivers"
+    ]
+  ],
+  "Equipment handover": [
+    [
+      "audio",
+      "binary"
+    ],
+    [
+      "demo",
+      "cue"
+    ],
+    [
+      "strap",
+      "mask"
+    ]
+  ]
+}

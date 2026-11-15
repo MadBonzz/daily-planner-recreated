@@ -55,14 +55,14 @@ def confusion(boards):
                 recall=rate(counts['tp'], counts['tp'] + counts['fn']))
 
 
-def run_boards(out, split, method, canonical, reference):
-    fixtures = json.loads(BOARDS.read_text())
+def run_boards(out, split, method, canonical, reference, boards_path=BOARDS):
+    fixtures = json.loads(boards_path.read_text())
     known = {}
     if reference:
         for board in json.loads(reference.read_text())['boards']:
             for pair in board['pairs']:
                 known[pair['request_sha256']] = pair['score']
-    run = {'orientation': 'canonical' if canonical else 'insertion', 'labels_sha256': hashlib.sha256(BOARDS.read_bytes()).hexdigest(),
+    run = {'orientation': 'canonical' if canonical else 'insertion', 'labels_sha256': hashlib.sha256(boards_path.read_bytes()).hexdigest(),
            'model': retrieval.DECISION_MODEL, 'variant': 'method' if method else 'production at run time', 'boards': []}
     for board in fixtures:
         if split and board['split'] != split:
@@ -234,7 +234,7 @@ def lifecycle(out, inputs, retry_from=None):
 
 def archived_peers(out):
     """Replay the historical .50 screen for accepted co-active peers in each published schedule."""
-    from examples.estimation.calibrate_retrieval import cosine
+    from examples.estimation.scoring import cosine
     from examples.estimation.run import histories, DATASET
     import sample_retrieval
 
@@ -311,6 +311,7 @@ def archived_orientation(out):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--boards', type=Path, default=BOARDS, help='Labeled boards for the pairwise audit')
     parser.add_argument('--split', choices=['development', 'validation'])
     parser.add_argument('--lifecycle', action='store_true')
     parser.add_argument('--method', action='store_true', help='Evaluate the timing-method prompt candidate')
@@ -331,4 +332,4 @@ if __name__ == '__main__':
     elif args.lifecycle:
         lifecycle(args.output, args.inputs, args.retry_from)
     else:
-        run_boards(args.output, args.split, args.method, args.canonical, args.reference)
+        run_boards(args.output, args.split, args.method, args.canonical, args.reference, args.boards)

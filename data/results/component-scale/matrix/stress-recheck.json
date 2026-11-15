@@ -1,0 +1,8 @@
+{
+  "description": "Rerun after enabling resolution of pending non-refreshable co-presence rows.",
+  "matched_each_seed": true,
+  "seed_count": 96,
+  "failed_seeds": [],
+  "before_sha256": "a4cb39714f67f31196f0153d872212a9dbb596e7c1d15771141ed08ee3775ab5",
+  "after_sha256": "a4cb39714f67f31196f0153d872212a9dbb596e7c1d15771141ed08ee3775ab5"
+}
