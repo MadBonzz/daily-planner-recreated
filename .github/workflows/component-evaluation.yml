@@ -57,25 +57,34 @@ jobs:
         timeout-minutes: 10
         run: |
           lms daemon up --json
-          lms runtime get llama.cpp --yes
-          lms runtime ls
+          lms runtime get llama.cpp-linux-x86_64-avx2@2.66.0 --yes
       - name: Load the pinned model
         timeout-minutes: 20
         run: |
           curl -fL --retry 3 --connect-timeout 20 --speed-time 60 --speed-limit 1024 \
             "https://huggingface.co/$MODEL_REPO/resolve/$REVISION/$MODEL_FILE" -o "$RUNNER_TEMP/$MODEL_FILE"
-          lms import "$RUNNER_TEMP/$MODEL_FILE" --user-repo "$MODEL_REPO" --hard-link --yes
-          lms load "$PLANNER_MODEL" --identifier "$PLANNER_MODEL" --context-length 8192 --gpu off --yes
-          lms server start --bind 127.0.0.1 --port 1234
-          lms ps
+          engine="$HOME/.lmstudio/extensions/backends/llama.cpp-linux-x86_64-avx2-2.66.0/llama-server"
+          test -x "$engine"
+          "$engine" --version
+          sha256sum "$RUNNER_TEMP/$MODEL_FILE"
+          nohup "$engine" -m "$RUNNER_TEMP/$MODEL_FILE" --alias "$PLANNER_MODEL" --host 127.0.0.1 --port 1234 \
+            --gpu-layers 0 --threads "$(nproc)" --threads-batch "$(nproc)" --parallel 2 --ctx-size 12288 \
+            --no-warmup --reasoning off --chat-template-kwargs '{"enable_thinking":false}' \
+            > "$RUNNER_TEMP/bonsai-server.log" 2>&1 &
+          engine_pid=$!
+          for attempt in {1..60}; do
+            if curl -fsS http://127.0.0.1:1234/health; then break; fi
+            if ! kill -0 "$engine_pid"; then cat "$RUNNER_TEMP/bonsai-server.log"; exit 1; fi
+            sleep 2
+          done
           python -m examples.estimation.check_local_models --component forecast
       - name: Evaluate the 48 workspace pauses
         run: |
-          python -m examples.estimation.scale_pause run "$TAG" --workers 1
+          python -m examples.estimation.scale_pause run "$TAG" --workers 2
           python -m examples.estimation.scale_pause score "$TAG"
       - name: Replay the 16 active-task boards
         run: |
-          python -m examples.estimation.scale_matrix forecast --model-tag "$TAG" --workers 1
+          python -m examples.estimation.scale_matrix forecast --model-tag "$TAG" --workers 2
       - uses: actions/upload-artifact@v4
         if: always()
         with:
