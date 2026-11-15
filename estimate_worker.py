@@ -11,6 +11,7 @@ import portalocker
 import estimator
 import focus_domains
 import retrieval
+import workspace_forecast
 from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
 
@@ -161,12 +162,16 @@ def _process_relation(store, job):
 def _process(store, index_dir, job):
     task, token = job["task"], job["token"]
     task_id = task["id"]
+    progress = job.get("workspace_progress")
+    workspace_only = progress is not None and job["workspace_only"]
+    prediction = job.get("previous_prediction")
     pdf_text = None
     with _heartbeat(lambda: store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS)) as revoked:
         try:
             pdf_text, unreadable = _read_documents(store, task)
-            for source in job["history"]:
-                _read_documents(store, source)
+            if not workspace_only:
+                for source in job["history"]:
+                    _read_documents(store, source)
 
             def renew():
                 return not revoked.is_set() and store.renew_prediction(task_id, token, lease_seconds=_LEASE_SECONDS)
@@ -174,20 +179,27 @@ def _process(store, index_dir, job):
             if not renew():
                 return
             with retrieval.estimation_lease(renew):
-                prediction = estimator.predict(task, job["history"], index_dir)
-                try:
-                    focus_domains.review_singles(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
-                except Exception as exc:
-                    # Site suggestions are optional. Preserve a completed time estimate if this review fails.
-                    _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
-            if unreadable:
+                if not workspace_only:
+                    prediction = estimator.predict(task, job["history"], index_dir)
+                if progress is not None:
+                    prediction = workspace_forecast.revise(task, prediction, progress, refreshed_history=not workspace_only)
+                if not workspace_only:
+                    try:
+                        focus_domains.review_singles(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
+                    except Exception as exc:
+                        # Site suggestions are optional. Preserve a completed time estimate if this review fails.
+                        _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
+            if unreadable and not workspace_only:
                 prediction["explanation"] += " No readable text was available from: " + ", ".join(unreadable) + "."
         except Exception as exc:
             # The timer and original estimate are already saved. An unexpected
             # parsing or inference error must leave a usable, truthful estimate.
             _LOG.error("Could not prepare task estimate (%s).", type(exc).__name__)
-            prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.",
-                                             retryable=True)
+            if progress is not None:
+                prediction = workspace_forecast.unavailable(progress, prediction, "The background estimate could not be completed.")
+            else:
+                prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.",
+                                                 retryable=True)
         saved = store.resolve_prediction(task_id, token, prediction, pdf_text=pdf_text)
         if saved:
             try:

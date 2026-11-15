@@ -1,8 +1,9 @@
 """End-to-end Dev replay with real timers, SQLite watcher reads and deterministic model answers."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -18,25 +19,33 @@ def load(directory, kind, profile):
     return json.loads((Path(directory) / kind / (profile + ".json")).read_text(encoding="utf-8"))
 
 
-def assert_timers(store, history, *, running_tolerance=0.01):
+def assert_timers(store, history):
     actual = {t["title"]: t for t in store.list_tasks()}
     assert set(actual) == {row["title"] for row in history["tasks"] + history["open_tasks"]}
     for row in history["tasks"] + history["open_tasks"]:
         saved = actual[row["title"]]
         status = row.get("status", "completed")
         assert saved["status"] == status
-        assert saved["actual_seconds"] == pytest.approx(
-            sum(row["sessions_minutes"]) * 60, abs=running_tolerance if status == "running" else 0.01)
+        assert saved["actual_seconds"] == pytest.approx(sum(row["sessions_minutes"]) * 60, abs=0.01)
         assert saved["completion_note"] == row.get("completion_note", "")
         if status == "completed":
             assert sum(saved["report"]["totals"].values()) == pytest.approx(saved["actual_seconds"], abs=0.01)
+
+
+def open_snapshot_at(directory, profile, opened_at, monkeypatch):
+    # Keep sample initialization and reads of its ongoing timers on the same local clock.
+    clock = opened_at.timestamp
+    monkeypatch.setattr(dev, "time", SimpleNamespace(time=clock))
+    store = dev.open_dev_workspace(directory, profile)
+    store.clock = clock
+    return store
 
 
 @pytest.mark.parametrize("profile", list(dev.history_choices()))
 def test_snapshots_anchor_packaged_schedules_and_preserve_all_timers(tmp_path, profile, monkeypatch):
     monkeypatch.setattr(activity, "_get", lambda *_a, **_k: pytest.fail("Dev contacted a personal watcher"))
     history = load(dev.DATASET, "histories", profile)
-    store = dev.open_dev_workspace(tmp_path, profile)
+    store = open_snapshot_at(tmp_path, profile, datetime(2026, 11, 15, 20), monkeypatch)
     state = schedule.progress(store, profile)
     events = state["events"]
     assert len(events) == state["total"] == state["done"] and all(e["applied"] for e in events)
@@ -47,8 +56,22 @@ def test_snapshots_anchor_packaged_schedules_and_preserve_all_timers(tmp_path, p
     assert len({e["day"] for e in events}) >= 3
     assert all(store.get_task(store.get_setting(f'dev_task_{r["id"]}'))["day"] == anchor.isoformat()
                for r in history["open_tasks"])
-    assert_timers(store, history, running_tolerance=5)
+    assert_timers(store, history)
     assert any(row.get("app") for task in store.completed_tasks() for row in task["report"]["intervals"])
+
+
+def test_editable_snapshot_opened_after_midnight_shows_both_activity_dates(tmp_path, monkeypatch):
+    profile = "06-neighborhood-clinic"
+    opened_at = datetime(2026, 11, 15, 0, 5)
+    store = open_snapshot_at(tmp_path, profile, opened_at, monkeypatch)
+    flyer = store.get_task(store.get_setting("dev_task_paused-flyer"))
+
+    # The task is on today's plan, but nine minutes of work straddle midnight.
+    assert flyer["day"] == "2026-11-15" and flyer["status"] == "paused"
+    assert store.periods(flyer["id"]) == [(datetime(2026, 11, 14, 23, 56).timestamp(), opened_at.timestamp())]
+    work = [(event["action"], event["day"], event["time"]) for event in schedule.progress(store, profile)["events"]
+            if event["task"] == flyer["title"] and event["action"] in {"start", "pause"}]
+    assert work == [("start", "2026-11-14", "23:56"), ("pause", "2026-11-15", "00:05")]
 
 
 @pytest.fixture

@@ -27,14 +27,23 @@ def run():
     fields, files = task_inputs(case, profile["id"], DATASET)
     second_file = next(p for p in (DATASET/"pdfs").rglob("*.pdf") if p.name != files[0][0])
     received = []
+    milestone = "I finished the invariant proof."
     class Model(BaseHTTPRequestHandler):
         def do_POST(self):
             request = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             body = json.loads(request["messages"][1]["content"])
             received.append(body)
-            first = body["passages"][0]
-            answer = {"answer": "The supplied handout describes the recovery problem.", "supported": True,
-                      "sources": [{"page": first["page"], "quote": first["text"][:45]}]}
+            if "passages" in body:
+                first = body["passages"][0]
+                answer = {"answer": "The supplied handout describes the recovery problem.", "supported": True,
+                          "sources": [{"page": first["page"], "quote": first["text"][:45]}]}
+            else:
+                turn = next(m["turn"] for m in body["messages"] if m["role"] == "user" and milestone in m["content"])
+                answer = {"assessment": "supported", "remaining_min": 12, "remaining_low_min": 8,
+                          "remaining_high_min": 20, "confidence": "medium",
+                          "explanation": "The invariant is written. Reviewing the failure schedule remains.",
+                          "confidence_reason": "The review time can vary.",
+                          "evidence": [{"turn": turn, "kind": "completed", "quote": milestone.rstrip(".")}]}
             data = json.dumps({"choices": [{"finish_reason": "stop", "message":{"content": json.dumps(answer)}}]}).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
@@ -49,7 +58,9 @@ def run():
     try:
         with tempfile.TemporaryDirectory() as tmp:
             store = PlannerStore(Path(tmp)/"live")
-            fields.update(day=date.today().isoformat(), fixed_duration=True)
+            fields.update(day=date.today().isoformat(), fixed_duration=False,
+                          prediction={"point_min": 75, "low_min": 55, "high_min": 95, "confidence": "medium",
+                                      "explanation": "History suggests 75 minutes.", "evidence": [], "cautions": []})
             task = store.create_task(**fields, attachments=[*files, ("Second document.pdf",second_file.read_bytes())])
             with socket.socket() as port:
                 port.bind(("127.0.0.1",0))
@@ -84,7 +95,7 @@ def run():
                             assert store.running_task()["id"] == task["id"]
                             # The official PDF viewer renders pages into canvases, with its own scroll/zoom controls.
                             expect(reader.locator("canvas").first).to_be_visible(timeout=25000)
-                            reader.get_by_placeholder("Ask a question").fill("Which problem is described?")
+                            reader.get_by_placeholder("Ask a question").fill(milestone + " Which problem is described?")
                             reader.get_by_placeholder("Ask a question").press("Enter")
                             expect(reader.get_by_text("The supplied handout describes the recovery problem.",exact=True)).to_be_visible()
                             assert len(received) == 1 and received[0]["document"] == files[0][0]
@@ -96,7 +107,12 @@ def run():
                             reader.reload()
                             expect(reader.get_by_role("button",name="Resume timer")).to_be_visible(timeout=15000)
                             assert store.running_task() is None
-                            print("New PDF tab, running timer, rendered pages, scoped model chat, attachment switching and pause/reload passed.")
+                            expect(planner.get_by_text("12 min remaining", exact=False)).to_be_visible(timeout=20000)
+                            expect(reader.get_by_text("12 min remaining", exact=False)).to_be_visible(timeout=20000)
+                            updated = store.get_task(task["id"])
+                            assert updated["creation_prediction"]["point_min"] == 75
+                            assert updated["prediction"]["workspace_update"]["evidence"][0]["document"] == files[0][0]
+                            print("PDF chat, document switching and pause-based remaining estimate on both tabs passed.")
                         finally:
                             browser.close()
                 finally:

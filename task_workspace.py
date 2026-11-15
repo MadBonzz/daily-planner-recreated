@@ -79,6 +79,67 @@ def open_workspace(store, token):
         return (store._task(db, row["task_id"]), row["draft"]) if row else None
 
 
+def _chat_scope(db, token, document_id):
+    """Authenticate the reader link and keep each attachment's conversation in its task."""
+    row = db.execute("""SELECT t.id,(SELECT p.workspace_run FROM periods p JOIN sessions s ON s.id=p.session_id
+                                      WHERE s.task_id=t.id AND p.end IS NULL) AS run
+                        FROM task_workspaces w JOIN tasks t ON t.id=w.task_id
+                        WHERE w.token=? AND w.eligible=1 AND t.archived=0 AND
+                        ((?='task' AND NOT EXISTS(SELECT 1 FROM attachments a WHERE a.task_id=t.id))
+                         OR EXISTS(SELECT 1 FROM attachments a WHERE a.id=? AND a.task_id=t.id))""",
+                     (token, document_id, document_id)).fetchone()
+    if row is None:
+        raise ValueError("This task workspace or document is unavailable.")
+    return row
+
+
+def chat_history(store, token, doc_id):
+    with store._db() as db:
+        task = _chat_scope(db, token, doc_id)
+        rows = db.execute("""SELECT m.role,m.content,m.model,m.sources FROM workspace_messages m
+                             JOIN workspace_messages q ON q.task_id=m.task_id AND q.document_id=m.document_id
+                               AND q.turn_id=m.turn_id AND q.role='user'
+                             WHERE m.task_id=? AND m.document_id=?
+                             ORDER BY q.id, m.role='assistant'""", (task["id"], doc_id))
+        return [{"role": r["role"], "content": r["content"], "model": r["model"], "sources": json.loads(r["sources"])}
+                for r in rows]
+
+
+def begin_question(store, token, doc_id, question, *, turn_id=None):
+    """Persist the user's own words before requesting an answer that might arrive after a pause."""
+    if not isinstance(question, str) or not question.strip():
+        raise ValueError("Enter a question for this workspace.")
+    turn_id = str(uuid4()) if turn_id is None else str(turn_id)
+    with store._db(write=True) as db:
+        task = _chat_scope(db, token, doc_id)
+        existing = db.execute("""SELECT content FROM workspace_messages WHERE task_id=? AND document_id=?
+                                 AND turn_id=? AND role='user'""", (task["id"], doc_id, turn_id)).fetchone()
+        if existing:
+            if existing[0] != question:
+                raise ValueError("This turn already contains a different question.")
+            return turn_id
+        db.execute("""INSERT INTO workspace_messages(task_id,document_id,turn_id,role,content,workspace_run,recorded_at)
+                      VALUES (?,?,?,'user',?,?,?)""", (task["id"], doc_id, turn_id, question, task["run"], store.clock()))
+    return turn_id
+
+
+def finish_question(store, token, doc_id, turn_id, reply):
+    with store._db(write=True) as db:
+        task = _chat_scope(db, token, doc_id)
+        question = db.execute("""SELECT workspace_run FROM workspace_messages WHERE task_id=? AND document_id=?
+                                 AND turn_id=? AND role='user'""", (task["id"], doc_id, turn_id)).fetchone()
+        if question is None:
+            raise ValueError("The original workspace question is unavailable.")
+        # The answer still belongs in the transcript when a pause, resume or tab switch happened in flight.
+        run = question["workspace_run"] if question["workspace_run"] == task["run"] else None
+        model = " · ".join(v for v in (reply.get("provider"), reply.get("model")) if v)
+        db.execute("""INSERT INTO workspace_messages(task_id,document_id,turn_id,role,content,model,sources,
+                      workspace_run,recorded_at) VALUES (?,?,?,'assistant',?,?,?,?,?)
+                      ON CONFLICT(task_id,document_id,turn_id,role) DO NOTHING""",
+                   (task["id"], doc_id, turn_id, reply["answer"], model, json.dumps(reply.get("sources", [])),
+                    run, store.clock()))
+
+
 def save_draft(store, token, text, *, previous):
     with store._db(write=True) as db:
         saved = db.execute("""UPDATE task_workspaces SET draft=? WHERE token=? AND eligible=1 AND draft=?
@@ -94,7 +155,7 @@ def start_workspace(store, token):
         raise ValueError("This workspace is no longer available.")
     task, _ = workspace
     if task["status"] in {"ready", "paused", "running"}:
-        return store.transition(task["id"], "start")
+        return store.transition(task["id"], "start", workspace_token=token)
     raise ValueError("This task is already stopped or completed.")
 
 

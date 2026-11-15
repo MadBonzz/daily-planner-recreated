@@ -21,6 +21,7 @@ from planner_analytics import render_analytics, render_shared_chat
 from report_worker import schedule_reports
 from review_ui import postpone_action, review_notice, review_settings
 from model_client import model_settings
+from workspace_ui import pause_evidence, pause_summary
 from urllib.parse import urlsplit
 
 st.set_page_config(page_title="Plan Smarter", page_icon="🗓️", layout="centered")
@@ -91,6 +92,8 @@ def forecast_source(prediction):
     provenance = prediction.get("provenance") or {}
     decision = provenance.get("decision")
     model = " · ".join(str(value) for value in (provenance.get("provider"), provenance.get("model")) if value)
+    if prediction.get("basis") == "Workspace progress forecast":
+        return " · ".join(v for v in ("Workspace progress forecast", model) if v)
     if not decision:
         basis = prediction.get("basis", "Saved forecast")
         if basis == "Model-selected tasks":
@@ -133,7 +136,8 @@ def show_prediction(prediction):
     old_direct = "No timed personal history. This estimate is based on the task scope. "
     if not provenance and prediction.get("basis") == "Model estimate from task scope" and explanation.startswith(old_direct):
         rationale = explanation.removeprefix(old_direct)
-    if prediction.get("timing_context") and not prediction.get("evidence"):
+    update = prediction.get("workspace_update")
+    if prediction.get("timing_context") and not prediction.get("evidence") and not (update and update["status"] == "adjusted"):
         context = prediction["timing_context"]
         if minutes_by == "model":
             context += " This estimate uses the task description and budget without a personal timing comparison."
@@ -153,6 +157,9 @@ def show_prediction(prediction):
         st.html(f'<p class="task-copy">{escape(calculation)}</p>')
     if explanation and (not rationale or rationale not in explanation):
         st.html(f'<p class="task-copy">{escape(explanation)}</p>')
+    if update:
+        st.markdown("**Workspace chat at pause**")
+        pause_evidence(update, show_reason=update.get("explanation") not in (rationale, explanation))
     st.markdown(f"**{prediction['confidence'].capitalize()} confidence**")
     confidence_reason = prediction.get("confidence_reason")
     if confidence_reason:
@@ -568,7 +575,7 @@ def estimate_section(store, task, *, read_only=False):
         budget_label = "Previous forecast" if estimate_pending(task) else "Planner"
         values.append(f"{budget_label} {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
-    if estimate_pending(task) and not initial_pending:
+    if estimate_pending(task) and not initial_pending and not task.get("workspace_progress_pending"):
         values.append("Updating estimate…")
     if read_only or task["status"] != "running":
         if task.get("time_edited_at") is not None:
@@ -578,6 +585,7 @@ def estimate_section(store, task, *, read_only=False):
         else:
             values.append(f"Recorded {duration(task['actual_seconds'])}")
     st.caption("  ·  ".join(values))
+    pause_summary(task)
     if initial_pending or estimate_pending(task) or fixed:
         return
     has_forecast = "point_min" in prediction

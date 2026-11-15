@@ -52,6 +52,26 @@ CREATE TABLE IF NOT EXISTS task_workspaces (
     token TEXT NOT NULL UNIQUE,
     draft TEXT NOT NULL DEFAULT ''
 );
+CREATE TABLE IF NOT EXISTS workspace_messages (
+    id INTEGER PRIMARY KEY,
+    task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
+    document_id TEXT NOT NULL,
+    turn_id TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('user','assistant')),
+    content TEXT NOT NULL,
+    model TEXT NOT NULL DEFAULT '',
+    sources TEXT NOT NULL DEFAULT '[]',
+    workspace_run TEXT,
+    recorded_at REAL NOT NULL,
+    UNIQUE(task_id, document_id, turn_id, role)
+);
+CREATE INDEX IF NOT EXISTS workspace_messages_by_task ON workspace_messages(task_id,id);
+CREATE TABLE IF NOT EXISTS workspace_progress (
+    task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
+    last_message INTEGER NOT NULL,
+    applied_message INTEGER NOT NULL DEFAULT 0,
+    snapshot TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS report_jobs (
     task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
     generation TEXT NOT NULL,
@@ -74,7 +94,8 @@ CREATE TABLE IF NOT EXISTS activity_feedback (
 CREATE TABLE IF NOT EXISTS prediction_jobs (
     task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
     token TEXT,
-    lease_end REAL
+    lease_end REAL,
+    workspace_only INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS prediction_history (
     task_id TEXT NOT NULL REFERENCES prediction_jobs ON DELETE CASCADE,
@@ -125,7 +146,8 @@ CREATE TABLE IF NOT EXISTS periods (
     id INTEGER PRIMARY KEY,
     session_id INTEGER NOT NULL REFERENCES sessions ON DELETE CASCADE,
     start REAL NOT NULL,
-    end REAL CHECK (end >= start)
+    end REAL CHECK (end >= start),
+    workspace_run TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS one_running_period ON periods((1)) WHERE end IS NULL;
 CREATE TABLE IF NOT EXISTS capture (
@@ -160,6 +182,8 @@ CREATE TABLE IF NOT EXISTS categories (
 _TASKS = """
 SELECT t.*, clock.started_at,
        EXISTS(SELECT 1 FROM prediction_jobs j WHERE j.task_id=t.id) AS estimate_updating,
+       EXISTS(SELECT 1 FROM prediction_jobs j JOIN workspace_progress wp ON wp.task_id=j.task_id
+              WHERE j.task_id=t.id AND t.archived=0 AND t.status!='completed') AS workspace_progress_pending,
        (t.status!='completed' AND t.archived=0 AND t.fixed_duration=0 AND EXISTS(
           SELECT 1 FROM task_relations r WHERE (r.left_id=t.id OR r.right_id=t.id)
           AND (r.refresh_due=1 OR (r.related IS NOT 0 AND EXISTS(
@@ -215,11 +239,14 @@ def _forecast_sources(prediction):
     return _comparison_sources(prediction) | set(prediction.get("feedback_source_ids", []))
 
 
-def _enqueue_prediction(db, task_id):
+def _enqueue_prediction(db, task_id, *, workspace_only=False):
     # Replacing a refresh invalidates any older lease. Store the comparison set in
     # the same transaction, so a newer completion cannot leak into the first estimate.
+    if workspace_only:
+        pending = db.execute("SELECT workspace_only FROM prediction_jobs WHERE task_id=?", (task_id,)).fetchone()
+        workspace_only = pending is None or bool(pending[0])
     db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
-    db.execute("INSERT INTO prediction_jobs(task_id) VALUES (?)", (task_id,))
+    db.execute("INSERT INTO prediction_jobs(task_id,workspace_only) VALUES (?,?)", (task_id, workspace_only))
     # Freeze mutable historical evidence at submission. A timer correction or
     # rebuilt report while the queue is draining belongs to a later forecast.
     db.execute("""INSERT INTO prediction_history(task_id, source_id, snapshot)
@@ -251,15 +278,19 @@ _OBSOLETE_PAIRS = """DELETE FROM task_relations AS r WHERE related IS NULL
     AND EXISTS (SELECT 1 FROM tasks WHERE id=r.right_id AND status='completed')"""
 
 
-def _queue_related_target(db, target_id):
+def _queue_related_target(db, target_id, *, workspace_only=False):
     row = db.execute("""SELECT creation_prediction FROM tasks WHERE id=? AND archived=0
                         AND fixed_duration=0 AND status!='completed'""", (target_id,)).fetchone()
     if row is None:
         return
     if row["creation_prediction"] is None:
-        db.execute("UPDATE tasks SET refresh_waiting=1 WHERE id=?", (target_id,))
+        # Flag 2 is a deferred pause-only job. A new historical comparison takes priority.
+        if workspace_only:
+            db.execute("UPDATE tasks SET refresh_waiting=2 WHERE id=? AND refresh_waiting=0", (target_id,))
+        else:
+            db.execute("UPDATE tasks SET refresh_waiting=1 WHERE id=?", (target_id,))
     else:
-        _enqueue_prediction(db, target_id)
+        _enqueue_prediction(db, target_id, workspace_only=workspace_only)
 
 
 def _refresh_related_estimates(db, source_id, *, corrected=False):
@@ -294,13 +325,21 @@ def _enqueue_report(db, task_id, action="build"):
 
 def _close_period(db, session_id, now):
     period = db.execute(
-        "SELECT id FROM periods WHERE session_id=? AND end IS NULL", (session_id,)
+        "SELECT id, workspace_run FROM periods WHERE session_id=? AND end IS NULL", (session_id,)
     ).fetchone()
     if period is None:
         return
     db.execute("UPDATE capture SET end=MAX(start, ?) WHERE period_id=? AND end IS NULL",
                (now, period["id"]))
     db.execute("UPDATE periods SET end=MAX(start, ?) WHERE id=?", (now, period["id"]))
+    return period["workspace_run"]
+
+
+
+def _stopped_workspace_period(db, task_id):
+    return db.execute("""SELECT p.workspace_run,s.stopped_at FROM periods p JOIN sessions s ON s.id=p.session_id
+                         WHERE s.task_id=? AND s.stopped_at IS NOT NULL ORDER BY s.id DESC,p.id DESC LIMIT 1""",
+                      (task_id,)).fetchone()
 
 
 def _correct_total(db, task, seconds, now):
@@ -362,6 +401,10 @@ class PlannerStore:
         with self._db() as db:
             db.executescript(_SCHEMA + FEEDBACK_SCHEMA)
         with self._db(write=True) as db:
+            if "workspace_run" not in {row["name"] for row in db.execute("PRAGMA table_info(periods)")}:
+                db.execute("ALTER TABLE periods ADD COLUMN workspace_run TEXT")
+            if "workspace_only" not in {row["name"] for row in db.execute("PRAGMA table_info(prediction_jobs)")}:
+                db.execute("ALTER TABLE prediction_jobs ADD COLUMN workspace_only INTEGER NOT NULL DEFAULT 0")
             history_columns = {row["name"] for row in db.execute("PRAGMA table_info(prediction_history)")}
             if "snapshot" not in history_columns:
                 db.execute("ALTER TABLE prediction_history ADD COLUMN snapshot TEXT")
@@ -437,6 +480,7 @@ class PlannerStore:
             task["archived"] = bool(task["archived"])
             task["fixed_duration"] = bool(task["fixed_duration"])
             task["estimate_updating"] = bool(task["estimate_updating"])
+            task["workspace_progress_pending"] = bool(task["workspace_progress_pending"])
             task.pop("refresh_waiting")
             task["report"] = json.loads(task["report"]) if task["report"] else None
             task["attachments"] = [dict(a) for a in db.execute(
@@ -536,7 +580,10 @@ class PlannerStore:
             task = self._task(db, task_id)
             if task["estimate_updating"] or task["status"] == "completed" or task["fixed_duration"] or task["archived"]:
                 return False
-            _enqueue_prediction(db, task_id)
+            prediction = task["prediction"]
+            retry_progress = ((prediction.get("workspace_update") or {}).get("status") == "unavailable"
+                              and not prediction.get("retrieval_error") and not prediction.get("model_error"))
+            _enqueue_prediction(db, task_id, workspace_only=retry_progress)
             return True
 
     def comparison_options(self, task_id):
@@ -651,7 +698,7 @@ class PlannerStore:
         with self._db(write=True) as db:
             now = self.clock()
             row = db.execute("""
-                SELECT t.id FROM prediction_jobs j JOIN tasks t ON t.id=j.task_id
+                SELECT t.id,j.workspace_only FROM prediction_jobs j JOIN tasks t ON t.id=j.task_id
                 WHERE (t.archived=0 OR t.status='completed') AND (j.token IS NULL OR j.lease_end<=?)
                   AND (t.creation_prediction IS NULL OR NOT EXISTS (""" + _INITIAL_JOBS + """))
                 ORDER BY t.creation_prediction IS NOT NULL,t.created_at,t.rowid LIMIT 1
@@ -681,8 +728,14 @@ class PlannerStore:
             inputs = {key: task[key] for key in ("id", "title", "description", "category", "details",
                       "day", "estimate_minutes", "fixed_duration", "pdf_text", "pdf_text_version", "attachments")}
             inputs.update(forecast_feedback(db, task_id))
-            return {"task": inputs, "history": history, "token": token,
-                    "focus_verdicts": (task.get("prediction") or {}).get("focus_verdicts", {})}
+            job = {"task": inputs, "history": history, "token": token,
+                   "focus_verdicts": (task.get("prediction") or {}).get("focus_verdicts", {})}
+            if task["creation_prediction"] is not None and task["status"] != "completed":
+                progress = db.execute("SELECT snapshot FROM workspace_progress WHERE task_id=?", (task_id,)).fetchone()
+                if progress:
+                    job.update(workspace_progress=json.loads(progress[0]), workspace_only=bool(row["workspace_only"]),
+                               previous_prediction=task["prediction"])
+            return job
 
     def renew_prediction(self, task_id, token, *, lease_seconds=300):
         if not math.isfinite(lease_seconds) or lease_seconds <= 0:
@@ -716,12 +769,14 @@ class PlannerStore:
             data = json.dumps(prediction, allow_nan=False)
             waiting = db.execute("""SELECT refresh_waiting,status,creation_prediction IS NULL AS initial
                                     FROM tasks WHERE id=?""", (task_id,)).fetchone()
+            if (prediction.get("workspace_update") or {}).get("status") in {"adjusted", "insufficient_evidence"}:
+                db.execute("UPDATE workspace_progress SET applied_message=last_message WHERE task_id=?", (task_id,))
             _record_replay_forecast(db, task_id, self.clock(), waiting["initial"], data)
             db.execute("""UPDATE tasks SET prediction=?, creation_prediction=COALESCE(creation_prediction, ?),
                           pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
                        (data, data, pdf_text, task_id))
             if (waiting["refresh_waiting"] or changed_source) and waiting["status"] != "completed":
-                _enqueue_prediction(db, task_id)
+                _enqueue_prediction(db, task_id, workspace_only=waiting["refresh_waiting"] == 2 and not changed_source)
             return True
 
     def forecast_timeline(self, task_id):
@@ -730,8 +785,36 @@ class PlannerStore:
                     for row in db.execute("""SELECT at,initial,prediction FROM replay_forecasts WHERE task_id=?
                                              ORDER BY at,id""", (task_id,))]
 
+    def _workspace_pause(self, db, task_id, run, paused_at):
+        if not run:
+            return
+        target = self._task(db, task_id)
+        if target["fixed_duration"] or target["archived"]:
+            return
+        prior = db.execute("SELECT last_message,applied_message FROM workspace_progress WHERE task_id=?",
+                           (task_id,)).fetchone()
+        previous = prior["last_message"] if prior else 0
+        applied = prior["applied_message"] if prior else 0
+        fresh = db.execute("""SELECT 1 FROM workspace_messages WHERE task_id=? AND workspace_run=?
+                              AND role='user' AND id>? AND recorded_at<=?""", (task_id, run, previous, paused_at)).fetchone()
+        if not fresh:
+            return
+        rows = db.execute("""SELECT m.id,m.role,m.content,a.name AS document
+                             FROM workspace_messages m JOIN workspace_messages q ON q.task_id=m.task_id
+                                 AND q.document_id=m.document_id AND q.turn_id=m.turn_id AND q.role='user'
+                             LEFT JOIN attachments a ON a.id=m.document_id AND a.task_id=m.task_id
+                             WHERE m.task_id=? AND m.workspace_run IS NOT NULL AND m.recorded_at<=?
+                             ORDER BY q.id, m.id""", (task_id, paused_at)).fetchall()
+        snapshot = {"paused_at": paused_at, "elapsed_seconds": target["actual_seconds"],
+                    "messages": [{"role": r["role"], "content": r["content"], "document": r["document"]} for r in rows],
+                    "new_message_start": sum(r["id"] <= applied for r in rows)}
+        db.execute("""INSERT INTO workspace_progress(task_id,last_message,snapshot) VALUES (?,?,?)
+                      ON CONFLICT(task_id) DO UPDATE SET last_message=excluded.last_message,snapshot=excluded.snapshot""",
+                   (task_id, max(r["id"] for r in rows), json.dumps(snapshot, allow_nan=False)))
+        _queue_related_target(db, task_id, workspace_only=True)
+
     def transition(self, task_id, action, *, ended_at=None, completion_note="", report=None,
-                   pdf_text=None, refresh_estimates=True, queue_report=False, spent_seconds=None):
+                   pdf_text=None, refresh_estimates=True, queue_report=False, spent_seconds=None, workspace_token=None):
         """Apply a timer action and return the committed state. Starting another task pauses the first."""
         with self._db(write=True) as db:
             task = self._task(db, task_id)
@@ -747,8 +830,19 @@ class PlannerStore:
                 raise ValueError("An end-time correction is only available when stopping a task.")
             if spent_seconds is not None and action not in ("adjust_time", "finish", "continue_later"):
                 raise ValueError("Stop or pause the timer before editing total time.")
+            if workspace_token is not None:
+                if action not in ("start", "resume") or not db.execute(
+                    "SELECT 1 FROM task_workspaces WHERE task_id=? AND token=? AND eligible=1", (task_id, workspace_token)
+                ).fetchone():
+                    raise ValueError("This task workspace is unavailable.")
+                if state == "running":
+                    db.execute("""UPDATE periods SET workspace_run=coalesce(workspace_run,?)
+                                  WHERE session_id=? AND end IS NULL""", (str(uuid4()), session["id"]))
             if repeated.get(action) == state:
                 return task
+            stop_run = None
+            if action == "continue_later" and state == "awaiting_finish":
+                stop_run = _stopped_workspace_period(db, task_id)
             if ended_at is not None:
                 end = float(ended_at)
                 if state != "running" or not task["started_at"] <= end <= now:
@@ -765,6 +859,12 @@ class PlannerStore:
                 previous = task["actual_seconds"]
                 total = _correct_total(db, task, spent_seconds, now)
                 task["actual_seconds"] = total
+                if total != previous and state != "completed":
+                    updated = db.execute("""UPDATE workspace_progress
+                                            SET snapshot=json_set(snapshot,'$.elapsed_seconds',?)
+                                            WHERE task_id=?""", (total, task_id)).rowcount
+                    if updated:
+                        _queue_related_target(db, task_id, workspace_only=True)
                 if action == "adjust_time":
                     if state == "completed" and (total != previous or task["time_edited_at"] is None):
                         db.execute("UPDATE tasks SET actual_seconds=?, report=NULL WHERE id=?", (total, task_id))
@@ -786,25 +886,34 @@ class PlannerStore:
                     WHERE p.end IS NULL
                 """).fetchone()
                 if active:
-                    _close_period(db, active["id"], now)
+                    run = _close_period(db, active["id"], now)
                     db.execute("UPDATE tasks SET status='paused' WHERE id=?", (active["task_id"],))
+                    self._workspace_pause(db, active["task_id"], run, now)
                 sid = session["id"] if session else db.execute(
                     "INSERT INTO sessions(task_id, started_at) VALUES (?,?)", (task_id, now)
                 ).lastrowid
-                pid = db.execute("INSERT INTO periods(session_id,start) VALUES (?,?)",
-                                 (sid, now)).lastrowid
+                run = str(uuid4()) if workspace_token is not None else None
+                pid = db.execute("INSERT INTO periods(session_id,start,workspace_run) VALUES (?,?,?)",
+                                 (sid, now, run)).lastrowid
                 if _get_setting(db, "capture_enabled", True):
                     db.execute("INSERT INTO capture(period_id,start) VALUES (?,?)", (pid, now))
                 state = "running"
             elif action == "pause" and state == "running":
-                _close_period(db, session["id"], now)
+                run = _close_period(db, session["id"], now)
+                self._workspace_pause(db, task_id, run, now)
                 state = "paused"
             elif action == "stop" and state in ("paused", "running"):
                 if session:
-                    _close_period(db, session["id"], now)
+                    run = _close_period(db, session["id"], now)
+                    if run and ended_at is not None:
+                        # Keep the conversation readable; the user moved these turns outside the work interval.
+                        db.execute("""UPDATE workspace_messages SET workspace_run=NULL
+                                      WHERE task_id=? AND workspace_run=? AND recorded_at>?""", (task_id, run, now))
                     db.execute("UPDATE sessions SET stopped_at=MAX(started_at,?) WHERE id=?", (now, session["id"]))
                 state = "awaiting_finish"
             elif action == "continue_later" and state == "awaiting_finish":
+                if stop_run:
+                    self._workspace_pause(db, task_id, stop_run["workspace_run"], stop_run["stopped_at"])
                 # Stop closed the timer immediately. Resume should use the same
                 # session as Pause, including decisions pending from older versions.
                 db.execute("""UPDATE sessions SET stopped_at=NULL WHERE id=(
@@ -1000,9 +1109,13 @@ class PlannerStore:
             if state == "running":
                 session = db.execute("SELECT id FROM sessions WHERE task_id=? AND stopped_at IS NULL",
                                      (task_id,)).fetchone()
-                _close_period(db, session["id"], now)
+                run = _close_period(db, session["id"], now)
+                self._workspace_pause(db, task_id, run, now)
                 state = "paused"
             elif state == "awaiting_finish":
+                period = _stopped_workspace_period(db, task_id)
+                if period:
+                    self._workspace_pause(db, task_id, period["workspace_run"], period["stopped_at"])
                 db.execute("UPDATE sessions SET stopped_at=NULL WHERE id=(SELECT max(id) FROM sessions WHERE task_id=?)",
                            (task_id,))
                 state = "paused"

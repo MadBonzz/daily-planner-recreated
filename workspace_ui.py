@@ -6,6 +6,7 @@ from urllib.parse import urlencode, urlsplit, urlunsplit
 import streamlit as st
 
 from dev_workspace import history_choices, open_dev_workspace
+from estimate_worker import schedule_pending
 from model_client import ModelUnavailable
 from pdf_reader import extract_pdf_text
 from planner_store import PlannerStore
@@ -34,7 +35,7 @@ def _button(store, task, choice, sample):
     destination = urlunsplit((here.scheme, here.netloc, here.path, urlencode(query), ""))
     label = {"ready": "Start with workspace", "paused": "Resume with workspace", "running": "Open workspace"}
     st.link_button(label[task["status"]], destination, key="open-workspace-" + task["id"],
-                   on_click=_start if task["status"] != "running" else "ignore",
+                   on_click=_start,
                    args=(store, choice["token"]), icon=":material/open_in_new:",
                    help="Open this task’s reader or writing desk in a new tab.")
 
@@ -53,10 +54,13 @@ def offer_workspace(store, task, sample=None):
     check()
 
 
-def _chat(task, token, filename, text, draft, doc_id):
+def _chat(store, task, token, filename, text, draft, doc_id):
     identity = token + ":" + doc_id
-    key = "desk-chat:" + identity
-    history = st.session_state.setdefault(key, [])
+    try:
+        history = desk.chat_history(store, token, doc_id)
+    except ValueError as exc:
+        st.warning(str(exc))
+        return
     st.subheader("Ask about this document" if filename else "Task chat")
     if filename and not text:
         st.info("This PDF has no readable text for chat. You can still use the reader.")
@@ -73,20 +77,55 @@ def _chat(task, token, filename, text, draft, doc_id):
         bubble(row)
     question = st.chat_input("Ask a question", key="desk-question:" + identity)
     if question:
+        try:
+            turn_id = desk.begin_question(store, token, doc_id, question)
+        except ValueError as exc:
+            feed.warning(str(exc))
+            return
         previous = [{"role": row["role"], "content": row["content"]} for row in history]
         turn = {"role": "user", "content": question}
-        history.append(turn)
         bubble(turn)
         try:
             with st.spinner("Reading the relevant passages…" if filename else "Thinking through the task…"):
                 reply = desk.answer(task, question, document=filename, text=text, draft=draft, dialogue=previous)
-        except ModelUnavailable as exc:
+            desk.finish_question(store, token, doc_id, turn_id, reply)
+        except (ModelUnavailable, ValueError) as exc:
             feed.warning(str(exc))
         else:
             turn = {"role": "assistant", "content": reply["answer"], "sources": reply["sources"],
                     "model": " · ".join(v for v in (reply["provider"], reply["model"]) if v)}
-            history.append(turn)
             bubble(turn)
+
+
+def pause_summary(task):
+    """Show the state of the last chat-based estimate on either task surface."""
+    if task.get("workspace_progress_pending"):
+        st.caption("Updating estimate from workspace chat…")
+        return
+    prediction = task["prediction"]
+    update = prediction.get("workspace_update")
+    if not update:
+        return
+    if update["status"] == "adjusted":
+        st.caption(f"At the last workspace pause · {round(update['elapsed_minutes'], 1):g} min spent · "
+                   f"{update['remaining_min']:g} min remaining · "
+                   f"{prediction['point_min']:g} min total (before chat review {update['previous_total_min']:g} min)")
+    elif update["status"] == "insufficient_evidence":
+        st.caption(f"The workspace chat gave too little evidence to revise the {prediction['point_min']:g} min estimate.")
+    else:
+        st.caption(f"Workspace estimate unavailable. The current forecast is {prediction['point_min']:g} min.")
+
+
+def pause_evidence(update, *, show_reason=True):
+    if show_reason and update.get("explanation"):
+        st.text(update["explanation"])
+    support = update.get("last_adjusted") or update
+    if support is not update and support.get("evidence"):
+        st.caption("Workspace evidence behind the current forecast")
+    for item in support.get("evidence", []):
+        document = item.get("document")
+        label = {"completed": "Completed", "remaining": "Remaining", "blocker": "Blocker"}.get(item.get("kind"), "Progress")
+        st.text(f'{label} · “{item["quote"]}”' + (f" · {document}" if document else ""))
 
 
 def display(data_root, *, confirm_stop):
@@ -104,6 +143,8 @@ def display(data_root, *, confirm_stop):
         st.error("This task workspace is unavailable.")
         return
     task, draft = saved
+    if store.has_estimation_work():
+        schedule_pending(store, store.data_dir / "vectors")
     st.html("<style>[data-testid=stMainBlockContainer]{max-width:100%;padding:2.5rem clamp(1rem,3vw,3rem)}</style>")
     st.title(task["title"])
     st.write(task["description"])
@@ -116,11 +157,26 @@ def display(data_root, *, confirm_stop):
         state = current[0]
         status = state["status"]
         st.caption(f"Timer · {status.replace('_', ' ')} · {state['actual_seconds']/60:.1f} min spent")
+        pause_summary(state)
+        update = state["prediction"].get("workspace_update")
+        if update and not state.get("workspace_progress_pending"):
+            with st.expander("Why this workspace estimate?"):
+                if update["status"] == "adjusted":
+                    forecast = state["prediction"]
+                    st.caption(f"{forecast['low_min']:g}–{forecast['high_min']:g} min total · "
+                               f"{forecast['confidence']} confidence")
+                pause_evidence(update)
+                source = update.get("provenance") or {}
+                if source.get("model"):
+                    st.caption(" · ".join(v for v in (source.get("provider"), source["model"]) if v))
+                if update["status"] == "unavailable" and status == "paused" and st.button("Retry workspace estimate"):
+                    store.retry_estimate(task["id"])
+                    st.rerun()
         actions = st.container(horizontal=True)
         if status in ("ready", "paused") and actions.button("Start timer" if status == "ready" else "Resume timer"):
             _start(store, token)
             st.rerun()
-        if status == "running" and actions.button("Pause timer"):
+        if status == "running" and actions.button("Pause timer", help="Pause and review progress from this session’s workspace chat."):
             store.transition(task["id"], "pause")
             st.rerun()
         if status in ("running", "paused") and actions.button("Stop timer"):
@@ -166,4 +222,4 @@ def display(data_root, *, confirm_stop):
                         st.session_state[version_key] = draft
                         st.toast("Draft saved")
     with side:
-        _chat(task, token, filename, text, draft, doc_id)
+        _chat(store, task, token, filename, text, draft, doc_id)
