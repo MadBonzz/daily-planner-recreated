@@ -44,11 +44,25 @@ CREATE TABLE IF NOT EXISTS tasks (
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS tasks_by_day ON tasks(day);
+CREATE TABLE IF NOT EXISTS task_workspaces (
+    task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
+    request_hash TEXT NOT NULL,
+    eligible INTEGER,
+    source TEXT NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    draft TEXT NOT NULL DEFAULT ''
+);
 CREATE TABLE IF NOT EXISTS report_jobs (
     task_id TEXT PRIMARY KEY REFERENCES tasks ON DELETE CASCADE,
     generation TEXT NOT NULL,
     action TEXT NOT NULL CHECK (action IN ('build','review')),
     error TEXT
+);
+CREATE TABLE IF NOT EXISTS focus_domain_choices (
+    task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
+    domain TEXT NOT NULL,
+    blocked INTEGER NOT NULL CHECK (blocked IN (0, 1)),
+    PRIMARY KEY (task_id, domain)
 );
 CREATE TABLE IF NOT EXISTS activity_feedback (
     task_id TEXT NOT NULL REFERENCES tasks ON DELETE CASCADE,
@@ -232,9 +246,9 @@ WHERE r.related IS NULL
   AND ((a.status!='completed' AND b.status!='completed') OR r.refresh_due=1)
 """
 
-_OBSOLETE_PAIRS = """DELETE FROM task_relations WHERE related IS NULL
-    AND left_id IN (SELECT id FROM tasks WHERE status='completed')
-    AND right_id IN (SELECT id FROM tasks WHERE status='completed')"""
+_OBSOLETE_PAIRS = """DELETE FROM task_relations AS r WHERE related IS NULL
+    AND EXISTS (SELECT 1 FROM tasks WHERE id=r.left_id AND status='completed')
+    AND EXISTS (SELECT 1 FROM tasks WHERE id=r.right_id AND status='completed')"""
 
 
 def _queue_related_target(db, target_id):
@@ -967,6 +981,31 @@ class PlannerStore:
                                 (_day(day), task_id))
             if not result.rowcount:
                 raise ValueError("Only unfinished tasks can be rescheduled.")
+            return self._task(db, task_id)
+
+    def postpone(self, task_id, day, *, previous_day):
+        """Move unfinished work to a later day and leave its existing session paused."""
+        day = _day(day)
+        with self._db(write=True) as db:
+            task = self._task(db, task_id)
+            if task["archived"] or task["status"] == "completed":
+                raise ValueError("Only unfinished tasks can be postponed.")
+            if task["day"] != _day(previous_day):
+                raise ValueError("This task was already moved. Open its current plan to postpone it again.")
+            now = self.clock()
+            if day <= task["day"] or day < date.fromtimestamp(now).isoformat():
+                raise ValueError("Choose a later plan date that is today or in the future.")
+            state = task["status"]
+            if state == "running":
+                session = db.execute("SELECT id FROM sessions WHERE task_id=? AND stopped_at IS NULL",
+                                     (task_id,)).fetchone()
+                _close_period(db, session["id"], now)
+                state = "paused"
+            elif state == "awaiting_finish":
+                db.execute("UPDATE sessions SET stopped_at=NULL WHERE id=(SELECT max(id) FROM sessions WHERE task_id=?)",
+                           (task_id,))
+                state = "paused"
+            db.execute("UPDATE tasks SET day=?, status=? WHERE id=?", (day, state, task_id))
             return self._task(db, task_id)
 
     def archived_tasks(self):

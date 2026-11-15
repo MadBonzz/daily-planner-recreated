@@ -1,0 +1,45 @@
+name: Planner integration
+on:
+  push:
+    paths:
+      - 'browser_extension/**'
+      - 'focus_*.py'
+      - 'tests/browser/**'
+      - 'daily_review.py'
+      - 'tests/test_daily_review.py'
+      - '.github/workflows/planner-integration.yml'
+  pull_request:
+    paths:
+      - 'browser_extension/**'
+      - 'focus_*.py'
+      - 'tests/browser/**'
+      - 'daily_review.py'
+      - 'tests/test_daily_review.py'
+      - '.github/workflows/planner-integration.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt playwright
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/browser/extension_smoke.py
+
+  windows-reminder:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    env:
+      PLANNER_TEST_WINDOWS_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests/test_daily_review.py

@@ -1,0 +1,7 @@
+:root {color-scheme: light dark; font: 15px/1.5 system-ui,sans-serif;}
+main {max-width: 34rem; min-width: 18rem; margin: 1.5rem auto; padding: 0 1rem;}
+h1 {font-size: 1.35rem;}
+label, input, button {display: block; box-sizing: border-box;}
+input, button {font: inherit; padding: .4rem .65rem; margin-top: .45rem;}
+input {width: 100%;}
+[hidden] {display: none;}
