@@ -696,6 +696,9 @@ class PlannerStore:
                 # comparison even for a target that previously had no link to this task.
                 if task["creation_prediction"] is None:
                     _enqueue_prediction(db, task_id)
+                elif task["estimate_updating"]:
+                    # A pre-completion retry cannot forecast scope edited after completion.
+                    db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
                 if scope_changed:
                     _enqueue_report(db, task_id)
                 if task["actual_seconds"]:
@@ -895,7 +898,7 @@ class PlannerStore:
             inputs.update(forecast_feedback(db, task_id))
             job = {"task": inputs, "history": history, "token": token,
                    "focus_verdicts": (task.get("prediction") or {}).get("focus_verdicts", {})}
-            if task["creation_prediction"] is not None and task["status"] != "completed":
+            if task["creation_prediction"] is not None:
                 progress = db.execute("SELECT snapshot FROM workspace_progress WHERE task_id=?", (task_id,)).fetchone()
                 if progress:
                     job.update(workspace_progress=json.loads(progress[0]), workspace_only=bool(row["workspace_only"]),
@@ -1024,7 +1027,7 @@ class PlannerStore:
                 previous = task["actual_seconds"]
                 total = _correct_total(db, task, spent_seconds, now)
                 task["actual_seconds"] = total
-                if total != previous and state != "completed":
+                if total != previous and state != "completed" and action != "finish":
                     updated = db.execute("""UPDATE workspace_progress
                                             SET snapshot=json_set(snapshot,'$.elapsed_seconds',?)
                                             WHERE task_id=?""", (total, task_id)).rowcount
@@ -1091,8 +1094,14 @@ class PlannerStore:
                               report=?, pdf_text=COALESCE(?,pdf_text), refresh_waiting=0 WHERE id=?""",
                            (now, task["actual_seconds"], completion_note.strip(),
                             json.dumps(report, allow_nan=False) if report is not None else None, pdf_text, task_id))
-                if task["creation_prediction"] is not None:
-                    db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
+                if task["creation_prediction"] is not None and task["estimate_updating"]:
+                    prediction = task["prediction"]
+                    failed = (prediction.get("model_error")
+                              or (prediction.get("provenance") or {}).get("decision") == "fallback")
+                    # A retry requested before completion can still recover the missing
+                    # forecast from the original history or pause. Freeze a valid forecast.
+                    if not failed:
+                        db.execute("DELETE FROM prediction_jobs WHERE task_id=?", (task_id,))
                 if queue_report:
                     _enqueue_report(db, task_id)
                 state = "completed"

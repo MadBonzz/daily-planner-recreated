@@ -581,16 +581,22 @@ def estimate_section(store, task, *, read_only=False):
     prediction = task["prediction"]
     initial_pending = prediction.get("status") == "pending"
     fixed = task["fixed_duration"]
+    completed = task["status"] == "completed"
+    provenance = prediction.get("provenance") or {}
+    completed_fallback = completed and provenance.get("decision") == "fallback"
     label = "Scheduled" if fixed else "Your estimate"
     values = [f"{label} {minutes(task['estimate_minutes'])}"]
+    pending_label = "Finishing the earlier forecast…" if completed else "Updating estimate…"
     if initial_pending:
-        values.append("Estimating task time…")
+        values.append(pending_label if completed else "Estimating task time…")
     elif "point_min" in prediction and not fixed:
         budget_label = "Previous forecast" if estimate_pending(task) else "Planner"
+        if completed_fallback:
+            budget_label = "Planning estimate"
         values.append(f"{budget_label} {minutes(prediction['point_min'])} ({prediction['low_min']:g}–"
                       f"{prediction['high_min']:g} min, {prediction['confidence']} confidence)")
     if estimate_pending(task) and not initial_pending and not task.get("workspace_progress_pending"):
-        values.append("Updating estimate…")
+        values.append(pending_label)
     if read_only or task["status"] != "running":
         if task.get("time_edited_at") is not None:
             values.append(f"Time spent {duration(task['actual_seconds'])} (user-adjusted)")
@@ -604,7 +610,12 @@ def estimate_section(store, task, *, read_only=False):
         return
     has_forecast = "point_min" in prediction
     if has_forecast:
-        st.caption(forecast_source(prediction))
+        if completed_fallback:
+            st.caption({"user": "Planning estimate used your own budget.",
+                        "history": "Planning estimate used recorded durations from related tasks."}
+                       .get(provenance.get("minutes_by"), "The planner used a fallback estimate."))
+        else:
+            st.caption(forecast_source(prediction))
         fallbacks = prediction.get("retrieval_fallbacks", ())
         sources = [label for role, label in (("embedding", "Qwen embeddings"), ("decision", "Kev decisions"))
                    if role in fallbacks]
@@ -612,10 +623,14 @@ def estimate_section(store, task, *, read_only=False):
             st.caption("History lookup used precomputed " + " and ".join(sources) +
                        " for exact matches when live lookup was unavailable.")
         comparison_summary(prediction)
+    errors = []
     if prediction.get("retrieval_error"):
-        st.warning(prediction["retrieval_error"])
+        errors.append(prediction["retrieval_error"])
     if prediction.get("model_error"):
-        st.warning(f"Forecast request failed. {prediction['model_error']}")
+        errors.append(f"Forecast request failed. {prediction['model_error']}")
+    if not (completed and has_forecast):
+        for error in errors:
+            st.warning(error)
     if not read_only and task["status"] != "completed":
         with st.container(horizontal=True):
             if st.button("Re-estimate", key=f"estimate-retry-{task['id']}",
@@ -634,6 +649,10 @@ def estimate_section(store, task, *, read_only=False):
         preview = first.get("advice") or source.get("observation", "")
         st.html(f'<p class="task-copy"><strong>Watch for</strong> · {escape(preview)}</p>')
     with st.expander("Why this estimate?"):
+        if completed and errors:
+            st.caption("Saved forecast details")
+            for error in errors:
+                st.caption(error)
         show_prediction(prediction)
         st.markdown("**What to watch for**")
         if cautions:

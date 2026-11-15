@@ -241,6 +241,94 @@ class StoreTests(unittest.TestCase):
         self.assertFalse(self.store.retry_estimate(task["id"]))
         self.assertFalse(self.store.has_pending_predictions())
 
+    def test_finish_keeps_queued_recovery_with_only_precompletion_timing(self):
+        source = self.finish_one("Earlier work")
+        failed = dict(self.budget, model_error="The model returned invalid JSON.")
+        target = self.task("Next task", prediction=failed)["id"]
+        self.assertTrue(self.store.retry_estimate(target))
+        self.store.transition(target, "start")
+        self.now += 75
+        self.store.transition(target, "pause")
+        self.store.transition(target, "finish", spent_seconds=1200, completion_note="Took longer than expected.")
+        self.finish_one("Later work")
+        self.store.transition(source["id"], "adjust_time", spent_seconds=600)
+        reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+        job = reopened.claim_prediction()
+        self.assertEqual(job["task"]["id"], target)
+        self.assertEqual([(row["id"], row["actual_seconds"]) for row in job["history"]], [(source["id"], 60)])
+        self.assertTrue({"actual_seconds", "completion_note", "report", "completed_at"}.isdisjoint(job["task"]))
+        self.assertNotIn("workspace_progress", job)
+        self.assertTrue(reopened.resolve_prediction(target, job["token"], self.budget))
+        saved = reopened.transition(target, "finish")
+        self.assertEqual((saved["creation_prediction"], saved["prediction"], saved["actual_seconds"]),
+                         (failed, self.budget, 1200))
+        self.assertFalse(reopened.retry_estimate(target))
+        self.assertFalse(reopened.has_pending_predictions())
+
+    def test_finish_preserves_leased_recovery_but_freezes_a_successful_retry(self):
+        failed = dict(self.budget, provenance={"decision": "fallback", "minutes_by": "user"})
+        for recovered_before_finish in (False, True):
+            with self.subTest(recovered_before_finish=recovered_before_finish):
+                target = self.task(prediction=failed)["id"]
+                self.store.retry_estimate(target)
+                job = self.store.claim_prediction()
+                if recovered_before_finish:
+                    self.assertTrue(self.store.resolve_prediction(target, job["token"], self.budget))
+                    self.store.retry_estimate(target)
+                    job = self.store.claim_prediction()
+                self.store.transition(target, "start")
+                self.now += 60
+                self.store.transition(target, "pause")
+                self.store.transition(target, "finish", spent_seconds=1200)
+                self.assertEqual(self.store.renew_prediction(target, job["token"]), not recovered_before_finish)
+                result = failed if recovered_before_finish else self.budget
+                self.assertEqual(self.store.resolve_prediction(target, job["token"], result), not recovered_before_finish)
+                saved = self.store.transition(target, "finish")
+                self.assertEqual((saved["creation_prediction"], saved["prediction"]), (failed, self.budget))
+
+    def test_finish_preserves_elapsed_time_at_workspace_pause_for_queued_or_leased_recoveries(self):
+        from task_workspace import begin_question
+
+        failed = dict(self.budget, model_error="Could not supply a forecast.")
+        for leased in (False, True):
+            with self.subTest(leased=leased):
+                target = self.task(prediction=failed)["id"]
+                with self.store._db(write=True) as db:
+                    db.execute("""INSERT INTO task_workspaces(task_id,request_hash,eligible,source,token)
+                                  VALUES (?, 'eligible', 1, 'packaged', ?)""", (target, target))
+                self.store.transition(target, "start", workspace_token=target)
+                begin_question(self.store, target, "task", "The appendix is still left.")
+                self.now += 180
+                self.store.transition(target, "pause")
+                job = self.store.claim_prediction() if leased else None
+                self.store.transition(target, "finish", spent_seconds=1200, completion_note="Finished the appendix.")
+                reopened = PlannerStore(self.store.data_dir, clock=lambda: self.now)
+                job = job or reopened.claim_prediction()
+                self.assertTrue(job["workspace_only"])
+                progress = job["workspace_progress"]
+                self.assertEqual(progress["elapsed_seconds"], 180)
+                self.assertEqual([row["content"] for row in progress["messages"]], ["The appendix is still left."])
+                self.assertNotIn("completion_note", job["task"])
+                self.assertTrue(reopened.renew_prediction(target, job["token"]))
+                self.assertTrue(reopened.resolve_prediction(target, job["token"], self.budget))
+                saved = reopened.get_task(target)
+                self.assertEqual((saved["actual_seconds"], saved["creation_prediction"], saved["prediction"]),
+                                 (1200, failed, self.budget))
+
+    def test_editing_a_completed_scope_cancels_its_pending_recovery(self):
+        failed = dict(self.budget, model_error="Could not supply a forecast.")
+        target = self.task(prediction=failed)["id"]
+        self.store.retry_estimate(target)
+        job = self.store.claim_prediction()
+        self.store.transition(target, "finish", spent_seconds=900)
+        saved = self.store.get_task(target)
+        fields = {key: saved[key] for key in ("title", "details", "category", "estimate_minutes", "fixed_duration")}
+        self.store.edit_task(target, **fields, description="New information after completion.",
+                             expected_revision=saved["edit_revision"])
+        self.assertFalse(self.store.resolve_prediction(target, job["token"], self.budget))
+        self.assertFalse(self.store.has_pending_predictions())
+        self.assertEqual(self.store.get_task(target)["prediction"], failed)
+
     def test_prediction_claims_are_atomic_and_restart_recovers_expired_lease(self):
         task = self.task(prediction=None)
         with ThreadPoolExecutor(2) as pool:

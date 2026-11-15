@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import sys
+from http.client import IncompleteRead
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -71,6 +72,35 @@ class ModelClientTests(unittest.TestCase):
                 with self.assertRaises(ModelResponseInvalid) as exc:
                     chat_json([], self.schema)
                 self.assertEqual(isinstance(exc.exception, ModelResponseTruncated), reason == "length")
+
+    @patch("model_client.build_opener")
+    def test_local_completion_errors_identify_the_failed_stage_without_echoing_server_content(self, opener):
+        private = "PRIVATE TASK CONTENT"
+        cases = [
+            (b"Not JSON: " + private.encode(), "decoded as JSON"),
+            (b"\xff\x90", "decoded as JSON"),
+            (json.dumps([private]).encode(), "without a chat completion object"),
+            (json.dumps({"error": {"message": private}}).encode(), "an error object"),
+            (b'{}', "choices array"),
+            (b'{"choices":[]}', "choices array"),
+            (b'{"choices":[null]}', "invalid first choice"),
+            (b'{"choices":[{}]}', "without an assistant message"),
+            (b'{"choices":[{"finish_reason":"content_filter"}]}', "filtered the response"),
+            (self.reply(message={"refusal": private, "content": None}).getvalue(), "a refusal"),
+            (self.reply(message={"content": [{"type": "refusal", "refusal": private}]}).getvalue(), "a refusal"),
+        ]
+        for raw, category in cases:
+            with self.subTest(category=category):
+                opener.return_value.open.reset_mock()
+                opener.return_value.open.return_value = io.BytesIO(raw)
+                with self.assertRaisesRegex(ModelResponseInvalid, category) as failure:
+                    chat_json([], self.schema)
+                self.assertNotIn(private, str(failure.exception))
+                opener.return_value.open.assert_called_once()
+        opener.return_value.open.side_effect = IncompleteRead(private.encode(), 80)
+        with self.assertRaisesRegex(ModelResponseInvalid, "closed the HTTP response") as failure:
+            chat_json([], self.schema)
+        self.assertNotIn(private, str(failure.exception))
 
     @patch("model_client.build_opener")
     def test_local_bonsai_reads_only_the_final_schema_object(self, opener):

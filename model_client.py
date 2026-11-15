@@ -7,6 +7,7 @@ import re
 import shlex
 from contextlib import contextmanager
 from contextvars import ContextVar
+from http.client import IncompleteRead
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
@@ -126,10 +127,15 @@ def _canonical_integers(value, schema):
 
 def _final_json(message, model):
     """Decode one answer from the assistant's public text, ignoring reasoning blocks."""
+    if not isinstance(message, dict):
+        raise ModelResponseInvalid(f"The local chat endpoint returned a choice without an assistant message for {model}.")
     content = message.get("content")
+    if message.get("refusal") or (isinstance(content, list) and any(
+            isinstance(part, dict) and part.get("type") == "refusal" for part in content)):
+        raise ModelResponseInvalid(f"{model} returned a refusal instead of a final JSON answer.")
     if isinstance(content, list):
         content = "".join(part["text"] for part in content if isinstance(part, dict)
-                          and part.get("type") in {"text", "output_text"} and isinstance(part.get("text"), str))
+                          and part.get("type") in ("text", "output_text") and isinstance(part.get("text"), str))
     if not isinstance(content, str) or not content.strip():
         if message.get("reasoning_content") or message.get("reasoning"):
             raise ModelResponseInvalid(f"{model} returned reasoning without a final JSON answer.")
@@ -174,6 +180,15 @@ def _post_completion(client, endpoint, headers, payload, timeout, model):
         try:
             with client.open(request, timeout=timeout) as response:
                 return json.load(response)
+        except IncompleteRead:
+            if host in {"localhost", "127.0.0.1", "::1"}:
+                raise ModelResponseInvalid(f"The local chat endpoint closed the HTTP response before it was complete for {model}.") from None
+            raise
+        except ValueError:
+            if host in {"localhost", "127.0.0.1", "::1"}:
+                raise ModelResponseInvalid(f"The local chat endpoint returned an HTTP response that could not "
+                                           f"be decoded as JSON for {model}.") from None
+            raise
         except HTTPError as exc:
             with exc:
                 if exc.code not in (400, 413, 422):
@@ -266,11 +281,23 @@ def chat_json(messages, schema, *, plain_local_retry=False):
         with local_model_runtime.managed_model(endpoint, model, config, kind="llm", timeout=timeout) as instance:
             payload["model"] = instance
             completion = _post_completion(client, endpoint, headers, payload, timeout, model)
+        if local:
+            if not isinstance(completion, dict):
+                raise ModelResponseInvalid(f"The local chat endpoint returned JSON without a chat completion object for {model}.")
+            if completion.get("error") is not None:
+                raise ModelResponseInvalid(f"The local chat endpoint returned an error object instead of a completion for {model}.")
+            choices = completion.get("choices")
+            if not isinstance(choices, list) or not choices:
+                raise ModelResponseInvalid(f"The local chat endpoint returned a completion without a nonempty choices array for {model}.")
+            if not isinstance(choices[0], dict):
+                raise ModelResponseInvalid(f"The local chat endpoint returned an invalid first choice for {model}.")
         choice = completion["choices"][0]
         if choice.get("finish_reason") == "length":
             raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.")
         if local:
-            result = _final_json(choice["message"], model)
+            if choice.get("finish_reason") == "content_filter":
+                raise ModelResponseInvalid(f"The local chat endpoint filtered the response for {model}.")
+            result = _final_json(choice.get("message"), model)
         else:
             content = choice["message"]["content"].strip()
             if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
