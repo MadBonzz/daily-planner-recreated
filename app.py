@@ -11,13 +11,15 @@ import time
 import streamlit as st
 
 import activity
+import focus_ui
 import estimator
 from dev_workspace import add_sample_task, history_choices, open_dev_workspace, sample_task_choices
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
 from relevance_feedback import related_ids
-from planner_analytics import render_analytics
+from planner_analytics import render_analytics, render_shared_chat
 from report_worker import schedule_reports
+from review_ui import postpone_action, review_notice, review_settings
 from model_client import model_settings
 from urllib.parse import urlsplit
 
@@ -422,7 +424,11 @@ def delete_task(store, index_dir, task):
         st.rerun()
 
 
-@st.dialog("Planner settings", width="large")
+def close_settings_dialog():
+    st.session_state.pop("opened_settings", None)
+
+
+@st.dialog("Planner settings", width="large", on_dismiss=close_settings_dialog)
 def settings(store, index_dir, dev):
     endpoint, model = model_settings()
     st.subheader("Model connection")
@@ -436,6 +442,7 @@ def settings(store, index_dir, dev):
     else:
         st.text(f"Configured host: {host}" if host else "Check the configured endpoint in .env.")
         st.caption("This provider receives the task descriptions, document excerpts, and filtered activity used for inference.")
+    focus_ui.website_settings(DATA_ROOT, store, dev=dev)
     st.subheader("Categories")
     st.caption(" · ".join(store.list_categories()))
     with st.form("add_category", clear_on_submit=True):
@@ -447,6 +454,8 @@ def settings(store, index_dir, dev):
                 st.error(str(error))
             else:
                 st.rerun(scope="fragment")
+    if not dev:
+        review_settings(store)
     st.subheader("Activity capture")
     if dev:
         st.caption("Dev uses synthetic activity from the loaded history.")
@@ -692,6 +701,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
         if task["category"]:
             st.html(f'<small>{escape(task["category"])}</small>')
         if not replay and status == "running":
+            focus_ui.running_status(DATA_ROOT, store, task)
             running_clock(store, key)
         if not replay and status == "running" and time.time() - task["started_at"] >= 8 * 3600:
             start = datetime.fromtimestamp(task["started_at"])
@@ -723,12 +733,20 @@ def render_task(store, index_dir, task, dev, *, replay=False):
         elif not replay and status == "awaiting_finish":
             if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
                 st.session_state["timer_dialog"] = ("finish", key)
+        if not replay and status in ("ready", "paused", "running"):
+            from workspace_ui import offer_workspace
+
+            sample = st.session_state.get("dev_history") if dev else None
+            offer_workspace(store, task, sample)
         if not replay and status in ("ready", "paused", "completed"):
             controls = st.columns(2)
             if controls[0].button("Edit time spent", key=f"edit-time-{key}"):
                 st.session_state["timer_dialog"] = ("edit", key)
             if status != "completed" and controls[1].button("Mark complete", key=f"finish-{key}"):
                 st.session_state["timer_dialog"] = ("finish", key)
+        if not replay and status != "completed":
+            postpone_action(store, task)
+            focus_ui.site_editor(store, task)
         if not replay:
             dialog = st.session_state.get("timer_dialog")
             if dialog == ("edit", key) and status in ("ready", "paused", "completed"):
@@ -812,7 +830,19 @@ def replay_controls(store, history_id):
 
 
 def main():
-    st.session_state.setdefault("plan_day", date.today())
+    focus_ui.start_if_paired(DATA_ROOT)
+    if "workspace" in st.query_params:
+        from workspace_ui import display
+
+        display(DATA_ROOT, confirm_stop=stop_confirmation)
+        return
+    st.session_state.setdefault("plan_day", st.session_state.get("last_plan_day", date.today()))
+    st.session_state["last_plan_day"] = st.session_state["plan_day"]
+    if day_to_review := st.session_state.pop("review_target_day", None):
+        select_day(date.fromisoformat(day_to_review))
+        st.session_state["planner_view"] = "Daily plan"
+    if postponed := st.session_state.pop("postponed_to", None):
+        st.toast(f"Task postponed to {postponed:%A, %B %d}.")
     title, options = st.container(key="plan_header").columns([4, 1], vertical_alignment="center")
     title.title("Plan Smarter")
     mode = st.segmented_control("Mode", ["Demo", "Dev"], default="Demo", required=True,
@@ -870,13 +900,17 @@ def main():
         with options.popover("Options", width="stretch"):
             open_settings = st.button("Planner settings")
         if open_settings:
+            st.session_state["opened_settings"] = str(store.path)
+        if st.session_state.get("opened_settings") == str(store.path):
             settings(store, index_dir, dev)
+    if not dev:
+        review_notice(store)
     if "notice" in st.session_state:
         st.warning(st.session_state.pop("notice"))
     page = st.segmented_control("View", ["Daily plan", "Analytics & logs"], default="Daily plan",
                                 required=True, key="planner_view")
     if page == "Analytics & logs":
-        render_analytics(store)
+        render_analytics(store, st.session_state["plan_day"])
         return
     controls = st.container(key="plan_navigation").columns([1, 2, 1, 1, 2], vertical_alignment="bottom")
     controls[0].button("←", key="prev", help="Previous day", on_click=move_day, args=(-1,), width="stretch")
@@ -900,7 +934,7 @@ def main():
             st.text(f'A stopped session on {pending["day"]} is waiting for your decision.')
             st.button("View stopped task", on_click=select_day, args=(date.fromisoformat(pending["day"]),))
     st.subheader(day.strftime("%A, %B %d").replace(" 0", " "))
-    other = store.worked_on(day) if dev else []
+    other = store.worked_on(day)
     if not tasks and not other:
         st.html('<div class="empty-plan"><strong>No tasks planned</strong>'
                 + ("<p>Use the replay schedule to browse or advance to a task.</p>" if replay else
@@ -911,6 +945,8 @@ def main():
         st.subheader("Also worked on this day" if tasks else "Worked on this day")
         for task in other:
             render_task(store, index_dir, task, dev, replay=replay)
+
+    render_shared_chat(store, day)
 
 
 

@@ -67,8 +67,10 @@ def check_policy(context, store, task, site, visits):
     assert "/new-navigation" not in visits, "A new navigation reached the blocked test site"
     store.transition(task, "pause")
     target.wait_for_url(f"http://focus-blocked.example.com:{site}/already-open", timeout=45_000)
-    other.goto(blocked_url)
-    expect(other.get_by_role("heading", name="Test destination")).to_be_visible()
+    # The extension may also be restoring the tab used for the failed navigation.
+    released = context.new_page()
+    released.goto(blocked_url)
+    expect(released.get_by_role("heading", name="Test destination")).to_be_visible()
     assert "/new-navigation" in visits, "Pausing did not release the original rule"
 
 

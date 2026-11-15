@@ -1,4 +1,4 @@
-streamlit>=1.67,<2
+streamlit[pdf]>=1.67,<2
 qdrant-client>=1.12,<2
 lmstudio>=1.5,<2
 portalocker[win32]>=2.7,<5

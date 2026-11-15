@@ -126,10 +126,10 @@ def test_no_matches_still_goes_to_model_for_a_grounded_explanation():
     tasks, logs = _records()
     sql = "SELECT phone_app FROM logs WHERE classification='off_task'"
     plan = {"scope": "all", "tool": "custom_sql", "task_ids": [], "sql": sql}
-    with patch("planner_analytics.chat_json", side_effect=[plan, {"finding": "The selected data did not yield a matching result for this query.", "next_step": "Inspect the query and current filters below."}]) as model:
+    with patch("planner_analytics.chat_json", side_effect=[plan, {"sql": ""}, {"finding": "The selected data did not yield a matching result for this query.", "next_step": "Inspect the query and current filters below."}]) as model:
         result = ask_analytics("Was my phone a distraction?", tasks, logs)
     assert result["answer_source"] == "model" and result["rows"] == []
-    payload = json.loads(model.call_args_list[1].args[0][-1]["content"])
+    payload = json.loads(model.call_args_list[-1].args[0][-1]["content"])
     assert payload["visible_interval_counts"] == {"on_task": 1}
     assert payload["result_rows"] == [] and payload["scope"]["interval_count"] == 1
 
@@ -190,3 +190,29 @@ def test_empty_sql_aggregate_returns_no_measurement():
     assert result["rows"] == [{"average": None}]
     assert "no measured value" in result["answer"]
     assert "enum" in model.call_args.args[1]["properties"]["finding"]
+
+
+def test_model_repairs_spurious_date_predicate_before_answering():
+    old = "SELECT title, actual_minutes FROM tasks WHERE completed_day='2999-01-01'"
+    new = "SELECT title, actual_minutes FROM tasks ORDER BY actual_minutes DESC LIMIT 1"
+    plan = {"scope": "all", "tool": "custom_sql", "task_ids": [], "sql": old}
+    with patch("planner_analytics.chat_json", side_effect=[plan, {"sql": new}, {"answer": "Flyer 0 took 40 minutes."}]):
+        result = ask_analytics("Which task took the longest?", *_records())
+    assert result["first_sql"] == old and result["sql"] == new
+    assert result["rows"] == [{"title": "Flyer 0", "actual_minutes": 40}]
+
+
+
+def test_last_week_query_uses_local_calendar_and_preserves_date_constraint():
+    from planner_analytics import _local_calendar
+    from datetime import date
+    calendar = _local_calendar(date(2026, 1, 1))
+    assert (calendar["last_week_starts"], calendar["last_week_ends"]) == ("2025-12-22", "2025-12-28")
+    assert (calendar["last_month_starts"], calendar["last_month_ends"]) == ("2025-12-01", "2025-12-31")
+    plan = {"scope": "all", "tool": "custom_sql", "task_ids": [],
+            "sql": "SELECT COUNT(*) AS tasks FROM tasks WHERE completed_day BETWEEN '2025-12-22' AND '2025-12-28'"}
+    with patch("planner_analytics.chat_json", side_effect=[plan, {"answer": "There were no completed tasks."}]) as model:
+        ask_analytics("How many tasks did I finish last week?", *_records())
+    messages, schema = model.call_args_list[0].args
+    assert json.loads(messages[-1]["content"])["local_calendar"] == _local_calendar(date.today())
+    assert schema["properties"]["tool"]["enum"] == ["custom_sql"]

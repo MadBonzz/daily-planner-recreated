@@ -11,6 +11,9 @@ import daily_review
 def review_settings(store):
     config = daily_review.preferences(store)
     st.subheader("Daily review reminder")
+    failed = store.get_setting("daily_review_desktop_error", {})
+    if config["desktop"] and failed:
+        st.warning(f"Windows reminder on {failed['day']} failed. {failed['message']}")
     zone = datetime.now().astimezone().tzname()
     with st.form("daily-review-settings"):
         enabled = st.checkbox("Remind me to review my day", value=config["enabled"])

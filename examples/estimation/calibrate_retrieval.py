@@ -39,11 +39,12 @@ def inputs(history):
     return {row["id"]: task_inputs(row, history["id"], DATASET)[0] for row in tasks}
 
 
-def collect(history, vectors):
+def collect(history, vectors, *, queries=None):
+    queries = vectors if queries is None else queries
     split = "calibration" if int(history["id"].split("-")[0]) % 2 else "validation"
     return [{"history": history["id"], "split": split, "query": query["id"], "candidate": row["id"],
              "expected": row["id"] in query["evaluation"]["evidence_ids"],
-             "cosine": cosine(vectors[query["id"]], vectors[row["id"]])}
+             "cosine": cosine(queries[query["id"]], vectors[row["id"]])}
             for query in history["holdouts"] if not query.get("fixed_duration") for row in history["tasks"]]
 
 
@@ -72,11 +73,14 @@ def embed_all(directory, profiles):
         vectors = {key: retrieval.embed_task(task, config) for key, task in tasks.items()}
         if len({len(vector) for vector in vectors.values()}) != 1:
             raise ValueError("Inconsistent vector dimensions")
-        rows.extend(collect(history, vectors))
+        queries = {row["id"]: retrieval.embed_query(tasks[row["id"]], config)
+                   for row in history["holdouts"] if not row.get("fixed_duration")}
+        rows.extend(collect(history, vectors, queries=queries))
         input_hashes[history["id"]] = {
             key: hashlib.sha256(retrieval.task_text(task).encode()).hexdigest() for key, task in tasks.items()}
     result = {"created_utc": datetime.now(timezone.utc).isoformat(),
               "model": config.get("PLANNER_EMBEDDING_MODEL") or retrieval.EMBEDDING_MODEL,
+              "query_instruction": retrieval.QUERY_INSTRUCTION,
               "dimensions": len(next(iter(vectors.values()))), "task_text_sha256": input_hashes,
               **summarize(rows), "pairs": rows}
     write_json(directory / "embeddings.json", result)

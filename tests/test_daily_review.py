@@ -62,6 +62,22 @@ def test_windows_registration_failure_and_missed_or_failed_delivery_can_recover(
     assert not daily_review.deliver(store, lambda plan: None, desktop=True)
 
 
+def test_failed_desktop_delivery_falls_back_to_in_app_once(tmp_path, monkeypatch):
+    now = datetime(2026, 10, 21, 22).timestamp()
+    store = PlannerStore(tmp_path, clock=lambda: now)
+    add(store, "2026-10-21")
+    monkeypatch.setattr(daily_review, "_schedule_windows", lambda *args: None)
+    assert daily_review.configure(store, "21:30", True, True) is None
+    assert not daily_review.deliver(store, lambda plan: None, desktop=False)
+    def denied(plan):
+        raise RuntimeError("Desktop notifications blocked")
+    with pytest.raises(RuntimeError, match="blocked"):
+        daily_review.deliver(store, denied, desktop=True)
+    assert store.get_setting("daily_review_desktop_error")["day"] == "2026-10-21"
+    assert daily_review.deliver(store, lambda plan: None, desktop=False)
+    assert not daily_review.deliver(store, lambda plan: None, desktop=True)
+
+
 @pytest.mark.parametrize("state", ["ready", "running", "paused", "awaiting_finish"])
 def test_postponing_preserves_task_evidence_and_stops_running_clock(tmp_path, state):
     now = [datetime(2026, 11, 14, 12).timestamp()]
@@ -112,6 +128,25 @@ postpone_action(store, store.get_task({key!r}))
     ui.button(key=f"postpone-next-{key}").click().run()
     assert not ui.exception
     assert store.get_task(key)["day"] == (date.today() + timedelta(days=1)).isoformat()
+
+
+def test_review_button_opens_the_due_plan_from_analytics(tmp_path, monkeypatch):
+    import app
+
+    store = PlannerStore(tmp_path / "live")
+    add(store, date.today())
+    daily_review.configure(store, "00:00", True, False)
+    monkeypatch.setattr(app, "DATA_ROOT", tmp_path)
+    ui = AppTest.from_string("from app import main\nmain()")
+    ui.session_state["plan_day"] = date.today() - timedelta(days=3)
+    ui.session_state["planner_view"] = "Analytics & logs"
+    ui.run()
+    assert not ui.exception
+    ui.button(key="review-open").click().run()
+    assert not ui.exception
+    assert ui.session_state["planner_view"] == "Daily plan"
+    assert ui.date_input(key="plan_day").value == date.today()
+    assert daily_review.due(store) is None
 
 
 @pytest.mark.skipif(sys.platform != "win32" or os.getenv("PLANNER_TEST_WINDOWS_SCHEDULER") != "1",

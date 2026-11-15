@@ -5,6 +5,10 @@ on:
       - 'browser_extension/**'
       - 'focus_*.py'
       - 'tests/browser/**'
+      - 'app.py'
+      - '*workspace*.py'
+      - 'requirements.txt'
+      - 'data/tasks/workspace-decisions.json'
       - 'daily_review.py'
       - 'tests/test_daily_review.py'
       - '.github/workflows/planner-integration.yml'
@@ -13,6 +17,10 @@ on:
       - 'browser_extension/**'
       - 'focus_*.py'
       - 'tests/browser/**'
+      - 'app.py'
+      - '*workspace*.py'
+      - 'requirements.txt'
+      - 'data/tasks/workspace-decisions.json'
       - 'daily_review.py'
       - 'tests/test_daily_review.py'
       - '.github/workflows/planner-integration.yml'
@@ -30,6 +38,7 @@ jobs:
       - run: python -m pip install -r requirements.txt playwright
       - run: python -m playwright install --with-deps chromium
       - run: python tests/browser/extension_smoke.py
+      - run: python tests/browser/workspace_smoke.py
 
   windows-reminder:
     runs-on: windows-latest

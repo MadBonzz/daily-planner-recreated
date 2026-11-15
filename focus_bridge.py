@@ -115,10 +115,27 @@ class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
+    def _extension_origin(self):
+        origin = self.headers.get("Origin", "")
+        return origin if re.fullmatch(r"chrome-extension://[a-p]{32}", origin) else None
+
+    def do_OPTIONS(self):
+        if (self.headers.get("Host") != f"{HOST}:{self.server.server_port}" or not self._extension_origin()
+                or urlsplit(self.path).path != "/v1/sites"):
+            return self._reply(403)
+        return self._reply(200)
+
     def _reply(self, status, payload=None):
         body = json.dumps(payload or {}).encode()
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
+        if status == 200 and self._extension_origin():
+            self.send_header("Access-Control-Allow-Origin", self._extension_origin())
+            self.send_header("Vary", "Origin")
+            if self.command == "OPTIONS":
+                self.send_header("Access-Control-Allow-Methods", "GET")
+                self.send_header("Access-Control-Allow-Headers", "Authorization, X-Planner-Browser")
+                self.send_header("Access-Control-Allow-Private-Network", "true")
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
@@ -144,20 +161,45 @@ class _Handler(BaseHTTPRequestHandler):
             return self._reply(400)
         root = self.server.root
         deadline = time.monotonic() + self.server.poll_seconds
-        recorded = False
-        while True:
-            config = binding(root)
-            if not config or not hmac.compare_digest(auth.encode(), ("Bearer " + config["token"]).encode()):
-                return self._reply(403)
-            if not recorded:
-                with closing(sqlite3.connect(_path(root), timeout=2)) as db, db:
-                    db.execute("INSERT OR REPLACE INTO browsers(client,seen,applied) VALUES (?,?,?)",
-                               (client, time.time(), after))
-                recorded = True
-            policy = snapshot(root, config)
-            if policy["revision"] != after or time.monotonic() >= deadline:
-                return self._reply(200, policy)
-            time.sleep(0.6)
+        config = binding(root)
+        credential = auth.encode()
+        if not config or not hmac.compare_digest(credential, ("Bearer " + config["token"]).encode()):
+            return self._reply(403)
+        with closing(sqlite3.connect(_path(root), timeout=2)) as db, db:
+            db.execute("INSERT OR REPLACE INTO browsers(client,seen,applied) VALUES (?,?,?)", (client, time.time(), after))
+        # Watch SQLite's commit counter on one read-only connection. Idle tasks
+        # do not need their reports/PDFs examined on every long-poll tick.
+        watch = None
+        try:
+            monitored = None
+            generation = None
+            while True:
+                config = binding(root)
+                if not config or not hmac.compare_digest(credential, ("Bearer " + config["token"]).encode()):
+                    return self._reply(403)
+                try:
+                    path = active_workspace(root, config["workspace"])
+                    if path != monitored:
+                        if watch:
+                            watch.close()
+                            watch = None
+                        watch = sqlite3.connect(path.as_uri() + "?mode=ro", uri=True, timeout=1)
+                        monitored = path
+                        generation = None
+                    version = watch.execute("PRAGMA data_version").fetchone()[0]
+                    if version != generation:
+                        policy = snapshot(root, config)
+                        generation = version
+                except (OSError, ValueError, sqlite3.Error):
+                    policy = {"domains": [], "revision": hashlib.sha256(b"[]").hexdigest()}
+                    monitored = None
+                if policy["revision"] != after or time.monotonic() >= deadline:
+                    return self._reply(200, policy)
+                time.sleep(0.6)
+        finally:
+            if watch:
+                watch.close()
+
 
 
 def ensure_listener(root, *, port=PORT):

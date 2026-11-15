@@ -48,7 +48,7 @@ def test_even_an_old_cutoff_cannot_admit_a_candidate_below_the_half_cosine_floor
 
     target = {"id": "target", "title": "Fill a form", "estimate_minutes": 12}
     rows = [{**target, "id": "below", "cosine": 0.49}, {**target, "id": "above", "cosine": 0.51}]
-    def embed(task, config):
+    def embed(task, config, query=False):
         cosine = task.get("cosine", 1)
         return [cosine, math.sqrt(1 - cosine ** 2)]
     monkeypatch.setattr(retrieval, "embed_task", embed)
@@ -64,7 +64,7 @@ def test_threshold_is_applied_before_judging_and_cache_repairs_content(tmp_path,
     vecs = {"new": [1., 0.], "cross-category": [1., .1], "weak": [0., 1.], "deleted": [1., 0.]}
     calls = []
 
-    def embed(row, config):
+    def embed(row, config, query=False):
         calls.append(row["id"])
         return vecs[row["id"]]
     monkeypatch.setattr(retrieval, "embed_task", embed)

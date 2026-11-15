@@ -19,6 +19,7 @@ from qdrant_client import QdrantClient, models
 
 from model_client import ModelUnavailable, _NoRedirect, planner_settings
 from pdf_reader import document_excerpt
+import sample_retrieval
 
 
 COLLECTION = "planner_tasks_qwen_v2"
@@ -26,6 +27,8 @@ LEGACY_COLLECTION = "planner_tasks_v1"
 INDEX_LOCK = threading.RLock()
 EMBEDDING_MODEL = "qwen3-embedding-0.6b"
 DECISION_MODEL = "kev-4b"
+QUERY_INSTRUCTION = ("Retrieve past tasks whose work, methods, and scope are comparable and whose durations "
+                     "could help estimate this task.")
 MINIMUM_THRESHOLD = 0.50
 _FIELDS = (("Title", "title"), ("Description", "description"), ("Details", "details"), ("Documents", "pdf_text"))
 
@@ -135,11 +138,28 @@ def _local_post(endpoint, payload, config):
         raise ModelUnavailable(f"Could not reach {payload['model']} on the configured local LM Studio endpoint.") from exc
 
 
-def embed_task(task, config=None):
+def embedding_input(task, query=False):
+    content = task_text(task)
+    return f"Instruct: {QUERY_INSTRUCTION}\nQuery: {content}" if query else content
+
+
+def embed_query(task, config=None):
+    return embed_task(task, config, True)
+
+
+def embed_task(task, config=None, query=False):
     config = planner_settings() if config is None else config
     model = config.get("PLANNER_EMBEDDING_MODEL") or EMBEDDING_MODEL
+    content = embedding_input(task, query)
+    packaged = sample_retrieval.vector_for(model, content)
+    if packaged is not None:
+        return packaged
+    return _live_vector(content, model, config)
+
+
+def _live_vector(content, model, config):
     endpoint = config.get("PLANNER_EMBEDDING_ENDPOINT") or "http://127.0.0.1:1234/v1/embeddings"
-    response = _local_post(endpoint, {"model": model, "input": task_text(task)}, config)
+    response = _local_post(endpoint, {"model": model, "input": content}, config)
     try:
         vector = response["data"][0]["embedding"]
         if not isinstance(vector, list) or not vector or not all(
@@ -177,15 +197,28 @@ _PAIR_INSTRUCTION = (
 )
 
 
-def decide_related(left, right, examples=()):
-    """Decide exactly one task pair. An unavailable judge leaves the pair unknown."""
-    config = planner_settings()
-    model = config.get("PLANNER_DECISION_MODEL") or DECISION_MODEL
-    endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
+def decision_payload(left, right, examples, model):
     state = {"examples": _PAIR_EXAMPLES, "reviewed_examples": reviewed_examples(examples),
              "target": _decision_record(left), "candidate": _decision_record(right)}
-    reply = _local_post(endpoint, {"model": model, "state": json.dumps(state, ensure_ascii=False),
-                                   "questions": {"relevant": {"type": "noul", "instructions": _PAIR_INSTRUCTION}}}, config)
+    return {"model": model, "state": json.dumps(state, ensure_ascii=False),
+            "questions": {"relevant": {"type": "noul", "instructions": _PAIR_INSTRUCTION}}}
+
+
+def decide_related(left, right, examples=()):
+    """Use an exact packaged decision, otherwise judge this pair with the configured model."""
+    config = planner_settings()
+    model = config.get("PLANNER_DECISION_MODEL") or DECISION_MODEL
+    payload = decision_payload(left, right, examples, model)
+    packaged = sample_retrieval.decision_for(payload)
+    if packaged is not None:
+        return packaged
+    return _live_decision(payload, config)
+
+
+def _live_decision(payload, config):
+    model = payload["model"]
+    endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
+    reply = _local_post(endpoint, payload, config)
     try:
         answer = reply["answers"]["relevant"]
         probability = answer["noul"]
@@ -243,7 +276,7 @@ def _upsert_tasks(client, name, rows, config, errors=None):
             continue
         try:
             vector = embed_task(row, config)
-        except DocumentTooLong as error:
+        except ModelUnavailable as error:
             if errors is None:
                 raise
             errors.add("A historical task was skipped. " + str(error))
@@ -313,7 +346,7 @@ def search(task, history, index_dir, *, errors=None):
     config = planner_settings()
     name = _collection(config)
     threshold = relevance_threshold(config)
-    query = embed_task(task, config)
+    query = embed_query(task, config)
     with _index(index_dir) as client:
         rows = _upsert_tasks(client, name, history, config, errors)
         if not rows:

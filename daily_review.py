@@ -52,11 +52,14 @@ def deliver(store, notify, *, desktop):
     token = uuid4().hex
     with store._db(write=True) as db:
         config = _get_setting(db, "daily_review", DEFAULT)
-        if bool(config.get("desktop")) != desktop:
-            return False
         now = store.clock()
         pending = _due(db, now)
         if not pending or pending["day"] <= _get_setting(db, "daily_review_sent", ""):
+            return False
+        failed = _get_setting(db, "daily_review_desktop_error", {})
+        if desktop and not config.get("desktop"):
+            return False
+        if not desktop and config.get("desktop") and failed.get("day") != pending["day"]:
             return False
         claim = _get_setting(db, "daily_review_claim", {})
         if claim.get("expires", 0) > now:
@@ -64,15 +67,19 @@ def deliver(store, notify, *, desktop):
         _save_setting(db, "daily_review_claim", {"token": token, "expires": now + 120})
     try:
         notify(pending)
-    except Exception:
+    except Exception as error:
         with store._db(write=True) as db:
             if _get_setting(db, "daily_review_claim", {}).get("token") == token:
                 _save_setting(db, "daily_review_claim", {})
+                if desktop:
+                    _save_setting(db, "daily_review_desktop_error", {"day": pending["day"], "message": str(error)})
         raise
     with store._db(write=True) as db:
         if _get_setting(db, "daily_review_claim", {}).get("token") == token:
             _save_setting(db, "daily_review_sent", pending["day"])
             _save_setting(db, "daily_review_claim", {})
+            if desktop:
+                _save_setting(db, "daily_review_desktop_error", {})
     return True
 
 

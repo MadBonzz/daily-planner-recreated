@@ -27,7 +27,11 @@ async function examine(id) {
     try { await chrome.tabs.update(id, {url: blockedPage}); } catch { await chrome.storage.session.remove(key); }
   } else if (url === blockedPage) {
     const original = (await chrome.storage.session.get(key))[key];
-    if (original && !blockedHost(original, domains)) {
+    if (!original && domains.length === 0) {
+      // The browser may restore a parked tab after restarting, when session
+      // storage has expired. Recover its previous history entry if it exists.
+      await chrome.tabs.goBack(id).catch(() => {});
+    } else if (original && !blockedHost(original, domains)) {
       await chrome.tabs.update(id, {url: original}).catch(() => {});
       await chrome.storage.session.remove(key);
     }
@@ -113,8 +117,13 @@ function changed() {
   controller?.abort();
   void poll();
 }
-function wake() {
-  void chrome.alarms.create(alarmName, {periodInMinutes: 0.5});
+async function wake() {
+  const {pairToken} = await chrome.storage.local.get("pairToken");
+  if (pairToken) {
+    await chrome.alarms.create(alarmName, {periodInMinutes: 0.5});
+  } else {
+    await chrome.alarms.clear(alarmName);
+  }
   void poll();
 }
 
@@ -122,7 +131,10 @@ chrome.alarms.onAlarm.addListener(a => { if (a.name === alarmName) void poll(); 
 chrome.runtime.onStartup.addListener(wake);
 chrome.runtime.onInstalled.addListener(wake);
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.pairToken) changed();
+  if (area === "local" && changes.pairToken) {
+    changed();
+    void wake();
+  }
 });
 chrome.tabs.onActivated.addListener(info => { if (applied !== null) void serialize(() => examine(info.tabId)); });
 chrome.tabs.onUpdated.addListener((id, change) => {
