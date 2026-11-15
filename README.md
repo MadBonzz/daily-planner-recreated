@@ -4,7 +4,7 @@ A local, daily-only planner for comparing the time you set aside with the time y
 
 ## Run on macOS
 
-The quickest demo uses the five bundled Dev histories and a Cohere API key. The planner, databases and retrieval cache run on your Mac. Cohere supplies the forecast and other chat responses. For fully local inference on Apple Silicon, see [Local LM Studio](#local-lm-studio). LM Studio supports Apple Silicon on macOS 14 or newer and recommends 16 GB or more of RAM. On an Intel Mac, use the hosted forecast configuration. [LM Studio system requirements](https://lmstudio.ai/docs/app/system-requirements)
+For a fully local Mac setup, install the planner in step 1, then follow [Run all three models live on a Mac](#run-all-three-models-live-on-a-mac). That route uses LM Studio for Qwen, Kev and Bonsai, including on the five Dev histories. The other option below uses the bundled Qwen and Kev results with a Cohere key for the final forecast. An Intel Mac can use the hosted setup. [LM Studio system requirements](https://lmstudio.ai/docs/app/system-requirements)
 
 1. Install Python 3.12 for macOS, or use `brew install python@3.12` if you have Homebrew. If `python3.12 --version` already reports 3.12, start at the clone command. [Python macOS installers](https://www.python.org/downloads/macos/) · [Homebrew formula](https://formulae.brew.sh/formula/python@3.12)
 
@@ -72,58 +72,103 @@ Task records, original PDFs and ActivityWatch databases stay on your computer. A
 
 ### Local LM Studio
 
-On an Apple Silicon Mac running macOS 14+, install the LM Studio desktop app and launch it once, or install its headless daemon from Terminal. The official headless command also supports Linux. The commands below use the llama.cpp GGUF runtime and serve all three roles on loopback. [LM Studio download](https://lmstudio.ai/download) · [Headless installation](https://lmstudio.ai/docs/developer/core/headless) · [CLI](https://lmstudio.ai/docs/cli)
+#### Run all three models live on a Mac
+
+This setup runs Qwen, Kev and Bonsai on one Apple Silicon Mac. It works with both your personal plan and the five supplied Dev histories. The histories still supply the original tasks, PDFs, recorded times and ActivityWatch events. Your Mac computes the embeddings, relevance decisions, workspace and website decisions, and new forecasts. No Cohere key is needed.
+
+**1. Install the planner and LM Studio.** Use macOS 14 or later on Apple Silicon. LM Studio recommends at least 16 GB of RAM. Complete step 1 of [Run on macOS](#run-on-macos) to clone the repo and install the Python environment. If you already cloned it, run `git pull --ff-only` on `main` and `.venv/bin/python -m pip install -r requirements.txt`. Run the commands below from the repository root. [Mac requirements](https://lmstudio.ai/docs/app/system-requirements)
+
+Install [LM Studio for Mac](https://lmstudio.ai/download), open the app once, and leave it running. Open a new Terminal. If `lms` is missing from your path, run `export PATH="$HOME/.lmstudio/bin:$PATH"`. For a Terminal-only installation, follow the [headless installer](https://lmstudio.ai/docs/developer/core/headless) and start it with `lms daemon up`. Both setups use the same CLI.
 
 ```sh
-curl -fsSL https://lmstudio.ai/install.sh | bash
+lms --version
+lms runtime get llama.cpp --yes
+lms runtime ls
 ```
 
-Open a new Terminal if the installer updates your shell path, then run `lms daemon up` for the headless install. Check `lms runtime ls`. Use `lms runtime get llama.cpp` to install the engine or `lms runtime update llama.cpp` to update it. Kev needs a release with the native System One decisions endpoint. [Runtime commands](https://lmstudio.ai/docs/cli/runtime/runtime) · [System One endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
-
-Download the following GGUF files to your Mac and run the import commands from that folder. `--hard-link` keeps the downloads available without a second copy. If you downloaded to an external volume, use `--copy` to place a copy on the volume where LM Studio stores models. The benchmark used these exact quantizations. Only one Bonsai model is needed for normal use.
-
-| Role | GGUF file |
-| --- | --- |
-| Embedding | [Qwen3-Embedding-0.6B-Q8_0.gguf](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/blob/370f27d7550e0def9b39c1f16d3fbaa13aa67728/Qwen3-Embedding-0.6B-Q8_0.gguf) |
-| Decision | [Kev-4B-Q4_K_M.gguf](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/f4624b6bb7072f1bab726a622c1cad3f96030b9e/Kev-4B-Q4_K_M.gguf) |
-| Forecast, activity and chat | [Ternary-Bonsai-4B-Q2_0_g64.gguf](https://huggingface.co/prism-ml/Ternary-Bonsai-4B-gguf/blob/a3eb42bafe873f9686bc97486c43b72ef7d75ec8/Ternary-Bonsai-4B-Q2_0_g64.gguf) |
-| Optional 9B forecast model | [Ternary-Bonsai-2-9B-Q2_0.gguf](https://huggingface.co/prism-ml/Ternary-Bonsai-2-9B-gguf/blob/82265ccc78ddaac4700286a35e9badcc32376dd9/Ternary-Bonsai-2-9B-Q2_0.gguf) |
+**2. Download and import the three GGUFs once.** The 4B setup downloads about 4.8 GB of weights. These URLs pin the files used in the project evaluations. If `lms ls --json` already lists the same files, go straight to step 3. The imports use hard links on the same volume. Use `--copy` in place of `--hard-link` if you store downloads on a different volume. [LM Studio import options](https://lmstudio.ai/docs/cli/local-models/import)
 
 ```sh
-lms import Qwen3-Embedding-0.6B-Q8_0.gguf --user-repo Qwen/Qwen3-Embedding-0.6B-GGUF --hard-link --yes
-lms import Kev-4B-Q4_K_M.gguf --user-repo ggml-org/Kev-4B-GGUF --hard-link --yes
-lms import Ternary-Bonsai-4B-Q2_0_g64.gguf --user-repo prism-ml/Ternary-Bonsai-4B-gguf --hard-link --yes
+model_dir="$HOME/Downloads/plan-smarter-models"
+mkdir -p "$model_dir"
+curl -fL --retry 3 -o "$model_dir/Qwen3-Embedding-0.6B-Q8_0.gguf" \
+  https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/370f27d7550e0def9b39c1f16d3fbaa13aa67728/Qwen3-Embedding-0.6B-Q8_0.gguf
+curl -fL --retry 3 -o "$model_dir/Kev-4B-Q4_K_M.gguf" \
+  https://huggingface.co/ggml-org/Kev-4B-GGUF/resolve/f4624b6bb7072f1bab726a622c1cad3f96030b9e/Kev-4B-Q4_K_M.gguf
+curl -fL --retry 3 -o "$model_dir/Ternary-Bonsai-4B-Q2_0_g64.gguf" \
+  https://huggingface.co/prism-ml/Ternary-Bonsai-4B-gguf/resolve/a3eb42bafe873f9686bc97486c43b72ef7d75ec8/Ternary-Bonsai-4B-Q2_0_g64.gguf
+
+lms import "$model_dir/Qwen3-Embedding-0.6B-Q8_0.gguf" --user-repo Qwen/Qwen3-Embedding-0.6B-GGUF --hard-link --yes
+lms import "$model_dir/Kev-4B-Q4_K_M.gguf" --user-repo ggml-org/Kev-4B-GGUF --hard-link --yes
+lms import "$model_dir/Ternary-Bonsai-4B-Q2_0_g64.gguf" --user-repo prism-ml/Ternary-Bonsai-4B-gguf --hard-link --yes
 lms ls
 ```
 
-Load each model under the identifiers the planner uses. The first argument is the model key printed by `lms ls`. With these GGUFs, Qwen’s key starts with `text-embedding-`. If your catalog lists a different key, use the one paired with the exact file in `lms ls --json` and keep the identifier shown below. The commands select CPU inference. Append `--estimate-only` to a load command to estimate memory needs before loading. [Import options](https://lmstudio.ai/docs/cli/local-models/import) · [Load options](https://lmstudio.ai/docs/cli/local-models/load)
+**3. Load the models and start the local server.** Keep the two `-live` identifiers exactly as shown. The planner keys its bundled Qwen vectors by model ID and input text. Every saved Kev request also includes the model ID. Giving the same weights new identifiers makes even an exact demo input go to LM Studio. The first argument of each load command is the model key on disk. If your key differs, find the matching file and its `modelKey` in `lms ls --json` and change only that first argument. [Model identifiers and load options](https://lmstudio.ai/docs/cli/local-models/load)
 
 ```sh
-lms load text-embedding-qwen3-embedding-0.6b --gpu off --context-length 8192 --identifier qwen3-embedding-0.6b --yes
-lms load kev-4b --gpu off --context-length 4096 --identifier kev-4b --yes
-lms load ternary-bonsai-4b --gpu off --context-length 8192 --identifier ternary-bonsai-4b --yes
+lms load text-embedding-qwen3-embedding-0.6b --identifier qwen3-embedding-0.6b-live --context-length 8192 --gpu off --yes
+lms load kev-4b --identifier kev-4b-live --context-length 4096 --gpu off --yes
+lms load ternary-bonsai-4b --identifier ternary-bonsai-4b --context-length 8192 --gpu off --yes
 lms server start --bind 127.0.0.1 --port 1234
 lms ps
 ```
 
-Back in the repository, select the local forecast in `.env`. The embedding and decision endpoints default to the same loopback port.
+`lms ps` should show all three identifiers. These commands select CPU inference, including for the experimental Bonsai GGUF. You can try LM Studio’s default device selection by omitting `--gpu off` when loading a model and rerunning the check in step 5. To preview memory use, append `--estimate-only` to a load command. If the local server is already listening on port 1234, continue with that server.
 
-```dotenv
-PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1234/v1/chat/completions
-PLANNER_MODEL=ternary-bonsai-4b
-PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b
-PLANNER_DECISION_MODEL=kev-4b
-PLANNER_MODEL_TIMEOUT_SECONDS=360
+**4. Save a reusable local profile.** Paste the block below into Terminal once. It creates a shell settings file for this run mode. Sourcing it overrides any hosted settings in the repository’s `.env` for this Terminal. `PLANNER_DATA_DIR` selects a separate location for the planner database and vector index. Start with a new directory so previously stored task relationships or forecasts cannot be reused from a bundled demo run.
+
+```sh
+mkdir -p "$HOME/.config/plan-smarter"
+cat > "$HOME/.config/plan-smarter/lmstudio-live.sh" <<'ENV'
+export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
+export PLANNER_EMBEDDING_ENDPOINT=http://127.0.0.1:1234/v1/embeddings
+export PLANNER_DECISION_MODEL=kev-4b-live
+export PLANNER_DECISION_ENDPOINT=http://127.0.0.1:1234/v1/systemone
+export PLANNER_MODEL=ternary-bonsai-4b
+export PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1234/v1/chat/completions
+export PLANNER_MODEL_TIMEOUT_SECONDS=360
+export PLANNER_DATA_DIR="$HOME/Library/Application Support/Plan Smarter/lmstudio-live"
+ENV
+source "$HOME/.config/plan-smarter/lmstudio-live.sh"
 ```
 
-From the repository root, check the three endpoints with a synthetic task and launch the app. To inspect local server traffic, run `lms log stream` in a separate Terminal. Long documents may need a larger Qwen context and longer inference can need a larger timeout. The default timeout is 90 seconds.
+| Role | What should appear in LM Studio |
+| --- | --- |
+| Qwen | `/v1/embeddings` for task text and extracted PDF content. |
+| Kev | `/v1/systemone` for candidate comparisons, active-task relationships, workspace eligibility and site suggestions when the task has distraction evidence. |
+| Bonsai | `/v1/chat/completions` for flexible duration forecasts, in-app chat and activity classification when requested. |
+
+**5. Verify live requests, then try a task.** Open a second Terminal and run `lms log stream --source server`. Back in the first Terminal, run the check in the same shell where you sourced the profile. It makes an embedding request, a typed Kev decision and a structured Bonsai forecast. Look for a **1,024-dimensional vector**, a **related/unrelated verdict** and a **validated forecast in minutes**. The check exits with an error if a component fails. [Server logs](https://lmstudio.ai/docs/cli/serve/log-stream) · [Kev’s System One endpoint](https://lmstudio.ai/docs/developer/jev-compat/systemone)
 
 ```sh
 .venv/bin/python -m examples.estimation.check_local_models
-.venv/bin/python -m streamlit run app.py --server.address 127.0.0.1
+.venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
-To try 9B, import `Ternary-Bonsai-2-9B-Q2_0.gguf` under `prism-ml/Ternary-Bonsai-2-9B-gguf`, unload the 4B forecaster with `lms unload ternary-bonsai-4b`, load the 9B file with `--identifier ternary-bonsai-2-9b`, and change `PLANNER_MODEL` accordingly. Leave Qwen and Kev loaded.
+Open <http://127.0.0.1:8501>. Choose **Dev → Ishan · paper reading and GPU research → Editable history**. Under **History details → Try a sample task**, add **Fix nondeterministic segmented sums**. Its history includes related GPU debugging sessions. Allow the initial open tasks to finish estimating. Watch for embedding, decision and chat requests in LM Studio, then open **Why this estimate?** and check the source and comparisons. A fixed-duration task uses its scheduled time. For step-by-step inference from the first task in a history, choose **Chronological replay → Apply next action**.
+
+**Later runs.** Open LM Studio, repeat any missing loads from step 3, and start the server if stopped. From the repo, `source "$HOME/.config/plan-smarter/lmstudio-live.sh"` and rerun the Streamlit command. Reusing this profile keeps your tasks and the results your Mac already computed. For a new cold run, source the profile, export `PLANNER_DATA_DIR` to a different unused folder, then launch Streamlit. Ctrl+C stops the app.
+
+**Optional Bonsai 9B.** Download the [pinned 9B GGUF](https://huggingface.co/prism-ml/Ternary-Bonsai-2-9B-gguf/resolve/82265ccc78ddaac4700286a35e9badcc32376dd9/Ternary-Bonsai-2-9B-Q2_0.gguf) to the same model folder. Stop Streamlit, then run the following in the shell with the live profile loaded. To keep 9B on subsequent launches, change the `PLANNER_MODEL` line in the profile to `ternary-bonsai-2-9b`.
+
+```sh
+lms import "$HOME/Downloads/plan-smarter-models/Ternary-Bonsai-2-9B-Q2_0.gguf" --user-repo prism-ml/Ternary-Bonsai-2-9B-gguf --hard-link --yes
+lms unload ternary-bonsai-4b
+lms load ternary-bonsai-2-9b --identifier ternary-bonsai-2-9b --context-length 8192 --gpu off --yes
+export PLANNER_MODEL=ternary-bonsai-2-9b
+.venv/bin/python -m examples.estimation.check_local_models --component forecast
+.venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
+```
+
+**If a check fails**
+
+| Symptom | What to check |
+| --- | --- |
+| Cannot connect or model ID is unknown | Check `lms server status` and `lms ps`. Match the loaded identifiers to the exported variables. Run the check and launch Streamlit from the same Terminal. |
+| Embedding and chat work, but Kev gives an HTTP error | Confirm the decision endpoint ends in `/v1/systemone` and `kev-4b-live` is the decision model in `lms ps`. Update LM Studio and its llama.cpp runtime with `lms runtime update llama.cpp`, reload Kev and run the check with `--component decision`. |
+| The app opens an old forecast or shows a hosted model | Stop the old Streamlit process, source the live profile, check `echo "$PLANNER_DATA_DIR"` and start the app again. A new unused directory gives you a clean comparison. |
+| A long PDF exceeds the loaded context or a request times out | Reload the affected model with a larger `--context-length` if memory permits. For a slow request, raise `PLANNER_MODEL_TIMEOUT_SECONDS` in the profile, source it again, restart Streamlit and choose **Re-estimate**. |
 
 ### Local relevance models
 
