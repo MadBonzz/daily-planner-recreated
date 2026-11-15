@@ -47,4 +47,13 @@ The original workspace gate allowed a PDF saved only on a workstation. On this e
 
 All 60 targeted focus and workspace tests passed. All ten offline schedule replays passed. An interrupted workspace-fixture rebuild keeps the previous package available and can resume from a separate checkpoint. The timer and browser-policy regression starts the task while its forecast is pending, adds a user rule, commits a site review, and checks the resulting domain set through the same read-only transaction used by the extension. It also checks pause, resume, and archiving. Other regression tests cover report corrections, missing or malformed decisions, deleted evidence, pending-site edits, and negative choices.
 
+## Workspace fallback
+
+Both models were called through the normal workspace fallback after the test made the Kev endpoint unavailable. The writing task should open a desk and the workstation-only PDF should stay unavailable.
+
+| Fallback | Missing PDF | Drafting text |
+| --- | --- | --- |
+| [Bonsai 4B](4b-fallback.json) | Ineligible | Eligible |
+| [Bonsai 9B](9b-fallback.json) | Ineligible | Eligible |
+
 Across the 40 shipped open or addable tasks, the number of eligible workspaces changed from 10 to 9. All 40 have exact packaged Kev decisions. [Per-task decisions](public-workspaces.json)

@@ -83,5 +83,8 @@ A release memo and a package-signing task were open when a second package-signin
 | Model | Initial total | After unrelated completion | After related completion | Cited the 90-minute signing task | Model-authored forecasts |
 | --- | ---: | ---: | ---: | --- | ---: |
 | Bonsai 4B | 45 min | 45 min | 60 min | Yes | 2/2 |
+| Bonsai 9B | 30 min | 30 min | 120 min | Yes | 2/2 |
+
+The first 9B refresh timed out after the 900-second client limit while several suites shared the CPU server. The app calculated a 40-minute fallback. We restored the original 30-minute cold forecast, confirmed that the control steps matched, and retried the refresh with a longer timeout. The 9B table row uses the model response from that retry. [First 9B attempt](lifecycle-9b-timeout.json)
 
 The relevant completion tests whether the actual reaches the forecaster and whether the forecast moves in the expected direction. The new task has no labeled actual duration. [Frozen Qwen/Kev responses](lifecycle-inputs.json) · [4B transitions and receipts](lifecycle-4b.json) · [9B transitions and receipts](lifecycle-9b.json)

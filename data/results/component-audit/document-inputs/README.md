@@ -39,6 +39,8 @@ The Part II transcript write-up recovered the earlier suite report. The Part I m
 
 The app uses the narrower excerpts for Kev and the final forecast when it can identify the assigned part unambiguously. Qwen still receives the whole document. Missing headings, ambiguous numbering across attachments and requests to cover more than one section preserve the broader context. Separate regression checks cover negated scope such as “not only page 2,” a reference to office hours on a different page, and late assigned pages in a long rubric. [Scope tests](../../../../tests/test_document_scope.py)
 
+Five additional deterministic controls found that “Only Part I and Part II” discarded Part II, while “Part I and Part II only” discarded Part I. The same error affected ranges and comma-separated assignments. The section selector now keeps the packet when the assignment names a list or range. Three page-list controls also caught dropped final pages in “1, 2, and 3,” “1 & p. 3,” and “1 or 3.” All eight controls pass. These tests exercise the text sent to both judges. They are outside the 56 scored model pairs. [Compound-assignment regressions](../../../../tests/test_document_scope.py)
+
 ## Reproduce
 
 Run from the repository root with the app's local endpoints set. On a machine that can hold one model at a time, first save vectors with Qwen, then start Kev. The cache is keyed by the SHA-256 of the exact instructed or bare input.

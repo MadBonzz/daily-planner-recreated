@@ -134,14 +134,22 @@ def prepare(out):
                 config['PLANNER_DECISION_ENDPOINT'], target + '/' + candidate)
 
 
-def lifecycle(out, inputs):
+def lifecycle(out, inputs, retry_from=None):
     board = next(b for b in json.loads(BOARDS.read_text()) if b['name'] == 'release desk')
     tasks = {t[0]: t for t in board['tasks']}
     calls = []
     responses = json.loads(inputs.read_text())['responses'] if inputs else None
     model = planner_settings()['PLANNER_MODEL']
+    prior = json.loads(retry_from.read_text()) if retry_from else None
+    if prior and (prior['model'] != model or prior['steps'][0]['provenance']['decision'] != 'direct'
+                  or prior['steps'][0]['selected'] or prior['steps'][0]['cited']
+                  or prior['steps'][2]['provenance']['decision'] != 'fallback'):
+        raise ValueError('Expected a saved cold model forecast followed by a failed refresh for this model.')
     run = {'model': model, 'budget_minutes': 30, 'control_cards': 'Independent memo and related signing task start with a saved 30-minute estimate.',
            'steps': [], 'http': calls}
+    if prior:
+        run['recovered_initial_from'] = retry_from.name
+        run['recovered_initial_sha256'] = hashlib.sha256(retry_from.read_bytes()).hexdigest()
     send = retrieval._local_post
     def observe(endpoint, body, config):
         if responses is None:
@@ -165,7 +173,18 @@ def lifecycle(out, inputs):
         store.transition(old, 'finish', spent_seconds=20 * 60)
         a = add(store, tasks['sign'])
         b = add(store, tasks['memo'])
-        c = add(store, tasks['verify'], initial=False)
+        if prior:
+            original = prior['steps'][0]
+            # Recover just the actual persisted cold forecast fields used by this scenario.
+            # The later model request uses the task scope and the newly completed signing record.
+            saved = {'point_min': original['minutes'], 'low_min': original['range'][0],
+                     'high_min': original['range'][1], 'provenance': original['provenance'],
+                     'explanation': original['rationale'], 'related_tasks': [], 'used_task_ids': []}
+            _, title, scope = tasks['verify']
+            c = store.create_task(day=DAY, title=title, description=scope, category='Project',
+                                  estimate_minutes=30, prediction=saved)['id']
+        else:
+            c = add(store, tasks['verify'], initial=False)
         keys = {a: 'sign', b: 'memo', c: 'verify', old: 'bike'}
         for stage in ('after_add', 'after_independent_completion', 'after_related_completion'):
             if stage == 'after_independent_completion':
@@ -188,6 +207,12 @@ def lifecycle(out, inputs):
                                  'retrieval_error': pred.get('retrieval_error'),
                                  'selected': [{**r, 'task_id': keys[r['task_id']]} for r in pred['related_tasks']],
                                  'cited': [keys[k] for k in pred['used_task_ids']]})
+            if prior and stage != 'after_related_completion':
+                old = prior['steps'][len(run['steps']) - 1]
+                for field in ('minutes', 'range', 'matrix', 'timeline_length', 'provenance', 'selected', 'cited'):
+                    if run['steps'][-1][field] != old[field]:
+                        raise RuntimeError(f'Restored control step differs in {field}.')
+                run['steps'][-1] = {**old, 'recovered_from_prior_attempt': True}
             if stage == 'after_related_completion':
                 initial, independent, final = run['steps']
                 run['checks'] = {
@@ -198,8 +223,9 @@ def lifecycle(out, inputs):
                     'related_triggered_one_refresh': final['queued'] and final['jobs'] == 1
                         and final['timeline_length'] == independent['timeline_length'] + 1,
                     'only_related_evidence_reached_forecaster': [r['task_id'] for r in final['selected']] == ['sign'],
-                    'model_cited_related_source': 'sign' in final['cited'],
-                    'model_revised_up_after_overrun': final['minutes'] > initial['minutes'],
+                    'model_cited_related_source': final['provenance']['decision'] == 'direct' and 'sign' in final['cited'],
+                    'model_revised_up_after_overrun': final['provenance']['decision'] == 'direct'
+                        and final['minutes'] > initial['minutes'],
                     'model_wrote_both_forecasts': initial['provenance']['decision'] == final['provenance']['decision'] == 'direct',
                 }
             write(out, run)
@@ -294,6 +320,7 @@ if __name__ == '__main__':
     parser.add_argument('--canonical', action='store_true', help='Use stable active-pair ordering from the patched app')
     parser.add_argument('--reference', type=Path, help='Reuse previously measured probabilities for identical payloads')
     parser.add_argument('--archived-orientation', action='store_true', help='Audit direction invariance of shipped matrix decisions')
+    parser.add_argument('--retry-from', type=Path, help='Restore the verified cold forecast and retry only a failed lifecycle refresh')
     args = parser.parse_args()
     if args.archived_orientation:
         archived_orientation(args.output)
@@ -302,6 +329,6 @@ if __name__ == '__main__':
     elif args.prepare:
         prepare(args.output)
     elif args.lifecycle:
-        lifecycle(args.output, args.inputs)
+        lifecycle(args.output, args.inputs, args.retry_from)
     else:
         run_boards(args.output, args.split, args.method, args.canonical, args.reference)

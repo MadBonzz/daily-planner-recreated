@@ -27,6 +27,17 @@ The reference app is [c213b3f](https://github.com/MadBonzz/daily-planner-recreat
 
 The tags TP, FP and FN count accepted relevant items, accepted irrelevant items and missed relevant items, respectively. The component tables include true negatives and their denominators. The original Kev question outperformed its more narrowly worded alternative on the historical validation cases. Assigning a precise section of a PDF and changing the wording of a judge are separately measured interventions.
 
+## What happened when an active task finished?
+
+Three open tasks started with 30-minute budgets. Kev related the signing and verification tasks. The memo was independent. Finishing the memo in 75 minutes queued zero re-estimates. Finishing signing in 90 minutes queued exactly one for verification. Both models cited the completed signing task.
+
+| Estimate for the remaining verification task | At creation | After the independent memo | After the related signing task |
+| --- | ---: | ---: | ---: |
+| Bonsai 4B | 45 min | 45 min | 60 min |
+| Bonsai 9B | 30 min | 30 min | 120 min |
+
+This checks whether the right task changed and what evidence reached it. The verification task has no measured outcome to say whether 60 or 120 is closer. Under shared CPU load, the first 9B refresh timed out after 900 seconds and produced a labeled 40-minute fallback. Retrying that request with the same prior state produced the 120-minute model forecast. [Three-step replay and timeout record](matrix/README.md)
+
 ## Runtime and inputs
 
 The local checkpoints were Qwen3-Embedding-0.6B Q8_0, Kev-4B Q4_K_M, Ternary-Bonsai-4B Q2_0_g64 and Ternary-Bonsai-2-9B Q2_0. The runner used LM Studio’s bundled llama.cpp CPU backend. The forecast comparison pins the upstream candidates so that a different Qwen result cannot masquerade as a forecasting improvement. The separate three-open-task replay exercises the stages together. Public fixture caches contain actual input-keyed embeddings or decisions. Controlled failure and race tests explicitly inject responses and are reported separately.

@@ -9,6 +9,8 @@ TEXT = "Page 1: Assemble a frequency sweep.\nPage 2: Translate an interview.\nPa
 
 @pytest.mark.parametrize("details, expected", [
     ("Only do page 2.", [2]), ("Read only pp. 2–3.", [2, 3]),
+    ("Only use pages 1, 2, and 3.", [1, 2, 3]),
+    ("Only read pp. 1 & p. 3.", [1, 3]), ("Only use pages 1 or 3.", [1, 3]),
     ("Just review pages 1 and 3.", [1, 3]), ("Read pp. 2–3 only.", [2, 3]),
     ("Skip page 1. Only use page 2.", [2]),
     ("Draft a two-page report.", [1, 2, 3]),
@@ -90,3 +92,16 @@ def test_not_only_part_does_not_truncate_a_shared_handout():
     raw = "Page 1: Part I · Write code. Part II · Write prose."
     task = {"details": "Do not only do part I. Complete the whole packet.", "pdf_text": raw}
     assert assigned_section_text(task) == raw
+
+
+@pytest.mark.parametrize("assignment", [
+    "Only part I and part II.",
+    "Part I and part II only.",
+    "Only do part I–III.",
+    "Complete only part I, II, and III.",
+    "Only part I through part III.",
+])
+def test_compound_section_assignments_keep_all_requested_parts(assignment):
+    from pdf_reader import assigned_section_text
+    raw = "Page 1: Part I · Implement. Part II · Analyze. Part III · Summarize."
+    assert assigned_section_text({"details": assignment, "pdf_text": raw}) == raw

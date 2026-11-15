@@ -7,7 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 from model_client import API_URL, MODEL_ID, ModelContextExceeded, ModelResponseInvalid, ModelResponseTruncated, ModelUnavailable, chat_json
 
@@ -180,6 +180,17 @@ assert model_client.model_settings() == (endpoint, 'env-override')
         subprocess.run([sys.executable, "-c", script, str(self.env_file)], check=True,
                        cwd=Path(__file__).resolve().parents[1])
 
+
+    @patch("model_client.build_opener")
+    def test_forecast_timeout_distinguishes_waiting_for_a_model_from_unreachable_endpoint(self, opener):
+        with patch.dict(os.environ, PLANNER_MODEL_TIMEOUT_SECONDS="900"):
+            for error in (TimeoutError(), URLError(TimeoutError())):
+                opener.return_value.open.side_effect = error
+                with self.assertRaisesRegex(ModelUnavailable, "timed out after 900 seconds"):
+                    chat_json([], self.schema)
+            opener.return_value.open.side_effect = URLError(ConnectionRefusedError())
+            with self.assertRaisesRegex(ModelUnavailable, "is unavailable"):
+                chat_json([], self.schema)
 
     @patch("model_client.build_opener")
     def test_configurable_timeout_is_positive_and_finite(self, opener):

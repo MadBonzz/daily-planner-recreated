@@ -41,8 +41,10 @@ def _terms(text):
     return {s for s in re.findall(r"[^\W_]+", text.casefold()) if len(s) > 2 and s not in _STOP}
 
 
-_PAGE_SCOPE = re.compile(
-    r"\b(?:pages?\s+|p{1,2}\.\s*)(\d+(?:\s*(?:[-–—]|to|through|and|,)\s*(?:pages?\s+)?\d+)*)", re.I)
+_PAGE_PREFIX = r"(?:pages?\s+|p{1,2}\.\s*)"
+_PAGE_JOIN = r"(?:[-–—/&]|,\s*(?:and\b|or\b)?|\b(?:to|through|and|or)\b)"
+_PAGE_SCOPE = re.compile(r"\b" + _PAGE_PREFIX + r"(\d+(?:\s*" + _PAGE_JOIN
+                         + r"\s*(?:" + _PAGE_PREFIX + r")?\d+)*)", re.I)
 
 # A mention such as "not only page 2" asks for a broader search. Removing other
 # pages here would change the assigned work before the model ever sees it.
@@ -106,6 +108,11 @@ _SECTION_ID = r"(?:[ivxlcdm]+|[a-z]|[0-9]+(?:\.[0-9]+)*)"
 _SECTION = rf"(part|task|section|exercise|problem)\s+({_SECTION_ID})\b"
 _ONLY_BEFORE = re.compile(r"\bonly\s+(?:(?:do|read|complete|use)\s+)?" + _SECTION, re.I)
 _ONLY_AFTER = re.compile(r"\b" + _SECTION + r"\s+only\b", re.I)
+# "Only Part I and II" and "Part I through Part III only" assign multiple
+# sections even though the word "only" touches just one of them.
+_SECTION_LIST = re.compile(
+    r"\b" + _SECTION + r"\s*(?:,\s*(?:and\s+|or\s+)?|[-–—/&]|\b(?:and|or|through|to)\b)\s*"
+    r"(?:(?:part|task|section|exercise|problem)\s+)?" + _SECTION_ID + r"\b", re.I)
 
 
 def assigned_section_text(task):
@@ -114,7 +121,8 @@ def assigned_section_text(task):
     scope = " ".join(task.get(k) or "" for k in ("title", "description", "details"))
     requested = {tuple(part.casefold() for part in m.groups()) for pattern in (_ONLY_BEFORE, _ONLY_AFTER)
                  for m in pattern.finditer(scope)}
-    if len(requested) != 1 or len(task.get("attachments") or ()) > 1 or _BROAD_SCOPE.search(scope):
+    if (len(requested) != 1 or len(task.get("attachments") or ()) > 1
+            or _BROAD_SCOPE.search(scope) or _SECTION_LIST.search(scope)):
         return raw
     kind, label = next(iter(requested))
     heading = re.compile(r"\b" + kind + r"\s+(" + _SECTION_ID + r")\s*(?:[·:–—]|\s-\s)", re.I)

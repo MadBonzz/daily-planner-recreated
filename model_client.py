@@ -205,6 +205,10 @@ def chat_json(messages, schema, *, max_tokens=512):
                 raise ModelContextExceeded(f"{model} rejected the input because it exceeds the context window{sizes}.") from exc
         raise ModelUnavailable(f"{url.hostname} returned HTTP {exc.code} for {model}.") from exc
     except OSError as exc:
+        # urllib can surface a read timeout directly or wrap a connection timeout in URLError.reason.
+        if isinstance(exc, TimeoutError) or isinstance(getattr(exc, "reason", None), TimeoutError):
+            raise ModelUnavailable(f"The request to {model} timed out after {timeout:g} seconds. "
+                                   "Retry when the endpoint is less busy or increase PLANNER_MODEL_TIMEOUT_SECONDS.") from exc
         raise ModelUnavailable(f"{model} is unavailable.") from exc
     except ValidationError as exc:
         # ValidationError.message can contain the entire response. Limit the
