@@ -115,7 +115,7 @@ Under **Activity logs**, select an activity day and task to inspect timestamps, 
 
 ## Evaluate the models
 
-Score the same unseen tasks against the original estimate, a category baseline, the offline planner, and the model-backed planner. Predeclared ranges check whether a forecast learns the expected personal correction. The original and enriched suites are documented separately. [Histories and commands](data/tasks/README.md) · [Benchmark results](data/results/README.md)
+Score the same unseen tasks against the original estimate, a category baseline, the offline planner, and the model-backed planner. Predeclared ranges check whether a forecast learns the expected personal correction. The original and enriched suites are documented separately. [Histories and commands](data/tasks/README.md) · [Benchmark results](data/results/README.md) · [0.50 vs. 0.70 and the pre-Qwen/Kev estimator](data/results/holdouts/2026-11-15-command-r7b-050/)
 
 ## Tests
 
