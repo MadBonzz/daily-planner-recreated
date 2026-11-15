@@ -718,11 +718,6 @@ def render_shared_chat(store, plan_day, *, tasks=None, logs=None):
     chat = st.session_state.get("planner_chat")
     if not chat or chat["scope"] != scope:
         chat = st.session_state["planner_chat"] = {"scope": scope, "turns": []}
-    st.subheader("Ask Plan Smarter")
-    filter_text = " · ".join(
-        f"{key} {', '.join(map(str, value)) if isinstance(value, list) else value}"
-        for key, value in active_filters.items()) or "all completed tasks and visible logs"
-    st.caption(f"Open plan · {plan_day.isoformat()}  |  Analytics · {filter_text}")
     for turn in chat["turns"]:
         _show_turn(turn)
     question = st.chat_input("Ask what fits today, or explore your history", max_chars=1500, key="shared_planner_question")
