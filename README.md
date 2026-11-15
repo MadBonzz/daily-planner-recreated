@@ -45,35 +45,56 @@ To check the bundled inputs for Nora’s editable history and replay on your own
 
 ### Start the planner with Bionic on port 1235
 
-Use this on your Mac when LM Studio Bionic is already serving `http://localhost:1235/v1` and you have downloaded Qwen, Kev and Bonsai. Leave Bionic’s local API server running. These commands connect the planner to that server. Bionic supports the `lms` CLI and the `/v1/systemone` endpoint used by Kev. [Bionic release notes](https://lmstudio.ai/changelog/bionic-v1.1.8)
+Use this on your Mac when LM Studio Bionic is already serving `http://localhost:1235/v1`. Leave Bionic’s local API server running. The example uses Qwen3-Embedding-0.6B GGUF, Kev-4B GGUF and Ternary Bonsai 2 4B MLX. Each model can use its own format. [Bionic runtimes](https://lmstudio.ai/changelog/bionic-v1.1.9)
 
-Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal for all three blocks. If you still need the models, use the [Mac model download instructions](#run-all-three-models-live-on-a-mac).
+Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal throughout.
 
-**1. Update the planner, activate its virtual environment and check the server.** The last command prints the model IDs available to the API.
+**1. Update the planner, activate its virtual environment and check the server.** With just-in-time loading enabled, the API can list downloaded models before they are loaded. In `lms ps`, an `IDLE` model is loaded and waiting for a request.
 
 ```sh
 git pull --ff-only
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 curl -fsS http://127.0.0.1:1235/v1/models | python -m json.tool
-```
-
-**2. Load Qwen and Kev for live inference.** Run each load command only if its `-live` identifier is missing from `lms ps`. These identifiers make the planner compute fresh results for the bundled Dev histories. With **Just in Time Model Loading** enabled on the server, Bonsai can load when the planner first requests it. If a load command cannot find its model, run `lms ls` and substitute the installed model key, keeping the `--identifier` value.
-
-```sh
 lms ps
-lms load text-embedding-qwen3-embedding-0.6b --identifier qwen3-embedding-0.6b-live --context-length 8192 --gpu off --yes
-lms load kev-4b --identifier kev-4b-live --context-length 4096 --gpu off --yes
 ```
 
-**3. Point all three model requests at port 1235 and launch.** If step 1 lists a different ID for your Bonsai model, use it on the `PLANNER_MODEL` line. The separate data directory keeps this local demo available on later runs.
+**2. Load Qwen and check one embedding.** If Qwen appears in the API list as `text-embedding-qwen3-embedding-0.6b` but is missing from `lms ps`, run this on the Mac. It asks Bionic on port 1235 to load Qwen with its default device and context settings. The command prints the HTTP status and the response body, including any error.
 
 ```sh
-export PLANNER_EMBEDDING_MODEL=qwen3-embedding-0.6b-live
+curl -sS -i http://127.0.0.1:1235/api/v1/models/load \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"text-embedding-qwen3-embedding-0.6b"}'
+```
+
+On success, use the returned `instance_id` as `PLANNER_EMBEDDING_MODEL`. The usual value for this download is shown below. This ID differs from the bundled vector ID (`qwen3-embedding-0.6b`), so the Dev histories request fresh embeddings. If your instance has the bundled ID, load Qwen with `lms load <installed-key> --identifier qwen3-embedding-0.6b-live` and use that alias instead.
+
+```sh
+export PLANNER_EMBEDDING_MODEL=text-embedding-qwen3-embedding-0.6b
 export PLANNER_EMBEDDING_ENDPOINT=http://127.0.0.1:1235/v1/embeddings
+python -m examples.estimation.check_local_models --component embedding
+```
+
+Expect `returned 1024 dimensions`. The project’s Apple Silicon test loaded the Qwen Q8_0 GGUF and returned all 1,024 dimensions using llama.cpp. [Mac test run](https://github.com/MadBonzz/daily-planner-recreated/actions/runs/43709790621/job/132798710539) · [Model load API](https://lmstudio.ai/docs/developer/rest/load)
+
+| If the Qwen load fails | Next step |
+| --- | --- |
+| Runtime error or `Exit code: null` | Run `lms runtime ls`. If the Mac has only the MLX runtime, install the GGUF runtime with `lms runtime get llama.cpp --yes`, then retry the HTTP load above. |
+| Unknown model | Run `curl -sS http://127.0.0.1:1235/api/v1/models \| python -m json.tool`. Use the Qwen embedding entry’s `key` in the load request. |
+| The cause is still unclear | In a second Terminal, run `lms log stream --source server`. Repeat the HTTP load in the first Terminal and capture its response body and the corresponding error line. |
+
+**3. Load Kev.** If Kev is missing from the API list, open Bionic’s model search and download `Kev-4B-Q4_K_M.gguf` from `ggml-org/Kev-4B-GGUF`. Check `lms ls` for the installed key and substitute it for `kev-4b` below if needed. Run the load once, keeping the `-live` alias so the demo requests fresh relevance decisions. [Kev download](https://huggingface.co/ggml-org/Kev-4B-GGUF/blob/main/Kev-4B-Q4_K_M.gguf)
+
+```sh
+lms load kev-4b --identifier kev-4b-live --yes
 export PLANNER_DECISION_MODEL=kev-4b-live
 export PLANNER_DECISION_ENDPOINT=http://127.0.0.1:1235/v1/systemone
-export PLANNER_MODEL=ternary-bonsai-4b
+```
+
+**4. Use the loaded Bonsai and launch.** Use the exact 4B ID from your API list. Bionic’s Bonsai 2 4B MLX has the ID shown below. If you installed the project’s original 4B GGUF, use `ternary-bonsai-4b`. The separate data directory keeps this local demo available on later runs.
+
+```sh
+export PLANNER_MODEL=ternary-bonsai-2-4b-mlx
 export PLANNER_MODEL_ENDPOINT=http://127.0.0.1:1235/v1/chat/completions
 export PLANNER_MODEL_TIMEOUT_SECONDS=360
 export PLANNER_DATA_DIR="$HOME/Library/Application Support/Plan Smarter/lmstudio-live"
@@ -82,7 +103,7 @@ python -m examples.estimation.check_local_models && \
   python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
-The check prints a 1,024-dimensional Qwen embedding, a Kev relevance decision and a Bonsai forecast in minutes. Once Streamlit starts, open <http://127.0.0.1:8501>. For the demo, select **Dev → Nora · distributed systems lab → Editable history**. On later runs, activate `.venv`, load any missing `-live` models and repeat step 3.
+The check prints a 1,024-dimensional Qwen embedding, a Kev relevance decision and a Bonsai forecast in minutes. Once Streamlit starts, open <http://127.0.0.1:8501>. For the demo, select **Dev → Nora · distributed systems lab → Editable history**. In a new Terminal, activate `.venv`, repeat the exports in steps 2–4, load any models missing from `lms ps`, and run the launch command.
 
 ## Run on Windows
 
