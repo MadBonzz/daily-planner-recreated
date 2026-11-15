@@ -4,7 +4,7 @@ A local, daily-only planner for comparing the time you set aside with the time y
 
 ## Run on macOS
 
-**Already running LM Studio on port 1235?** Jump to [Start the planner with LM Studio on port 1235](#start-the-planner-with-lm-studio-on-port-1235).
+**Already running LM Studio Bionic on port 1235?** Jump to [Start the planner with Bionic on port 1235](#start-the-planner-with-bionic-on-port-1235).
 
 For a fully local Mac setup, install the planner in step 1, then follow [Run all three models live on a Mac](#run-all-three-models-live-on-a-mac). That route uses LM Studio for Qwen, Kev and Bonsai, including on the five Dev histories. The other option below uses the bundled Qwen and Kev results with a Cohere key for the final forecast. An Intel Mac can use the hosted setup. [LM Studio system requirements](https://lmstudio.ai/docs/app/system-requirements)
 
@@ -43,9 +43,11 @@ To check the bundled inputs for Nora’s editable history and replay on your own
 .venv/bin/python -m examples.estimation.package_demo --stage verify --history d1-systems-student
 ```
 
-### Start the planner with LM Studio on port 1235
+### Start the planner with Bionic on port 1235
 
-Use this on your Mac when LM Studio is already serving `http://localhost:1235/v1` and you have downloaded Qwen, Kev and Bonsai. Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal for all three blocks. If you still need the models, use the [Mac model download instructions](#run-all-three-models-live-on-a-mac).
+Use this on your Mac when LM Studio Bionic is already serving `http://localhost:1235/v1` and you have downloaded Qwen, Kev and Bonsai. Leave Bionic’s local API server running. These commands connect the planner to that server. Bionic supports the `lms` CLI and the `/v1/systemone` endpoint used by Kev. [Bionic release notes](https://lmstudio.ai/changelog/bionic-v1.1.8)
+
+Open Terminal **in the `daily-planner-recreated` folder** and use the same Terminal for all three blocks. If you still need the models, use the [Mac model download instructions](#run-all-three-models-live-on-a-mac).
 
 **1. Update the planner, activate its virtual environment and check the server.** The last command prints the model IDs available to the API.
 
@@ -56,7 +58,7 @@ python -m pip install -r requirements.txt
 curl -fsS http://127.0.0.1:1235/v1/models | python -m json.tool
 ```
 
-**2. Load Qwen and Kev for live inference.** Run each load command only if its `-live` identifier is missing from `lms ps`. These identifiers make the planner compute fresh results for the bundled Dev histories. With **Just in Time Model Loading** enabled in LM Studio, Bonsai can load when the planner first requests it. If a load command cannot find its model, run `lms ls` and substitute the installed model key, keeping the `--identifier` value.
+**2. Load Qwen and Kev for live inference.** Run each load command only if its `-live` identifier is missing from `lms ps`. These identifiers make the planner compute fresh results for the bundled Dev histories. With **Just in Time Model Loading** enabled on the server, Bonsai can load when the planner first requests it. If a load command cannot find its model, run `lms ls` and substitute the installed model key, keeping the `--identifier` value.
 
 ```sh
 lms ps
