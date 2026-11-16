@@ -155,6 +155,23 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
         result = chat_json([{"role": "system", "content": system},
                             {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], schema)
         return {"answer": result["answer"], "tool": tool}
+    if not prior:
+        literal = literal_task_creation(question, files, plan)
+        if literal is not None:
+            if categories:
+                # All user-supplied fields and file references are already resolved.
+                # Only the category needs inference.
+                fields = literal["new_task"]
+                schema = {"type": "object", "properties": {"category": {"type": "string",
+                          "enum": list(dict.fromkeys(["", *categories]))}},
+                          "required": ["category"], "additionalProperties": False}
+                choice = chat_json([{"role": "system", "content":
+                    "Select one listed category for this task, or an empty string if none fits. Return only JSON."},
+                    {"role": "user", "content": json.dumps({"title": fields["title"],
+                     "description": fields["description"], "categories": categories}, ensure_ascii=False)}], schema)
+                if choice["category"] in categories:
+                    fields["category"] = choice["category"]
+            return literal
     data["pending_request"] = prior
     data["files"] = [{"id": key, "name": item["name"], "uploaded_this_turn": item["current"]}
                      for key, item in files.items()]
@@ -182,16 +199,6 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
                "than one task is requested, clarify before saving. Use reply to ask for missing information.")
     result = chat_json([{"role": "system", "content": system},
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], schema)
-    if not prior:
-        literal = literal_task_creation(question, files, plan)
-        if literal is not None:
-            if set(result["file_ids"]) - set(literal["file_ids"]):
-                return {"tool": tool, "pending_request": request,
-                        "answer": "Which of the uploaded files should I attach to this task?"}
-            fields = literal["new_task"]
-            if result["category"] in categories:
-                fields["category"] = result["category"]
-            return {"tool": tool, "new_task": fields, "file_ids": literal["file_ids"]}
     if result["action"] != "create":
         return {"tool": tool, "pending_request": request if result["action"] == "clarify" else "", "answer": result["reply"] or "What task would you like to add, and for how long?"}
     effort = result["estimate_phrase"].strip().casefold()

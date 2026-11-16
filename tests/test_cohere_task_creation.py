@@ -22,8 +22,12 @@ ASSIGNMENT_REQUEST = (
 COHERE_URL = "https://api.cohere.ai/compatibility/v1/chat/completions"
 
 
-@pytest.mark.parametrize("with_pdf", [True, False], ids=["uploaded-pdf", "no-upload"])
-def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monkeypatch, with_pdf):
+@pytest.mark.parametrize("with_pdf, grounded", [(True, True), (False, True), (True, False)],
+                         ids=["uploaded-pdf", "no-upload", "conversational-request"])
+def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monkeypatch, with_pdf, grounded):
+    question = (ASSIGNMENT_REQUEST if grounded else
+                "Add a task for my distributed computing assignment. Use the attached PDF for it. "
+                "I expect 200 minutes of work on Paxos and consensus.")
     monkeypatch.setenv("PLANNER_MODEL", "command-r7b-12-2024")
     monkeypatch.setenv("PLANNER_MODEL_ENDPOINT", COHERE_URL)
     monkeypatch.setenv("COHERE_API", "test-token")
@@ -38,10 +42,15 @@ def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monke
         assert body["model"] == "command-r7b-12-2024"
         props = body["response_format"]["json_schema"]["schema"]["properties"]
         data = json.loads(body["messages"][-1]["content"])
-        assert data["message"] == ASSIGNMENT_REQUEST
-        if "intent" in props:
+        if grounded:
+            assert set(props) == {"category"}
+            assert data["title"] == "Distributed computing assignment" and "Paxos" in data["description"]
+            assert "files" not in data
+            reply = {"category": "Study"}
+        elif "intent" in props:
             reply = {"intent": "create_task"}
         else:
+            assert data["message"] == question
             # Cohere rejects numerical range constraints in structured output schemas.
             if "minimum" in props["estimate_minutes"]:
                 error = {"message": "Numeric minimum is unsupported in response_format"}
@@ -62,7 +71,7 @@ def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monke
     monkeypatch.setattr(model_client, "build_opener", lambda *_: transport)
 
     page = AppTest.from_string("from app import main\nmain()", default_timeout=15).run()
-    message = page.chat_input[0].set_value(ASSIGNMENT_REQUEST)
+    message = page.chat_input[0].set_value(question)
     if with_pdf:
         pdf = (Path(__file__).resolve().parents[1] / "data/tasks/pdfs/01-replica-proofs/bridge-proof.pdf").read_bytes()
         message.upload("HW_3_1.pdf", pdf, "application/pdf")
