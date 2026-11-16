@@ -1,5 +1,6 @@
 """Validated chat completions from LM Studio or a configured compatible endpoint."""
 
+import codecs
 import json
 import math
 import os
@@ -8,6 +9,7 @@ import shlex
 from contextlib import contextmanager
 from contextvars import ContextVar
 from http.client import IncompleteRead
+from io import StringIO
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
@@ -54,14 +56,17 @@ class ModelResponseTruncated(ModelResponseInvalid):
 
 
 def _file_settings():
-    if dotenv_values is not None:
-        return dotenv_values(ENV_FILE, interpolate=False, encoding="utf-8-sig")
-    # Existing installations can read the planner's simple one-line settings
-    # before the user updates their environment from requirements.txt.
-    if not ENV_FILE.is_file():
+    try:
+        raw = ENV_FILE.read_bytes()
+    except FileNotFoundError:
         return {}
+    encoding = "utf-16" if raw.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)) else "utf-8-sig"
+    contents = raw.decode(encoding)
+    if dotenv_values is not None:
+        return dotenv_values(stream=StringIO(contents), interpolate=False)
+    # Older installations may not yet have python-dotenv.
     result = {}
-    for line in ENV_FILE.read_text(encoding="utf-8-sig").splitlines():
+    for line in contents.splitlines():
         name, sep, value = line.strip().removeprefix("export ").partition("=")
         name = name.strip()
         if not sep or name not in SETTING_NAMES:
@@ -87,7 +92,14 @@ def model_settings(config=None):
     """The active endpoint and model ID, without credentials."""
     if config is None:
         config = planner_settings()
-    return config.get("PLANNER_MODEL_ENDPOINT") or API_URL, config.get("PLANNER_MODEL") or MODEL_ID
+    endpoint = config.get("PLANNER_MODEL_ENDPOINT") or API_URL
+    if model := config.get("PLANNER_MODEL"):
+        return endpoint, model
+    try:
+        hosted = urlsplit(endpoint).hostname in COHERE_HOSTS
+    except ValueError:
+        hosted = False  # chat_json reports malformed endpoint URLs.
+    return endpoint, "command-r7b-12-2024" if hosted else MODEL_ID
 
 
 _forecast_config = ContextVar("forecast_config", default=None)
@@ -223,6 +235,11 @@ def _post_completion(client, endpoint, headers, payload, timeout, model):
             raise ModelResponseInvalid(f"The chat endpoint returned an HTTP response that could not be decoded as JSON for {model}.") from None
         except HTTPError as exc:
             with exc:
+                if host in COHERE_HOSTS and exc.code in (401, 403, 429):
+                    hint = {401: "Check COHERE_API in the repository-root .env.",
+                            403: "Check that your Cohere key has access to this model.",
+                            429: "Cohere rate-limited this request. Retry after your account limit resets."}[exc.code]
+                    raise ModelUnavailable(f"{host} returned HTTP {exc.code} for {model}. {hint}") from exc
                 if exc.code not in (400, 413, 422):
                     raise ModelUnavailable(f"{host} returned HTTP {exc.code} for {model}.") from exc
                 try:

@@ -357,3 +357,19 @@ assert model_client.model_settings() == (endpoint, 'env-override')
             with self.subTest(invalid=invalid), patch.dict(os.environ, PLANNER_MODEL_TIMEOUT_SECONDS=invalid):
                 with self.assertRaisesRegex(ModelUnavailable, "positive finite"):
                     chat_json([], self.schema)
+
+
+def test_windows_powershell_utf16_env_and_explicit_hosted_endpoint_default(tmp_path, monkeypatch):
+    import model_client
+    env_file = tmp_path / ".env"
+    env_file.write_text("PLANNER_MODEL_ENDPOINT=https://api.cohere.ai/compatibility/v1/chat/completions\n"
+                        "COHERE_API=test-token\n", encoding="utf-16")
+    monkeypatch.setattr(model_client, "ENV_FILE", env_file)
+    monkeypatch.delenv("PLANNER_MODEL", raising=False)
+    monkeypatch.delenv("PLANNER_MODEL_ENDPOINT", raising=False)
+    for parser in (model_client.dotenv_values, None):
+        monkeypatch.setattr(model_client, "dotenv_values", parser)
+        config = model_client.planner_settings()
+        assert config["COHERE_API"] == "test-token"
+        assert model_client.model_settings(config) == ("https://api.cohere.ai/compatibility/v1/chat/completions",
+                                                      "command-r7b-12-2024")

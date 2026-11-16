@@ -99,6 +99,12 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py --server.address 127.0.0.1
 ```
 
+For your existing Windows setup with Cohere and the bundled Qwen and Kev results, keep your repository-root `.env`. On a fresh installation, copy the example with `if (!(Test-Path .env)) { Copy-Item .env.example .env }` and set `COHERE_API` inside it. Use the hosted endpoint shown below. To check your actual key and model before opening the demo, run this in PowerShell. It sends a synthetic task to Cohere through the same forecast code as a dashboard card. It prints the model and minutes on success and exits with an error if Cohere rejects the request or the reply cannot supply a forecast.
+
+```powershell
+.\.venv\Scripts\python.exe -m examples.estimation.check_local_models --component hosted-forecast
+```
+
 If an existing install reports `No module named dotenv`, run the pip command above with the same virtual environment you use to start Streamlit. The package is named `python-dotenv`.
 
 On Linux, use `python3 -m venv .venv` and `.venv/bin/python` for the last two commands. Open the local URL printed by Streamlit. The planner can record tasks and sessions before the optional services below are available.

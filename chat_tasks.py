@@ -68,7 +68,7 @@ _EXPLICIT_CREATE = re.compile(
     r"(?:(?:can|could|would) you )?(?:please )?(?:add|create) (?:a |a new |another )?task "
     r"(?:for |to |called |named )?(?:my )?(?P<title>[\w][\w &'’/()-]*?),\s*"
     r"(?:I expect (?:it|this) (?:will|to) take |it (?:will|should) take |"
-    r"I (?:would )?estimate (?:it )?at )?(?:(?:around|about) )?"
+    r"I (?:would )?estimate (?:it )?at )?(?:(?:around?|about) )?"
     r"(?P<amount>\d+(?:\.\d+)?)\s*(?P<unit>hours?|hrs?|minutes?|mins?)"
     r"(?:\s*[,\.]\s*(?P<scope>(?:it (?:has|involves|requires)|the (?:task|assignment) "
     r"(?:is|has|involves|requires))\s+.+))?", re.I)
@@ -87,15 +87,27 @@ def literal_task_creation(question, files, plan):
     """Extract a single fully specified task from an explicit creation request."""
     text = question.strip().rstrip(".?!").strip()
     file_ids = []
+    declared = re.match(r"^this is (?:my|the) (?:assignment |homework )?(pdf|file|document)[.!]\s+", text, re.I)
+    if declared:
+        matches = [key for key, item in files.items() if item.get("current")
+                   and (declared[1].casefold() != "pdf" or item.get("kind") == "pdf")]
+        if len(matches) > 1 or (not matches and any(item.get("current") for item in files.values())):
+            return None
+        file_ids = matches
+        text = text[declared.end():]
+        # A declared assignment followed by a budget can name the work directly.
+        text = re.sub(r"^((?:(?:can|could|would) you )?(?:please )?(?:create|add)) (?:a new|another) "
+                      r"(?=[\w &'’/()-]+\b(?:assignment|homework)\s*,)", r"\1 a task for ", text, flags=re.I)
     attachment = re.search(r"[,\.]\s*(?:please )?attach (.+)$", text, re.I)
     if attachment:
+        declared_ids = file_ids
         reference = re.sub(r"\s+to (?:this|the) task$", "", attachment[1].casefold()).strip()
         if reference in {"the attached file", "this file", "the attached pdf", "this pdf"}:
             file_ids = [key for key, item in files.items() if item.get("current")
                         and ("pdf" not in reference or item.get("kind") == "pdf")]
         else:
             file_ids = [key for key, item in files.items() if item["name"].casefold() == reference]
-        if len(file_ids) != 1:
+        if len(file_ids) != 1 or (declared_ids and file_ids != declared_ids):
             return None
         text = text[:attachment.start()].strip()
     match = _EXPLICIT_CREATE.fullmatch(text)
@@ -170,8 +182,6 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
                "than one task is requested, clarify before saving. Use reply to ask for missing information.")
     result = chat_json([{"role": "system", "content": system},
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], schema)
-    if result["action"] != "create":
-        return {"tool": tool, "pending_request": request if result["action"] == "clarify" else "", "answer": result["reply"] or "What task would you like to add, and for how long?"}
     if not prior:
         literal = literal_task_creation(question, files, plan)
         if literal is not None:
@@ -182,6 +192,8 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
             if result["category"] in categories:
                 fields["category"] = result["category"]
             return {"tool": tool, "new_task": fields, "file_ids": literal["file_ids"]}
+    if result["action"] != "create":
+        return {"tool": tool, "pending_request": request if result["action"] == "clarify" else "", "answer": result["reply"] or "What task would you like to add, and for how long?"}
     effort = result["estimate_phrase"].strip().casefold()
     if not 0 < result["estimate_minutes"] < float("inf") or not effort or effort not in request.casefold():
         return {"tool": tool, "pending_request": request, "answer": "How many minutes do you expect this task to take?"}

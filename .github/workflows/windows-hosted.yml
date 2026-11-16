@@ -7,10 +7,11 @@ on:
 permissions:
   contents: read
 jobs:
-  hosted:
+  check-hosted-access:
     if: github.ref == 'refs/heads/main'
     runs-on: windows-latest
-    timeout-minutes: 18
+    outputs:
+      available: ${{ steps.access.outputs.available }}
     steps:
       - name: Check hosted test availability
         id: access
@@ -24,19 +25,20 @@ jobs:
             "Live Cohere inference was not tested. Set the COHERE_API repository secret and run this workflow again." >> $env:GITHUB_STEP_SUMMARY
             "available=false" >> $env:GITHUB_OUTPUT
           }
+  hosted:
+    needs: check-hosted-access
+    if: needs.check-hosted-access.outputs.available == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
       - uses: actions/checkout@v4
-        if: steps.access.outputs.available == 'true'
       - uses: actions/setup-python@v5
-        if: steps.access.outputs.available == 'true'
         with:
           python-version: '3.12'
           cache: pip
       - run: python -m pip install -r requirements.txt pytest playwright
-        if: steps.access.outputs.available == 'true'
       - run: python -m playwright install chromium
-        if: steps.access.outputs.available == 'true'
       - name: Run the browser and Nora with hosted Command R7B
-        if: steps.access.outputs.available == 'true'
         env:
           COHERE_API: ${{ secrets.COHERE_API || secrets.COHERE_API_KEY }}
           PLANNER_MODEL_ENDPOINT: https://api.cohere.ai/compatibility/v1/chat/completions

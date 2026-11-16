@@ -1,4 +1,4 @@
-"""Check the three configured local model endpoints using synthetic planner inputs."""
+"""Check a configured model endpoint using synthetic planner inputs."""
 
 import argparse
 import sys
@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 
 import estimator
 import retrieval
-from model_client import ModelUnavailable, model_settings, planner_settings
+from model_client import COHERE_HOSTS, ModelUnavailable, model_settings, planner_settings
 
 
 TASK = {
@@ -33,7 +33,11 @@ def check(component, config):
         return f"{model} classified the example pair as {'related' if related else 'unrelated'}."
 
     endpoint, model = model_settings(config)
-    if urlsplit(endpoint).hostname not in {"127.0.0.1", "localhost", "::1"}:
+    host = urlsplit(endpoint).hostname
+    if component == "hosted-forecast":
+        if host not in COHERE_HOSTS:
+            raise ModelUnavailable("Set PLANNER_MODEL_ENDPOINT to the Cohere chat completions URL in .env.")
+    elif host not in {"127.0.0.1", "localhost", "::1"}:
         raise ModelUnavailable("Set PLANNER_MODEL_ENDPOINT to your local chat endpoint for this check.")
     # Exercise the forecast contract used by a task card with a selected comparison and a completion note.
     prior = {**PRIOR, "id": "checked-copies", "estimate_minutes": 20, "actual_seconds": 28 * 60,
@@ -49,7 +53,7 @@ def check(component, config):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--component", choices=("all", "embedding", "decision", "forecast"), default="all")
+    parser.add_argument("--component", choices=("all", "embedding", "decision", "forecast", "hosted-forecast"), default="all")
     component = parser.parse_args().component
     components = ("embedding", "decision", "forecast") if component == "all" else (component,)
     config = planner_settings()

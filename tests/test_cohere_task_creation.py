@@ -70,7 +70,7 @@ def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monke
     assert not page.exception
     page.run()  # A normal Streamlit rerun must not repeat the write.
     assert not page.exception
-    assert transport.open.call_count == 2
+    assert transport.open.call_count == 1  # Explicit assignment and budget already resolve the intent.
     store = PlannerStore(tmp_path / "live")
     tasks = store.list_tasks()
     assert len(tasks) == 1, page.session_state["planner_chat"]["turns"][-1]["answer"]
@@ -83,3 +83,34 @@ def test_cohere_accepts_assignment_creation_with_and_without_pdf(tmp_path, monke
         assert store.attachment_bytes(attachment["id"]) == pdf
     else:
         assert task["attachments"] == []
+
+
+def test_explicit_assignment_survives_rate_limit_and_keeps_its_uploaded_pdf(tmp_path, monkeypatch):
+    from datetime import date, datetime
+    from chat_tasks import apply_action
+    from planner_analytics import ask_analytics
+
+    monkeypatch.setenv("PLANNER_MODEL_ENDPOINT", COHERE_URL)
+    monkeypatch.setenv("COHERE_API", "test-token")
+    transport = Mock()
+    transport.open.side_effect = HTTPError(COHERE_URL, 429, "Too Many Requests", {}, BytesIO(b"{}"))
+    monkeypatch.setattr(model_client, "build_opener", lambda *_: transport)
+    pdf = (Path(__file__).resolve().parents[1] / "data/tasks/pdfs/01-replica-proofs/bridge-proof.pdf").read_bytes()
+    files = {"1": {"name": "HW_3_1.pdf", "current": True, "kind": "pdf", "data": pdf}}
+    plan = {"now": datetime.now(), "selected_day": date.today().isoformat()}
+    result = ask_analytics(ASSIGNMENT_REQUEST, [], [], plan=plan, files=files, create_categories=["Study"])
+    store = PlannerStore(tmp_path)
+    applied = apply_action(store, result, files, "submission")
+    assert applied.get("affected_task_id"), applied.get("answer")
+    task, = store.list_tasks()
+    assert task["estimate_minutes"] == 200 and "paxos" in task["description"].lower()
+    assert store.attachment_bytes(task["attachments"][0]["id"]) == pdf
+
+
+def test_assignment_prefix_cannot_override_ambiguous_files_or_hypothetical_request():
+    from chat_tasks import literal_task_creation
+    files = {key: {"name": key, "kind": "pdf", "current": True} for key in ("exam.pdf", "notes.pdf")}
+    plan = {"selected_day": "2026-11-16"}
+    assert literal_task_creation(ASSIGNMENT_REQUEST, files, plan) is None
+    hypothetical = ASSIGNMENT_REQUEST.replace("can you create", "what if I create")
+    assert literal_task_creation(hypothetical, {"exam": files["exam.pdf"]}, plan) is None

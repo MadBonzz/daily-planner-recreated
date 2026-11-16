@@ -345,28 +345,28 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
     with forecast_endpoint() as endpoint:
         result = {"provider": endpoint["provider"], "model": endpoint["model"],
                   "query_source": "unavailable", "answer_source": "local status"}
+        literal = None
         intent = None
         try:
             if not general_tool and plan is not None and (create_categories is not None or files):
-                intent = route_request(question, history, files or {}, create_categories is not None, _chat_reply)
+                if create_categories is not None and not (history and history[-1].get("pending_request")):
+                    literal = literal_task_creation(question, files or {}, plan)
+                intent = "create_task" if literal is not None else route_request(
+                    question, history, files or {}, create_categories is not None, _chat_reply)
                 if intent != "plan_or_history":
                     if still_current is not None and not still_current():
                         return {"answer": "Your planner records changed. Please ask again."}
                     reply = handle_request(intent, question, history, files or {}, plan, create_categories or [],
                                            _chat_reply, tasks=task_catalog)
                     return {**result, "query_source": "model", "answer_source": "model", **reply}
-        except ModelResponseInvalid as exc:
+        except ModelUnavailable as exc:
             if still_current is not None and not still_current():
                 return {"answer": "Your planner records changed. Please ask again."}
-            if intent in (None, "create_task") and create_categories is not None:
-                literal = literal_task_creation(question, files or {}, plan)
-                if literal is not None:
-                    return {**result, **literal}
-            if intent is not None:
+            if literal is not None:
+                return {**result, **literal}
+            if intent is not None or not isinstance(exc, ModelResponseInvalid):
                 return {**result, "answer": f"The model could not process this request. {exc}"}
             # The intent was unavailable. Continue with the read-only planning and history tools.
-        except ModelUnavailable as exc:
-            return {**result, "answer": f"The model could not process this request. {exc}"}
         try:
             if general_tool:
                 planned = {"scope": "all", "tool": general_tool, "task_ids": [], "sql": ""}
