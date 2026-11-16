@@ -1,1 +1,4 @@
 *.pdf binary
+# These UTF-8 inputs have published byte-level checksums.
+data/tasks/**/histories/*.json text eol=lf
+data/tasks/**/schedules/*.json text eol=lf

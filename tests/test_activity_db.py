@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 from urllib.parse import quote
 
@@ -18,7 +19,7 @@ BUCKET = "aw-watcher-window_laptop"
 
 def make_db(path, desktop="laptop", *, android_only=False):
     path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(path) as con:
+    with closing(sqlite3.connect(path)) as con, con:
         con.executescript("""
             PRAGMA user_version=6;
             CREATE TABLE buckets (id INTEGER PRIMARY KEY, name TEXT UNIQUE, type TEXT,
@@ -96,7 +97,7 @@ def test_missing_explicit_database_cannot_create_a_file_or_switch_to_other_devic
 def test_read_sees_committed_wal_updates(tmp_path):
     store = make_db(tmp_path / "live.db")
     source = activity_db.SQLiteActivitySource(store, hostname="laptop")
-    with sqlite3.connect(store) as writer:
+    with closing(sqlite3.connect(store)) as writer, writer:
         writer.execute("PRAGMA journal_mode=WAL")
         writer.execute("PRAGMA wal_autocheckpoint=0")
         writer.execute("UPDATE events SET endtime=? WHERE id=2", ((BASE + 3) * NS,))
@@ -148,7 +149,7 @@ def test_capture_off_skips_db_discovery_and_filesystem_reads(monkeypatch):
 def test_phone_source_in_parallel_with_desktop_is_sanitized_and_counts_once(tmp_path, monkeypatch):
     desktop = make_db(tmp_path / "desktop.db")
     phone = make_db(tmp_path / "phone.db", android_only=True)
-    with sqlite3.connect(phone) as db:
+    with closing(sqlite3.connect(phone)) as db, db:
         for event, app, classname in [(2, "Calendar", "internal.calendar"), (3, "Messages", "private.thread")]:
             db.execute("UPDATE events SET data=? WHERE id=?",
                        (json.dumps({"app": app, "package": "test.app", "classname": classname}), event))
@@ -181,13 +182,13 @@ def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monke
         monkeypatch.setenv("LOCALAPPDATA", str(local))
         monkeypatch.setenv("USERPROFILE", str(tmp_path))
     primary = make_db(local / "activitywatch" / "aw-server-rust" / "sqlite.db")
-    with sqlite3.connect(primary) as db:
+    with closing(sqlite3.connect(primary)) as db, db:
         db.execute("INSERT INTO buckets(name,type,client,hostname,created) VALUES(?,?,?,?,?)",
                    ("aw-watcher-android_phone", "currentwindow", "aw-watcher-android", "phone", "2026-01-01"))
         db.execute("INSERT INTO events(bucketrow,starttime,endtime,data) VALUES(5,?,?,?)",
                    (BASE * NS, (BASE + 2) * NS, json.dumps({"app": "Old copy"})))
     phone = make_db(tmp_path / "Downloads" / "activity-watch-one-plus" / "uuid" / "test.db", android_only=True)
-    with sqlite3.connect(phone) as db:
+    with closing(sqlite3.connect(phone)) as db, db:
         db.execute("UPDATE events SET data=? WHERE bucketrow=1", (json.dumps({"app": "Current phone app"}),))
     if platform == "darwin":
         monkeypatch.setenv("PLANNER_ACTIVITYWATCH_PHONE_DB", str(phone))
@@ -199,7 +200,7 @@ def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monke
 def test_one_corrupted_synced_phone_event_preserves_its_valid_neighbor(tmp_path, monkeypatch):
     desktop = make_db(tmp_path / "desktop.db")
     phone = make_db(tmp_path / "phone.db", android_only=True)
-    with sqlite3.connect(phone) as db:
+    with closing(sqlite3.connect(phone)) as db, db:
         db.execute("UPDATE events SET data='not-json' WHERE id=2")
         db.execute("UPDATE events SET data=? WHERE id=3", (json.dumps({"app": "Garden notes"}),))
     monkeypatch.setenv("PLANNER_ACTIVITYWATCH_DB", str(desktop))

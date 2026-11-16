@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from contextlib import closing
 import sqlite3
 import unittest
 
@@ -176,7 +177,7 @@ class StoreTests(unittest.TestCase):
         target = self.task("Unfinished task", prediction=failure)["id"]
         self.task("Healthy forecast")
         self.task("Other failure", prediction=dict(self.budget, retrieval_error="Index unavailable."))
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("DELETE FROM settings WHERE key='retried_qwen_tokenizer_failures'")
         upgraded = PlannerStore(self.store.data_dir, clock=lambda: self.now)
         job = upgraded.claim_prediction()
@@ -204,7 +205,7 @@ class StoreTests(unittest.TestCase):
         target = self.task("Running task", prediction=failed)["id"]
         self.store.transition(target, "start")
         self.now += 45
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("DELETE FROM settings WHERE key='retried_bonsai_mlx_invalid_json'")
             db.execute("UPDATE tasks SET fixed_duration=1 WHERE id=?", (fixed,))
 
@@ -508,7 +509,7 @@ class StoreTests(unittest.TestCase):
     def test_matrix_backfill_only_unfinished_pairs_and_reopen_is_idempotent(self):
         self.finish_one("Finished")
         a,b,c = [self.task(name)["id"] for name in ("A","B","C")]
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("DELETE FROM settings WHERE key='relation_matrix_initialized'")
             db.execute("DROP TABLE task_relations")
         restored = PlannerStore(self.store.data_dir)
@@ -547,7 +548,7 @@ class StoreTests(unittest.TestCase):
     def test_previous_databases_preserve_creation_forecasts_and_pending_work(self):
         known = self.task()
         pending = self.task(prediction=None)
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             for column in ("creation_prediction", "completion_note", "fixed_duration", "refresh_waiting"):
                 db.execute(f"ALTER TABLE tasks DROP COLUMN {column}")
             db.execute("ALTER TABLE prediction_history DROP COLUMN snapshot")

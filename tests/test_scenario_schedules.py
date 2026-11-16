@@ -17,8 +17,8 @@ def test_every_bundled_history_has_one_schedule():
 
 @pytest.mark.parametrize("history_id", HISTORIES)
 def test_events_preserve_timer_and_activity_windows_and_do_not_leak_holdouts(tmp_path, history_id):
-    history = json.loads((FIXTURES / "histories" / f"{history_id}.json").read_text())
-    schedule = json.loads((FIXTURES / "schedules" / f"{history_id}.json").read_text())
+    history = json.loads((FIXTURES / "histories" / f"{history_id}.json").read_text(encoding="utf-8"))
+    schedule = json.loads((FIXTURES / "schedules" / f"{history_id}.json").read_text(encoding="utf-8"))
     rows = {row["id"]: row for row in history["tasks"] + history["open_tasks"]}
     layout = task_layout(history)
     slots = [(event["day_offset"], event["minute"]) for event in schedule]

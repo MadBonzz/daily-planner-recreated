@@ -25,8 +25,8 @@ def test_historical_notes_timers_and_both_devices_survive_loading_and_adding(tmp
     anchor = datetime(2026, 11, 15, 20)
     monkeypatch.setattr(dev_workspace, "time", SimpleNamespace(time=anchor.timestamp))
     monkeypatch.setattr(activity, "_get", lambda *_a, **_k: pytest.fail("Demo read a personal ActivityWatch server"))
-    history = json.loads((DEMO_DATASET / "histories" / (profile + ".json")).read_text())
-    events = json.loads((DEMO_DATASET / "schedules" / (profile + ".json")).read_text())
+    history = json.loads((DEMO_DATASET / "histories" / (profile + ".json")).read_text(encoding="utf-8"))
+    events = json.loads((DEMO_DATASET / "schedules" / (profile + ".json")).read_text(encoding="utf-8"))
     created = {row["task"]: row["day_offset"] for row in events if row["action"] == "create"}
     store = dev_workspace.open_dev_workspace(tmp_path, profile)
     store.clock = anchor.timestamp
