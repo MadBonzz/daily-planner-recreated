@@ -170,8 +170,16 @@ def test_phone_source_in_parallel_with_desktop_is_sanitized_and_counts_once(tmp_
     assert all(term not in visible for term in ("internal.calendar", "test.app", "private.thread", "Messages"))
 
 
-def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monkeypatch):
-    local = tmp_path / "AppData" / "Local"
+@pytest.mark.parametrize("platform", ["win32", "darwin"])
+def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monkeypatch, platform):
+    monkeypatch.setattr(activity_db.sys, "platform", platform)
+    monkeypatch.setattr(activity_db.Path, "home", classmethod(lambda cls: tmp_path))
+    if platform == "darwin":
+        local = tmp_path / "Library" / "Application Support"
+    else:
+        local = tmp_path / "AppData" / "Local"
+        monkeypatch.setenv("LOCALAPPDATA", str(local))
+        monkeypatch.setenv("USERPROFILE", str(tmp_path))
     primary = make_db(local / "activitywatch" / "aw-server-rust" / "sqlite.db")
     with sqlite3.connect(primary) as db:
         db.execute("INSERT INTO buckets(name,type,client,hostname,created) VALUES(?,?,?,?,?)",
@@ -181,8 +189,8 @@ def test_synced_android_store_takes_precedence_over_stale_import(tmp_path, monke
     phone = make_db(tmp_path / "Downloads" / "activity-watch-one-plus" / "uuid" / "test.db", android_only=True)
     with sqlite3.connect(phone) as db:
         db.execute("UPDATE events SET data=? WHERE bucketrow=1", (json.dumps({"app": "Current phone app"}),))
-    monkeypatch.setenv("LOCALAPPDATA", str(local))
-    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    if platform == "darwin":
+        monkeypatch.setenv("PLANNER_ACTIVITYWATCH_PHONE_DB", str(phone))
     result = activity.live_preview(BASE, BASE + 2)
     assert [(r["app"], r.get("phone_app"), r["seconds"]) for r in result["intervals"]] == [
         ("chrome.exe", "Current phone app", 2)]
