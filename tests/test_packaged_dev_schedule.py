@@ -17,12 +17,14 @@ import task_workspace
 from relevance_feedback import related_ids
 
 
-def exercise_packaged_history(tmp_path, monkeypatch, history_id):
+def exercise_packaged_history(tmp_path, monkeypatch, history_id, *, local=False):
     calls = Counter()
     missing = []
-    endpoint = "https://api.cohere.ai/compatibility/v1/chat/completions"
+    endpoint = ("http://127.0.0.1:1235/v1/chat/completions" if local
+                else "https://api.cohere.ai/compatibility/v1/chat/completions")
+    model = "ternary-bonsai-2-4b-mlx" if local else "command-r7b-12-2024"
     for key, value in {
-        "PLANNER_MODEL_ENDPOINT": endpoint, "PLANNER_MODEL": "command-r7b-12-2024",
+        "PLANNER_MODEL_ENDPOINT": endpoint, "PLANNER_MODEL": model,
         "COHERE_API": "test-credential", "PLANNER_EMBEDDING_MODEL": retrieval.EMBEDDING_MODEL,
         "PLANNER_DECISION_MODEL": retrieval.DECISION_MODEL, "PLANNER_RELEVANCE_THRESHOLD": "0.50",
     }.items():
@@ -39,12 +41,16 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
             missing.append(payload["input"][:90])
         raise retrieval.ModelUnavailable("Packaged task made a local model request.")
 
-    def cohere_http(request, timeout):
+    def completion_http(request, timeout):
         assert request.full_url == endpoint
         body = json.loads(request.data)
-        assert body["model"] == "command-r7b-12-2024"
+        assert body["model"] == model
         prompt = json.loads(body["messages"][1]["content"])
-        fields = body["response_format"]["json_schema"]["schema"]["properties"]
+        if local:
+            assert "response_format" not in body
+            fields = json.loads(body["messages"][0]["content"].rsplit("matching this schema:\n", 1)[1])["properties"]
+        else:
+            fields = body["response_format"]["json_schema"]["schema"]["properties"]
         if "intervals" in prompt:
             calls["activity"] += 1
             reply = {str(r["id"]): {"label": "uncertain", "reason": "Simulated classifier."}
@@ -60,11 +66,15 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
                 reply["comparisons"] = [{"slot": prior["slot"], "reason": f"Both involve work on {prior['title']}."}]
             if "warnings" in fields:
                 reply["warnings"] = []
-        envelope = {"choices": [{"finish_reason": "stop", "message": {"content": json.dumps(reply)}}]}
+        content = json.dumps(reply)
+        if local:
+            content = [{"type": "reasoning", "text": "untrusted draft"},
+                       {"type": "text", "text": "```json\n" + content + "\n```"}]
+        envelope = {"choices": [{"finish_reason": "stop", "message": {"content": content}}]}
         return BytesIO(json.dumps(envelope).encode())
 
     monkeypatch.setattr(retrieval, "_local_post", no_local_model)
-    monkeypatch.setattr(model_client, "build_opener", lambda *_: SimpleNamespace(open=cohere_http))
+    monkeypatch.setattr(model_client, "build_opener", lambda *_: SimpleNamespace(open=completion_http))
 
     replay = dev_workspace.open_dev_workspace(tmp_path, history_id, replay=True)
     dev_schedule.advance(replay, history_id, through_end=True)
@@ -136,7 +146,7 @@ def exercise_packaged_history(tmp_path, monkeypatch, history_id):
             forecasts = [task["creation_prediction"], task["prediction"]]
             forecasts.extend(entry["prediction"] for entry in store.forecast_timeline(task["id"]))
             for prediction in forecasts:
-                assert prediction["provenance"]["provider"] == "Cohere"
+                assert prediction["provenance"]["provider"] == ("Local endpoint" if local else "Cohere")
                 assert prediction["provenance"]["minutes_by"] == "model"
                 assert not prediction.get("retrieval_error")
                 assert not prediction.get("model_error")
@@ -149,3 +159,7 @@ def test_packaged_replay_and_editable_samples_need_only_the_forecast_provider(tm
                                                                              record_property):
     for label, value in exercise_packaged_history(tmp_path, monkeypatch, history_id).items():
         record_property(label, value)
+
+def test_local_completion_blocks_across_nora_replay_and_edits(tmp_path, monkeypatch):
+    calls = exercise_packaged_history(tmp_path, monkeypatch, "d1-systems-student", local=True)
+    assert calls["screened forecast"] > 0 and calls["local inference requests"] == 0

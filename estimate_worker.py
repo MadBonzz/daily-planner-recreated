@@ -56,7 +56,8 @@ def run_one_job(store, index_dir):
         portalocker.lock(lockfile, portalocker.LOCK_EX)
         job = store.claim_prediction(lease_seconds=_LEASE_SECONDS)
         if job:
-            _process(store, index_dir, job)
+            with retrieval.reuse_task_embedding(job["task"]["id"]):
+                _process(store, index_dir, job)
             return True
         pair = store.claim_relation(lease_seconds=_LEASE_SECONDS)
         if pair:
@@ -192,12 +193,6 @@ def _process(store, index_dir, job):
                     prediction = estimator.predict(task, job["history"], index_dir)
                 if progress is not None:
                     prediction = workspace_forecast.revise(task, prediction, progress, refreshed_history=not workspace_only)
-                if not workspace_only:
-                    try:
-                        focus_domains.review_sites(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
-                    except Exception as exc:
-                        # Site suggestions are optional. Preserve a completed time estimate if this review fails.
-                        _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
             if unreadable and not workspace_only:
                 prediction["explanation"] += " No readable text was available from: " + ", ".join(unreadable) + "."
         except Exception as exc:
@@ -209,17 +204,22 @@ def _process(store, index_dir, job):
             else:
                 prediction = estimator._fallback(task["estimate_minutes"], "The background estimate could not be completed.")
         saved = store.resolve_prediction(task_id, token, prediction, pdf_text=pdf_text)
-        if saved:
+    if saved:
+        if not workspace_only:
             try:
-                estimator.index_current_task(index_dir, store, task_id)
-            except (RuntimeError, ValueError, OSError, sqlite3.Error) as exc:
-                # The committed SQLite forecast is usable. Retrieval repairs a
-                # missing or stale vector when this task becomes a comparison.
-                _LOG.warning("Could not refresh task vector (%s).", type(exc).__name__)
-        elif job["history"]:
-            # Search may have repaired a missing vector just as its source task
-            # was deleted. Drop any such vectors without indexing stale targets.
-            existing = {row["id"] for row in store.completed_tasks()}
-            for row in job["history"]:
-                if row["id"] not in existing:
-                    estimator.forget_task(index_dir, row["id"])
+                focus_domains.review_sites(store, task, prediction, pdf_text, job.get("focus_verdicts", {}))
+            except Exception as exc:
+                _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
+        try:
+            estimator.index_current_task(index_dir, store, task_id)
+        except (RuntimeError, ValueError, OSError, sqlite3.Error) as exc:
+            # The committed SQLite forecast is usable. Retrieval repairs a
+            # missing or stale vector when this task becomes a comparison.
+            _LOG.warning("Could not refresh task vector (%s).", type(exc).__name__)
+    elif job["history"]:
+        # Search may have repaired a missing vector just as its source task
+        # was deleted. Drop any such vectors without indexing stale targets.
+        existing = {row["id"] for row in store.completed_tasks()}
+        for row in job["history"]:
+            if row["id"] not in existing:
+                estimator.forget_task(index_dir, row["id"])

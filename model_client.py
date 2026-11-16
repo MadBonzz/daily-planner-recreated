@@ -36,7 +36,7 @@ SETTING_NAMES = {
     "PLANNER_DECISION_ENDPOINT", "PLANNER_RELEVANCE_THRESHOLD",
     "PLANNER_MODEL_TIMEOUT_SECONDS", "PLANNER_ACTIVITYWATCH_HOSTNAME",
     "PLANNER_ACTIVITYWATCH_DB", "PLANNER_ACTIVITYWATCH_PHONE_DB",
-    "PLANNER_SINGLE_MODEL", "PLANNER_MODEL_KEY", "PLANNER_DECISION_MODEL_KEY", "PLANNER_EMBEDDING_MODEL_KEY",
+    "PLANNER_SINGLE_MODEL", "PLANNER_PREFER_PRECOMPUTED", "PLANNER_MODEL_KEY", "PLANNER_DECISION_MODEL_KEY", "PLANNER_EMBEDDING_MODEL_KEY",
     "PLANNER_CHAT_CONTEXT_LENGTH", "PLANNER_DECISION_CONTEXT_LENGTH", "PLANNER_EMBEDDING_CONTEXT_LENGTH",
 }
 
@@ -107,13 +107,13 @@ def using_local_bonsai():
 
 def plain_chat_reply(generate, messages, schema):
     """Use the existing repair attempt with the original evidence and a complete final answer."""
-    if not using_local_bonsai():
-        return generate(messages, schema)
     correction = ("Answer in the final assistant message with one complete JSON object. "
                   "Fill the required fields using the supplied data. Return only that object.")
     first, *rest = messages
     repaired = [{**first, "content": first["content"] + "\n" + correction}, *rest]
-    return generate(repaired, schema, plain_local_retry=True)
+    if using_local_bonsai():
+        return generate(repaired, schema, plain_local_retry=True)
+    return generate(repaired, schema)
 
 
 @contextmanager
@@ -151,11 +151,15 @@ def _canonical_integers(value, schema):
 def _final_json(message, model):
     """Decode one answer from the assistant's public text, ignoring reasoning blocks."""
     if not isinstance(message, dict):
-        raise ModelResponseInvalid(f"The local chat endpoint returned a choice without an assistant message for {model}.")
+        raise ModelResponseInvalid(f"The chat endpoint returned a choice without an assistant message for {model}.")
     content = message.get("content")
     if message.get("refusal") or (isinstance(content, list) and any(
             isinstance(part, dict) and part.get("type") == "refusal" for part in content)):
         raise ModelResponseInvalid(f"{model} returned a refusal instead of a final JSON answer.")
+    if isinstance(content, dict):
+        return content
+    if content is None and isinstance(message.get("parsed"), dict):
+        return message["parsed"]
     if isinstance(content, list):
         content = "".join(part["text"] for part in content if isinstance(part, dict)
                           and part.get("type") in ("text", "output_text") and isinstance(part.get("text"), str))
@@ -195,23 +199,28 @@ def _final_json(message, model):
     return result
 
 
+def _schema_prompt(messages, schema):
+    instruction = "Return only one JSON object matching this schema:\n" + json.dumps(schema)
+    conversation = list(messages)
+    if conversation and conversation[0].get("role") in {"system", "developer"}:
+        first = conversation.pop(0)["content"]
+        if not first.endswith(instruction):
+            first += "\n\n" + instruction
+        instruction = first
+    return [{"role": "system", "content": instruction}, *conversation]
+
+
 def _post_completion(client, endpoint, headers, payload, timeout, model):
     host = urlsplit(endpoint).hostname
-    bonsai = "reasoning_effort" in payload
     while True:
         request = Request(endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
         try:
             with client.open(request, timeout=timeout) as response:
                 return json.load(response)
         except IncompleteRead:
-            if host in {"localhost", "127.0.0.1", "::1"}:
-                raise ModelResponseInvalid(f"The local chat endpoint closed the HTTP response before it was complete for {model}.") from None
-            raise
+            raise ModelResponseInvalid(f"The chat endpoint closed the HTTP response before it was complete for {model}.") from None
         except ValueError:
-            if host in {"localhost", "127.0.0.1", "::1"}:
-                raise ModelResponseInvalid(f"The local chat endpoint returned an HTTP response that could not "
-                                           f"be decoded as JSON for {model}.") from None
-            raise
+            raise ModelResponseInvalid(f"The chat endpoint returned an HTTP response that could not be decoded as JSON for {model}.") from None
         except HTTPError as exc:
             with exc:
                 if exc.code not in (400, 413, 422):
@@ -238,10 +247,13 @@ def _post_completion(client, endpoint, headers, payload, timeout, model):
                     continue
             # Provider messages can echo private input. Surface only the error category.
             if param == "response_format" or "response_format" in message or "json schema" in message:
-                if bonsai and "response_format" in payload and exc.code in (400, 422):
-                    raise ModelResponseInvalid(f"{model} rejected the requested JSON schema.") from exc
-                if host in COHERE_HOSTS and exc.code == 400:
-                    raise ModelUnavailable(f"{model} rejected the requested response format (HTTP 400).") from exc
+                if "response_format" in payload and exc.code in (400, 422):
+                    # The server rejected the constraint before starting inference.
+                    # Send the same contract in the prompt and validate it locally.
+                    schema = payload.pop("response_format")["json_schema"]["schema"]
+                    payload["messages"] = _schema_prompt(payload["messages"], schema)
+                    continue
+                raise ModelUnavailable(f"{model} rejected the requested response format (HTTP {exc.code}).") from exc
             raise ModelUnavailable(f"{host} returned HTTP {exc.code} for {model}.") from exc
 
 
@@ -279,12 +291,7 @@ def chat_json(messages, schema, *, plain_local_retry=False):
     aya = cohere and model.startswith(("c4ai-aya-", "tiny-aya-"))
     if bonsai or aya:
         # Prompt the same contract when the runtime uses grammar-constrained or ordinary chat.
-        instruction = "Return only one JSON object matching this schema:\n" + json.dumps(schema)
-        conversation = list(messages)
-        if conversation and conversation[0].get("role") in {"system", "developer"}:
-            first = conversation.pop(0)
-            instruction = first["content"] + "\n\n" + instruction
-        payload["messages"] = [{"role": "system", "content": instruction}, *conversation]
+        payload["messages"] = _schema_prompt(messages, schema)
     if bonsai:
         payload.update(temperature=0.7, top_p=0.8, reasoning_effort="none")
     # On Bonsai 2 MLX grammar constraints can consume the answer in the reasoning
@@ -306,29 +313,25 @@ def chat_json(messages, schema, *, plain_local_retry=False):
         with local_model_runtime.managed_model(endpoint, model, config, kind="llm", timeout=timeout) as instance:
             payload["model"] = instance
             completion = _post_completion(client, endpoint, headers, payload, timeout, model)
-        if local:
-            if not isinstance(completion, dict):
-                raise ModelResponseInvalid(f"The local chat endpoint returned JSON without a chat completion object for {model}.")
-            if completion.get("error") is not None:
-                raise ModelResponseInvalid(f"The local chat endpoint returned an error object instead of a completion for {model}.")
-            choices = completion.get("choices")
-            if not isinstance(choices, list) or not choices:
-                raise ModelResponseInvalid(f"The local chat endpoint returned a completion without a nonempty choices array for {model}.")
-            if not isinstance(choices[0], dict):
-                raise ModelResponseInvalid(f"The local chat endpoint returned an invalid first choice for {model}.")
-        choice = completion["choices"][0]
-        if choice.get("finish_reason") == "length":
-            raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.")
-        if local:
-            if choice.get("finish_reason") == "content_filter":
-                raise ModelResponseInvalid(f"The local chat endpoint filtered the response for {model}.")
+        if not isinstance(completion, dict):
+            raise ModelResponseInvalid(f"The chat endpoint returned JSON without a chat completion object for {model}.")
+        if completion.get("error") is not None:
+            raise ModelResponseInvalid(f"The chat endpoint returned an error object instead of a completion for {model}.")
+        choices = completion.get("choices")
+        if not isinstance(choices, list) or not choices:
+            raise ModelResponseInvalid(f"The chat endpoint returned a completion without a nonempty choices array for {model}.")
+        choice = choices[0]
+        if not isinstance(choice, dict):
+            raise ModelResponseInvalid(f"The chat endpoint returned an invalid first choice for {model}.")
+        if choice.get("finish_reason") == "content_filter":
+            raise ModelResponseInvalid(f"The chat endpoint filtered the response for {model}.")
+        try:
             result = _final_json(choice.get("message"), model)
-        else:
-            content = choice["message"]["content"].strip()
-            if cohere and content.startswith(("```json\n", "```\n")) and content.endswith("```"):
-                content = content.split("\n", 1)[1][:-3].strip()
-            result = json.loads(content)
-        validate(result, schema)
+            validate(result, schema)
+        except (ModelResponseInvalid, ValidationError) as exc:
+            if choice.get("finish_reason") == "length":
+                raise ModelResponseTruncated(f"The endpoint stopped {model} at its response length limit.") from exc
+            raise
         return _canonical_integers(result, schema)
     except OSError as exc:
         # urllib can surface a read timeout directly or wrap a connection timeout in URLError.reason.

@@ -35,6 +35,20 @@ _FIELDS = (("Title", "title"), ("Description", "description"), ("Details", "deta
 _current_lease = ContextVar("planner_retrieval_lease", default=None)
 
 
+_job_embedding = ContextVar("planner_job_embedding", default=None)
+
+
+@contextmanager
+def reuse_task_embedding(task_id):
+    # The bare query and the vector written after saving are the same input.
+    # Keep it for this job only; editing/deleting a task cannot leak it into a later job.
+    token = _job_embedding.set((task_id, {}))
+    try:
+        yield
+    finally:
+        _job_embedding.reset(token)
+
+
 @contextmanager
 def estimation_lease(renew):
     """A worker's SQLite token is revoked whenever a memory source is forgotten."""
@@ -109,9 +123,18 @@ def embed_task(task, config=None, query=False):
     config = planner_settings() if config is None else config
     model = config.get("PLANNER_EMBEDDING_MODEL") or EMBEDDING_MODEL
     content = embedding_input(task, query)
-    vector, _ = sample_retrieval.resolve(
+    scope = _job_embedding.get()
+    cache = scope[1] if scope and scope[0] == task.get("id") and not query else None
+    key = (model, config.get("PLANNER_EMBEDDING_ENDPOINT"), config.get("PLANNER_EMBEDDING_MODEL_KEY"),
+           config.get("PLANNER_EMBEDDING_CONTEXT_LENGTH"), config.get("PLANNER_SINGLE_MODEL"),
+           config.get("PLANNER_PREFER_PRECOMPUTED"), content)
+    if cache is not None and key in cache:
+        return cache[key]
+    vector, source = sample_retrieval.resolve(
         "embedding", model, config, lambda canonical: sample_retrieval.vector_for(canonical, content),
         lambda: _live_vector(content, model, config))
+    if cache is not None and source == model:
+        cache[key] = vector
     return vector
 
 

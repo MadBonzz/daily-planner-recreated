@@ -446,3 +446,17 @@ def test_paired_audit_cases_change_only_historical_timing_and_derived_fields(tmp
     assert arms["same-indexing-slower"] == arms["same-indexing-faster"] == arms["same-indexing-variable"]
     assert arms["supply-count-tight"] == arms["supply-count-variable"]
     assert arms["supply-count-tight"] != arms["same-indexing-slower"]
+
+
+def test_point_only_forecast_keeps_model_minutes_without_another_generation(tmp_path):
+    reply = {"point_min": 15, "low_min": 15, "high_min": 15, "confidence": "low",
+             "rationale": "Collect the card from the department office.",
+             "confidence_reason": "There are no comparable pick-ups."}
+    task = {"title": "Pick up the lab access card", "description": "Collect the replacement card.",
+            "id": "card", "estimate_minutes": 20}
+    with patch("estimator.chat_json", return_value=reply) as generation:
+        result = estimator.predict(task, [], tmp_path)
+    generation.assert_called_once()
+    assert (result["low_min"], result["point_min"], result["high_min"]) == (7, 15, 23)
+    assert result["range_source"] == "planner_margin" and result["provenance"]["minutes_by"] == "model"
+    assert "model_error" not in result

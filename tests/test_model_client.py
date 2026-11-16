@@ -83,7 +83,7 @@ class ModelClientTests(unittest.TestCase):
 
     @patch("model_client.build_opener")
     def test_bad_schema_or_truncated_completion_is_recoverable(self, opener):
-        for content, reason in [('{"label":"unknown"}', "stop"), ('{"label":', "stop"), ('{"label":"on_task"}', "length")]:
+        for content, reason in [('{"label":"unknown"}', "stop"), ('{"label":', "stop"), ('{"label":', "length")]:
             with self.subTest(reason=reason):
                 opener.return_value.open.return_value = self.reply(content, reason)
                 with self.assertRaises(ModelResponseInvalid) as exc:
@@ -159,13 +159,12 @@ class ModelClientTests(unittest.TestCase):
                     chat_json([], self.schema)
 
     @patch("model_client.build_opener")
-    def test_hosted_error_keeps_the_original_single_request(self, opener):
+    def test_hosted_answer_with_a_preamble_needs_only_one_request(self, opener):
         os.environ.update(PLANNER_MODEL="command-r7b-12-2024",
                           PLANNER_MODEL_ENDPOINT="https://api.cohere.ai/compatibility/v1/chat/completions",
                           COHERE_API="test-token")
         opener.return_value.open.return_value = self.reply('Here is my guess. {"label":"on_task"}')
-        with self.assertRaises(ModelResponseInvalid):
-            chat_json([], self.schema)
+        self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
         opener.return_value.open.assert_called_once()
 
     @patch("model_client.build_opener")
@@ -202,16 +201,40 @@ class ModelClientTests(unittest.TestCase):
                 self.assertIn("HTTP 400", str(exc.exception))
 
     @patch("model_client.build_opener")
-    def test_cohere_schema_rejection_explains_format_without_echoing_input(self, opener):
-        url = "https://api.cohere.ai/compatibility/v1/chat/completions"
-        message = "invalid response_format: unsupported JSON schema - PRIVATE PROMPT ECHO"
-        with patch.dict("os.environ", {"PLANNER_MODEL_ENDPOINT": url, "COHERE_API": "test-token"}):
-            for error in ({"message": message}, {"error": {"param": "response_format", "message": message}}):
-                opener.return_value.open.side_effect = HTTPError(
-                    url, 400, "Bad Request", {}, io.BytesIO(json.dumps(error).encode()))
-                with self.assertRaisesRegex(ModelUnavailable, "response format.*HTTP 400") as exc:
+    def test_rejected_schema_retries_as_prompt_at_the_same_endpoint(self, opener):
+        for url in ("https://api.cohere.ai/compatibility/v1/chat/completions", API_URL):
+            with self.subTest(url=url), patch.dict(os.environ, PLANNER_MODEL_ENDPOINT=url, COHERE_API="test"):
+                issue = {"error": {"param": "response_format", "message": "unsupported schema - PRIVATE ECHO"}}
+                transport = opener.return_value.open
+                transport.reset_mock()
+                transport.side_effect = [HTTPError(url, 400, "Bad Request", {}, io.BytesIO(json.dumps(issue).encode())),
+                                         self.reply('{"label":"on_task"}')]
+                self.assertEqual(chat_json([{"role": "user", "content": "Classify"}], self.schema), {"label": "on_task"})
+                first, retry = [json.loads(call.args[0].data) for call in transport.call_args_list]
+                self.assertIn("response_format", first)
+                self.assertNotIn("response_format", retry)
+                self.assertIn(json.dumps(self.schema), retry["messages"][0]["content"])
+                self.assertNotIn("PRIVATE ECHO", json.dumps(retry))
+                self.assertEqual(first["messages"][-1], retry["messages"][-1])
+
+    @patch("model_client.build_opener")
+    def test_complete_schema_valid_answer_reused_across_wire_formats(self, opener):
+        answer = {"label": "on_task"}
+        messages = [{"content": answer}, {"content": None, "parsed": answer},
+                    {"content": [{"type": "reasoning", "text": "draft"},
+                                 {"type": "text", "text": "```json\n"},
+                                 {"type": "output_text", "text": json.dumps(answer) + "\n```"}]},
+                    {"content": "<think>draft</think>\n" + json.dumps(answer)}]
+        for endpoint in [API_URL, "https://api.cohere.ai/compatibility/v1/chat/completions"]:
+            with self.subTest(endpoint=endpoint), patch.dict(os.environ, PLANNER_MODEL_ENDPOINT=endpoint, COHERE_API="test"):
+                for message in messages:
+                    opener.return_value.open.reset_mock()
+                    opener.return_value.open.return_value = self.reply(message=message, finish_reason="length")
+                    self.assertEqual(chat_json([], self.schema), answer)
+                    opener.return_value.open.assert_called_once()
+                opener.return_value.open.return_value = self.reply(message={"content": None, "reasoning_content": json.dumps(answer)})
+                with self.assertRaisesRegex(ModelResponseInvalid, "without a final"):
                     chat_json([], self.schema)
-                self.assertNotIn("PRIVATE PROMPT", str(exc.exception))
 
     @patch("model_client.build_opener")
     def test_configured_cohere_request_loads_dotenv_and_keeps_prompt(self, opener):

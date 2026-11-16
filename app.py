@@ -117,6 +117,8 @@ def show_prediction(prediction):
         "user": "Plan Smarter used your own estimate as the point estimate.",
         "schedule": "The event uses its scheduled duration.",
     }.get(minutes_by)
+    if minutes_by == "model" and prediction.get("range_source") == "planner_margin":
+        calculation = "The model supplied a single duration and its confidence rating. Plan Smarter added its default ±50% planning range."
     decision = provenance.get("decision")
     matched = decision in {"direct", "matches"} or (not decision and prediction.get("basis") == "Model-selected tasks")
     reasons = []
@@ -531,10 +533,6 @@ def estimate_pending(task):
     return task["estimate_updating"]
 
 
-def forecast_may_change(task):
-    return estimate_pending(task) or task.get("awaiting_related_update", False)
-
-
 def comparison_summary(prediction):
     used = list(prediction.get("evidence", []))
     for caution in prediction.get("cautions", []):
@@ -586,9 +584,12 @@ def estimate_section(store, task, *, read_only=False):
     completed_fallback = completed and provenance.get("decision") == "fallback"
     label = "Scheduled" if fixed else "Your estimate"
     values = [f"{label} {minutes(task['estimate_minutes'])}"]
+    queued = estimate_pending(task) and task.get("estimate_in_progress") == 0
     pending_label = "Finishing the earlier forecast…" if completed else "Updating estimate…"
+    if queued:
+        pending_label = "Forecast queued"
     if initial_pending:
-        values.append(pending_label if completed else "Estimating task time…")
+        values.append(pending_label if queued or completed else "Estimating task time…")
     elif "point_min" in prediction and not fixed:
         budget_label = "Previous forecast" if estimate_pending(task) else "Planner"
         if completed_fallback:
@@ -684,34 +685,27 @@ def live_estimate_section(store, task):
     # Refresh only this part of the card. A finished forecast must not close an open dialog.
     @st.fragment(run_every="2s", key=f"estimate-{task['id']}")
     def refresh():
-        if forecast_may_change(task):
-            try:
-                fresh = store.get_task(task["id"])
-            except ValueError:
-                st.rerun()
-            task.update(fresh)
-        estimate_section(store, task)
+        try:
+            fresh = store.get_task(task["id"])
+        except ValueError:
+            st.rerun()
+        estimate_section(store, fresh)
     refresh()
 
 
-def daily_totals(tasks):
-    original = sum(t["estimate_minutes"] for t in tasks)
-    budget = sum(t["prediction"].get("point_min", t["estimate_minutes"]) for t in tasks)
-    done = sum(t["status"] == "completed" for t in tasks)
-    budget_label = "Estimating…" if any(t["prediction"].get("status") == "pending" for t in tasks) else minutes(budget)
+def daily_totals(store, day):
+    totals = store.daily_forecast_totals(day)
+    count, pending = totals["tasks"], totals["pending"]
+    budget = f"{count - pending}/{count} ready" if pending else minutes(totals["budget"])
     st.html('<div class="metric-grid">' + "".join(
         f"<div><small>{label}</small><strong>{value}</strong></div>" for label, value in
-        (("Your estimates", minutes(original)), ("Planner budget", budget_label),
-         ("Tasks complete", f"{done} / {len(tasks)}"))) + '</div>')
+        (("Your estimates", minutes(totals["original"])), ("Planner budget", budget),
+         ("Tasks complete", f"{totals['done']} / {count}"))) + '</div>')
 
 
-def live_daily_totals(store, day, tasks):
-    @st.fragment(run_every="2s")
-    def refresh():
-        if any(forecast_may_change(t) for t in tasks):
-            tasks[:] = store.list_tasks(day)
-        daily_totals(tasks)
-    refresh()
+@st.fragment(run_every="2s")
+def live_daily_totals(store, day):
+    daily_totals(store, day)
 
 
 def replay_forecasts(store, task_id):
@@ -741,7 +735,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
         if not replay and st.session_state.get("delete_target") == key:
             delete_task(store, index_dir, task)
         st.html(f'<p class="task-copy">{escape(task["description"])}</p>')
-        if not replay and forecast_may_change(task):
+        if not replay:
             live_estimate_section(store, task)
         else:
             estimate_section(store, task, read_only=replay)
@@ -970,10 +964,10 @@ def main():
     if not replay and controls[4].button("＋ Add task", type="primary", width="stretch"):
         new_task(store, day)
     tasks = store.list_tasks(day)
-    if not replay and any(forecast_may_change(t) for t in tasks):
-        live_daily_totals(store, day, tasks.copy())
+    if replay:
+        daily_totals(store, day)
     else:
-        daily_totals(tasks)
+        live_daily_totals(store, day)
     if running := store.running_task():
         if running["day"] != day.isoformat():
             st.text(f'Timer running on {running["day"]}: {running["title"]}')

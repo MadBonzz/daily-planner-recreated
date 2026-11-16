@@ -234,3 +234,26 @@ def test_timer_started_before_estimate_applies_committed_review_and_keeps_user_e
     store.archive_task(target)
     assert not focus_bridge.snapshot(tmp_path, config)["domains"]
     assert len(model_calls) == 1
+
+@pytest.mark.parametrize("superseded", [False, True])
+def test_forecast_is_visible_during_site_review_and_late_verdict_cannot_overwrite_it(tmp_path, model_calls,
+                                                                                      monkeypatch, superseded):
+    store = PlannerStore(tmp_path)
+    finished(store, [visit()])
+    target = create(store, "Diagnose a stuck print queue")
+    decide = focus_judge.decide
+    observed = []
+
+    def during_review(request, config):
+        saved = store.get_task(target)
+        observed.append((saved["prediction"].get("point_min"), saved["estimate_updating"]))
+        if superseded:
+            store.retry_estimate(target)
+        return decide(request, config)
+
+    monkeypatch.setattr(focus_judge, "decide", during_review)
+    estimate(store)
+    assert observed == [(32, False)]
+    saved = store.get_task(target)
+    assert ("focus_verdicts" in saved["prediction"]) is not superseded
+    assert saved["estimate_updating"] is superseded

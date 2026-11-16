@@ -84,7 +84,7 @@ _OTHER_REQUEST = re.compile(
 
 
 def literal_task_creation(question, files, plan):
-    """Recover one explicit title and effort after an unusable local model response."""
+    """Extract a single fully specified task from an explicit creation request."""
     text = question.strip().rstrip(".?!").strip()
     file_ids = []
     attachment = re.search(r"[,\.]\s*(?:please )?attach (.+)$", text, re.I)
@@ -172,6 +172,16 @@ def handle_request(tool, question, history, files, plan, categories, chat_json, 
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], schema)
     if result["action"] != "create":
         return {"tool": tool, "pending_request": request if result["action"] == "clarify" else "", "answer": result["reply"] or "What task would you like to add, and for how long?"}
+    if not prior:
+        literal = literal_task_creation(question, files, plan)
+        if literal is not None:
+            if set(result["file_ids"]) - set(literal["file_ids"]):
+                return {"tool": tool, "pending_request": request,
+                        "answer": "Which of the uploaded files should I attach to this task?"}
+            fields = literal["new_task"]
+            if result["category"] in categories:
+                fields["category"] = result["category"]
+            return {"tool": tool, "new_task": fields, "file_ids": literal["file_ids"]}
     effort = result["estimate_phrase"].strip().casefold()
     if not 0 < result["estimate_minutes"] < float("inf") or not effort or effort not in request.casefold():
         return {"tool": tool, "pending_request": request, "answer": "How many minutes do you expect this task to take?"}

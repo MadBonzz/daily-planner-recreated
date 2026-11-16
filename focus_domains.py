@@ -9,7 +9,6 @@ from urllib.parse import urlsplit
 import focus_judge
 from activity import activity_key
 from model_client import ModelUnavailable, planner_settings
-from retrieval import check_lease
 from relevance_feedback import related_ids
 from sample_retrieval import prefer_packaged
 
@@ -139,23 +138,35 @@ def site_requests(store, task_id, source_ids, *, pdf_text=None, config=None):
 
 
 def review_sites(store, task, prediction, pdf_text, previous):
-    """Run local inference outside SQLite; commit verdicts atomically with this forecast."""
+    """Publish site suggestions only while this previously saved forecast is current."""
     sources = related_ids(prediction)
     if not sources:
         return
     config = planner_settings()
     requests = site_requests(store, task["id"], sources, pdf_text=pdf_text, config=config)
+    if not requests:
+        return
+    current = """id=? AND archived=0 AND edit_revision=? AND prediction=?
+                 AND NOT EXISTS (SELECT 1 FROM prediction_jobs WHERE task_id=tasks.id)"""
+    expected = json.dumps(prediction, allow_nan=False)
+    args = (task["id"], task["edit_revision"], expected)
     results = {}
     for request in requests.values():
         key = focus_judge.key(request)
-        check_lease()
+        with store._db() as db:
+            if not db.execute("SELECT 1 FROM tasks WHERE " + current, args).fetchone():
+                return
         try:
             results[key] = previous[key] if type(previous.get(key)) is bool else focus_judge.decide(request, config)
         except ModelUnavailable:
             # An unreviewed domain remains editable; a later re-estimate can retry.
             continue
     if results:
-        prediction["focus_verdicts"] = results
+        updated = json.dumps({**prediction, "focus_verdicts": results}, allow_nan=False)
+        with store._db(write=True) as db:
+            db.execute("""UPDATE tasks SET prediction=?,
+                       creation_prediction=CASE WHEN creation_prediction=? THEN ? ELSE creation_prediction END
+                       WHERE """ + current, (updated, expected, updated, *args))
 
 
 def policy_from_db(db, task_id):

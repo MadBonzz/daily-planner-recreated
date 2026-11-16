@@ -5,7 +5,7 @@ import math
 import re
 
 from estimator import _object, _prompt_record
-from model_client import ModelResponseTruncated, ModelUnavailable, chat_json, forecast_endpoint
+from model_client import ModelResponseInvalid, ModelUnavailable, chat_json, forecast_endpoint, plain_chat_reply
 from retrieval import check_lease
 
 
@@ -189,6 +189,7 @@ def _assessment(reply, records, baseline, progress, endpoint):
                "basis": "Workspace progress forecast", "provenance": provenance, "confidence": reply["confidence"],
                "confidence_reason": confidence_reason, "explanation": explanation, "model_rationale": explanation,
                "workspace_update": update}
+    revised.pop("range_source", None)
     revised.pop("model_error", None)
     if not revised.get("retrieval_error"):
         revised.pop("retryable", None)
@@ -217,11 +218,11 @@ def revise(task, baseline, progress, *, refreshed_history=False):
             for attempt in range(2):
                 check_lease()
                 try:
-                    reply = chat_json(messages, contract)
+                    reply = plain_chat_reply(chat_json, messages, contract) if attempt else chat_json(messages, contract)
                     if attempt and isinstance(reply.get("evidence"), dict):
                         reply = {**reply, "evidence": [reply["evidence"]]}
                     return _assessment(reply, records, baseline, progress, endpoint)
-                except (ValueError, ModelResponseTruncated) as exc:
+                except (ValueError, ModelResponseInvalid) as exc:
                     if attempt:
                         raise ModelUnavailable(f"The model could not provide a verifiable progress estimate. {exc}") from exc
                     # A small model can repeatedly emit an empty evidence array even after a

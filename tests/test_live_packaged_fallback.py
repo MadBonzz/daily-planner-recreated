@@ -81,6 +81,16 @@ def test_nonmatching_keys_and_managed_explicit_key_do_not_confuse_models():
     assert not sample_retrieval.prefer_packaged("embedding", "qwen3-embedding-0.6b", settings)
 
 
+@pytest.mark.parametrize("role,model,saved", [("embedding", sample_retrieval.QWEN, [0.5]),
+                                             ("decision", sample_retrieval.KEV, False)])
+def test_managed_precomputed_mode_contacts_model_only_on_a_miss(role, model, saved):
+    config = {"PLANNER_SINGLE_MODEL": "1", "PLANNER_PREFER_PRECOMPUTED": "1"}
+    def unexpected():
+        pytest.fail("A packaged result should avoid a live request")
+    assert sample_retrieval.resolve(role, model, config, lambda _: saved, unexpected)[0] == saved
+    assert sample_retrieval.resolve(role, model, config, lambda _: None, lambda: "live") == ("live", model)
+
+
 def test_site_and_workspace_use_exact_fallback_before_another_forecast(monkeypatch):
     request = {"model": "kev-4b-live", "state": "task scope", "questions": {"relevant": {"type": "noul"}}}
     archived = {**request, "model": "kev-4b"}
@@ -106,3 +116,21 @@ def test_site_and_workspace_use_exact_fallback_before_another_forecast(monkeypat
         assert not misses
     assert calls == [request, request, modified, modified]
     assert request["model"] == "kev-4b-live"
+
+
+def test_live_bare_embedding_reused_only_for_identical_task_and_configuration_within_job(monkeypatch):
+    calls = []
+    def infer(content, model, config):
+        calls.append((content, model))
+        return [float(len(calls))]
+    monkeypatch.setattr(retrieval, "_live_vector", infer)
+    config = {"PLANNER_EMBEDDING_MODEL": "test-encoder"}
+    task = {"id": "target", "title": "A proof"}
+    with retrieval.reuse_task_embedding("target"):
+        first = retrieval.embed_task(task, config)
+        assert retrieval.embed_task(task, config) == first
+        assert retrieval.embed_query(task, config) != first
+        assert retrieval.embed_task({**task, "title": "A new proof"}, config) != first
+        assert retrieval.embed_task(task, {**config, "PLANNER_EMBEDDING_MODEL": "another-encoder"}) != first
+    assert retrieval.embed_task(task, config) != first
+    assert len(calls) == 5

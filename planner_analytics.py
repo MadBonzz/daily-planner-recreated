@@ -14,7 +14,7 @@ import streamlit as st
 
 from activity import LABEL_NAMES, device_label, exclusion_terms, visible_saved_event
 from model_client import (chat_json, forecast_endpoint, ModelResponseInvalid, ModelResponseTruncated,
-                          ModelUnavailable, plain_chat_reply, using_local_bonsai)
+                          ModelUnavailable, plain_chat_reply)
 from chat_tasks import apply_action, handle_request, literal_task_creation, route_request
 from task_files import document_text, upload_info
 from planner_chat import answer_plan, asks_what_fits, planning_context
@@ -311,9 +311,7 @@ def _chat_reply(messages, schema):
     try:
         return chat_json(messages, schema)
     except ModelResponseInvalid:
-        if not using_local_bonsai():
-            raise
-    return plain_chat_reply(chat_json, messages, schema)
+        return plain_chat_reply(chat_json, messages, schema)
 
 
 def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan=None, files=None, create_categories=None, task_catalog=()):
@@ -358,8 +356,6 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
                                            _chat_reply, tasks=task_catalog)
                     return {**result, "query_source": "model", "answer_source": "model", **reply}
         except ModelResponseInvalid as exc:
-            if not using_local_bonsai():
-                return {**result, "answer": f"The model could not process this request. {exc}"}
             if still_current is not None and not still_current():
                 return {"answer": "Your planner records changed. Please ask again."}
             if intent in (None, "create_task") and create_categories is not None:
@@ -381,8 +377,6 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
                 planned = chat_json(messages, schema)
         except ModelResponseInvalid as exc:
             compact = isinstance(exc, ModelResponseTruncated) and not needs_dates
-            if not compact and not using_local_bonsai():
-                return {**result, "answer": f"The model could not plan this query. {exc}"}
             if still_current is not None and not still_current():
                 return {"answer": "Your analytics records changed. Ask again using the current data."}
             if compact:
@@ -543,10 +537,8 @@ def _explain_distractions(result, payload):
                                                     "available_findings": [{"id": i, "finding": text}
                                                                            for i, text in enumerate(observations, 1)]},
                                                    ensure_ascii=False)}], schema)
-    except ModelUnavailable as exc:
-        if isinstance(exc, ModelResponseTruncated) or result.get("provider") == "Local endpoint":
-            return ranked
-        return {**result, "answer": f"The model could not interpret these query results. {exc}"}
+    except ModelUnavailable:
+        return ranked
     indices = dict.fromkeys(map(int, response["finding_ids"]))
     chosen = [observations[i - 1] for i in indices if 1 <= i <= len(observations)][:5]
     if not chosen:

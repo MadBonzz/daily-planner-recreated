@@ -136,8 +136,8 @@ def _read_forecast(reply, candidates, sources):
     if not all(type(v) is int or (type(v) is float and v.is_integer()) for v in values):
         raise ValueError("Use whole minutes for all three durations.")
     low, point, high = map(int, values)
-    if not 0 < low <= point <= high or low == high:
-        raise ValueError("Use a positive interval with low_min <= point_min <= high_min and distinct endpoints.")
+    if not 0 < low <= point <= high:
+        raise ValueError("Use positive minutes with low_min <= point_min <= high_min.")
     if reply.get("confidence") not in ("low", "medium", "high"):
         raise ValueError("Return low, medium, or high confidence.")
     if not all(isinstance(reply.get(k), str) and reply[k].strip() for k in ("rationale", "confidence_reason")):
@@ -166,10 +166,20 @@ def _read_forecast(reply, candidates, sources):
         if source_id not in cited:
             cautions.append({"advice": advice, "sources": [sources[source_id]]})
             cited.add(source_id)
-    return {"point_min": point, "low_min": low, "high_min": high, "confidence": reply["confidence"],
+    forecast = {"point_min": point, "low_min": low, "high_min": high, "confidence": reply["confidence"],
             "confidence_reason": reply["confidence_reason"].strip(), "model_rationale": reply["rationale"].strip(),
             "explanation": reply["rationale"].strip(), "evidence": evidence, "cautions": cautions,
             "basis": "Model forecast" if evidence else "Model estimate from task scope"}
+    if low == high:
+        # A valid point-only answer still estimates the task. Use the existing
+        # planning margin and label its source separately from the model's point.
+        forecast["low_min"], forecast["high_min"] = _default_range(point)
+        forecast["range_source"] = "planner_margin"
+    return forecast
+
+
+def _default_range(point):
+    return max(1, math.floor(point * 0.5)), math.ceil(point * 1.5)
 
 
 _FORECAST_INSTRUCTIONS = """Give a personal planning forecast for TOTAL minutes to finish the new deliverable.
@@ -243,8 +253,9 @@ def _model_forecast(task, candidates, observations, timing_context):
 
 
 def _fallback(estimate, explanation):
-    return {"point_min": max(1, round(estimate)), "low_min": max(1, math.floor(estimate * 0.5)),
-            "high_min": math.ceil(estimate * 1.5), "confidence": "low", "basis": "User estimate",
+    low, high = _default_range(estimate)
+    return {"point_min": max(1, round(estimate)), "low_min": low, "high_min": high,
+            "confidence": "low", "basis": "User estimate",
             "explanation": explanation + " Using your estimate with a default planning margin of ±50%.",
             "confidence_reason": "The local fallback has no reliable timing comparison for this task.",
             "evidence": [], "cautions": [], "retryable": True,

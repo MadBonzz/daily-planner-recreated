@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 import workspace_forecast as forecast
-from model_client import ModelUnavailable
+from model_client import ModelResponseInvalid, ModelUnavailable
 
 
 TASK = {"title": "Prove the rate", "description": "Derive and check the bound.", "estimate_minutes": 30}
@@ -25,6 +25,18 @@ def supported(quote, turn=1):
             "remaining_low_min": 5, "remaining_min": 8, "remaining_high_min": 14, "confidence": "medium",
             "confidence_reason": "The boundary case could need a separate argument.",
             "explanation": "The recurrence is solved. Allow eight minutes to check the boundary case."}
+
+
+def test_pause_repairs_missing_final_answer_and_replaces_default_range(monkeypatch):
+    quote = "I finished the recurrence proof."
+    reply = supported(quote)
+    reply["evidence"] = reply["evidence"][0]
+    model = Mock(side_effect=[ModelResponseInvalid("reasoning without a final answer"), reply])
+    monkeypatch.setattr(forecast, "chat_json", model)
+    result = forecast.revise(TASK, {**BASE, "range_source": "planner_margin"}, snapshot(("user", quote)))
+    assert model.call_count == 2 and result["workspace_update"]["status"] == "adjusted"
+    assert (result["low_min"], result["point_min"], result["high_min"]) == (11, 14, 20)
+    assert "range_source" not in result
 
 
 def test_user_work_sample_updates_total_preserves_historical_evidence(monkeypatch):

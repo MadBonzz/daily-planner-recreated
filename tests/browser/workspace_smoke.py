@@ -59,7 +59,7 @@ def run():
         with tempfile.TemporaryDirectory() as tmp:
             store = PlannerStore(Path(tmp)/"live")
             fields.update(day=date.today().isoformat(), fixed_duration=False,
-                          prediction={"point_min": 75, "low_min": 55, "high_min": 95, "confidence": "medium",
+                          prediction={"point_min": 70, "low_min": 55, "high_min": 95, "confidence": "medium",
                                       "explanation": "History suggests 75 minutes.", "evidence": [], "cautions": []})
             task = store.create_task(**fields, attachments=[*files, ("Second document.pdf",second_file.read_bytes())])
             with socket.socket() as port:
@@ -87,6 +87,15 @@ def run():
                         try:
                             planner = browser.new_page(viewport={"width": 1460, "height": 1000})
                             planner.goto(url)
+                            budget = planner.get_by_text("Planner budget", exact=True).locator("..")
+                            expect(budget).to_contain_text("70 min", timeout=15000)
+                            expect(planner.get_by_text("Planner 70 min", exact=False)).to_be_visible()
+                            # Both worker writes can happen between two fragment polls on an idle tab.
+                            store.retry_estimate(task["id"])
+                            job = store.claim_prediction()
+                            assert store.resolve_prediction(task["id"], job["token"], {**fields["prediction"], "point_min": 75})
+                            expect(budget).to_contain_text("75 min", timeout=15000)
+                            expect(planner.get_by_text("Planner 75 min", exact=False)).to_be_visible()
                             with planner.expect_popup() as opened:
                                 planner.get_by_role("link",name="Start with workspace").click(timeout=20000)
                             reader = opened.value
@@ -97,7 +106,7 @@ def run():
                             expect(reader.locator("canvas").first).to_be_visible(timeout=25000)
                             reader.get_by_placeholder("Ask a question").fill(milestone + " Which problem is described?")
                             reader.get_by_placeholder("Ask a question").press("Enter")
-                            expect(reader.get_by_text("The supplied handout describes the recovery problem.",exact=True)).to_be_visible()
+                            expect(reader.get_by_text("The supplied handout describes the recovery problem.",exact=True)).to_be_visible(timeout=25000)
                             assert len(received) == 1 and received[0]["document"] == files[0][0]
                             assert received[0]["passages"] and "completion_note" not in received[0]["task"]
                             reader.get_by_role("combobox",name="Document").click()
@@ -110,7 +119,7 @@ def run():
                             expect(planner.get_by_text("12 min remaining", exact=False)).to_be_visible(timeout=20000)
                             expect(reader.get_by_text("12 min remaining", exact=False)).to_be_visible(timeout=20000)
                             updated = store.get_task(task["id"])
-                            assert updated["creation_prediction"]["point_min"] == 75
+                            assert updated["creation_prediction"]["point_min"] == 70
                             assert updated["prediction"]["workspace_update"]["evidence"][0]["document"] == files[0][0]
                             print("PDF chat, document switching and pause-based remaining estimate on both tabs passed.")
                         finally:

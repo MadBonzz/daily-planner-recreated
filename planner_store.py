@@ -189,7 +189,8 @@ CREATE TABLE IF NOT EXISTS categories (
 
 _TASKS = """
 SELECT t.*, clock.started_at,
-       EXISTS(SELECT 1 FROM prediction_jobs j WHERE j.task_id=t.id) AS estimate_updating,
+       job.task_id IS NOT NULL AS estimate_updating,
+       (job.token IS NOT NULL AND job.lease_end > ?1) AS estimate_in_progress,
        EXISTS(SELECT 1 FROM prediction_jobs j JOIN workspace_progress wp ON wp.task_id=j.task_id
               WHERE j.task_id=t.id AND t.archived=0 AND t.status!='completed') AS workspace_progress_pending,
        (t.status!='completed' AND t.archived=0 AND t.fixed_duration=0 AND EXISTS(
@@ -205,8 +206,9 @@ SELECT t.*, clock.started_at,
        COALESCE(manual.total, 0) AS manual_seconds,
        COALESCE(t.actual_seconds, COALESCE(clock.total, 0) + COALESCE(manual.total, 0)) AS measured
 FROM tasks AS t
+LEFT JOIN prediction_jobs job ON job.task_id=t.id
 LEFT JOIN (
-    SELECT s.task_id, SUM(MAX(0, COALESCE(p.end, ?) - p.start)) AS total,
+    SELECT s.task_id, SUM(MAX(0, COALESCE(p.end, ?1) - p.start)) AS total,
            MAX(CASE WHEN p.end IS NULL THEN p.start END) AS started_at
     FROM sessions AS s JOIN periods AS p ON p.session_id = s.id
     GROUP BY s.task_id
@@ -271,7 +273,9 @@ def _enqueue_prediction(db, task_id, *, workspace_only=False):
 
 
 _INITIAL_JOBS = """SELECT 1 FROM prediction_jobs j0 JOIN tasks t0 ON t0.id=j0.task_id
-                   WHERE t0.creation_prediction IS NULL AND (t0.archived=0 OR t0.status='completed')"""
+                   WHERE t0.creation_prediction IS NULL AND (t0.archived=0 OR t0.status='completed')
+                   AND (t0.status!='completed' OR NOT EXISTS (
+                       SELECT 1 FROM settings WHERE key='dev_replay_enabled' AND value='false'))"""
 
 # Finish an overlap decision while either card remains open. refresh_due separately
 # controls whether a positive result should schedule another forecast.
@@ -585,6 +589,17 @@ class PlannerStore:
                 return self._tasks(db, "WHERE t.archived=0")
             return self._tasks(db, "WHERE t.archived=0 AND t.day=?", (_day(day),))
 
+    def daily_forecast_totals(self, day):
+        # Dashboard polling only needs these aggregates, not documents, timers or reports.
+        with self._db() as db:
+            return dict(db.execute("""
+                SELECT count(*) AS tasks, count(*) FILTER (WHERE status='completed') AS done,
+                       total(estimate_minutes) AS original,
+                       total(coalesce(json_extract(prediction, '$.point_min'), estimate_minutes)) AS budget,
+                       count(*) FILTER (WHERE json_extract(prediction, '$.status')='pending') AS pending
+                FROM tasks WHERE archived=0 AND day=?
+            """, (_day(day),)).fetchone())
+
     def worked_on(self, day):
         """Visible cards with timed activity on this local date, across planning dates."""
         day = date.fromisoformat(_day(day))
@@ -837,16 +852,22 @@ class PlannerStore:
             raise ValueError("The estimate lease must be a positive number of seconds.")
         with self._db(write=True) as db:
             now = self.clock()
+            # Imported historical forecasts keep their frozen inputs. Live cards and
+            # completion-triggered updates can run first in editable sample histories.
+            editable = _get_setting(db, "dev_replay_enabled", None) is False
             row = db.execute("""
                 SELECT t.id,j.workspace_only FROM prediction_jobs j JOIN tasks t ON t.id=j.task_id
-                WHERE (t.archived=0 OR t.status='completed') AND (j.token IS NULL OR j.lease_end<=?)
+                WHERE (t.archived=0 OR t.status='completed') AND (j.token IS NULL OR j.lease_end<=:now)
                   AND (t.creation_prediction IS NULL OR NOT EXISTS (""" + _INITIAL_JOBS + """))
                   AND (t.creation_prediction IS NULL OR NOT EXISTS (
                       SELECT 1 FROM task_relations r WHERE (r.left_id=t.id OR r.right_id=t.id)
-                      AND r.refresh_due=1 AND r.related IS NULL AND r.retry_at<=?
-                      AND (r.token IS NULL OR r.lease_end<=?)))
-                ORDER BY t.creation_prediction IS NOT NULL,t.created_at,t.rowid LIMIT 1
-            """, (now, now, now)).fetchone()
+                      AND r.refresh_due=1 AND r.related IS NULL AND r.retry_at<=:now
+                      AND (r.token IS NULL OR r.lease_end<=:now)))
+                  AND (NOT :editable OR t.status!='completed' OR NOT EXISTS (
+                      SELECT 1 """ + _UNDECIDED + """ AND r.refresh_due=1 AND r.retry_at<=:now
+                      AND (r.token IS NULL OR r.lease_end<=:now)))
+                ORDER BY (:editable AND t.status='completed'),t.creation_prediction IS NOT NULL,t.created_at,t.rowid LIMIT 1
+            """, {"now": now, "editable": editable}).fetchone()
             if row is None:
                 return None
             task_id = row["id"]
