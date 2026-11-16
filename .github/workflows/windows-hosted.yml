@@ -3,7 +3,17 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/windows-hosted.yml', 'tests/live/test_windows_planner.py']
+    paths:
+      - '.github/workflows/windows-hosted.yml'
+      - 'tests/live/*.py'
+      - 'app.py'
+      - 'model_client.py'
+      - 'estimator.py'
+      - 'estimate_worker.py'
+      - 'planner_analytics.py'
+      - 'chat_tasks.py'
+      - 'planner_store.py'
+      - 'retrieval.py'
 permissions:
   contents: read
 jobs:
@@ -49,10 +59,12 @@ jobs:
 
   windows-command-r7b:
     runs-on: windows-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     env:
       PLANNER_MODEL_ENDPOINT: http://127.0.0.1:18175/v1/chat/completions
       PLANNER_MODEL: command-r7b-12-2024
+      # This job runs seven-billion-parameter inference on the runner's shared CPU.
+      PLANNER_MODEL_TIMEOUT_SECONDS: '360'
       PLANNER_TEST_LIVE_BROWSER: '1'
       PLANNER_TEST_LIVE_HISTORY: '1'
     steps:
@@ -86,7 +98,11 @@ jobs:
             }
             Invoke-RestMethod http://127.0.0.1:18175/health -TimeoutSec 3 | Out-Null
             python -m pytest -q -s tests/live/test_windows_planner.py tests/live/test_bonsai_history.py
-            if ($LASTEXITCODE) { exit $LASTEXITCODE }
+            $result = $LASTEXITCODE
+            if ($result) {
+              Get-Content "$env:RUNNER_TEMP/command-server.log" -Tail 100
+              exit $result
+            }
           } finally {
             if (!$server.HasExited) { Stop-Process -Id $server.Id -Force }
           }

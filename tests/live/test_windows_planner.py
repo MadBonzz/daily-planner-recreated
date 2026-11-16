@@ -83,7 +83,11 @@ def test_assignment_from_browser_and_saved_history(tmp_path):
             task, = store.list_tasks()
             task_id = task["id"]
             assert task["estimate_minutes"] == 200 and store.attachment_bytes(task["attachments"][0]["id"]) == pdf
-            expect(page.get_by_text("Model forecast", exact=False).first).to_be_visible(timeout=240_000)
+            try:
+                expect(page.get_by_text("Model forecast", exact=False).first).to_be_visible(timeout=240_000)
+            except AssertionError as error:
+                prediction = store.get_task(task_id)["prediction"]
+                raise AssertionError(f"Dashboard forecast did not appear. Stored forecast: {prediction}") from error
             assert store.get_task(task_id)["prediction"]["provenance"]["minutes_by"] == "model"
             say("Edit that task and change its description to Prove Paxos safety", "Updated")
             assert store.get_task(task_id)["description"] == "Prove Paxos safety"
