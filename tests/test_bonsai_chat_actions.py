@@ -63,15 +63,7 @@ def chat(tmp_path, monkeypatch):
     return page, PlannerStore(tmp_path / "live"), requests, replies
 
 
-def creation(data):
-    fields = {"action": "create", "title": TITLE, "description": "Prove properties of consensus, Paxos and broadcast.",
-              "details": "Solve theoretical questions.", "estimate_minutes": 240, "estimate_phrase": "4 hours",
-              "fixed_duration": False, "day": "", "when": "", "category": "", "reply": "",
-              "file_ids": [file["id"] for file in data["files"]]}
-    return {"content": json.dumps(fields)}
-
-
-@pytest.mark.parametrize("second_reply,attach_pdf", [(creation, False), (DRAFT, False), (DRAFT, True)],
+@pytest.mark.parametrize("second_reply,attach_pdf", [({"content": '{"category":"Study"}'}, False), (DRAFT, False), (DRAFT, True)],
                          ids=["valid-repair", "literal-request", "literal-request-with-related-pdf"])
 def test_add_four_hour_assignment_once_after_reasoning_only_reply(chat, second_reply, attach_pdf):
     page, store, requests, replies = chat
@@ -101,9 +93,13 @@ def test_add_four_hour_assignment_once_after_reasoning_only_reply(chat, second_r
     else:
         assert not task["attachments"]
     first, retry = requests
-    assert all("response_format" not in body and "estimate_minutes" in body["messages"][0]["content"]
+    assert all("response_format" not in body and "category" in body["messages"][0]["content"]
                for body in (first, retry))
-    assert json.loads(retry["messages"][-1]["content"])["message"] == question
+    request = json.loads(retry["messages"][-1]["content"])
+    assert set(request) == {"title", "description", "categories"}
+    assert request["title"] == TITLE and "broadcast" in request["description"]
+    if second_reply != DRAFT:
+        assert task["category"] == "Study"
 
 
 def test_explicit_postponement_updates_the_existing_task_without_inference(chat):
