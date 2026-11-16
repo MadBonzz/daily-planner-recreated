@@ -70,13 +70,20 @@ def _drain(store, index_dir, key, wake):
     try:
         while True:
             wake.clear()
-            if run_one_job(store, index_dir):
-                continue
-            if store.has_pending_predictions():
-                # A previous process may have stopped with a lease outstanding.
-                wake.wait(_RECHECK_SECONDS)
-                continue
-            delay = store.next_estimation_delay()
+            try:
+                if run_one_job(store, index_dir):
+                    continue
+                if store.has_pending_predictions():
+                    # A previous process may have stopped with a lease outstanding.
+                    wake.wait(_RECHECK_SECONDS)
+                    continue
+                delay = store.next_estimation_delay()
+            except sqlite3.OperationalError as exc:
+                # A concurrent save can briefly hold SQLite's write lock. Wake the
+                # queue again even if the user leaves the dashboard open.
+                if (getattr(exc, "sqlite_errorcode", 0) & 0xFF) not in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED):
+                    raise
+                delay = _RECHECK_SECONDS
             if delay == 0:
                 continue  # A transaction queued new work between scans.
             with _LOCK:
@@ -91,7 +98,6 @@ def _drain(store, index_dir, key, wake):
                         timer.start()
                     return
     except Exception as exc:
-        # A later UI render will reschedule durable jobs on a temporary DB error.
         _LOG.error("Estimate worker paused (%s).", type(exc).__name__)
     finally:
         with _LOCK:

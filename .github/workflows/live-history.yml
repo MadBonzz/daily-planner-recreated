@@ -5,6 +5,10 @@ on:
     paths:
       - '.github/workflows/live-history.yml'
       - 'tests/live/test_bonsai_history.py'
+      - 'estimator.py'
+      - 'estimate_worker.py'
+      - 'model_client.py'
+      - 'chat_tasks.py'
 
 permissions:
   contents: read

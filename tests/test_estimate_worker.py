@@ -1,4 +1,5 @@
 from contextlib import closing
+import sqlite3
 import threading
 import time
 
@@ -33,6 +34,35 @@ def drain(store):
     else:
         raise AssertionError("Background estimate did not finish.")
     assert not store.has_pending_predictions()
+
+
+def test_temporary_db_lock_retries_without_another_dashboard_render(tmp_path, monkeypatch):
+    store = PlannerStore(tmp_path)
+    task_id = create(store)["id"]
+    original = store.claim_prediction
+    attempts = 0
+    computed = threading.Event()
+
+    def temporarily_locked(**kwargs):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            error = sqlite3.OperationalError("database is locked")
+            error.sqlite_errorcode = sqlite3.SQLITE_BUSY
+            raise error
+        return original(**kwargs)
+
+    def predict(*args):
+        computed.set()
+        return {"point_min": 27, "low_min": 20, "high_min": 35, "explanation": "Review the proof."}
+
+    monkeypatch.setattr(store, "claim_prediction", temporarily_locked)
+    monkeypatch.setattr(worker, "_RECHECK_SECONDS", 0.02)
+    monkeypatch.setattr(worker.estimator, "predict", predict)
+    schedule_pending(store, tmp_path / "vectors")
+    assert computed.wait(5)
+    drain(store)
+    assert store.get_task(task_id)["prediction"]["point_min"] == 27
 
 
 @pytest.mark.parametrize("finish_before_prediction", [False, True])
