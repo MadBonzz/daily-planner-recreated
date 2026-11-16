@@ -342,6 +342,9 @@ def chat_json(messages, schema, *, plain_local_retry=False):
     except ValidationError as exc:
         # ValidationError.message can contain the entire response. Limit the
         # retry hint to a field path and failed rule, so it cannot echo task text.
+        if exc.validator == "required" and isinstance(exc.instance, dict):
+            missing = [name for name in exc.validator_value if name not in exc.instance]
+            raise ModelResponseInvalid(f"{model} omitted required fields: {', '.join(missing)}.") from exc
         field = ".".join(map(str, exc.absolute_path)) or "response"
         raise ModelResponseInvalid(f"{model} returned an invalid {field} field ({exc.validator}).") from exc
     except (KeyError, IndexError, ValueError, TypeError, AttributeError) as exc:
