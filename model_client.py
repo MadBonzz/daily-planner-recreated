@@ -306,7 +306,15 @@ def chat_json(messages, schema, *, plain_local_retry=False):
             raise ModelUnavailable("Set COHERE_API in .env to use the Cohere endpoint.")
         headers["Authorization"] = f"Bearer {key}"
     aya = cohere and model.startswith(("c4ai-aya-", "tiny-aya-"))
-    if bonsai or aya:
+    local_command_r = local and any(
+        re.search(r"(?:^|/)(?:c4ai-)?command-r(?:7b|[-+]|$)", name.casefold())
+        for name in (model, config.get("PLANNER_MODEL_KEY") or "")
+    )
+    if local_command_r:
+        # The native Command R template can append its turn delimiter after a
+        # valid JSON answer. Stop there before the server parses the response.
+        payload["stop"] = ["<|END_OF_TURN_TOKEN|>"]
+    if bonsai or aya or local_command_r:
         # Prompt the same contract when the runtime uses grammar-constrained or ordinary chat.
         payload["messages"] = _schema_prompt(messages, schema)
     if bonsai:

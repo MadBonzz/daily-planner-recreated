@@ -44,6 +44,22 @@ class ModelClientTests(unittest.TestCase):
         self.assertEqual(body["response_format"]["json_schema"]["schema"], self.schema)
 
     @patch("model_client.build_opener")
+    def test_command_r_turn_delimiter_only_applies_to_local_inference(self, opener):
+        model = "command-r7b-12-2024"
+        for endpoint, key, local in [(API_URL, model, True), (API_URL, "other-model", False),
+                                     ("https://api.cohere.ai/compatibility/v1/chat/completions", model, False)]:
+            with self.subTest(endpoint=endpoint, key=key), patch.dict(os.environ,
+                    PLANNER_MODEL=key, PLANNER_MODEL_ENDPOINT=endpoint, COHERE_API="test"):
+                opener.return_value.open.return_value = self.reply('{"label":"on_task"}')
+                self.assertEqual(chat_json([], self.schema), {"label": "on_task"})
+                payload = json.loads(opener.return_value.open.call_args.args[0].data)
+                self.assertEqual(payload.get("stop"), ["<|END_OF_TURN_TOKEN|>"] if local else None)
+                self.assertEqual(payload["response_format"]["json_schema"]["schema"], self.schema)
+                self.assertNotIn("max_tokens", payload)
+                if local:
+                    self.assertIn(json.dumps(self.schema), payload["messages"][0]["content"])
+
+    @patch("model_client.build_opener")
     def test_bonsai_2_mlx_uses_prompt_schema_from_first_request(self, opener):
         for model, key, mlx in [
             ("ternary-bonsai-2-4b-mlx", "", True),
