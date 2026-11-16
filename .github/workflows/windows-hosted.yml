@@ -1,0 +1,43 @@
+name: Windows live Cohere check
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/windows-hosted.yml']
+permissions:
+  contents: read
+jobs:
+  hosted:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
+      - name: Check hosted test availability
+        id: access
+        shell: pwsh
+        env:
+          COHERE_API: ${{ secrets.COHERE_API || secrets.COHERE_API_KEY }}
+        run: |
+          if ($env:COHERE_API) {
+            "available=true" >> $env:GITHUB_OUTPUT
+          } else {
+            "Live Cohere inference was not tested. Set the COHERE_API repository secret and run this workflow again." >> $env:GITHUB_STEP_SUMMARY
+            "available=false" >> $env:GITHUB_OUTPUT
+          }
+      - uses: actions/checkout@v4
+        if: steps.access.outputs.available == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.access.outputs.available == 'true'
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt pytest
+        if: steps.access.outputs.available == 'true'
+      - name: Run Nora and task chat with live Command R7B
+        if: steps.access.outputs.available == 'true'
+        env:
+          COHERE_API: ${{ secrets.COHERE_API || secrets.COHERE_API_KEY }}
+          PLANNER_MODEL_ENDPOINT: https://api.cohere.ai/compatibility/v1/chat/completions
+          PLANNER_MODEL: command-r7b-12-2024
+          PLANNER_TEST_LIVE_HISTORY: '1'
+        run: python -m pytest -q -s tests/live/test_bonsai_history.py

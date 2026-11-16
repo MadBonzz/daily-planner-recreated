@@ -38,9 +38,9 @@ jobs:
       - run: python tests/browser/extension_smoke.py
       - run: python tests/browser/workspace_smoke.py
 
-  windows-reminder:
+  windows-planner:
     runs-on: windows-latest
-    timeout-minutes: 8
+    timeout-minutes: 18
     env:
       PLANNER_TEST_WINDOWS_SCHEDULER: '1'
     steps:
@@ -49,4 +49,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -r requirements.txt pytest
-      - run: python -m pytest -q tests/test_daily_review.py
+      - run: python -m pytest -q
+      - run: python -m pip install playwright
+      - run: python -m playwright install chromium
+      - run: python tests/browser/workspace_smoke.py
