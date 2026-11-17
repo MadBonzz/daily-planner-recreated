@@ -142,7 +142,7 @@ def main():
                 return reply
 
             with (patch.object(workspace_eligibility, "package", return_value={}),
-                  patch.object(workspace_eligibility, "_local_post", side_effect=ModelUnavailable("Kev is unavailable")),
+                  patch.object(retrieval, "_local_post", side_effect=ModelUnavailable("Kev is unavailable")),
                   patch.object(workspace_eligibility, "chat_json", record_chat)):
                 try:
                     predicted, source = workspace_eligibility.decide(request, config)
@@ -159,7 +159,7 @@ def main():
                 predicted = focus_case(Path(tmp), case)
         else:
             request = workspace_eligibility.payload(case, config)
-            with patch.object(workspace_eligibility, "_local_post", record):
+            with patch.object(retrieval, "_local_post", record):
                 predicted = workspace_eligibility.live(request, config)
         row = {"id": case["id"], "component": case["component"], "split": case["split"],
                "expected": case["expected"], "predicted": predicted, "live_calls": receipt}

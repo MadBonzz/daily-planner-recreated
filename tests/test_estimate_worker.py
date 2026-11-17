@@ -83,7 +83,7 @@ def test_pdf_worker_runs_without_blocking_timer_or_duplicating_calls(tmp_path, m
         calls.append((task["id"], task["pdf_text"], history))
         return dict(point_min=35, low_min=20, high_min=50, explanation="Derive two lemmas.")
 
-    monkeypatch.setattr(worker, "extract_pdf_text", parse)
+    monkeypatch.setattr("task_files.extract_pdf_text", parse)
     monkeypatch.setattr(worker.estimator, "predict", predict)
     index = store.data_dir / "vectors"
     schedule_pending(store, index)

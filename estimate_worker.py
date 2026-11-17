@@ -14,7 +14,6 @@ import retrieval
 import workspace_forecast
 from fallback_provenance import capture_fallbacks
 from model_client import ModelUnavailable
-from pdf_reader import extract_pdf_text
 from task_files import document_text
 
 
@@ -139,8 +138,7 @@ def _read_documents(store, task):
         kind = document.get("kind", "pdf")
         if kind == "file":
             continue
-        data = store.attachment_bytes(document["id"])
-        text = extract_pdf_text(data) if kind == "pdf" else document_text(kind, data)
+        text = document_text(kind, store.attachment_bytes(document["id"]))
         if text:
             pages.append(text)
         else:

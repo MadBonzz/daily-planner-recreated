@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from model_client import ModelUnavailable, chat_json, forecast_endpoint
-from retrieval import DECISION_MODEL, _local_post
+from retrieval import DECISION_MODEL, decision_scores
 import sample_retrieval
 from sample_retrieval import decision_hash
 
@@ -76,7 +76,6 @@ def _decisions(path):
     return {key: allowed for key, allowed in records.items() if type(allowed) is bool}
 
 
-@lru_cache(maxsize=1)
 def package():
     return _decisions(PACK)
 
@@ -87,15 +86,9 @@ def packaged(digest):
         cached = _decisions(PACK.parent / "demo" / "models" / "workspaces.json").get(digest)
     return cached
 
+
 def live(request, config):
-    endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
-    reply = _local_post(endpoint, request, config)
-    try:
-        scores = {key: reply["answers"][key]["noul"] for key in request["questions"]}
-        if any(type(value) not in (int, float) or not 0 <= value <= 1 for value in scores.values()):
-            raise ValueError
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ModelUnavailable("The workspace decision model returned an invalid response.") from exc
+    scores = decision_scores(request, config, purpose="workspace")
     return scores["relevant"] >= 0.5 and scores["external"] < 0.5 and scores.get("needs_document", 0) < 0.5
 
 

@@ -101,7 +101,7 @@ def test_pair_upgrades_sampled_documents_from_legacy_or_fixed_tasks(tmp_path, mo
         store.create_task(title=name, description="Lab booking", category="Lab", day="2026-01-05",
                           estimate_minutes=15, fixed_duration=True, pdf_text="Page 1: stale preview", attachments=[("scope.pdf", b"%PDF-stub")])
     pair = store.claim_relation()
-    monkeypatch.setattr("estimate_worker.extract_pdf_text", lambda data: "Page 1: torque calibration on the test rig")
+    monkeypatch.setattr("task_files.extract_pdf_text", lambda data: "Page 1: torque calibration on the test rig")
     with patch.object(retrieval, "decide_related", return_value=True) as judge:
         _process_relation(store, pair)
     assert all("torque calibration" in row["pdf_text"] for row in judge.call_args.args)

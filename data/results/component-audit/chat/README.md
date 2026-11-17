@@ -51,7 +51,7 @@ The first 9B header response was “4,” with a verified page quotation that ex
 
 ### Budget query that selected completed history
 
-For “I have 25 minutes. Which task fits?”, the original 9B router selected a historical SQL query. Its first query referenced a missing column and its repaired query returned “Profile a second warp,” a completed task. The frozen revised ranker could not help because the router never called it. `scope-before-ternary-bonsai-2-9b.json` replays the exact router, SQL repair and narrative through that version.
+For “I have 25 minutes. Which task fits?”, the original 9B router selected a historical SQL query. Its first query referenced a missing column and its repaired query returned “Profile a second warp,” a completed task. The frozen revised ranker could not help because the router never called it. [The archived 9B response](https://github.com/MadBonzz/daily-planner-recreated/blob/68ea21eb7a6d65ef8c9f6396a90081cde2685f55/data/results/component-audit/chat/scope-before-ternary-bonsai-2-9b.json) replays the exact router, SQL repair and narrative through that version.
 
 The follow-on check redirects an explicit prospective task-fit question with a work budget or clock cutoff to the open plan when the model selects historical data. The model still ranks the actual open tasks. The UI records the proposed tool and the scope correction. The 9B targeted rerun selected the paused “File receipts” (15 minutes remaining). Its two model reasons described the opposite task IDs, and the numeric rank still put “Kernel lab” first. The local time-budget check put the receipts alone in the fitting section. On the same question, 4B kept its model-selected planning route and its original ranking. `scope-guard-*.json` records both outcomes.
 

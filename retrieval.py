@@ -218,18 +218,21 @@ def active_decision_order(left, right, examples=(), *, model=None):
     return first, second
 
 
-def _live_decision(payload, config):
-    model = payload["model"]
+def decision_scores(payload, config, *, purpose):
+    """Read a Kev probability for each question in the request."""
     endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
     reply = _local_post(endpoint, payload, config)
     try:
-        answer = reply["answers"]["relevant"]
-        probability = answer["noul"]
-        if type(probability) not in (int, float) or not 0 <= probability <= 1:
+        scores = {name: reply["answers"][name]["noul"] for name in payload["questions"]}
+        if any(type(value) not in (int, float) or not 0 <= value <= 1 for value in scores.values()):
             raise ValueError
-        return probability >= 0.5
     except (KeyError, TypeError, ValueError) as exc:
-        raise ModelUnavailable(f"{model} returned an invalid relevance decision.") from exc
+        raise ModelUnavailable(f"{payload['model']} returned an invalid {purpose} decision.") from exc
+    return scores
+
+
+def _live_decision(payload, config):
+    return decision_scores(payload, config, purpose="relevance")["relevant"] >= 0.5
 
 
 def _point_id(task_id):

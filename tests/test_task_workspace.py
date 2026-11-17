@@ -6,6 +6,7 @@ import pytest
 from model_client import ModelUnavailable
 from planner_store import PlannerStore
 from pdf_reader import extract_pdf_text
+import retrieval
 import task_workspace as desk
 import workspace_eligibility as gate
 
@@ -100,11 +101,11 @@ def test_eligibility_fallback_and_paired_kev_decision(monkeypatch):
     task = {"title":"Jog in the park", "description":"Run 3 km on the trail", "attachments":[]}
     request = gate.payload(task, {})
     monkeypatch.setattr(gate, "package", lambda: {})
-    monkeypatch.setattr(gate, "_local_post", lambda *a: {"answers":{"relevant":{"noul":0.9},"external":{"noul":1},"needs_document":{"noul":0}}})
+    monkeypatch.setattr(retrieval, "_local_post", lambda *a: {"answers":{"relevant":{"noul":0.9},"external":{"noul":1},"needs_document":{"noul":0}}})
     assert gate.decide(request, {}) == (False, request["model"])
     def offline(*a):
         raise ModelUnavailable("Local Kev is offline")
-    monkeypatch.setattr(gate, "_local_post", offline)
+    monkeypatch.setattr(retrieval, "_local_post", offline)
     monkeypatch.setenv("PLANNER_MODEL", "ternary-bonsai-4b")
     def fallback(messages, schema, **options):
         assert "essential material is elsewhere" in messages[0]["content"]
@@ -120,7 +121,7 @@ def test_every_actionable_sample_has_current_workspace_decision_without_model_ca
     labels = {}
     def no_network(*args):
         pytest.fail("Packaged sample workspace unexpectedly required a model")
-    monkeypatch.setattr(gate, "_local_post", no_network)
+    monkeypatch.setattr(retrieval, "_local_post", no_network)
     for history in histories(None):
         for row in [*history["open_tasks"], *history["holdouts"]]:
             request = gate.payload({**row, "attachments": bool(row.get("pdf"))}, {})
@@ -136,11 +137,17 @@ def test_invalid_workspace_cache_cannot_grant_access(tmp_path, monkeypatch, bad)
     cache = tmp_path / "desk.json"
     cache.write_text(bad)
     monkeypatch.setattr(gate, "PACK", cache)
-    gate.package.cache_clear()
-    try:
-        assert gate.package() == {}
-    finally:
-        gate.package.cache_clear()
+    assert gate.package() == {}
+
+
+def test_rebuilt_workspace_package_is_visible_after_cache_invalidation(tmp_path, monkeypatch):
+    path = tmp_path / "workspace-decisions.json"
+    monkeypatch.setattr(gate, "PACK", path)
+    path.write_text('{"decisions": {"sample": false}}')
+    assert gate.packaged("sample") is False
+    path.write_text('{"decisions": {"sample": true}}')
+    gate._decisions.cache_clear()
+    assert gate.packaged("sample") is True
 
 
 def test_workspace_gate_requires_the_actual_source_even_if_a_reader_would_be_suitable(monkeypatch):
@@ -149,7 +156,7 @@ def test_workspace_gate_requires_the_actual_source_even_if_a_reader_would_be_sui
     def decision(*args):
         return {"answers": {"relevant": {"noul": .91}, "external": {"noul": .18},
                             "needs_document": {"noul": .89}}}
-    monkeypatch.setattr(gate, "_local_post", decision)
+    monkeypatch.setattr(retrieval, "_local_post", decision)
     assert gate.live(request, {}) is False
 
 

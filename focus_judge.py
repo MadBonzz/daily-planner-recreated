@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import re
 
-from model_client import ModelUnavailable, planner_settings
+from model_client import planner_settings
 import retrieval
 import sample_retrieval
 from sample_retrieval import decision_hash as key
@@ -92,18 +92,9 @@ def packaged(request):
 
 def live_decision(request, config=None):
     config = planner_settings() if config is None else config
-    endpoint = config.get("PLANNER_DECISION_ENDPOINT") or "http://127.0.0.1:1234/v1/systemone"
-    reply = retrieval._local_post(endpoint, request, config)
-    try:
-        repeated = "generic" in request["questions"]
-        title_score, needed = (reply["answers"][name]["noul"]
-                               for name in ("generic" if repeated else "specific", "needed"))
-        if any(type(value) not in (int, float) or not 0 <= value <= 1 for value in (title_score, needed)):
-            raise ValueError
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ModelUnavailable(f"{request['model']} returned an invalid website blocking decision.") from exc
-    identifiable = title_score < 0.5 if repeated else title_score >= 0.5
-    return identifiable and needed < 0.5
+    scores = retrieval.decision_scores(request, config, purpose="website blocking")
+    identifiable = scores["generic"] < 0.5 if "generic" in scores else scores["specific"] >= 0.5
+    return identifiable and scores["needed"] < 0.5
 
 
 def decide(request, config=None):
