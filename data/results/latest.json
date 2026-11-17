@@ -1,0 +1,1103 @@
+{
+  "review": "Live Streamlit dashboard walkthrough",
+  "environment": {
+    "browser": "Chromium on Linux",
+    "forecast_model": "Ternary Bonsai 2 4B GGUF served by llama.cpp",
+    "retrieval": "Packaged Qwen and Kev results for matching inputs",
+    "forecast_and_website_walkthrough": "https://github.com/MadBonzz/daily-planner-recreated/actions/runs/44019426141",
+    "additional_chat": "Separate Chromium sessions on the same five editable histories. The PDF and planning conversation used Nora.",
+    "coverage": "30 initial cards, six completions, five website rankings and five longest-task questions. Additional sessions exercised PDF creation, editing, postponement and a follow-up planning question. This run used Linux, Chromium and GGUF. Native Windows, Bionic MLX and hosted Cohere were not exercised."
+  },
+  "observations": [
+    "For each stage, the dashboard budget and task count were compared with the saved cards. Each card includes the displayed estimate, saved minutes and range, model rationale, and comparison titles. Unchanged cards are omitted after the opening stage.",
+    "Website replies were checked against the summed off-task intervals in each history. Longest-task replies were checked against the greatest saved actual duration. A model-generated query originally grouped durations by category, so the planner now ranks individual tasks for those questions.",
+    "The numerical evidence and the model explanation can disagree. In Nora’s initial debugging forecast, Bonsai described a historical budget as 91 minutes. The original budget was 90 minutes and the recorded time was 137 minutes. On Ishan’s revised GPU task, the explanation predicted an overrun of the 75-minute budget, while the model supplied a 70-minute point estimate. Both are recorded in the walkthrough.",
+    "During an additional shared-server session the model process was killed. The dashboard surfaced fallback forecasts and kept accepting completions. The five isolated runs below show the result with each model endpoint running separately.",
+    "The chat send button was disabled while a PDF uploaded. Pressing Enter during that interval kept the draft. Sending once the upload finished submitted the task. The stored PDF was checked byte for byte after postponement."
+  ],
+  "histories": [
+    {
+      "history": "d1-systems-student",
+      "summary": [
+        {
+          "action": "Open editable history",
+          "dashboard_budget": "271 min",
+          "completed": "0 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Pick up dish soap, 20 minutes: Ready → Running → Paused → Completed",
+          "dashboard_budget": "271 min",
+          "completed": "1 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Minimize the marker-word failure, 110 minutes: Paused → Completed",
+          "dashboard_budget": "311 min",
+          "completed": "2 / 6",
+          "revised_forecasts": [
+            {
+              "title": "Attach the minimized trace to the lab issue",
+              "previous_point": 60,
+              "new_point": 100,
+              "previous_range": [
+                45,
+                80
+              ],
+              "new_range": [
+                90,
+                120
+              ],
+              "used": [
+                "Minimize the marker-word failure"
+              ]
+            }
+          ]
+        }
+      ],
+      "website_minutes_from_saved_intervals": {
+        "chess.com": 5.0,
+        "ebay.com": 4.0
+      },
+      "longest_recorded_tasks": [
+        {
+          "title": "Port the wraparound header reader",
+          "minutes": 137.0
+        }
+      ],
+      "dashboard_discrepancies_or_forecast_errors": [],
+      "dashboard_stages": [
+        {
+          "action": "Open editable history",
+          "dashboard": "Your estimates\n215 min\nPlanner budget\n271 min\nTasks complete\n0 / 6",
+          "changed_cards": {
+            "Minimize the marker-word failure": {
+              "state": "paused",
+              "recorded_minutes": 17,
+              "user_minutes": 60,
+              "point": 91,
+              "range": [
+                91,
+                100
+              ],
+              "source": "model",
+              "reason": "Historical actual (137) is 52% over budget (91), suggesting significant overhead from the EOF fixture minimization step.",
+              "selected": [
+                "Port the wraparound header reader"
+              ],
+              "used": [
+                "Port the wraparound header reader"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 60 min · Planner 91 min (91–100 min, medium confidence) · Recorded 17m 00s"
+            },
+            "Pick up the lab access card": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 15,
+              "point": 15,
+              "range": [
+                10,
+                20
+              ],
+              "source": "model",
+              "reason": "User estimate is 15 minutes but lacks specific context for task duration",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 15 min · Planner 15 min (10–20 min, medium confidence) · Recorded 0s"
+            },
+            "Typeset the recovery argument": {
+              "state": "paused",
+              "recorded_minutes": 12,
+              "user_minutes": 40,
+              "point": 45,
+              "range": [
+                40,
+                55
+              ],
+              "source": "model",
+              "reason": "The task involves complex distributed systems reasoning, proof construction, and trace analysis which are time-intensive but well-defined.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 40 min · Planner 45 min (40–55 min, medium confidence) · Recorded 12m 00s"
+            },
+            "Fill the replay table in part A": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 30,
+              "point": 45,
+              "range": [
+                30,
+                75
+              ],
+              "source": "model",
+              "reason": "The task involves tracing distributed state transitions and reconstructing durable records across multiple events.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 30 min · Planner 45 min (30–75 min, medium confidence) · Recorded 0s"
+            },
+            "Pick up dish soap": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 15,
+              "point": 15,
+              "range": [
+                10,
+                20
+              ],
+              "source": "model",
+              "reason": "User estimate is 15 minutes but no comparable history exists to validate scope accuracy.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 15 min · Planner 15 min (10–20 min, medium confidence) · Recorded 0s"
+            },
+            "Attach the minimized trace to the lab issue": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 55,
+              "point": 60,
+              "range": [
+                45,
+                80
+              ],
+              "source": "model",
+              "reason": "The task involves running scripts, capturing data, and modifying documentation, which requires careful execution.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 55 min · Planner 60 min (45–80 min, medium confidence) · Recorded 0s"
+            }
+          }
+        },
+        {
+          "action": "Pick up dish soap, 20 minutes: Ready → Running → Paused → Completed",
+          "dashboard": "Your estimates\n215 min\nPlanner budget\n271 min\nTasks complete\n1 / 6",
+          "changed_cards": {
+            "Pick up dish soap": {
+              "state": "completed",
+              "recorded_minutes": 20,
+              "user_minutes": 15,
+              "point": 15,
+              "range": [
+                10,
+                20
+              ],
+              "source": "model",
+              "reason": "User estimate is 15 minutes but no comparable history exists to validate scope accuracy.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 15 min · Planner 15 min (10–20 min, medium confidence) · Time spent 20m 00s (user-adjusted)"
+            }
+          }
+        },
+        {
+          "action": "Minimize the marker-word failure, 110 minutes: Paused → Completed",
+          "dashboard": "Your estimates\n215 min\nPlanner budget\n311 min\nTasks complete\n2 / 6",
+          "changed_cards": {
+            "Minimize the marker-word failure": {
+              "state": "completed",
+              "recorded_minutes": 110,
+              "user_minutes": 60,
+              "point": 91,
+              "range": [
+                91,
+                100
+              ],
+              "source": "model",
+              "reason": "Historical actual (137) is 52% over budget (91), suggesting significant overhead from the EOF fixture minimization step.",
+              "selected": [
+                "Port the wraparound header reader"
+              ],
+              "used": [
+                "Port the wraparound header reader"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 60 min · Planner 91 min (91–100 min, medium confidence) · Time spent 1h 50m (user-adjusted)"
+            },
+            "Attach the minimized trace to the lab issue": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 55,
+              "point": 100,
+              "range": [
+                90,
+                120
+              ],
+              "source": "model",
+              "reason": "Historical actual was 110 minutes for the same scope (minimize trace), current estimate is 55 minutes but the task involves adding offsets and running a reproducer twice which adds complexity.",
+              "selected": [
+                "Minimize the marker-word failure"
+              ],
+              "used": [
+                "Minimize the marker-word failure"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 55 min · Planner 100 min (90–120 min, medium confidence) · Recorded 0s"
+            }
+          }
+        }
+      ],
+      "website_chat": {
+        "question": "Which websites distract me most when I work?",
+        "reply": "smart_toy\n\nWebsites ranked by recorded off-task time:\n\nchess.com — 5 min\nebay.com — 4 min\n\nQuery · local records (selected website ranking) | Answer · local records\n\nAll filtered tasks · 18 tasks · 352 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      },
+      "longest_task_chat": {
+        "question": "Of my completed tasks, which took the most minutes?",
+        "reply": "smart_toy\n\nLongest recorded task:\n\nPort the wraparound header reader — 137 min\n\nQuery · local records (selected longest recorded task) | Answer · local records\n\nAll filtered tasks · 18 tasks · 352 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      }
+    },
+    {
+      "history": "d2-lab-researcher",
+      "summary": [
+        {
+          "action": "Open editable history",
+          "dashboard_budget": "260 min",
+          "completed": "0 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Compare old and new poison runs, 50 minutes: Paused → Completed",
+          "dashboard_budget": "220 min",
+          "completed": "1 / 6",
+          "revised_forecasts": [
+            {
+              "title": "Reproduce the first corrupted row after a short pitch",
+              "previous_point": 110,
+              "new_point": 70,
+              "previous_range": [
+                105,
+                125
+              ],
+              "new_range": [
+                65,
+                85
+              ],
+              "used": [
+                "Compare old and new poison runs"
+              ]
+            }
+          ]
+        }
+      ],
+      "website_minutes_from_saved_intervals": {
+        "youtube.com": 11.0,
+        "nba.com": 4.0,
+        "espncricinfo.com": 3.2,
+        "sports.example": 3.0
+      },
+      "longest_recorded_tasks": [
+        {
+          "title": "Make the shared scratch race reproducible",
+          "minutes": 138.0
+        }
+      ],
+      "dashboard_discrepancies_or_forecast_errors": [],
+      "dashboard_stages": [
+        {
+          "action": "Open editable history",
+          "dashboard": "Your estimates\n235 min\nPlanner budget\n260 min\nTasks complete\n0 / 6",
+          "changed_cards": {
+            "Write two board prompts on audit delay": {
+              "state": "paused",
+              "recorded_minutes": 8,
+              "user_minutes": 35,
+              "point": 45,
+              "range": [
+                42,
+                52
+              ],
+              "source": "model",
+              "reason": "Comparable repeat on variance bounds for a two-item table exists, though algebraic complexity increased.",
+              "selected": [
+                "Prepare one slide about the delay experiment",
+                "Work out the epsilon-floor variance lemma"
+              ],
+              "used": [
+                "Prepare one slide about the delay experiment",
+                "Work out the epsilon-floor variance lemma"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 35 min · Planner 45 min (42–52 min, medium confidence) · Recorded 8m 00s"
+            },
+            "Compare old and new poison runs": {
+              "state": "paused",
+              "recorded_minutes": 10,
+              "user_minutes": 35,
+              "point": 35,
+              "range": [
+                32,
+                40
+              ],
+              "source": "model",
+              "reason": "Prior task took 109 minutes for a 70-minute estimate, indicating significant overhead; however, the current task is explicitly a comparison of existing rows rather than full regression.",
+              "selected": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "used": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 35 min · Planner 35 min (32–40 min, medium confidence) · Recorded 10m 00s"
+            },
+            "Make one slide about the two ablations": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 45,
+              "point": 20,
+              "range": [
+                15,
+                25
+              ],
+              "source": "model",
+              "reason": "Creating a single presentation slide based on specific experimental data and theoretical ablation results requires synthesizing complex findings into a concise visual format.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 45 min · Planner 20 min (15–25 min, medium confidence) · Recorded 0s"
+            },
+            "Reproduce the first corrupted row after a short pitch": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 75,
+              "point": 110,
+              "range": [
+                105,
+                125
+              ],
+              "source": "model",
+              "reason": "The previous task's actual duration (109.0 min) is close to the new estimate (75.0 min) but significantly overruns the budget (ratio 1.56), suggesting the scope is tight despite the similar core logic.",
+              "selected": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "used": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 75 min · Planner 110 min (105–125 min, medium confidence) · Recorded 0s"
+            },
+            "Return library adapter and buy soap": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 25,
+              "point": 30,
+              "range": [
+                25,
+                40
+              ],
+              "source": "model",
+              "reason": "Combining two distinct actions with potential travel time between them",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 25 min · Planner 30 min (25–40 min, medium confidence) · Recorded 0s"
+            },
+            "Bring bread for reading group": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 20,
+              "point": 20,
+              "range": [
+                15,
+                25
+              ],
+              "source": "model",
+              "reason": "User estimate is 20 minutes but bakery travel and seminar room logistics may vary.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 20 min · Planner 20 min (15–25 min, medium confidence) · Recorded 0s"
+            }
+          }
+        },
+        {
+          "action": "Compare old and new poison runs, 50 minutes: Paused → Completed",
+          "dashboard": "Your estimates\n235 min\nPlanner budget\n220 min\nTasks complete\n1 / 6",
+          "changed_cards": {
+            "Compare old and new poison runs": {
+              "state": "completed",
+              "recorded_minutes": 50,
+              "user_minutes": 35,
+              "point": 35,
+              "range": [
+                32,
+                40
+              ],
+              "source": "model",
+              "reason": "Prior task took 109 minutes for a 70-minute estimate, indicating significant overhead; however, the current task is explicitly a comparison of existing rows rather than full regression.",
+              "selected": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "used": [
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 35 min · Planner 35 min (32–40 min, medium confidence) · Time spent 50m 00s (user-adjusted)"
+            },
+            "Reproduce the first corrupted row after a short pitch": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 75,
+              "point": 70,
+              "range": [
+                65,
+                85
+              ],
+              "source": "model",
+              "reason": "Historical data shows a 1.43x overrun on similar scope work (comparing old/new poison runs) and a 1.56x overrun on strided kernel debugging, suggesting the task will exceed the initial 75-minute estimate.",
+              "selected": [
+                "Compare old and new poison runs",
+                "Debug a mismatched pitch in the strided kernel"
+              ],
+              "used": [
+                "Compare old and new poison runs"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 75 min · Planner 70 min (65–85 min, medium confidence) · Recorded 0s"
+            }
+          }
+        }
+      ],
+      "website_chat": {
+        "question": "Which websites distract me most when I work?",
+        "reply": "smart_toy\n\nWebsites ranked by recorded off-task time:\n\nyoutube.com — 11 min\nnba.com — 4 min\nespncricinfo.com — 3.2 min\nsports.example — 3 min\n\nQuery · local records (selected website ranking) | Answer · local records\n\nAll filtered tasks · 17 tasks · 389 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      },
+      "longest_task_chat": {
+        "question": "Which task took me the longest?",
+        "reply": "smart_toy\n\nLongest recorded task:\n\nMake the shared scratch race reproducible — 138 min\n\nQuery · local records (selected longest recorded task) | Answer · local records\n\nAll filtered tasks · 17 tasks · 389 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      }
+    },
+    {
+      "history": "d3-clinic-coordinator",
+      "summary": [
+        {
+          "action": "Open editable history",
+          "dashboard_budget": "197 min",
+          "completed": "0 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Check the foyer seat map, 30 minutes: Running → Paused → Completed",
+          "dashboard_budget": "197 min",
+          "completed": "1 / 6",
+          "revised_forecasts": []
+        }
+      ],
+      "website_minutes_from_saved_intervals": {
+        "nytimes.com": 6.4,
+        "ticketmaster.com": 3.0
+      },
+      "longest_recorded_tasks": [
+        {
+          "title": "Run captions during Radio Cabaret",
+          "minutes": 60.0
+        }
+      ],
+      "dashboard_discrepancies_or_forecast_errors": [],
+      "dashboard_stages": [
+        {
+          "action": "Open editable history",
+          "dashboard": "Your estimates\n179 min\nPlanner budget\n197 min\nTasks complete\n0 / 6",
+          "changed_cards": {
+            "Label the spare caption leads": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 15,
+              "point": 20,
+              "range": [
+                15,
+                30
+              ],
+              "source": "model",
+              "reason": "Labeling two physical items with tape and placement involves simple but time-sensitive manual work.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 15 min · Planner 20 min (15–30 min, medium confidence) · Recorded 0s"
+            },
+            "Order two door wedges": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 12,
+              "point": 15,
+              "range": [
+                10,
+                20
+              ],
+              "source": "model",
+              "reason": "Requires locating specific item and contacting buyer, which is a simple but non-trivial task.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 12 min · Planner 15 min (10–20 min, medium confidence) · Recorded 0s"
+            },
+            "Operate captions for Sea Glass at 19:00": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 75,
+              "point": 75,
+              "range": [
+                75,
+                75
+              ],
+              "source": "schedule",
+              "reason": "The scheduled duration is 75 minutes.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Scheduled 75 min · Recorded 0s"
+            },
+            "Update the March opening-hours flyer": {
+              "state": "paused",
+              "recorded_minutes": 9,
+              "user_minutes": 25,
+              "point": 30,
+              "range": [
+                25,
+                40
+              ],
+              "source": "model",
+              "reason": "Task involves document editing and printing, which requires physical handling and potential waiting time.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 25 min · Planner 30 min (25–40 min, medium confidence) · Recorded 9m 00s"
+            },
+            "Confirm the garden room shift with Mara": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 30,
+              "point": 35,
+              "range": [
+                30,
+                45
+              ],
+              "source": "model",
+              "reason": "Historical calls averaged 40.5 minutes due to late arrivals and scope expansion, but this task has no off-task distractions recorded.",
+              "selected": [
+                "Review Thursday evening coverage with Mara",
+                "Work out the overflow roster with Mara"
+              ],
+              "used": [
+                "Review Thursday evening coverage with Mara"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 30 min · Planner 35 min (30–45 min, medium confidence) · Recorded 0s"
+            },
+            "Check the foyer seat map": {
+              "state": "running",
+              "recorded_minutes": 13.5,
+              "user_minutes": 22,
+              "point": 22,
+              "range": [
+                20,
+                25
+              ],
+              "source": "model",
+              "reason": "The task involves marking six seats on a printed map and distributing copies, which is a straightforward but time-sensitive administrative activity.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 22 min · Planner 22 min (20–25 min, medium confidence)"
+            }
+          }
+        },
+        {
+          "action": "Check the foyer seat map, 30 minutes: Running → Paused → Completed",
+          "dashboard": "Your estimates\n179 min\nPlanner budget\n197 min\nTasks complete\n1 / 6",
+          "changed_cards": {
+            "Check the foyer seat map": {
+              "state": "completed",
+              "recorded_minutes": 30,
+              "user_minutes": 22,
+              "point": 22,
+              "range": [
+                20,
+                25
+              ],
+              "source": "model",
+              "reason": "The task involves marking six seats on a printed map and distributing copies, which is a straightforward but time-sensitive administrative activity.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 22 min · Planner 22 min (20–25 min, medium confidence) · Time spent 30m 00s (user-adjusted)"
+            }
+          }
+        }
+      ],
+      "website_chat": {
+        "question": "Which websites distract me most when I work?",
+        "reply": "smart_toy\n\nWebsites ranked by recorded off-task time:\n\nnytimes.com — 6.4 min\nticketmaster.com — 3 min\n\nQuery · local records (selected website ranking) | Answer · local records\n\nAll filtered tasks · 20 tasks · 169 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      },
+      "longest_task_chat": {
+        "question": "Which completed task took the most time?",
+        "reply": "smart_toy\n\nLongest recorded task:\n\nRun captions during Radio Cabaret — 60 min\n\nQuery · local records (selected longest recorded task) | Answer · local records\n\nAll filtered tasks · 20 tasks · 176 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      }
+    },
+    {
+      "history": "d4-signal-student",
+      "summary": [
+        {
+          "action": "Open editable history",
+          "dashboard_budget": "235 min",
+          "completed": "0 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Trace monotone deque by hand, 40 minutes: Paused → Completed",
+          "dashboard_budget": "235 min",
+          "completed": "1 / 6",
+          "revised_forecasts": []
+        }
+      ],
+      "website_minutes_from_saved_intervals": {
+        "youtube.com": 40.0
+      },
+      "longest_recorded_tasks": [
+        {
+          "title": "Draw the manifest control-flow graph",
+          "minutes": 98.0
+        }
+      ],
+      "dashboard_discrepancies_or_forecast_errors": [],
+      "dashboard_stages": [
+        {
+          "action": "Open editable history",
+          "dashboard": "Your estimates\n264 min\nPlanner budget\n235 min\nTasks complete\n0 / 6",
+          "changed_cards": {
+            "Trim the intro to the club interview": {
+              "state": "running",
+              "recorded_minutes": 20.12,
+              "user_minutes": 30,
+              "point": 15,
+              "range": [
+                5,
+                25
+              ],
+              "source": "model",
+              "reason": "The task involves precise audio editing with specific timing constraints (3 seconds) and prior isolation work.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 30 min · Planner 15 min (5–25 min, medium confidence)"
+            },
+            "Explain the two-window invariant without my notes": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 45,
+              "point": 30,
+              "range": [
+                20,
+                50
+              ],
+              "source": "model",
+              "reason": "The task requires understanding a mathematical invariant and constructing a counterexample, which involves conceptual work rather than rote memorization.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 45 min · Planner 30 min (20–50 min, medium confidence) · Recorded 0s"
+            },
+            "Trace monotone deque by hand": {
+              "state": "paused",
+              "recorded_minutes": 6,
+              "user_minutes": 25,
+              "point": 30,
+              "range": [
+                25,
+                40
+              ],
+              "source": "model",
+              "reason": "User estimated 25 minutes but historical actual was 54 minutes for a similar scope task.",
+              "selected": [
+                "LeetCode practice · subarray sum equals k"
+              ],
+              "used": [
+                "LeetCode practice · subarray sum equals k"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 25 min · Planner 30 min (25–40 min, medium confidence) · Recorded 6m 00s"
+            },
+            "Implement the optional leak-site analysis": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 115,
+              "point": 120,
+              "range": [
+                90,
+                150
+              ],
+              "source": "model",
+              "reason": "The task requires complex program analysis with data-flow equations and AST tracing, which exceeds simple coding tasks.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 115 min · Planner 120 min (90–150 min, medium confidence) · Recorded 0s"
+            },
+            "Redo the saved interval merge after lunch": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 25,
+              "point": 16,
+              "range": [
+                14,
+                20
+              ],
+              "source": "model",
+              "reason": "Comparison against Slot 1 (17 mins) assumes the current fix resolves the single boundary error noted in S1.1.",
+              "selected": [
+                "Retype merge intervals from my notes",
+                "Review the saved monotone stack solution"
+              ],
+              "used": [
+                "Retype merge intervals from my notes"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 25 min · Planner 16 min (14–20 min, medium confidence) · Recorded 0s"
+            },
+            "Pick up the repaired headphones": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 24,
+              "point": 24,
+              "range": [
+                15,
+                35
+              ],
+              "source": "model",
+              "reason": "Task involves physical movement and timing constraints not fully specified.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 24 min · Planner 24 min (15–35 min, low confidence) · Recorded 0s"
+            }
+          }
+        },
+        {
+          "action": "Trace monotone deque by hand, 40 minutes: Paused → Completed",
+          "dashboard": "Your estimates\n264 min\nPlanner budget\n235 min\nTasks complete\n1 / 6",
+          "changed_cards": {
+            "Trim the intro to the club interview": {
+              "state": "running",
+              "recorded_minutes": 21.17,
+              "user_minutes": 30,
+              "point": 15,
+              "range": [
+                5,
+                25
+              ],
+              "source": "model",
+              "reason": "The task involves precise audio editing with specific timing constraints (3 seconds) and prior isolation work.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 30 min · Planner 15 min (5–25 min, medium confidence)"
+            },
+            "Trace monotone deque by hand": {
+              "state": "completed",
+              "recorded_minutes": 40,
+              "user_minutes": 25,
+              "point": 30,
+              "range": [
+                25,
+                40
+              ],
+              "source": "model",
+              "reason": "User estimated 25 minutes but historical actual was 54 minutes for a similar scope task.",
+              "selected": [
+                "LeetCode practice · subarray sum equals k"
+              ],
+              "used": [
+                "LeetCode practice · subarray sum equals k"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 25 min · Planner 30 min (25–40 min, medium confidence) · Time spent 40m 00s (user-adjusted)"
+            }
+          }
+        }
+      ],
+      "website_chat": {
+        "question": "Which websites distract me most when I work?",
+        "reply": "smart_toy\n\nWebsites ranked by recorded off-task time:\n\nyoutube.com — 40 min\n\nQuery · local records (selected website ranking) | Answer · local records\n\nAll filtered tasks · 20 tasks · 297 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      },
+      "longest_task_chat": {
+        "question": "Which of my tasks took the longest?",
+        "reply": "smart_toy\n\nLongest recorded task:\n\nDraw the manifest control-flow graph — 98 min\n\nQuery · local records (selected longest recorded task) | Answer · local records\n\nAll filtered tasks · 20 tasks · 299 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      }
+    },
+    {
+      "history": "d5-field-engineer",
+      "summary": [
+        {
+          "action": "Open editable history",
+          "dashboard_budget": "193 min",
+          "completed": "0 / 6",
+          "revised_forecasts": []
+        },
+        {
+          "action": "Check the camera mast axes, 55 minutes: Paused → Completed",
+          "dashboard_budget": "193 min",
+          "completed": "1 / 6",
+          "revised_forecasts": []
+        }
+      ],
+      "website_minutes_from_saved_intervals": {
+        "geoguessr.com": 8.6,
+        "rei.com": 3.0
+      },
+      "longest_recorded_tasks": [
+        {
+          "title": "Record a turning test on rover C",
+          "minutes": 77.0
+        }
+      ],
+      "dashboard_discrepancies_or_forecast_errors": [],
+      "dashboard_stages": [
+        {
+          "action": "Open editable history",
+          "dashboard": "Your estimates\n186 min\nPlanner budget\n193 min\nTasks complete\n0 / 6",
+          "changed_cards": {
+            "Check the camera mast axes": {
+              "state": "paused",
+              "recorded_minutes": 13,
+              "user_minutes": 35,
+              "point": 35,
+              "range": [
+                25,
+                45
+              ],
+              "source": "model",
+              "reason": "The task involves creating a technical drawing based on specific parameters, which typically takes longer than simple verification.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 35 min · Planner 35 min (25–45 min, medium confidence) · Recorded 13m 00s"
+            },
+            "Inventory spare axle washers": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 20,
+              "point": 25,
+              "range": [
+                20,
+                30
+              ],
+              "source": "model",
+              "reason": "Counting items and filling a card involves simple counting but requires accuracy and potential for minor delays.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 20 min · Planner 25 min (20–30 min, medium confidence) · Recorded 0s"
+            },
+            "Measure the loaded rover docking run after the belt change": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 45,
+              "point": 50,
+              "range": [
+                48,
+                52
+              ],
+              "source": "model",
+              "reason": "One comparable repeat shows a 1.57x overrun on the same scope; no tight cluster of durations exists to narrow the interval further.",
+              "selected": [
+                "Record rover C going over the cabinet threshold"
+              ],
+              "used": [
+                "Record rover C going over the cabinet threshold"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 45 min · Planner 50 min (48–52 min, medium confidence) · Recorded 0s"
+            },
+            "Wash and fold the blue work shirts": {
+              "state": "paused",
+              "recorded_minutes": 7,
+              "user_minutes": 24,
+              "point": 24,
+              "range": [
+                18,
+                30
+              ],
+              "source": "model",
+              "reason": "User estimate is based on machine time plus manual folding, which is a straightforward sequence.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 24 min · Planner 24 min (18–30 min, medium confidence) · Recorded 7m 00s"
+            },
+            "Pick up rice, ginger and limes": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 22,
+              "point": 22,
+              "range": [
+                20,
+                25
+              ],
+              "source": "model",
+              "reason": "User estimate is based on a simple single-store errand with three items.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 22 min · Planner 22 min (20–25 min, medium confidence) · Recorded 0s"
+            },
+            "Plot the ramp trial from yesterday’s recording": {
+              "state": "ready",
+              "recorded_minutes": 0,
+              "user_minutes": 40,
+              "point": 37,
+              "range": [
+                35,
+                41
+              ],
+              "source": "model",
+              "reason": "Historical comparison shows 36 minutes for similar offline replay task, with slight variance due to wrap interpretation.",
+              "selected": [
+                "Replot the wheel slip from Thursday’s bag",
+                "Replay the line-junction bag"
+              ],
+              "used": [
+                "Replot the wheel slip from Thursday’s bag"
+              ],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 40 min · Planner 37 min (35–41 min, medium confidence) · Recorded 0s"
+            }
+          }
+        },
+        {
+          "action": "Check the camera mast axes, 55 minutes: Paused → Completed",
+          "dashboard": "Your estimates\n186 min\nPlanner budget\n193 min\nTasks complete\n1 / 6",
+          "changed_cards": {
+            "Check the camera mast axes": {
+              "state": "completed",
+              "recorded_minutes": 55,
+              "user_minutes": 35,
+              "point": 35,
+              "range": [
+                25,
+                45
+              ],
+              "source": "model",
+              "reason": "The task involves creating a technical drawing based on specific parameters, which typically takes longer than simple verification.",
+              "selected": [],
+              "used": [],
+              "errors": [],
+              "pending": false,
+              "display": "Your estimate 35 min · Planner 35 min (25–45 min, medium confidence) · Time spent 55m 00s (user-adjusted)"
+            }
+          }
+        }
+      ],
+      "website_chat": {
+        "question": "Which websites distract me most when I work?",
+        "reply": "smart_toy\n\nWebsites ranked by recorded off-task time:\n\ngeoguessr.com — 8.6 min\nrei.com — 3 min\n\nQuery · local records (selected website ranking) | Answer · local records\n\nAll filtered tasks · 20 tasks · 219 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      },
+      "longest_task_chat": {
+        "question": "Among my finished tasks, which one took the longest?",
+        "reply": "smart_toy\n\nLongest recorded task:\n\nRecord a turning test on rover C — 77 min\n\nQuery · local records (selected longest recorded task) | Answer · local records\n\nAll filtered tasks · 20 tasks · 222 activity intervals\n\nkeyboard_arrow_right\n\nQuery and supporting data"
+      }
+    }
+  ],
+  "nora_assignment_chat": {
+    "turns": [
+      {
+        "question": "Can you create a task for my protocol assignment, I expect it will take 4 hours, it has proofs about Paxos and consensus. Attach bridge-proof.pdf to this task.",
+        "reply": "smart_toy\n\nAdded “Protocol assignment” for 2026-11-16 with your 240-minute estimate. Attached bridge-proof.pdf.\n\nLocal task command",
+        "saved": [
+          {
+            "title": "Protocol assignment",
+            "day": "2026-11-16",
+            "description": "it has proofs about Paxos and consensus",
+            "estimate_minutes": 240.0,
+            "status": "ready",
+            "attachments": "bridge-proof.pdf"
+          }
+        ]
+      },
+      {
+        "question": "Edit that task and change its description to Prove agreement after a crash",
+        "reply": "smart_toy\n\nUpdated “Protocol assignment”.\n\nLocal task command",
+        "saved": [
+          {
+            "title": "Protocol assignment",
+            "day": "2026-11-16",
+            "description": "Prove agreement after a crash",
+            "estimate_minutes": 240.0,
+            "status": "ready",
+            "attachments": "bridge-proof.pdf"
+          }
+        ]
+      },
+      {
+        "question": "Postpone that task to tomorrow",
+        "reply": "smart_toy\n\nPostponed “Protocol assignment” to 2026-11-17.\n\nLocal task command",
+        "saved": [
+          {
+            "title": "Protocol assignment",
+            "day": "2026-11-17",
+            "description": "Prove agreement after a crash",
+            "estimate_minutes": 240.0,
+            "status": "ready",
+            "attachments": "bridge-proof.pdf"
+          }
+        ]
+      }
+    ],
+    "stored_attachment": {
+      "name": "bridge-proof.pdf",
+      "size_bytes": 6118,
+      "matches_uploaded_bytes_after_postpone": true
+    },
+    "follow_up_plan": {
+      "question": "I have 75 minutes from 9 AM tomorrow. What fits?",
+      "reply": "smart_toy\n\nYou gave a 75-minute work budget. Up to 75 min fit before 00:00. 4 unfinished task(s) were planned earlier; ask to include the backlog.\n\nConsider deferring or splitting\n\nProtocol assignment — 180 min remaining (range 120–240). Fixed duration is false and estimate is 180 minutes, which exceeds the 75 minute budget.\n\nShare any hard deadlines or priorities that should change this order.\n\nPlan request · Local endpoint · ternary-bonsai-2-4b-gguf | Priorities · Local endpoint · ternary-bonsai-2-4b-gguf | Time calculations · local\n\nkeyboard_arrow_right\n\nTasks and remaining time"
+    },
+    "additional_model_backed_creation": {
+      "question": "Add a task to review the Paxos proof. I expect 20 minutes. Attach bridge-proof.pdf to this task.",
+      "reply": "smart_toy\n\nAdded “Review Paxos Proof” for 2026-11-17 with your 20-minute estimate. Attached bridge-proof.pdf.\n\nLocal endpoint · ternary-bonsai-2-4b-gguf",
+      "workspace": "Separate personal Demo workspace",
+      "stored_file_matches_upload": true
+    }
+  }
+}

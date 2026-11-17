@@ -17,7 +17,7 @@ The sample vectors and decisions were generated locally with Qwen Q8_0 and Kev Q
 
 ## Regenerate
 
-Load the two local models with the [setup in the main README](../../../README.md#local-relevance-models). Fetch the public repository’s `main` branch and run both stages from its checkout with the published sample inputs. The builder verifies those files against `origin/main` before calling the models. To rebuild against an older published commit, add `--public-revision <commit>` to both commands and use the matching fixture files. These commands write a separate output directory for reviewing a build.
+Install Qwen and Kev from the [local setup](../../../README.md#run-locally-on-an-apple-silicon-mac). For the build commands below, set the embedding and decision endpoints and model IDs for your server in the repository’s `.env`. [Configuration example](../../../.env.example) Fetch the public repository’s `main` branch and run both stages from its checkout with the published sample inputs. The builder verifies those files against `origin/main` before calling the models. To rebuild against an older published commit, add `--public-revision <commit>` to both commands and use the matching fixture files. These commands write a separate output directory for reviewing a build.
 
 ```sh
 python -m examples.estimation.package_retrieval data/results/local/retrieval-build --stage vectors

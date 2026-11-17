@@ -4,7 +4,7 @@ set -eu
 cd "$(dirname "$0")"
 
 if [[ ! -x .venv/bin/python ]]; then
-    echo "Create the repo's .venv and install requirements.txt first. See Run on macOS in README.md." >&2
+    echo "Create the repo's .venv and install requirements.txt first. See Quick start in README.md." >&2
     exit 1
 fi
 
