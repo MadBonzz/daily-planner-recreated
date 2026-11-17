@@ -240,6 +240,10 @@ def entered_minutes(task, *, optional):
                            help=hint if optional else "Enter the total across all sessions.")
 
 
+def open_time_dialog(mode, task_id):
+    st.session_state["timer_dialog"] = (mode, task_id)
+
+
 def close_time_dialog():
     st.session_state.pop("timer_dialog", None)
 
@@ -384,7 +388,7 @@ def running_clock(store, task_id):
         st.warning(f"Time spent has reached twice your {minutes(task['estimate_minutes'])} estimate. Still working?")
         if st.button("Stop and review time", key=f"overdue-{task_id}"):
             if perform(store, task, "stop"):
-                st.session_state["timer_dialog"] = ("finish", task_id)
+                open_time_dialog("finish", task_id)
                 st.rerun()
 
 
@@ -757,7 +761,7 @@ def render_task(store, index_dir, task, dev, *, replay=False):
                     if st.form_submit_button("Stop at corrected time"):
                         end_ts = datetime.combine(end_day, end_time).timestamp()
                         if perform(store, task, "stop", ended_at=end_ts):
-                            st.session_state["timer_dialog"] = ("finish", key)
+                            open_time_dialog("finish", key)
                             st.rerun()
         if not replay and status in ("running", "paused"):
             left, right = st.columns(2)
@@ -767,15 +771,15 @@ def render_task(store, index_dir, task, dev, *, replay=False):
                     st.rerun()
             if right.button("Stop", key=f"stop-{key}", width="stretch"):
                 if perform(store, task, "stop"):
-                    st.session_state["timer_dialog"] = ("finish", key)
+                    open_time_dialog("finish", key)
                     st.rerun()
         elif not replay and status == "ready":
             if st.button("Start", key=f"start-{key}", type="primary"):
                 if perform(store, task, "start"):
                     st.rerun()
         elif not replay and status == "awaiting_finish":
-            if st.button("Confirm completion", key=f"confirm-{key}", type="primary"):
-                st.session_state["timer_dialog"] = ("finish", key)
+            st.button("Confirm completion", key=f"confirm-{key}", type="primary",
+                      on_click=open_time_dialog, args=("finish", key))
         if not replay and status in ("ready", "paused", "running"):
             from workspace_ui import offer_workspace
 
@@ -783,10 +787,9 @@ def render_task(store, index_dir, task, dev, *, replay=False):
             offer_workspace(store, task, sample)
         if not replay and status in ("ready", "paused", "completed"):
             controls = st.columns(2)
-            if controls[0].button("Edit time spent", key=f"edit-time-{key}"):
-                st.session_state["timer_dialog"] = ("edit", key)
-            if status != "completed" and controls[1].button("Mark complete", key=f"finish-{key}"):
-                st.session_state["timer_dialog"] = ("finish", key)
+            controls[0].button("Edit time spent", key=f"edit-time-{key}", on_click=open_time_dialog, args=("edit", key))
+            if status != "completed":
+                controls[1].button("Mark complete", key=f"finish-{key}", on_click=open_time_dialog, args=("finish", key))
         if not replay and status != "completed":
             postpone_action(store, task)
             focus_ui.site_editor(store, task)

@@ -212,7 +212,8 @@ def _general_distraction_tool(question):
     # Additional conditions (a category, date, device, etc.) go through the scoped planner.
     question = " ".join(question.casefold().split()).strip(" ?!.")
     if re.fullmatch(r"(?:what|which) (?:websites|sites|domains) (?:do i (?:use|visit) (?:the )?most "
-                    r"(?:when|while) (?:i (?:get|am) )?distracted|distract me (?:the )?most)", question):
+                    r"(?:when|while) (?:i (?:get|am) )?distracted|distract me (?:the )?most"
+                    r"(?: (?:when|while) (?:i work|(?:i(?:'m| am) )?working))?)", question):
         return "distraction_websites"
     if re.fullmatch(r"(?:what|which) are (?:my|the) (?:biggest|top|main|most common) distractions"
                     r"(?: (?:that )?i (?:need to|should) avoid)?"

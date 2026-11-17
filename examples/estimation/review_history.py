@@ -100,6 +100,7 @@ def finish(page, title, minutes):
     dialog.get_by_role("spinbutton").fill(str(minutes))
     dialog.get_by_role("button", name="Yes, finish task").click()
     view.get_by_text("Completed", exact=True).wait_for()
+    dialog.wait_for(state="hidden")
     return [*transitions, "Completed"]
 
 
@@ -110,9 +111,9 @@ def review(args, page, url, root, result):
     choices = history_choices()
     if args.history != next(iter(choices)):
         picker = page.get_by_role("combobox", name="Sample history")
-        picker.fill(choices[args.history])
+        picker.click()
         picker.press("ArrowDown")
-        picker.press("Enter")
+        page.get_by_role("option", name=choices[args.history], exact=True).click()
     store = open_dev_workspace(root, args.history)
     day = store.get_setting("dev_calendar")["day"]
     page.get_by_role("heading", name=store.list_tasks(day)[0]["title"], exact=True).wait_for()
@@ -130,6 +131,7 @@ def review(args, page, url, root, result):
         states = finish(page, title, float(minutes))
         record(f"{title}, {minutes} minutes: " + " → ".join(states))
     page.get_by_text("Analytics & logs", exact=True).click()
+    page.get_by_role("heading", name="Analytics & logs", exact=True).wait_for()
     composer = page.get_by_placeholder("Ask about your plan, add a task, or attach a file")
     for question in args.ask:
         messages = page.locator('[data-testid="stChatMessage"]').filter(
