@@ -8,7 +8,7 @@ import json
 import portalocker
 
 from examples.estimation.activity_fixture import replay_task_at, task_layout
-from examples.estimation.run import DATASET, sample_root, task_inputs, valid_id
+from examples.estimation.histories import DATASET, sample_root, task_inputs, valid_id
 from planner_store import PlannerStore
 
 

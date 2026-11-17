@@ -14,12 +14,11 @@ import portalocker
 import dev_schedule
 import dev_workspace
 import focus_domains
-import focus_judge
 import retrieval
 import sample_retrieval as cache
 import workspace_eligibility as workspace
-from examples.estimation.run import DEMO_DATASET, histories, task_inputs, write_json
-from examples.estimation.scoring import cosine
+from examples.estimation.histories import DEMO_DATASET, histories, task_inputs, write_json
+from sample_retrieval import cosine
 from planner_store import PlannerStore
 
 
@@ -136,7 +135,7 @@ def package_verdicts(stage, requests, *, generate, stats):
         if stage == "pairs":
             hit = cache.decision_for(request)
         elif stage == "sites":
-            hit = focus_judge.packaged(request)
+            hit = focus_domains.packaged_site_decision(request)
         else:
             hit = workspace.packaged(key)
         if stored is not None and hit is not verdict:
@@ -146,13 +145,13 @@ def package_verdicts(stage, requests, *, generate, stats):
         stats["missing"] += 1
         if not generate:
             continue
-        live = {"pairs": retrieval._live_decision, "sites": focus_judge.live_decision, "workspaces": workspace.live}[stage]
+        live = {"pairs": retrieval._live_decision, "sites": focus_domains.live_site_decision, "workspaces": workspace.live}[stage]
         result = live(request, config)
         bundle["decisions"][key] = {"related": result} if stage == "pairs" else result
         write_json(path, bundle, sort_keys=True)
         print(f"Kev {stage} {stats['missing']} {key[:12]}", flush=True)
     cache._indexes.cache_clear()
-    focus_judge._decisions.cache_clear()
+    focus_domains._site_decisions.cache_clear()
     workspace._decisions.cache_clear()
 
 
@@ -186,7 +185,7 @@ def site_requests(history, tasks, matrix, historical, pairs):
         sources = [ids[source] for source in sorted(candidates)]
         checks = focus_domains.site_requests(store, ids[target], sources, pdf_text=tasks[target]["pdf_text"], config=CONFIG)
         for request in checks.values():
-            requests[focus_judge.key(request)] = request
+            requests[cache.decision_hash(request)] = request
         return checks
 
     def automatic(target):

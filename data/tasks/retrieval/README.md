@@ -13,7 +13,7 @@ Each Kev-4B record specifies the target task, candidate task and boolean relevan
 
 There are 119 distinct sample tasks across the ten histories and 238 vectors. The current schedules, both variants of the query-instruction experiment, and editable sample additions require 351 distinct ordered Kev requests at the supported floor. Some bundles also retain earlier genuine decisions with the reverse task order. The app uses a record only when the entire request hash matches. The package includes a decision for a duplicate addition of each of the twenty optional tasks.
 
-The original source includes [the model file hashes and runtime configuration](../../results/retrieval/2026-11-15-qwen06b-kev4b/#model-files-and-runtime) for the Qwen Q8_0 and Kev Q4_K_M weights. Both models processed the fixture data locally. Lookups use the task-scope text hash or complete pair-decision request hash. The history database continues to determine whether a particular task is eligible for retrieval. Only eligible completed tasks from the active workspace can contribute timing comparisons.
+The sample vectors and decisions were generated locally with Qwen Q8_0 and Kev Q4_K_M. Lookups use the task-scope text hash or complete pair-decision request hash. The history database continues to determine whether a particular task is eligible for retrieval. Only eligible completed tasks from the active workspace can contribute timing comparisons.
 
 ## Regenerate
 
@@ -32,7 +32,3 @@ To verify an export directly against the original public input revision, run the
 python -m examples.estimation.package_retrieval data/tasks/retrieval --stage verify --public-revision 2a0eda84ca4a3725933373b28f296cf50335f5dd
 ```
 The verifier checks Git blob contents, all 238 embedding inputs, every numeric component, every complete Kev request hash and required pair coverage. This check makes no model calls.
-
-## Verify Dev without local models
-
-From the repository root, run `python -m pytest -q tests/test_sample_retrieval.py tests/test_packaged_dev_schedule.py`. The first suite checks public fixture hashes, CSV dimensions and values, both embedding inputs, and the saved pair decisions. The second replays all ten schedules. Use `-k 04` to run just the GPU workbench. Each test also opens a separate editable workspace, adds both sample tasks and repeats one submission. It exercises the shipped vectors, Kev judgments, Qdrant index and task matrix. The test simulates Cohere’s HTTP responses, checks the application’s response validation, and fails on any attempt to contact a local model.

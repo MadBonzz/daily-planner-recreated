@@ -138,11 +138,6 @@ def _render(history, *, render_events=True):
     return {'buckets': buckets}, agenda
 
 
-def export_history(history):
-    """Create a /api/0/export-compatible synthetic file for one device."""
-    return _render(history)[0]
-
-
 class ExportSource:
     """Read the two bounded ActivityWatch REST resources used by the collector."""
 

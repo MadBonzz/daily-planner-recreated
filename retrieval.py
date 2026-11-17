@@ -15,7 +15,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from qdrant_client import QdrantClient, models
 
 import local_model_runtime
-from fallback_provenance import capture_fallbacks
+from sample_retrieval import capture_fallbacks
 from model_client import ModelUnavailable, _NoRedirect, planner_settings
 from pdf_reader import assigned_section_text, document_excerpt
 import sample_retrieval
@@ -296,12 +296,6 @@ def _upsert_tasks(client, name, rows, config, errors=None):
             client.create_collection(name, vectors_config=models.VectorParams(size=len(vector), distance=models.Distance.COSINE))
         client.upsert(name, points=[models.PointStruct(id=point_id, vector=vector, payload=payload)])
     return eligible
-
-
-def index_task(index_dir, task):
-    config = planner_settings()
-    with _index(index_dir) as client:
-        _upsert_tasks(client, _collection(config), [task], config)
 
 
 def _managed_names(client):

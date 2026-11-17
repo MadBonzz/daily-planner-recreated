@@ -1,5 +1,7 @@
 """Load exact model results for the public samples. Qwen vectors are ordinary numeric CSVs."""
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 import csv
 from functools import lru_cache
 import hashlib
@@ -9,7 +11,6 @@ from pathlib import Path
 import re
 import struct
 
-from fallback_provenance import record_packaged_fallback
 from local_model_runtime import ModelUnavailable
 
 DIRECTORY = Path(__file__).resolve().parent / "data" / "tasks" / "retrieval"
@@ -25,6 +26,33 @@ _MODELS = {
     "decision": (KEV, "PLANNER_DECISION_MODEL_KEY", {KEV, "kev-4b-gguf", "ggml-org/kev-4b-gguf", "ggml-org/kev-4b"}),
 }
 _NUMBER = re.compile(r"-?(?:\d+\.\d+|\d+)(?:[eE][+-]?\d+)?", re.ASCII)
+
+
+_fallbacks = ContextVar("planner_packaged_fallbacks", default=None)
+
+
+@contextmanager
+def capture_fallbacks():
+    roles = set()
+    parent = _fallbacks.get()
+    token = _fallbacks.set(roles)
+    try:
+        yield roles
+    finally:
+        _fallbacks.reset(token)
+        if parent is not None:
+            parent.update(roles)
+
+
+def record_packaged_fallback(role):
+    roles = _fallbacks.get()
+    if roles is not None:
+        roles.add(role)
+
+
+def cosine(a, b):
+    return sum(x * y for x, y in zip(a, b, strict=True)) / math.sqrt(
+        sum(x ** 2 for x in a) * sum(x ** 2 for x in b))
 
 
 def text_hash(text):

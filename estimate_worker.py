@@ -12,7 +12,7 @@ import estimator
 import focus_domains
 import retrieval
 import workspace_forecast
-from fallback_provenance import capture_fallbacks
+from sample_retrieval import capture_fallbacks
 from model_client import ModelUnavailable
 from task_files import document_text
 
@@ -215,7 +215,7 @@ def _process(store, index_dir, job):
             except Exception as exc:
                 _LOG.warning("Website review did not finish (%s).", type(exc).__name__)
         try:
-            estimator.index_current_task(index_dir, store, task_id)
+            retrieval.index_current_task(index_dir, store, task_id)
         except (RuntimeError, ValueError, OSError, sqlite3.Error) as exc:
             # The committed SQLite forecast is usable. Retrieval repairs a
             # missing or stale vector when this task becomes a comparison.
@@ -226,4 +226,4 @@ def _process(store, index_dir, job):
         existing = {row["id"] for row in store.completed_tasks()}
         for row in job["history"]:
             if row["id"] not in existing:
-                estimator.forget_task(index_dir, row["id"])
+                retrieval.forget_task(index_dir, row["id"])

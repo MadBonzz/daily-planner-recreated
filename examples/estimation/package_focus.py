@@ -16,12 +16,11 @@ from tempfile import TemporaryDirectory
 import dev_schedule
 import dev_workspace
 import focus_domains
-import focus_judge
 import retrieval
 import sample_retrieval
-from examples.estimation.scoring import cosine
+from sample_retrieval import cosine
 from examples.estimation.package_retrieval import inputs, public_revision, public_sources
-from examples.estimation.run import DATASET, REPO, histories, write_json
+from examples.estimation.histories import DATASET, REPO, histories, write_json
 from model_client import planner_settings
 from planner_store import PlannerStore
 
@@ -71,7 +70,7 @@ def collect(history, store, revision, requests):
                                                 config={"PLANNER_DECISION_MODEL": retrieval.DECISION_MODEL})
         checks = {}
         for domain, request in evidence.items():
-            digest = focus_judge.key(request)
+            digest = sample_retrieval.decision_hash(request)
             requests[digest] = request
             checks[domain] = digest
         return checks
@@ -134,7 +133,7 @@ def main():
     parser.add_argument("--public-ref", help="Published sample revision (defaults to the package revision or origin/main).")
     parser.add_argument("--checkpoint", type=Path, help="Save completed live judgments and resume an interrupted build.")
     args = parser.parse_args()
-    path = focus_judge.CACHE_PATH
+    path = focus_domains.SITE_DECISIONS_PATH
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     revision = public_revision(args.public_ref or old.get("public_revision", "origin/main"))
     requests, snapshots, manual, chronology = public_requests(revision)
@@ -156,7 +155,7 @@ def main():
         for index, (digest, request) in enumerate(ordered, 1):
             if digest in decisions:
                 continue
-            decisions[digest] = focus_judge.live_decision(request, config)
+            decisions[digest] = focus_domains.live_site_decision(request, config)
             if args.checkpoint:
                 write_json(args.checkpoint, {"public_revision": revision, "decisions": decisions}, sort_keys=True)
             print(f"{index}/{len(requests)} public domain judgments", flush=True)

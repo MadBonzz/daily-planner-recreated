@@ -1,0 +1,74 @@
+name: Review live planner histories
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/history-review.yml'
+      - 'examples/estimation/review_history.py'
+permissions:
+  contents: read
+jobs:
+  history:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: d1-systems-student
+            finish: Pick up dish soap
+            minutes: 20
+          - profile: d2-lab-researcher
+            finish: Compare old and new poison runs
+            minutes: 50
+          - profile: d3-clinic-coordinator
+            finish: Check the foyer seat map
+            minutes: 30
+          - profile: d4-signal-student
+            finish: Trace monotone deque by hand
+            minutes: 40
+          - profile: d5-field-engineer
+            finish: Check the camera mast axes
+            minutes: 55
+    env:
+      PLANNER_MODEL_ENDPOINT: http://127.0.0.1:18175/v1/chat/completions
+      PLANNER_MODEL: ternary-bonsai-2-4b-gguf
+      PLANNER_MODEL_TIMEOUT_SECONDS: '360'
+      PLANNER_PREFER_PRECOMPUTED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Start Bonsai and record the dashboard
+        env:
+          PROFILE: ${{ matrix.profile }}
+          TASK: ${{ matrix.finish }}
+          MINUTES: ${{ matrix.minutes }}
+        run: |
+          curl -fLsS --retry 3 https://github.com/ggml-org/llama.cpp/releases/download/b12444/llama-b12444-bin-ubuntu-x64.tar.gz -o "$RUNNER_TEMP/llama.tar.gz"
+          mkdir "$RUNNER_TEMP/llama"
+          tar -xzf "$RUNNER_TEMP/llama.tar.gz" -C "$RUNNER_TEMP/llama" --strip-components=1
+          curl -fLsS --retry 3 https://huggingface.co/prism-ml/Ternary-Bonsai-2-4B-gguf/resolve/50ebba61be85e5be07e8083db468ace0fc1bac43/Ternary-Bonsai-2-4B-Q2_0.gguf -o "$RUNNER_TEMP/bonsai.gguf"
+          "$RUNNER_TEMP/llama/llama-server" -m "$RUNNER_TEMP/bonsai.gguf" --alias "$PLANNER_MODEL" --port 18175 -c 8192 -np 1 -t 4 --seed 42 >"$RUNNER_TEMP/model.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:18175/health >/dev/null 2>&1; then break; fi
+            kill -0 "$server"
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:18175/health
+          actions=(--finish "$TASK" "$MINUTES")
+          if [[ "$PROFILE" == d1-systems-student ]]; then actions+=(--finish "Minimize the marker-word failure" 110); fi
+          python -m examples.estimation.review_history "$PROFILE" "${actions[@]}" --ask "Which websites distract me most when I work?" --output "$RUNNER_TEMP/$PROFILE.json"
+          cat "$RUNNER_TEMP/$PROFILE.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.profile }}
+          path: ${{ runner.temp }}/${{ matrix.profile }}.json
+          retention-days: 3

@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from examples.estimation.run import histories, write_json
+from examples.estimation.histories import histories, write_json
 from model_client import planner_settings
 from retrieval import DECISION_MODEL
 from sample_retrieval import decision_hash

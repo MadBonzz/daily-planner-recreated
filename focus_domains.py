@@ -1,16 +1,114 @@
 """Per-task browser blocks from comparable work and explicit user choices."""
 
 from collections import defaultdict
+from functools import lru_cache
 import json
 import math
+from pathlib import Path
 import re
 from urllib.parse import urlsplit
 
-import focus_judge
+import retrieval
+import sample_retrieval
 from activity import activity_key
 from model_client import ModelUnavailable, planner_settings
 from relevance_feedback import related_ids
-from sample_retrieval import prefer_packaged
+from sample_retrieval import decision_hash, prefer_packaged
+
+
+SITE_DECISIONS_PATH = Path(__file__).resolve().parent / "data" / "tasks" / "focus-decisions.json"
+
+_SPECIFIC = (
+    "Does the title of the observed browser tab name a specific activity or content, like playing a game, "
+    "reading a story, viewing a score or shopping for an item? Answer false for an uninformative title "
+    "like Home, New Tab, Sign in or a blank tab."
+)
+_GENERIC = (
+    "Do all the observed browser tab titles consist only of generic navigation, such as Home, Dashboard, "
+    "Sign in, New Tab, a bare site name, or blank? Answer false if even one title names a particular item, "
+    "headline, event, game, or show. A named item need not include a verb."
+)
+_NEEDED = (
+    "Does this current task specifically use the website in the past visit? Look at the new task goals, "
+    "required resources and user instructions. Would blocking that domain prevent doing some of the new task?"
+)
+
+
+def _text(value, limit):
+    return " ".join(str(value or "").split())[:limit]
+
+
+def site_payload(target, domain, source, titles, config=None):
+    """Use only task scope and observed browser evidence. IDs, timestamps and durations stay local."""
+    config = planner_settings() if config is None else config
+    model = config.get("PLANNER_DECISION_MODEL") or retrieval.DECISION_MODEL
+    target = dict(target)
+    sources = source if isinstance(source, (list, tuple)) else [source]
+    previous_titles = sorted({_text(dict(row).get("title"), 180) for row in sources})
+    if isinstance(titles, str):
+        titles = [titles]
+    tabs = sorted({clean for title in (titles or ()) if (clean := _text(title, 160))})
+    # The activity report already labeled this visit off-task. Kev checks whether
+    # the site is identifiable and whether blocking it would interfere with this task.
+    state = {
+        "observed_off_task_browser_visit": {"label": "off_task", "domain": domain, "tab_titles": tabs[:5]},
+        "task_now": (_text(target.get("title"), 180) + ". " + _text(target.get("description"), 550)
+                     + " " + _text(target.get("details"), 350)),
+    }
+    if len(sources) == 1:
+        state["previous_task"] = previous_titles[0]
+    else:
+        state["previous_tasks"] = previous_titles[:5]
+        state["related_tasks_with_off_task_visits"] = len(sources)
+    # If the handout names this site/brand, retain the relevant passage. An
+    # unrelated protocol, proof or assignment excerpt can overwhelm short tab evidence.
+    pdf_text = target.get("pdf_text") or ""
+    names = [label for label in domain.split(".")[:-1] if len(label) > 2 and label != "www"]
+    if pdf_text and names:
+        reference = re.search(r"(?<!\w)(?:" + "|".join(map(re.escape, names)) + r")(?!\w)", pdf_text, re.I)
+        if reference:
+            excerpt = pdf_text[max(0, reference.start() - 80):reference.end() + 120]
+            state["site_reference_in_attachment"] = _text(excerpt, 240)
+    question = ("specific", _SPECIFIC) if len(sources) == 1 else ("generic", _GENERIC)
+    return {"model": model, "state": json.dumps(state, ensure_ascii=False),
+            "questions": {question[0]: {"type": "noul", "instructions": question[1]},
+                          "needed": {"type": "noul", "instructions": _NEEDED}}}
+
+
+@lru_cache(maxsize=2)
+def _site_decisions(path):
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (ValueError, OSError):
+        return {}
+    if not isinstance(data, dict) or data.get("format") != 1 or not isinstance(data.get("decisions"), dict):
+        return {}
+    return data["decisions"]
+
+
+def packaged_site_decision(request):
+    """An exact packaged verdict or None. Safe to call in the bridge's read-only path."""
+    digest = decision_hash(request)
+    value = _site_decisions(SITE_DECISIONS_PATH).get(digest)
+    if value is None:
+        value = _site_decisions(SITE_DECISIONS_PATH.parent / "demo" / "models" / "sites.json").get(digest)
+    return value if type(value) is bool else None
+
+
+def live_site_decision(request, config=None):
+    config = planner_settings() if config is None else config
+    scores = retrieval.decision_scores(request, config, purpose="website blocking")
+    identifiable = scores["generic"] < 0.5 if "generic" in scores else scores["specific"] >= 0.5
+    return identifiable and scores["needed"] < 0.5
+
+
+def _decide_site(request, config=None):
+    """Use an exact public judgment or request a new decision from the local model."""
+    config = planner_settings() if config is None else config
+    value, _ = sample_retrieval.resolve(
+        "decision", request["model"], config, lambda canonical: packaged_site_decision({**request, "model": canonical}),
+        lambda: live_site_decision(request, config))
+    return value
 
 
 def normalize_domain(value):
@@ -116,7 +214,7 @@ def _site_evidence(db, target, sources, config):
                       f"including {examples}.")
         if config is None:
             config = planner_settings()
-        yield domain, reason, focus_judge.payload(target, domain, sources_here, titles, config)
+        yield domain, reason, site_payload(target, domain, sources_here, titles, config)
 
 
 def _target(db, task_id):
@@ -152,12 +250,12 @@ def review_sites(store, task, prediction, pdf_text, previous):
     args = (task["id"], task["edit_revision"], expected)
     results = {}
     for request in requests.values():
-        key = focus_judge.key(request)
+        key = decision_hash(request)
         with store._db() as db:
             if not db.execute("SELECT 1 FROM tasks WHERE " + current, args).fetchone():
                 return
         try:
-            results[key] = previous[key] if type(previous.get(key)) is bool else focus_judge.decide(request, config)
+            results[key] = previous[key] if type(previous.get(key)) is bool else _decide_site(request, config)
         except ModelUnavailable:
             # An unreviewed domain remains editable; a later re-estimate can retry.
             continue
@@ -176,9 +274,9 @@ def policy_from_db(db, task_id):
     suggestions, pending = {}, {}
     config = planner_settings()
     for domain, reason, request in _site_evidence(db, task, _related_sources(db, task), config):
-        verdict = stored.get(focus_judge.key(request))
+        verdict = stored.get(decision_hash(request))
         if type(verdict) is not bool and prefer_packaged("decision", request["model"], config):
-            verdict = focus_judge.packaged(request)
+            verdict = packaged_site_decision(request)
         if verdict is True:
             suggestions[domain] = reason + " Kev recommends blocking it for this task."
         elif verdict is None:

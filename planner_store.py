@@ -12,7 +12,6 @@ from uuid import uuid4
 from relevance_feedback import (
     FEEDBACK_SCHEMA, comparison_options, forecast_feedback, related_ids, relevance_examples, save_choices,
 )
-from task_forecasts import scheduled_prediction
 from task_files import upload_info
 
 
@@ -447,6 +446,18 @@ def _add_files(db, task_id, attachments):
         name, kind = upload_info(name, data)
         db.execute("INSERT INTO attachments(id, task_id, name, pdf, kind) VALUES (?,?,?,?,?)",
                    (str(uuid4()), task_id, name, data, kind))
+
+
+def scheduled_prediction(minutes):
+    value = float(minutes)
+    minutes = int(value) if value.is_integer() else value
+    return {
+        "point_min": minutes, "low_min": minutes, "high_min": minutes,
+        "basis": "Scheduled duration", "confidence": "fixed",
+        "explanation": f"The scheduled duration is {minutes} minutes.",
+        "provenance": {"provider": None, "model": None, "decision": "fixed", "minutes_by": "schedule"},
+        "evidence": [], "cautions": [],
+    }
 
 
 class PlannerStore:
@@ -1145,15 +1156,6 @@ class PlannerStore:
             """, (self.clock(), task_id))
             return [tuple(r) for r in rows]
 
-    def capture_periods(self, task_id):
-        with self._db() as db:
-            rows = db.execute("""
-                SELECT c.start, MAX(c.start, COALESCE(c.end, ?)) FROM capture c
-                JOIN periods p ON p.id=c.period_id JOIN sessions s ON s.id=p.session_id
-                WHERE s.task_id=? ORDER BY c.start, c.id
-            """, (self.clock(), task_id))
-            return [tuple(r) for r in rows]
-
     def disabled_periods(self, task_id):
         """Privacy gaps within timed work. None marks an ongoing capture pause."""
         with self._db() as db:
@@ -1285,14 +1287,6 @@ class PlannerStore:
             if row is None:
                 raise ValueError("This attachment no longer exists.")
             return row[0]
-
-    def reschedule(self, task_id, day):
-        with self._db(write=True) as db:
-            result = db.execute("UPDATE tasks SET day=? WHERE id=? AND archived=0 AND status!='completed'",
-                                (_day(day), task_id))
-            if not result.rowcount:
-                raise ValueError("Only unfinished tasks can be rescheduled.")
-            return self._task(db, task_id)
 
     def postpone(self, task_id, day, *, previous_day, submission_id=None, expected_revision=None):
         """Move unfinished work to a later day and leave its existing session paused."""

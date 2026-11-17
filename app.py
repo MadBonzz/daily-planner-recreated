@@ -12,7 +12,7 @@ import streamlit as st
 
 import activity
 import focus_ui
-import estimator
+import retrieval
 from dev_workspace import add_sample_task, history_choices, open_dev_workspace, sample_task_choices
 from estimate_worker import schedule_pending
 from planner_store import PlannerStore
@@ -412,7 +412,7 @@ def live_activity(store, task):
 def purge_vectors(store, index_dir):
     for task_id in store.pending_vector_purges():
         try:
-            estimator.forget_task(index_dir, task_id)
+            retrieval.forget_task(index_dir, task_id)
             store.confirm_vector_purge(task_id)
         except (OSError, RuntimeError, ValueError):
             st.warning("The task is excluded from estimates. Plan Smarter will retry removing its saved vector.")
@@ -514,7 +514,7 @@ def settings(store, index_dir, dev):
     if st.button("Delete planner data", disabled=not confirm):
         try:
             store.clear_data()
-            estimator.clear_index(index_dir)
+            retrieval.clear_index(index_dir)
         except (OSError, RuntimeError, sqlite3.Error) as error:
             show_error(error)
             return

@@ -22,4 +22,4 @@ The [ActivityWatch SQLite stores](activitywatch) contain 1,911 synthetic desktop
 
 The 89 completed task reports expose 1,412 activity intervals, including laptop-only, phone-only and simultaneous device use in every history. The 32-minute saved-log write-up has nine intervals. Forty of the other long computer tasks have at least ten. Here a long computer task means at least 30 recorded minutes, a laptop foreground for at least half the time, and an open-ended duration. Dishwashing can have long unobserved stretches, and a recording that plays continuously can show a single foreground window.
 
-The [histories](histories) hold pre-task inputs, notes and timer annotations. The [schedules](schedules) give the order in which the planner receives each creation and timer event. Forecasts run through the dashboard and results from benchmark model runs live in the [results directory](../../results).
+The [histories](histories) hold pre-task inputs, notes and timer annotations. The [schedules](schedules) give the order in which the planner receives each creation and timer event. Forecasts run through the dashboard when you open an editable history.

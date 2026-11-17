@@ -6,8 +6,8 @@ import json
 import subprocess
 from pathlib import Path
 
-from examples.estimation.scoring import cosine
-from examples.estimation.run import DATASET, REPO, histories, task_inputs, valid_id, write_json
+from sample_retrieval import cosine
+from examples.estimation.histories import DATASET, REPO, histories, task_inputs, valid_id, write_json
 import retrieval
 import sample_retrieval as cache
 

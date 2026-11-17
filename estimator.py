@@ -7,11 +7,10 @@ from statistics import median
 
 import retrieval
 from activity import reviewed_examples as reviewed_activity
-from fallback_provenance import capture_fallbacks, record_packaged_fallback
+from sample_retrieval import capture_fallbacks, record_packaged_fallback
 from model_client import ModelResponseInvalid, ModelResponseTruncated, ModelUnavailable, chat_json, forecast_endpoint
-from pdf_reader import assigned_section_text, document_excerpt, extract_pdf_text
-from retrieval import COLLECTION, _index, clear_index, forget_task, index_current_task, index_task, search as _search
-from task_forecasts import scheduled_prediction
+from pdf_reader import assigned_section_text, document_excerpt
+from planner_store import scheduled_prediction
 
 
 def _prompt_record(task, *, target=False):
@@ -328,7 +327,7 @@ def _predict(task, completed, index_dir):
     errors = set()
     if automatic:
         try:
-            ranked = _search(task, automatic, index_dir, errors=errors)
+            ranked = retrieval.search(task, automatic, index_dir, errors=errors)
         except (OSError, RuntimeError, ValueError) as error:
             errors.add(str(error) if isinstance(error, ModelUnavailable) else "The local vector index is unavailable.")
         else:

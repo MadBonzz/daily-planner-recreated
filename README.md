@@ -33,7 +33,7 @@ For a fully local Mac setup, install the planner in step 1, then follow [Run all
 
 4. Open **Dev → Sample history**, choose **Nora · distributed systems lab**, and keep **Editable history** selected. In **History details**, select a date and click **Open date** to inspect dated tasks, completion notes and ActivityWatch logs. Under **Try a sample task**, choose **Solve part B of the bridge handout** and click **Add sample task**. Its card initially shows **Estimating task time…**. Once the provider replies, check **Why this estimate?** for the model, comparisons, minutes, range and cautions. **Re-estimate** requests a fresh forecast. Under **Chronological replay**, **Apply next action** advances one scheduled action and **Run to end** runs the whole sequence. Each stage that needs a new forecast or model-labeled activity can make another hosted request.
 
-5. To see a website suggestion, switch to **Ishan · paper reading and GPU research**. Under **History details → Try a sample task**, add **Fix nondeterministic segmented sums**. Once its estimate is ready, open **Websites to block during this task** on the card. Two related kernel-debugging sessions recorded 5 and 6 minutes on unrelated YouTube hockey videos. You can remove `youtube.com` under **Blocked websites** and click **Save websites**. [Block suggestions for the demo tasks](data/results/demo-histories/default-sites.json)
+5. To see a website suggestion, switch to **Ishan · paper reading and GPU research**. Under **History details → Try a sample task**, add **Fix nondeterministic segmented sums**. Once its estimate is ready, open **Websites to block during this task** on the card. Two related kernel-debugging sessions recorded 5 and 6 minutes on unrelated YouTube hockey videos. You can remove `youtube.com` under **Blocked websites** and click **Save websites**.
 
 The supplied profiles include synthetic ActivityWatch stores, PDFs, precomputed Qwen vectors and Kev decisions. You can explore the supplied tasks without installing ActivityWatch or model weights. The [macOS smoke workflow](https://github.com/MadBonzz/daily-planner-recreated/actions/workflows/mac-smoke.yml) checks the clean install, picker and a full replay on both Apple Silicon and Intel, using a simulated hosted response. The Apple Silicon job also opens the PDF workspace in Chromium, asks a document question and checks the remaining time after pausing. Writing a new task, changing its text or choosing new comparisons can require fresh retrieval. When local models are unavailable the card reports any retrieval or provider error. **Demo** opens your separate personal plan. To check your own activity there, follow [ActivityWatch](#activitywatch).
 
@@ -81,7 +81,6 @@ This uses the supplied Qwen embeddings and Kev decisions for exact matches. Bons
 
 In an editable Dev history, the planner estimates open tasks before it fills in forecasts for already completed sample tasks. **Forecast queued** means a card is waiting, **Estimating task time…** means a worker has claimed it, and **Planner budget** shows how many cards are ready until it can display the full total. The card and budget refresh automatically when a forecast is saved. Completing unrelated work can leave a target’s estimate unchanged. Open **Why this estimate?** to check which completed tasks contributed to the forecast. If a flexible task receives identical low, point and high estimates, the planner keeps the model’s point estimate and labels the displayed range as a planner-calculated margin.
 
-To check a running forecast endpoint end to end, set its usual planner model and endpoint variables, then run `PLANNER_TEST_LIVE_HISTORY=1 .venv/bin/python -m pytest -vs tests/live/test_bonsai_history.py` (requires pytest). This uses temporary databases for all six of Nora’s dashboard forecasts, an unrelated completion, a related completion, and a chat sequence that creates a four-hour assignment with a file, edits its description and postpones it. GitHub Actions runs the same sequence with pinned Bonsai 2 4B GGUF weights.
 
 **Recover existing forecasts on Mac.** Stop Streamlit with Ctrl+C. From the same repo folder, run `git pull --ff-only`, then `bash run-bionic-mac.sh`. Reopen the same editable Dev history. On the first open after updating, the planner retries unfinished flexible tasks whose saved local Bonsai MLX forecast reported an incomplete or invalid JSON object. It also recovers forecasts affected by the earlier Qwen tokenizer error. Your timer and original forecast are preserved. To retry another failed forecast, choose **Re-estimate** on its card. The card shows a separate forecast error if Bonsai could not produce the minutes. The planner can still use recovered historical durations for its local estimate.
 
@@ -217,7 +216,7 @@ export PLANNER_MODEL=ternary-bonsai-2-9b
 
 Qwen3-Embedding-0.6B searches prior tasks and Kev-4B judges each candidate. With a hosted forecaster you can still run just Qwen and Kev locally for your own new tasks. Precomputed vectors and decisions are keyed to the exact inputs. If a comparison needs fresh local inference and the models are unavailable, you can select completed comparisons under **Edit relevant tasks** and request a new forecast.
 
-The planner submits the full title, description, details and extracted document text to Qwen twice for a new task, once with a retrieval instruction and once as plain text. If Bionic truncates an input to its context window and returns a valid embedding, the planner uses that vector as received. In live mode, only a failed request or an invalid vector triggers a lookup for an exact packaged match. Qdrant compares each query with plain historical task vectors. A candidate goes to Kev once if either cosine reaches 0.50. The task card displays the larger score. You can raise this cutoff in `.env`. Category breaks tied cosine scores. The [threshold evaluation](data/results/retrieval/2026-11-15-qwen06b-kev4b/README.md) records the cosine sweep and the results for the earlier 0.70 cutoff. Check `.env.example` for local endpoint and threshold overrides.
+The planner submits the full title, description, details and extracted document text to Qwen twice for a new task, once with a retrieval instruction and once as plain text. If Bionic truncates an input to its context window and returns a valid embedding, the planner uses that vector as received. In live mode, only a failed request or an invalid vector triggers a lookup for an exact packaged match. Qdrant compares each query with plain historical task vectors. A candidate goes to Kev once if either cosine reaches 0.50. The task card displays the larger score. You can raise this cutoff in `.env`. Category breaks tied cosine scores. Check `.env.example` for local endpoint and threshold overrides.
 
 ## ActivityWatch
 
@@ -293,7 +292,7 @@ Use the trash icon on a card to remove it from the plan. The confirmation defaul
 
 ## Demo and Dev
 
-**Demo** opens your personal plan. In **Dev**, select one of the five mixed-workload demo profiles and a history view. The original ten benchmark histories remain available to the evaluation tools.
+**Demo** opens your personal plan. In **Dev**, select one of the five mixed-workload demo profiles and a history view. The demo profiles share documents and precomputed retrieval data with the original ten sample histories.
 
 * **Editable history** opens a populated calendar with dated tasks, descriptions, notes, PDFs and timer sessions. Go back a day with the arrow or choose a date under **History details**. The day shows tasks added to the plan and tasks worked on that day. Open a card to inspect the synthetic ActivityWatch intervals. Historical reports in this starting view use the fixture's reviewer labels. You can add tasks, finish work and revise classifications. Existing sample annotations refresh when you open a profile. **Reset sample history** restores the whole sample and discards edits in that copy.
 * **Chronological replay** starts a separate copy with an empty planner. **Apply next action** or **Run to end** advances the schedule through real task creation, timers, model forecasts, completion and report generation. Each task's forecast history shows the initial prediction and subsequent revisions, including the evidence the model had at that time. You can leave and resume a replay, or restart it without affecting the editable calendar.
@@ -310,19 +309,14 @@ The chat at the bottom of the page shares a conversation between **Daily plan** 
 
 Broad questions about top distractions or distracting websites rank the filtered activity logs directly by off-task minutes. For other analytics questions, the configured model selects a scoped metric or writes a read-only SQL query. It interprets the resulting records, including empty results. Expand the supporting data to see the model, scope, SQL and rows. For planning, the model ranks unfinished tasks using the selected date, task details and filtered historical accuracy. Python subtracts recorded progress from each estimate and checks the cumulative fit. You can specify available minutes or a local cutoff. Without an explicit budget, the answer shows the clock time up to midnight. Tasks that have already exhausted their estimate need a new remaining-time estimate. The suggestions leave the actual schedule in your control.
 
-## Evaluate the models
+## Review a live history
 
-Score the same unseen tasks against the original estimate, a category baseline, the offline planner, and the model-backed planner. Predeclared ranges check whether a forecast learns the expected personal correction. The original and enriched suites are documented separately. [Histories and commands](data/tasks/README.md) · [Benchmark results](data/results/README.md) · [Instructed vs. plain Qwen queries at 0.50](data/results/holdouts/2026-11-15-qwen-query-instruction/)
+Start the planner, select **Dev → Editable history**, and open a task’s **Why this estimate?**. Record its point estimate, range and cited tasks. Complete another task with the time you actually spent, then compare the card and the daily total. In **Analytics & logs**, ask which websites took the most off-task time. [Sample histories](data/tasks/demo/)
 
-## Tests
-
-From the repository root, run:
+To record the same interactions in a fresh temporary planner, configure your usual forecast endpoint and run the following from the repository root. Chromium opens the Streamlit dashboard and records the displayed minutes, saved forecasts, timer states and chat replies. The output directory is yours to choose.
 
 ```sh
-python -m pip install pytest
-python -m pytest -q
+python -m pip install playwright
+python -m playwright install chromium
+python -m examples.estimation.review_history d1-systems-student --finish "Pick up dish soap" 20 --finish "Minimize the marker-word failure" 110 --ask "Which websites distract me most?" --output history-review.json
 ```
-
-The [component evaluation](data/results/component-audit/) includes controlled input changes, live local model results, false positives and false negatives, and end-to-end scheduling scenarios.
-
-To run just the scheduling scenarios, use `python -m pytest -q tests/test_concurrent_planning.py tests/test_packaged_dev_schedule.py`. These cover rapid submissions while a forecast is running, switching active timers, a completion that triggers selective re-estimates, and chronological replays of the packaged histories. The replay tests use the packaged Qwen and Kev outputs, disable local model calls, and simulate the hosted endpoint for forecasts and activity reports. The [paired forecast evaluation](data/results/holdouts/2026-11-15-qwen-query-instruction/) records the live model calls used to measure estimation quality.

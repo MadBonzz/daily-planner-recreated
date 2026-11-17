@@ -14,7 +14,7 @@ import portalocker
 
 import activity
 from examples.estimation.activity_fixture import replay_history, replay_task_at, task_layout
-from examples.estimation.run import DATASET, DEMO_DATASET, sample_root, task_inputs, valid_id
+from examples.estimation.histories import DATASET, DEMO_DATASET, sample_root, task_inputs, valid_id
 from planner_store import PlannerStore
 
 
