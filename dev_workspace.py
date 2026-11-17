@@ -1,7 +1,6 @@
 """Load an isolated, editable synthetic planner; DEMO's personal database lives elsewhere."""
 
 from contextlib import closing
-from datetime import date
 import json
 from pathlib import Path
 import sqlite3
@@ -13,7 +12,7 @@ import time
 import portalocker
 
 import activity
-from examples.estimation.activity_fixture import replay_history, replay_task_at, task_layout
+from examples.estimation.activity_fixture import replay_task_at
 from examples.estimation.histories import DATASET, DEMO_DATASET, sample_root, task_inputs, valid_id
 from planner_store import PlannerStore
 
@@ -40,55 +39,6 @@ def add_sample_task(store, history_id, sample_id, day):
     fields, attachments = task_inputs(sample, history_id, sample_root(history_id, DATASET))
     fields["day"] = day
     return store.create_task(**fields, attachments=attachments)
-
-
-def _import_task(store, history_id, directory, row, sessions, *, status, now, report=None):
-    """Apply the same Start/Pause/Stop transitions used by the UI, with the fixture clock."""
-    stamp = sessions[0][0][0] if sessions else now
-    timed = PlannerStore(store.data_dir, clock=lambda: stamp)
-    fields, files = task_inputs(row, history_id, directory)
-    if status != "completed":
-        fields["day"] = date.fromtimestamp(now).isoformat()
-    # A sample has user budgets and observations. Open tasks receive a fresh estimate.
-    prediction = {} if status == "completed" else None
-    task = timed.create_task(**fields, attachments=files, prediction=prediction)
-    task_id = task["id"]
-    if row.get("activity"):
-        # This identifies public fixture observations, without copying raw
-        # unfiltered watcher content into the planner database.
-        timed.set_setting(f"dev_activity_{task_id}", {
-            "history": history_id, "task": row["id"], "sessions": sessions,
-        })
-
-    for i, periods in enumerate(sessions):
-        for j, (start, end) in enumerate(periods):
-            last = i == len(sessions) - 1 and j == len(periods) - 1
-            stamp = start
-            timed.transition(task_id, "start" if j == 0 else "resume")
-            if last and status == "running":
-                return
-            stamp = end
-            if (last and status == "paused") or j + 1 < len(periods):
-                timed.transition(task_id, "pause")
-            else:
-                timed.transition(task_id, "stop")
-                if last and status == "completed":
-                    timed.transition(task_id, "finish", completion_note=row.get("completion_note", ""),
-                                     report=report, refresh_estimates=False)
-                else:
-                    timed.transition(task_id, "continue_later")
-
-
-def seed_completed(store, history, directory):
-    """Import prior work from a single synthetic history with zero model or network calls."""
-    store.set_capture(False)
-    replayed = replay_history(history, directory=directory)
-    for row in sorted(history["tasks"], key=lambda task: task["day"]):
-        entry = replayed[row["id"]]
-        sessions = entry["sessions"]
-        report = entry["report"] if row.get("activity") else None
-        _import_task(store, history["id"], directory, row, sessions,
-                     status="completed", now=sessions[-1][-1][1], report=report)
 
 
 def _refresh_sample_activity(store, history, directory):
@@ -131,34 +81,6 @@ def dev_activity_report(store, task, *, examples=(), overrides=None):
                                       use_model=bool(history.get("activitywatch_sha256")),
                                       examples=examples, overrides=overrides)
     return activity.build_report(task, periods, capture=False)
-
-
-def _seed_open(store, history, now, directory):
-    rows = history.get("open_tasks", [])
-    if sum(row["status"] == "running" for row in rows) > 1:
-        raise ValueError("A profile can contain only one running task.")
-    # Allocate time serially; past work on two paused tasks must not overlap.
-    # The current session of the running task ends at import time and stays open.
-    end = now
-    blocks = []
-    layouts = task_layout(history)
-    ordered = sorted(rows, key=lambda task: task["status"] == "running")
-    for row in reversed(ordered):
-        status = row["status"]
-        if status not in {"ready", "running", "paused"}:
-            raise ValueError(f"Invalid open task state: {status}")
-        sessions = []
-        if row.get("sessions_minutes"):
-            layout = layouts[row["id"]]["sessions"]
-            offset = end - layout[-1][-1][1]
-            sessions = [[(start + offset, stop + offset) for start, stop in group] for group in layout]
-        elif status != "ready":
-            sessions = [[(end, end)]]
-        blocks.append((row, sessions))
-        if sessions:
-            end = sessions[0][0][0] - 900
-    for row, sessions in reversed(blocks):
-        _import_task(store, history["id"], directory, row, sessions, status=row["status"], now=now)
 
 
 def _read_generation(directory):
@@ -219,13 +141,7 @@ def open_dev_workspace(data_root, history_id, *, reset=False, replay=False):
             try:
                 fresh = PlannerStore(current)
                 import dev_schedule
-                if dev_schedule.schedule_exists(history_id, directory):
-                    dev_schedule.initialize(fresh, history_id, directory, replay=replay, now=time.time())
-                elif replay:
-                    raise ValueError("No chronological schedule is available for this sample.")
-                else:
-                    seed_completed(fresh, history, directory)
-                    _seed_open(fresh, history, time.time(), directory)
+                dev_schedule.initialize(fresh, history_id, directory, replay=replay, now=time.time())
                 fresh.set_setting("dev_sample_activity_sha256", history.get("activitywatch_sha256"))
             except BaseException:
                 rmtree(current, ignore_errors=True)

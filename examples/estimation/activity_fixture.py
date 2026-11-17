@@ -1,23 +1,14 @@
-"""Replay synthetic ActivityWatch SQLite stores for the planner and estimator.
+"""Map packaged ActivityWatch records and authored task sessions onto the planner clock."""
 
-The generator uses only the historical tasks in a profile. Watcher buckets contain
-ordinary device events. Timer boundaries and synthetic relevance annotations are
-separate, so the same export can also be replayed with the real model classifier.
-"""
-
-import argparse
 from collections import defaultdict
 from datetime import date, datetime, time, timezone
 import hashlib
 from functools import partial
-import json
 import math
 from pathlib import Path
-import sqlite3
-from contextlib import closing
-from urllib.parse import unquote
 
 import activity
+from activity_db import SQLiteActivitySource
 
 
 EXCLUDED_MARKER = 'private-fixture.example'
@@ -53,57 +44,9 @@ def _sessions_by_day(history):
     return days
 
 
-def _render(history, *, render_events=True):
-    hostname = 'demo-' + history['id']
-    buckets = {}
+def task_layout(history):
+    """Return the original timer periods and reviewed intervals for each task."""
     agenda = {}
-
-    def emit(watcher, kind, at, until, data):
-        key = f'{watcher}_{hostname}'
-        bucket = buckets.setdefault(key, {'id': key, 'created': activity._iso(at), 'name': '',
-                                         'type': kind, 'client': watcher, 'hostname': hostname,
-                                         'events': []})
-        events = bucket['events']
-        # Watchers heartbeat independently. Unchanged AFK state, for example,
-        # can span many foreground switches and task boundaries.
-        if events and events[-1]['data'] == data:
-            previous = events[-1]
-            left = activity._stamp(previous['timestamp'])
-            if abs(left + previous['duration'] - at) < 1e-5:
-                previous['duration'] = round(until - left, 6)
-                return
-        events.append({'id': len(events) + 1, 'timestamp': activity._iso(at),
-                       'duration': round(until - at, 6), 'data': data})
-
-    def watcher_slice(scene, at, end):
-        if not render_events:
-            return
-        app, title = scene.get('app', ''), scene.get('title', '')
-        domain = scene.get('domain', '')
-        browser = activity._browser(app)
-        if scene.get('excluded'):
-            if browser:
-                domain = EXCLUDED_MARKER
-            else:
-                title = f'{EXCLUDED_MARKER} — {title}'
-        if app or title:
-            emit('aw-watcher-window', 'currentwindow', at, end, {'app': app, 'title': title})
-        if browser and domain:
-            emit('aw-watcher-web-' + browser, 'web.tab.current', at, end,
-                 {'url': 'https://' + domain + '/', 'title': title,
-                  'audible': scene.get('audible', False), 'incognito': scene.get('incognito', False)})
-        elif scene.get('incognito'):
-            raise ValueError('A synthetic incognito interval needs a browser app and domain')
-        idle = scene.get('idle', False)
-        if idle is not None:
-            emit('aw-watcher-afk', 'afkstatus', at, end, {'status': 'afk' if idle else 'not-afk'})
-
-    def between(at, until):
-        # These events are part of the exported device day but outside the timer.
-        watcher_slice({'app': 'Calendar', 'title': 'Today', 'idle': False}, at, min(at + 60, until))
-        if until > at + 60:
-            watcher_slice({'app': 'Calendar', 'title': 'Today', 'idle': True}, at + 60, until)
-
     timed_tasks = [*history['tasks'], *(r for r in history.get('open_tasks', []) if r.get('sessions_minutes'))]
     for day, day_sessions in sorted(_sessions_by_day({'tasks': timed_tasks}).items()):
         clock = datetime.combine(date.fromisoformat(day), time(8), timezone.utc).timestamp()
@@ -113,7 +56,6 @@ def _render(history, *, render_events=True):
             if stamp is not None:
                 clock = stamp
             elif index:
-                between(clock, clock + 15 * 60)
                 clock += 15 * 60
             item = agenda.setdefault(task['id'], {'sessions': [], 'annotations': []})
             periods = []
@@ -124,39 +66,16 @@ def _render(history, *, render_events=True):
                 if label not in activity.LABELS:
                     raise ValueError(f"{task['id']}: unsupported annotation {label!r}")
                 end = clock + _seconds(scene['minutes'])
-                watcher_slice(scene, clock, end)
                 item['annotations'].append((clock, end, label, scene.get('review_reason')))
                 clock = end
                 if 'pause_after_minutes' in scene:
                     if offset == len(slices) - 1:
                         raise ValueError(f"{task['id']}: pause belongs between two slices")
                     periods.append((start, clock))
-                    wake = clock + _seconds(scene['pause_after_minutes'])
-                    between(clock, wake)
-                    start = clock = wake
+                    clock += _seconds(scene['pause_after_minutes'])
+                    start = clock
             periods.append((start, clock))
-    return {'buckets': buckets}, agenda
-
-
-class ExportSource:
-    """Read the two bounded ActivityWatch REST resources used by the collector."""
-
-    def __init__(self, export, hostname):
-        self.buckets = export['buckets']
-        self.hostname = hostname
-
-    def get(self, path, **query):
-        if path == 'buckets/':
-            return {key: {k: v for k, v in bucket.items() if k != 'events'}
-                    for key, bucket in self.buckets.items()}
-        prefix, key, suffix = path.split('/')
-        if prefix != 'buckets' or suffix != 'events':
-            raise ValueError('Unknown ActivityWatch resource')
-        start, end = activity._stamp(query['start']), activity._stamp(query['end'])
-        rows = self.buckets[unquote(key)]['events']
-        return sorted((r for r in rows if activity._stamp(r['timestamp']) < end
-                       and activity._stamp(r['timestamp']) + r['duration'] > start),
-                      key=lambda r: r['timestamp'], reverse=True)
+    return agenda
 
 
 def _review(row, *, annotations):
@@ -178,47 +97,6 @@ def _report(task, source, periods, annotations, exclusions, use_model=False, *, 
                                    source=source, reviewed_label=reviewed, examples=examples, overrides=overrides)
     report['classification_source'] = 'model' if use_model else 'synthetic_annotations'
     return report
-
-
-def _replay_source(history, directory, export=None):
-    """Packaged samples read their original DB. Inline authored scenes support old profiles."""
-    fingerprint = history.get('activitywatch_sha256')
-    raw, agenda = _render(history, render_events=not fingerprint)
-    hostname = 'demo-' + history['id']
-    if fingerprint:
-        from activity_db import SQLiteActivitySource
-        path = Path(directory) / 'activitywatch' / (history['id'] + '.db')
-        if hashlib.sha256(path.read_bytes()).hexdigest() != fingerprint:
-            raise ValueError(f'{path.name}: database does not match this history')
-        return SQLiteActivitySource(path, hostname=hostname), agenda
-    if export is not None and export != raw:
-        raise ValueError('Export differs from the authored device scenes. Regenerate it.')
-    return ExportSource(raw, hostname), agenda
-
-
-def replay_history(history, *, directory=None, export=None, use_model=False, tasks_by_id=None):
-    """Classify recorded windows for completed tasks. Open tasks and holdouts are excluded.
-
-    Historical annotations give deterministic estimator-only scores. use_model=True
-    sends only the sanitised intervals and supplied pre-task context to the classifier.
-    """
-    source, agenda = _replay_source(history, directory, export)
-    results = {}
-    for row in history['tasks']:
-        task_id = row['id']
-        item = agenda[task_id]
-        sessions = item['sessions']
-        periods = [period for session in sessions for period in session]
-        context = tasks_by_id[task_id] if tasks_by_id is not None else row
-        report = _report(context, source, periods, item['annotations'], [], use_model)
-        results[task_id] = {'sessions': sessions, 'periods': periods, 'report': report}
-    return results
-
-
-def task_layout(history):
-    """Seed calendars and annotations without regenerating, reading, or classifying events."""
-    _, agenda = _render(history, render_events=False)
-    return agenda
 
 
 class ShiftedSource:
@@ -246,13 +124,14 @@ class ShiftedSource:
         return sorted(events, key=lambda row: row['timestamp'], reverse=True)
 
 
-def replay_task_at(history, row, destination_sessions, periods, *, directory=None, exclusions=(),
+def replay_task_at(history, row, destination_sessions, periods, *, directory, exclusions=(),
                    use_model=False, task_context=None, examples=(), overrides=None):
     """Move bounded seed observations to Dev's clock. Later user activity stays unobserved."""
-    if isinstance(history, str):  # Backward compatibility with inline scenes.
-        history = {'id': history, 'tasks': [row]}
-    source, agenda = _replay_source(history, directory)
-    item = agenda[row['id']]
+    path = Path(directory) / 'activitywatch' / (history['id'] + '.db')
+    if hashlib.sha256(path.read_bytes()).hexdigest() != history['activitywatch_sha256']:
+        raise ValueError(f'{path.name}: database does not match this history')
+    source = SQLiteActivitySource(path, hostname='demo-' + history['id'])
+    item = task_layout(history)[row['id']]
     original = item['sessions']
     if [len(s) for s in original] != [len(s) for s in destination_sessions]:
         raise ValueError('Seeded timer session/period counts differ from the activity fixture')
@@ -268,55 +147,3 @@ def replay_task_at(history, row, destination_sessions, periods, *, directory=Non
                    for left, right, delta in mappings if left < b and right > a]
     return _report(task_context or row, ShiftedSource(source, mappings), periods, annotations,
                    exclusions, use_model, examples=examples, overrides=overrides)
-
-
-def write_database(export, path):
-    """Write native AW v6 bucket/event records from an authored ActivityWatch export."""
-    # Make the output reproducible and avoid overwriting an existing real watcher DB.
-    with Path(path).open('xb'):
-        pass
-    try:
-        with closing(sqlite3.connect(path)) as db, db:
-            db.executescript("""
-                PRAGMA user_version = 6;
-                PRAGMA foreign_keys = ON;
-                CREATE TABLE buckets (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL,
-                    type TEXT NOT NULL, client TEXT NOT NULL, hostname TEXT NOT NULL,
-                    created TEXT NOT NULL, data_deprecated TEXT DEFAULT '{}', data TEXT NOT NULL DEFAULT '{}');
-                CREATE TABLE events (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, bucketrow INTEGER NOT NULL,
-                    starttime INTEGER NOT NULL, endtime INTEGER NOT NULL, data TEXT NOT NULL,
-                    FOREIGN KEY (bucketrow) REFERENCES buckets(id));
-                CREATE TABLE key_value (key TEXT PRIMARY KEY, value TEXT, last_modified NUMBER NOT NULL);
-                CREATE INDEX bucket_id_index ON buckets(id);
-                CREATE INDEX events_bucketrow_endtime_starttime_index ON events(bucketrow, endtime, starttime DESC);
-                CREATE INDEX events_bucketrow_starttime_endtime_index ON events(bucketrow, starttime DESC, endtime);
-            """)
-            for key, bucket in sorted(export['buckets'].items()):
-                created = datetime.fromtimestamp(activity._stamp(bucket['created']), timezone.utc)
-                bucket_id = db.execute(
-                    'INSERT INTO buckets(name,type,client,hostname,created) VALUES (?,?,?,?,?)',
-                    (key, bucket['type'], bucket['client'], bucket['hostname'],
-                     created.isoformat(timespec='microseconds'))).lastrowid
-                for event in bucket['events']:
-                    # API events have a start and a duration. AW's SQLite store uses two Unix nanosecond endpoints.
-                    start = round(activity._stamp(event['timestamp']) * 1_000_000) * 1000
-                    end = start + round(event['duration'] * 1_000_000_000)
-                    db.execute('INSERT INTO events(bucketrow,starttime,endtime,data) VALUES (?,?,?,?)',
-                               (bucket_id, start, end, json.dumps(event['data'], ensure_ascii=False)))
-    except BaseException:
-        Path(path).unlink(missing_ok=True)
-        raise
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Write a new AW v6 SQLite fixture from an ActivityWatch JSON export.')
-    parser.add_argument('export', type=Path)
-    parser.add_argument('database', type=Path, help='New .db path')
-    args = parser.parse_args()
-    write_database(json.loads(args.export.read_text(encoding='utf-8')), args.database)
-
-
-if __name__ == '__main__':
-    main()
