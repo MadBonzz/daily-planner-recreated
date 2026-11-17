@@ -42,7 +42,11 @@ def dashboard(root):
             yield url
         finally:
             app.terminate()
-            app.wait(timeout=30)
+            try:
+                app.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                app.kill()
+                app.wait()
 
 
 def card(page, title):
@@ -102,10 +106,13 @@ def finish(page, title, minutes):
 def review(args, page, url, root, result):
     page.goto(url)
     page.get_by_text("Dev", exact=True).click()
-    name = history_choices()[args.history]
-    picker = page.get_by_role("combobox", name="Sample history")
-    picker.click()
-    page.get_by_role("option", name=name, exact=True).click()
+    page.locator(".task-head").first.wait_for()
+    choices = history_choices()
+    if args.history != next(iter(choices)):
+        picker = page.get_by_role("combobox", name="Sample history")
+        picker.fill(choices[args.history])
+        picker.press("ArrowDown")
+        picker.press("Enter")
     store = open_dev_workspace(root, args.history)
     day = store.get_setting("dev_calendar")["day"]
     page.get_by_role("heading", name=store.list_tasks(day)[0]["title"], exact=True).wait_for()
