@@ -166,7 +166,8 @@ def _response_schema(field):
 
 def _plan_schema(categories, *, needs_dates=False, planning=False):
     tools = ["custom_sql"] if needs_dates else [
-        "distraction_sources", "distraction_websites", "user_estimate_accuracy", "model_estimate_accuracy", "custom_sql"]
+        "distraction_sources", "distraction_websites", "longest_task",
+        "user_estimate_accuracy", "model_estimate_accuracy", "custom_sql"]
     if planning:
         tools.append("plan_remaining")
     return {
@@ -207,10 +208,14 @@ FROM logs WHERE classification = 'off_task' AND domain != ''
 GROUP BY website ORDER BY SUM(seconds) DESC, website"""
 
 
-def _general_distraction_tool(question):
+def _unqualified_metric(question):
     # These complete, unqualified questions rank the records already filtered on the page.
     # Additional conditions (a category, date, device, etc.) go through the scoped planner.
     question = " ".join(question.casefold().split()).strip(" ?!.")
+    if re.fullmatch(r"(?:(?:of|among) (?:all )?(?:my |the )?(?:completed |finished )?tasks,? (?:which|what)(?: one)?|"
+                    r"(?:which|what) (?:of my )?(?:completed |finished )?tasks?) took (?:me )?"
+                    r"(?:the )?(?:longest|most (?:time|minutes))", question):
+        return "longest_task"
     if re.fullmatch(r"(?:what|which) (?:websites|sites|domains) (?:do i (?:use|visit) (?:the )?most "
                     r"(?:when|while) (?:i (?:get|am) )?distracted|distract me (?:the )?most"
                     r"(?: (?:when|while) (?:i work|(?:i(?:'m| am) )?working))?)", question):
@@ -253,6 +258,8 @@ _PLAN_INSTRUCTIONS = (
     "laboratory tasks?' uses scope=category:Lab work and tool=distraction_sources. "
     "Choose distraction_websites for the most-used distracting websites by off-task minutes. For a particular device or a "
     "particular time of day, use custom_sql and keep those restrictions. "
+    "Use longest_task to find the individual completed task with the greatest recorded duration within the selected scope. "
+    "For category totals or extra constraints such as a time window, use custom_sql. "
     "For questions about my own estimate accuracy, frequency or average size of my overestimates and "
     "underestimates, select user_estimate_accuracy. Use model_estimate_accuracy for the original planner "
     "forecast. Example: 'When I underestimate, by how many minutes?' selects user_estimate_accuracy. "
@@ -317,7 +324,7 @@ def _chat_reply(messages, schema):
 
 def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan=None, files=None, create_categories=None, task_catalog=()):
     """Ask the configured LLM to select scope, query local data and interpret the evidence."""
-    general_tool = _general_distraction_tool(question)
+    general_tool = _unqualified_metric(question)
     catalog = [] if general_tool else _catalog(question, tasks)
     context = {
         "question": question,
@@ -433,6 +440,9 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
             sql = _DISTRACTION_SQL
         elif tool == "distraction_websites":
             sql = _DISTRACTION_WEBSITES_SQL
+        elif tool == "longest_task":
+            sql = """SELECT title, actual_minutes FROM tasks
+                     WHERE actual_minutes = (SELECT MAX(actual_minutes) FROM tasks) ORDER BY title"""
         elif tool in {"user_estimate_accuracy", "model_estimate_accuracy"}:
             source = "user_minutes" if tool == "user_estimate_accuracy" else "model_minutes"
             sql = _accuracy_sql(source)
@@ -488,6 +498,10 @@ def ask_analytics(question, tasks, logs, history=(), *, still_current=None, plan
             return {"answer": "Your analytics records changed. Ask again using the current data."}
         if not evidence or all(value is None for row in evidence for value in row.values()):
             return _explain_empty(result, payload, labels, tasks, logs)
+        if tool == "longest_task":
+            answer = "Longest recorded task" + ("s" if len(evidence) > 1 else "") + ":\n\n" + "\n".join(
+                f"- {row['title']} — {row['actual_minutes']:g} min" for row in evidence)
+            return {**result, "answer_source": "local records", "answer": answer}
         if tool == "distraction_websites":
             answer = "Websites ranked by recorded off-task time:\n\n" + "\n".join(
                 f"- {row['website']} — {row['minutes']:g} min" for row in evidence)
@@ -551,6 +565,8 @@ def _explain_empty(result, payload, labels, tasks, logs):
     # Keep the narrative grounded even when there is no supporting result row.
     if not tasks:
         facts = ["No completed tasks matched the selected scope."]
+    elif result["tool"] == "longest_task":
+        facts = ["The selected completed tasks have no recorded durations."]
     elif result.get("query_error"):
         facts = ["The requested query could not be executed against the visible records."]
     elif not result["sql"]:
@@ -592,7 +608,7 @@ def _show_turn(turn):
         if turn.get("provider"):
             model = f"{turn['provider']} · {turn['model']}"
             query = model if turn.get("query_source") == "model" else turn.get("query_source", "unavailable")
-            tool_name = {"distraction_websites": "website ranking", "distraction_sources": "distraction summary", "user_estimate_accuracy": "user accuracy summary",
+            tool_name = {"longest_task": "longest recorded task", "distraction_websites": "website ranking", "distraction_sources": "distraction summary", "user_estimate_accuracy": "user accuracy summary",
                          "model_estimate_accuracy": "model accuracy summary"}.get(turn.get("tool"))
             if tool_name:
                 query += f" (selected {tool_name})"
